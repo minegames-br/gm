@@ -1,0 +1,6 @@
+name: MineGames-Core
+author: joaoemilio
+version: 1.0.0
+main: br.com.minegames.core.CorePlugin
+depend: 
+commands:
