@@ -12,28 +12,25 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.jboss.logging.Logger;
-
-import br.com.minegames.core.domain.ServerInstance;
+import br.com.minegames.core.domain.Arena;
 import br.com.minegames.core.json.JSONParser;
-import br.com.minegames.gamemanager.service.ServerService;
+import br.com.minegames.gamemanager.service.ArenaService;
 
-@Path("/server")
-public class ServerREST {
+@Path("/arena")
+public class ArenaREST {
 	
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response create(String json) {
-		Logger.getLogger(ServerREST.class).info("json recebido: " + json );
-		ServerService service = new ServerService();
-		ServerInstance domain = (ServerInstance)JSONParser.getInstance().toObject(json, ServerInstance.class);
+		ArenaService service = new ArenaService();
+		Arena domain = (Arena)JSONParser.getInstance().toObject(json, Arena.class);
 		if(domain != null) {
 			UUID uuid = service.create(domain);
-			domain.setServer_uuid(uuid);
+			domain.setArena_uuid(uuid);
 			json = JSONParser.getInstance().toJSONString(domain);
 		    return Response.ok(json, MediaType.APPLICATION_JSON).build();
 		} else {
-			return Response.status(Response.Status.CONFLICT).entity("Não é possivel criar o servidor com as informações fornecidas").build();
+			return Response.status(Response.Status.CONFLICT).entity("Não é possivel criar o Arena com as informações fornecidas").build();
 		}
 	}
 	
@@ -41,14 +38,13 @@ public class ServerREST {
 	@Path("/{uuid}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response get(@PathParam("uuid") String _uuid) {
-		Logger.getLogger(ServerREST.class).info("uuid recebido: ");
-		ServerService service = new ServerService();
-		ServerInstance domain = service.find( UUID.fromString(_uuid) );
+		ArenaService service = new ArenaService();
+		Arena domain = service.find( UUID.fromString(_uuid) );
 		if( domain != null) {
 			String json = JSONParser.getInstance().toJSONString(domain);
 		    return Response.ok( json , MediaType.APPLICATION_JSON).build();
 		} else {
-			return Response.status(Response.Status.NOT_FOUND).entity("Servidor não encontrado: " + _uuid).build();
+			return Response.status(Response.Status.NOT_FOUND).entity("Arena não encontrado: " + _uuid).build();
 		}
 	}
 	
@@ -56,8 +52,8 @@ public class ServerREST {
 	@Path("/list")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response findAllGames() {
-		ServerService service = new ServerService();
-		Collection<ServerInstance> list = service.findAll();
+		ArenaService service = new ArenaService();
+		Collection<Arena> list = service.findAll();
 		String json = JSONParser.getInstance().toJSONString(list);
 		return Response.ok(json, MediaType.APPLICATION_JSON).build();
 	}
@@ -66,14 +62,13 @@ public class ServerREST {
 	@Path("/{uuid}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response delete(@PathParam("uuid") String _uuid) {
-		Logger.getLogger(ServerREST.class).info("uuid recebido: ");
-		ServerService service = new ServerService();
-		ServerInstance domain = service.find( UUID.fromString(_uuid) );
+		ArenaService service = new ArenaService();
+		Arena domain = service.find( UUID.fromString(_uuid) );
 		if( domain != null) {
 			service.delete(domain);
-		    return Response.ok( "Servidor removido com sucesso" , MediaType.APPLICATION_JSON).build();
+		    return Response.ok( "Arena removido com sucesso" , MediaType.APPLICATION_JSON).build();
 		} else {
-			return Response.status(Response.Status.NOT_FOUND).entity("Servidor não encontrado: " + _uuid).build();
+			return Response.status(Response.Status.NOT_FOUND).entity("Arena não encontrado: " + _uuid).build();
 		}
 	}
 	

@@ -8,16 +8,13 @@ import org.bukkit.World;
 
 import br.com.minegames.core.domain.Area3D;
 import br.com.minegames.core.domain.Local;
-import br.com.minegames.core.json.JSONParser;
+import br.com.minegames.core.logging.Logger;
 
 public class LocationUtil {
 	
 	public static Location getRandomLocationXYZ( World _world, Area3D area ) {
 		Local pointA = area.getPointA();
 		Local pointB = area.getPointB();
-		
-		Bukkit.getConsoleSender().sendMessage(JSONParser.getInstance().toJSONString(pointA));
-		Bukkit.getConsoleSender().sendMessage(JSONParser.getInstance().toJSONString(pointB));
 		
 		int xSize =  Math.abs(pointB.getX() - ( pointA.getX() ) );
 		int ySize =  Math.abs(pointB.getY() - ( pointA.getY() ) );
@@ -62,7 +59,7 @@ public class LocationUtil {
 			z = area.getPointB().getZ() + z;
 		}
 		
-		Bukkit.getConsoleSender().sendMessage("x: " + x + " - y: " + y + " z: " + z);
+		Logger.debug("getRamdomLocationXYZ - x: " + x + " - y: " + y + " z: " + z);
 		
 		Location spawnLocation = new Location(_world, x, y, z);
 		return spawnLocation;
@@ -74,4 +71,20 @@ public class LocationUtil {
 		System.out.println(Math.abs(+9-(-3)));
 		System.out.println(Math.abs(+9-(3)));
 	}
+
+	public static Location getMiddle(World world, Area3D spawnPoint) {
+        int middleX = (spawnPoint.getPointA().getX() + spawnPoint.getPointB().getX()) / 2;
+        int middleZ = (spawnPoint.getPointA().getZ() + spawnPoint.getPointB().getZ()) / 2;
+        Location l = new Location(world, middleX, spawnPoint.getPointA().getY(), middleZ);
+        return l;
+	}
+
+	/*
+	public Location getMiddle(World world) {
+        int middleX = (this.pointA.getX() + this.pointB.getX()) / 2;
+        int middleZ = (this.pointA.getZ() + this.pointB.getZ()) / 2;
+        Location l = new Location(world, middleX, pointA.getY(), middleZ);
+        return l;
+    }
+    */
 }

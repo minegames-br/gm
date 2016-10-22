@@ -4,12 +4,9 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.UUID;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.persistence.Query;
 
-import org.apache.logging.log4j.LogManager;
+import org.jboss.logging.Logger;
 
 import br.com.minegames.core.domain.Game;
 import br.com.minegames.core.domain.GameInstance;
@@ -17,22 +14,14 @@ import br.com.minegames.core.domain.GameState;
 import br.com.minegames.core.domain.ServerInstance;
 import br.com.minegames.gamemanager.dao.GameDAO;
 
-public class GameService {
+public class GameService extends Service {
 
-	protected EntityManagerFactory emf = Persistence.createEntityManagerFactory("game-manager"); 
-	protected EntityManager em;
-	
-	protected void startTransaction() {
-		this.em = emf.createEntityManager();
-		em.getTransaction().begin();
-	}
-	
 	public UUID createGame(Game game) {
 		startTransaction();
 		GameDAO dao = new GameDAO(em);
 		dao.save(game);
 		commitTransaction();
-		LogManager.getLogger(GameService.class).info("uuid: " + game.getGame_uuid());
+		Logger.getLogger(GameService.class).info("uuid: " + game.getGame_uuid());
 		return game.getGame_uuid();
 	}
 	
@@ -42,10 +31,6 @@ public class GameService {
 		Game game = dao.find(uuid);
 		commitTransaction();
 		return game;
-	}
-	
-	public void commitTransaction() {
-		em.getTransaction().commit();
 	}
 	
 	public Collection<Game> findAll() {
@@ -60,7 +45,7 @@ public class GameService {
 		startTransaction();
 		em.remove(game);
 		commitTransaction();
-		LogManager.getLogger(GameService.class).info("uuid: " + game.getGame_uuid() + " deletado");
+		Logger.getLogger(GameService.class).info("uuid: " + game.getGame_uuid() + " deletado");
 	}
 	
 	public void startNewGame(ServerInstance server, Game game) {

@@ -1,15 +1,27 @@
 package br.com.minegames.core.logging;
 
-import org.bukkit.Bukkit;
+import java.util.logging.Level;
 
-import br.com.minegames.core.util.Utils;
+import org.bukkit.Bukkit;
 
 public class Logger {
 
-	public static void log(String message) {
+	public static void debug(String msg) {
 		
-		Bukkit.getConsoleSender().sendMessage(Utils.color("&6" + message ));
-		
+		Bukkit.getLogger().log(Level.FINE, msg);
 	}
+
+	public static void info(String msg) {
+		Bukkit.getLogger().log(Level.INFO, msg);
+	}
+	
+	public static void trace(String msg) {
+		Bukkit.getLogger().log(Level.FINER, msg);
+	}
+	
+	public static void finest(String msg) {
+		Bukkit.getLogger().log(Level.FINEST, msg);
+	}
+	
 	
 }

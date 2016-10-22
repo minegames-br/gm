@@ -47,10 +47,6 @@ public class Config extends TransferObject {
 		this.value = value;
 	}
 
-	public int getIntValue() {
-		return Integer.parseInt(value);
-	}
-	
 
 	
 }

@@ -32,6 +32,14 @@ public class Local  extends TransferObject {
 		this.z = z;
 	}
 	
+	public UUID getLocal_uuid() {
+		return local_uuid;
+	}
+
+	public void setLocal_uuid(UUID local_uuid) {
+		this.local_uuid = local_uuid;
+	}
+
 	public int getX() {
 		return x;
 	}

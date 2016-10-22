@@ -9,15 +9,18 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.bukkit.Bukkit;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import br.com.minegames.core.json.JSONParser;
 
@@ -30,19 +33,20 @@ public class GameInstance extends TransferObject {
 	@Column(columnDefinition = "BINARY(16)")
 	private UUID gi_uuid;
 	
-	@OneToOne
+	@OneToOne(fetch=FetchType.EAGER)
 	private Game game;
 	
-	@OneToOne 
+	@ManyToOne(fetch=FetchType.EAGER) 
 	private ServerInstance server;
 
-	@OneToOne
+	@OneToOne(fetch=FetchType.EAGER)
 	private GameWorld world;
 	
-	@OneToOne
+	@OneToOne(fetch=FetchType.EAGER)
 	private Arena arena;
 	
-	@OneToMany
+	@LazyCollection(LazyCollectionOption.FALSE)
+	@OneToMany(fetch=FetchType.EAGER)
 	private List<Config> configs;
 	
 	@Temporal(TemporalType.TIMESTAMP)
@@ -110,23 +114,6 @@ public class GameInstance extends TransferObject {
 		this.configs = configs;
 	}
 	
-	public int getConfigIntValue(String configName) {
-		Config config = null;
-		for(Config c: configs) {
-			if(c.getName().equalsIgnoreCase(configName)){
-				config = c;
-				break;
-			}
-		}
-		
-		if(config != null) {
-			return config.getIntValue();
-		} else {
-			return 0;
-		}
-		
-	}
-
 	public Area3D getArea(String name) {
 		Area3D area = null;
 		for(Area3D a : this.arena.getAreas() ) {
@@ -142,11 +129,9 @@ public class GameInstance extends TransferObject {
 
 	public List<Area3D> getAreaListByType(String areaType) {
 
-		Bukkit.getLogger().info("area type: " + areaType);
 		List<Area3D> areas = new ArrayList<Area3D>();
 		
 		for(Area3D area: this.arena.getAreas()) {
-			Bukkit.getLogger().info("area type: " + areaType);
 			if(area.getType().equalsIgnoreCase(areaType)) {
 				areas.add(area);
 			}

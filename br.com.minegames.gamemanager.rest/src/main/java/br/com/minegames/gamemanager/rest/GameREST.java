@@ -2,6 +2,7 @@ package br.com.minegames.gamemanager.rest;
 
 import java.util.Collection;
 import java.util.UUID;
+import java.util.logging.LogManager;
 
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -12,7 +13,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.apache.logging.log4j.LogManager;
+import org.jboss.logging.Logger;
 
 import br.com.minegames.core.domain.Game;
 import br.com.minegames.core.domain.GameInstance;
@@ -25,7 +26,7 @@ public class GameREST {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response create(String json) {
-		LogManager.getLogger(GameREST.class).info("json recebido: " + json );
+		Logger.getLogger(GameREST.class).info("json recebido: " + json );
 		GameService service = new GameService();
 		Game game = (Game)JSONParser.getInstance().toObject(json, Game.class);
 		if(game != null) {
@@ -42,7 +43,7 @@ public class GameREST {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response startNewGame(String json) {
-		LogManager.getLogger(GameREST.class).info("json recebido: " + json );
+		Logger.getLogger(GameREST.class).info("json recebido: " + json );
 		GameService service = new GameService();
 		GameInstance domain = (GameInstance)JSONParser.getInstance().toObject(json, GameInstance.class);
 		if(domain != null) {
@@ -58,7 +59,7 @@ public class GameREST {
 	@Path("/{uuid}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response get(@PathParam("uuid") String _uuid) {
-		LogManager.getLogger(GameREST.class).info("uuid recebido: ");
+		Logger.getLogger(GameREST.class).info("uuid recebido: ");
 		GameService service = new GameService();
 		Game game = service.find( UUID.fromString(_uuid) );
 		if( game != null) {
@@ -83,7 +84,7 @@ public class GameREST {
 	@Path("/{uuid}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response delete(@PathParam("uuid") String _uuid) {
-		LogManager.getLogger(GameREST.class).info("uuid recebido: ");
+		Logger.getLogger(GameREST.class).info("uuid recebido: ");
 		GameService service = new GameService();
 		Game game = service.find( UUID.fromString(_uuid) );
 		if( game != null) {

@@ -3,32 +3,21 @@ package br.com.minegames.gamemanager.service;
 import java.util.Collection;
 import java.util.UUID;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.persistence.Query;
 
-import org.apache.logging.log4j.LogManager;
+import org.jboss.logging.Logger;
 
 import br.com.minegames.core.domain.ServerInstance;
 import br.com.minegames.gamemanager.dao.ServerDAO;
 
-public class ServerService {
-
-	protected EntityManagerFactory emf = Persistence.createEntityManagerFactory("game-manager"); 
-	protected EntityManager em;
-	
-	protected void startTransaction() {
-		this.em = emf.createEntityManager();
-		em.getTransaction().begin();
-	}
+public class ServerService extends Service {
 	
 	public UUID create(ServerInstance server) {
 		startTransaction();
 		ServerDAO dao = new ServerDAO(em);
 		dao.save(server);
 		commitTransaction();
-		LogManager.getLogger(ServerService.class).info("uuid: " + server.getServer_uuid());
+		Logger.getLogger(ServerService.class).info("uuid: " + server.getServer_uuid());
 		return server.getServer_uuid();
 	}
 	
@@ -40,13 +29,9 @@ public class ServerService {
 		return server;
 	}
 	
-	public void commitTransaction() {
-		em.getTransaction().commit();
-	}
-	
 	public Collection<ServerInstance> findAll() {
 		startTransaction();
-		Query query = em.createQuery("SELECT s FROM Server s");
+		Query query = em.createQuery("SELECT si FROM ServerInstance si");
 		Collection<ServerInstance> list = (Collection<ServerInstance>) query.getResultList();
 		commitTransaction();
 		return list;
@@ -56,7 +41,7 @@ public class ServerService {
 		startTransaction();
 		em.remove(server);
 		commitTransaction();
-		LogManager.getLogger(ServerService.class).info("uuid: " + server.getServer_uuid() + " deletado");
+		Logger.getLogger(ServerService.class).info("uuid: " + server.getServer_uuid() + " deletado");
 	}
 	
 }

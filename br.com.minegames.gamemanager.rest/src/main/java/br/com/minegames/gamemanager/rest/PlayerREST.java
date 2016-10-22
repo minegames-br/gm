@@ -12,7 +12,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.apache.logging.log4j.LogManager;
+import org.jboss.logging.Logger;
 
 import br.com.minegames.core.domain.GamePlayer;
 import br.com.minegames.core.json.JSONParser;
@@ -24,7 +24,7 @@ public class PlayerREST {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response create(String json) {
-		LogManager.getLogger(PlayerREST.class).info("json recebido: " + json );
+		Logger.getLogger(PlayerREST.class).info("json recebido: " + json );
 		PlayerService service = new PlayerService();
 		GamePlayer domain = (GamePlayer)JSONParser.getInstance().toObject(json, GamePlayer.class);
 		if(domain != null) {
@@ -41,7 +41,7 @@ public class PlayerREST {
 	@Path("/{uuid}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response get(@PathParam("uuid") String _uuid) {
-		LogManager.getLogger(PlayerREST.class).info("uuid recebido: ");
+		Logger.getLogger(PlayerREST.class).info("uuid recebido: ");
 		PlayerService service = new PlayerService();
 		GamePlayer domain = service.find( UUID.fromString(_uuid) );
 		if( domain != null) {
@@ -66,7 +66,7 @@ public class PlayerREST {
 	@Path("/{uuid}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response delete(@PathParam("uuid") String _uuid) {
-		LogManager.getLogger(PlayerREST.class).info("uuid recebido: ");
+		Logger.getLogger(PlayerREST.class).info("uuid recebido: ");
 		PlayerService service = new PlayerService();
 		GamePlayer domain = service.find( UUID.fromString(_uuid) );
 		if( domain != null) {

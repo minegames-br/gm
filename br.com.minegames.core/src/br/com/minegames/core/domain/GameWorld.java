@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 @Entity
 public class GameWorld  extends TransferObject {
@@ -20,6 +22,7 @@ public class GameWorld  extends TransferObject {
 	@Column(columnDefinition = "BINARY(16)")
 	private UUID world_uuid;	
 	
+	@LazyCollection(LazyCollectionOption.FALSE)
 	@OneToMany
 	private List<Arena> arenas;
 	

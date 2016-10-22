@@ -8,8 +8,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
-import org.bukkit.Location;
-import org.bukkit.World;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
@@ -21,7 +19,10 @@ public class Area3D  extends TransferObject {
 	private UUID area_uuid;
 	
 	private String name;
-	
+
+	@OneToOne
+	private Arena arena;
+
 	@OneToOne
 	private Local pointA;
 
@@ -52,25 +53,8 @@ public class Area3D  extends TransferObject {
 		this.pointB = pointB;
 	}
 
-	public int getXSize() {
-		return this.pointB.getX()-this.pointA.getX();
-	}
-	
-	public int getYSize() {
-		return this.pointB.getY()-this.pointA.getY();
-	}
-	
-	public int getZSize() {
-		return this.pointB.getZ()-this.pointA.getZ();
-	}
-	
-	public Location getMiddle(World world) {
-        int middleX = (this.pointA.getX() + this.pointB.getX()) / 2;
-        int middleZ = (this.pointA.getZ() + this.pointB.getZ()) / 2;
-        Location l = new Location(world, middleX, pointA.getY(), middleZ);
-        return l;
-    }
-
+	/*
+	*/
 	public UUID getArea_uuid() {
 		return area_uuid;
 	}
@@ -93,6 +77,14 @@ public class Area3D  extends TransferObject {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public Arena getArena() {
+		return arena;
+	}
+
+	public void setArena(Arena arena) {
+		this.arena = arena;
 	}
 	
 }

@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 @Entity
 public class ServerInstance extends TransferObject {
@@ -25,6 +27,7 @@ public class ServerInstance extends TransferObject {
 	private String ip_address;
 	private String hostname;
 	
+	@LazyCollection(LazyCollectionOption.FALSE)
 	@OneToMany
 	private List<Game> games;
 	
