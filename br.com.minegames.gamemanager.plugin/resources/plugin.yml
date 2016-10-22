@@ -1,0 +1,7 @@
+name: MineGamesGameManagerPlugin
+author: joaoemilio
+version: 1.0.0
+main: br.com.minegames.gamemanager.plugin.MineGamesPlugin
+depend: [GameManager-Client,MineGames-Core]
+commands:
+  mg:
