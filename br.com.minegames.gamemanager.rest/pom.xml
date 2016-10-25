@@ -87,6 +87,7 @@
   			<groupId>br.com.minegames.core</groupId>
   			<artifactId>br.com.minegames.core</artifactId>
   			<version>1.0.0</version>
+  			<scope>runtime</scope>
   		</dependency>
 
     	<!--Spigot API-->

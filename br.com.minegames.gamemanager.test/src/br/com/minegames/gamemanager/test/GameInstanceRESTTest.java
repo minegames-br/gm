@@ -26,7 +26,7 @@ public class GameInstanceRESTTest {
 	public static void main(String args[]) {
 
         String jsonString;
-        GameInstance domain = GameDelegate.getInstance().joinGame("arena1");
+        GameInstance domain = GameDelegate.getInstance().joinGame("arena2");
         
         Game game = new Game();
         domain.setGame(game);
@@ -105,7 +105,7 @@ public class GameInstanceRESTTest {
 	}
 	
 	public static String post(String path, String jsonString) {
-		String restURL = "http://localhost:8080/gamemanager/webresources";
+		String restURL = "http://services.minegames.com.br:8080/gamemanager/webresources";
 		//String restURL = "http://jamine-bot.mybluemix.net/webresources";
         Client client = ClientBuilder.newClient();
         WebTarget target = client.target(restURL);

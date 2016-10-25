@@ -5,37 +5,6 @@
   <version>1.0.0</version>
   <name>br.com.minegames.core</name>
 
-
-	<properties>
-		<targetDir>D:/minecraft/</targetDir>
-	</properties>
-	<profiles>
-		<profile>
-			<id>renato</id>
-			<activation>
-				<property>
-					<name>developer</name>
-					<value>renato</value>
-				</property>
-			</activation>
-			<properties>
-				<targetDir>c:/temp/</targetDir>
-			</properties>
-		</profile>
-		<profile>
-			<id>joao</id>
-			<activation>
-				<property>
-					<name>developer</name>
-					<value>joao</value>
-				</property>
-			</activation>
-			<properties>
-				<targetDir>D:/minecraft/minecraft-arqueiro/plugins</targetDir>
-			</properties>
-		</profile>
-	</profiles>
-
   <build>
     <sourceDirectory>src</sourceDirectory>
     <plugins>
@@ -47,32 +16,7 @@
           <target>1.7</target>
         </configuration>
       </plugin>
-		<plugin>
-    		<artifactId>maven-resources-plugin</artifactId>
-    		<version>3.0.0</version>
-    		<executions>
-        		<execution>
-            		<id>copy-files-on-build</id>
-            		<phase>validate</phase>
-            		<goals>
-                		<goal>copy-resources</goal>
-            		</goals>
-            		<configuration>
-                		<outputDirectory>${targetDir}</outputDirectory>
-                		<resources>
-                    		<resource>
-								<directory>target</directory>
-                        		<includes>
-                        			<include>*.jar</include>
-                        		</includes>
-                        		<filtering>false</filtering>
-                    		</resource>
-                		</resources>
-            		</configuration>
-        		</execution>
-    		</executions>
-		</plugin>
-    </plugins>
+     </plugins>
   </build>
 	<repositories>
     	<repository>
@@ -85,6 +29,20 @@
 		</repository>
 	</repositories>
 	<dependencies>
+		<dependency>
+		    <groupId>javax.ws.rs</groupId>
+		    <artifactId>javax.ws.rs-api</artifactId>
+		    <version>2.0.1</version>
+		    <scope>provided</scope>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.glassfish.jersey.connectors/jersey-apache-connector -->
+		<dependency>
+		    <groupId>org.glassfish.jersey.connectors</groupId>
+		    <artifactId>jersey-apache-connector</artifactId>
+		    <version>2.23.2</version>
+		    <scope>provided</scope>
+		</dependency>
 		<dependency>
 		    <groupId>com.sk89q.worldedit</groupId>
 		    <artifactId>worldedit-bukkit</artifactId>
@@ -104,11 +62,13 @@
 		    <groupId>com.fasterxml.jackson.core</groupId>
 		    <artifactId>jackson-core</artifactId>
 		    <version>2.8.3</version>
+		    <scope>provided</scope>
 		</dependency>
 		<dependency>
 		    <groupId>com.fasterxml.jackson.core</groupId>
 		    <artifactId>jackson-databind</artifactId>
 		    <version>2.8.3</version>
+		    <scope>provided</scope>
 		</dependency>
 			<dependency>
 			    <groupId>org.hibernate</groupId>
