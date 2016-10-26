@@ -14,14 +14,14 @@ import br.com.minegames.core.domain.ServerInstance;
 import br.com.minegames.gamemanager.client.GameManagerDelegate;
 import br.com.minegames.gamemanager.plugin.MineGamesPlugin;
 
-public class DefineAreaAction extends CommandAction {
+public class DefineArenaAction extends CommandAction {
 
-	public DefineAreaAction(JavaPlugin plugin, CommandSender arg0, Command arg1, String arg2, String[] arguments) {
+	public DefineArenaAction(JavaPlugin plugin, CommandSender arg0, Command arg1, String arg2, String[] arguments) {
 		super(plugin, arg0, arg1, arg2, arguments);
 	}
 
 	public void execute() {
-		Bukkit.getLogger().info("Executando commando Define Area " + this.commandSender + " "
+		Bukkit.getLogger().info("Executando commando Set Arena " + this.commandSender + " "
 				+ "\n" + this.command 
 				+ "\n" + this.arg2
 				+ "\n" + this.arguments);
@@ -40,32 +40,29 @@ public class DefineAreaAction extends CommandAction {
 				return;
 			}
 		}
-		Arena arena = p.getArena();
-		if(arena == null) {
+		
+		if(p.getArenas() == null || p.getArenas().size() == 0) {
 			if(player != null) {
 				player.sendMessage("Find available arenas: /mg listarenas [name]");
-				player.sendMessage("Please, set the active Arena first: /mg setarena <#>");
 				return;
 			}
 		}
 		
-		if(arguments.length < 2) {
-			player.sendMessage("Please, send a name for the area. /mg addarea <name> [category]");
-			return;
+		String sIndexArena = arguments[1];
+		player.sendMessage("You have chosen: " + sIndexArena);
+		try{
+			Integer indexArena = Integer.parseInt(sIndexArena);
+			if((indexArena-1) > p.getArenas().size()) {
+				player.sendMessage("You have " + p.getArenas().size() + " arenas that matched your query.");
+				return;
+			}
+			Arena arena = p.getArenas().get(indexArena);
+			p.setArena(arena);
+			player.sendMessage("You have selected Arena: " + arena.getName() );
+		}catch(Exception e) {
+			e.printStackTrace();
+			player.sendMessage("Try again. You have " + p.getArenas().size() + " arenas that matched your query.");
 		}
-		String areaName = arguments[1];
 		
-		ServerInstance server = delegate.findServerInstance(server_uuid);
-		Area3D area = p.getSelection();
-		area.setName(areaName);
-		if(arguments.length == 3) {
-			area.setType(arguments[2]);			
-		}
-		
-		arena = delegate.addArea3D(arena, area);
-		player.sendMessage("Listing Areas...");
-		for(Area3D a: arena.getAreas()) {
-			player.sendMessage(a.getName() + ":" + a.getType() );
-		}
 	}
 }

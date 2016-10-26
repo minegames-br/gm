@@ -25,7 +25,7 @@ public class SelectAreaAction extends CommandAction {
 		Player player = null; 
 		if( this.commandSender instanceof Player ) {
 			player = (Player)commandSender;
-			player.getInventory().addItem(new ItemStack(Material.WOOD_AXE));
+			player.getInventory().setItemInMainHand(new ItemStack(Material.WOOD_AXE));
 		}
 
 	}

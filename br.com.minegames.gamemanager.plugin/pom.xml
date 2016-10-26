@@ -4,36 +4,6 @@
   <artifactId>br.com.minegames.gamemanager.plugin</artifactId>
   <version>1.0.0</version>
 
-	<properties>
-		<targetDir>D:/minecraft/</targetDir>
-	</properties>
-	<profiles>
-		<profile>
-			<id>renato</id>
-			<activation>
-				<property>
-					<name>developer</name>
-					<value>renato</value>
-				</property>
-			</activation>
-			<properties>
-				<targetDir>c:/temp/</targetDir>
-			</properties>
-		</profile>
-		<profile>
-			<id>joao</id>
-			<activation>
-				<property>
-					<name>developer</name>
-					<value>joao</value>
-				</property>
-			</activation>
-			<properties>
-				<targetDir>D:/minecraft/minecraft-arqueiro/plugins</targetDir>
-			</properties>
-		</profile>
-	</profiles>
-
   <build>
     <sourceDirectory>src</sourceDirectory>
     <plugins>
@@ -46,32 +16,6 @@
         </configuration>
       </plugin>
 
-		<plugin>
-    		<artifactId>maven-resources-plugin</artifactId>
-    		<version>3.0.0</version>
-    		<executions>
-        		<execution>
-            		<id>copy-files-on-build</id>
-            		<phase>validate</phase>
-            		<goals>
-                		<goal>copy-resources</goal>
-            		</goals>
-            		<configuration>
-                		<outputDirectory>${targetDir}</outputDirectory>
-                		<resources>
-                    		<resource>
-								<directory>target</directory>
-                        		<includes>
-                        			<include>*.jar</include>
-                        		</includes>
-                        		<filtering>false</filtering>
-                    		</resource>
-                		</resources>
-            		</configuration>
-        		</execution>
-    		</executions>
-		</plugin>
-
       </plugins>
   </build>
 	<repositories>
@@ -79,6 +23,10 @@
         	<id>spigot-repo</id>
         	<url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
     	</repository>
+		<repository>
+			<id>sk89q-repo</id>
+			<url>http://maven.sk89q.com/repo/</url>
+		</repository>
 	</repositories>
 
 	<dependencies>
@@ -109,5 +57,18 @@
   			<version>1.0.0</version>
   		</dependency>
 
+		<dependency>
+		    <groupId>com.sk89q.worldedit</groupId>
+		    <artifactId>worldedit-bukkit</artifactId>
+		    <version>6.1.3-SNAPSHOT</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-multipart-provider</artifactId>
+			<version>2.2.1.GA</version>
+		</dependency>
+  
+		
 	</dependencies>
 </project>

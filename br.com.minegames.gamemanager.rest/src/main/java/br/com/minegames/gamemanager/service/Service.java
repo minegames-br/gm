@@ -7,15 +7,32 @@ import javax.persistence.Persistence;
 public class Service {
 	protected EntityManagerFactory emf = Persistence.createEntityManagerFactory("game-manager"); 
 	protected EntityManager em;
+	protected boolean slave = false; 
+	
+	public Service() {
 		
+	}
+	
+	public Service(EntityManager em) {
+		this.em = em;
+		this.slave = true;
+	}
+	
 	protected void startTransaction() {
-		this.em = emf.createEntityManager();
-		em.getTransaction().begin();
+		if(!this.slave) {
+			this.em = emf.createEntityManager();
+			em.getTransaction().begin();
+		}
 	}
 	
 	public void commitTransaction() {
-		em.getTransaction().commit();
-		em.close();
+		if(!this.slave) {
+			try{
+				em.getTransaction().commit();
+			}finally{
+				em.close();
+			}
+		}
 	}
 	
 

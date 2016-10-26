@@ -26,13 +26,36 @@
 		    <version>2.0.1</version>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.glassfish.jersey.connectors/jersey-apache-connector -->
-		<dependency>
-		    <groupId>org.glassfish.jersey.connectors</groupId>
-		    <artifactId>jersey-apache-connector</artifactId>
-		    <version>2.23.2</version>
-		</dependency>
-
+<!-- core library -->
+    <dependency>
+        <groupId>org.jboss.resteasy</groupId>
+         <artifactId>resteasy-jaxrs</artifactId>
+        <version>2.3.1.GA</version>
+    </dependency>
+    <dependency>
+        <groupId>net.sf.scannotation</groupId>
+        <artifactId>scannotation</artifactId>
+        <version>1.0.2</version>
+    </dependency>
+    <!-- JAXB provider -->
+   <dependency>
+        <groupId>org.jboss.resteasy</groupId>
+        <artifactId>resteasy-jaxb-provider</artifactId>
+        <version>2.3.1.GA</version>
+    </dependency> 
+    <!-- Multipart support -->
+    <dependency>
+        <groupId>org.jboss.resteasy</groupId>
+        <artifactId>resteasy-multipart-provider</artifactId>
+        <version>2.3.1.GA</version>
+    </dependency>
+    <!-- For better I/O control -->
+    <dependency>
+        <groupId>commons-io</groupId>
+        <artifactId>commons-io</artifactId>
+        <version>2.4</version>
+    </dependency>
+    
   		<dependency>
   			<groupId>br.com.minegames.core</groupId>
   			<artifactId>br.com.minegames.core</artifactId>

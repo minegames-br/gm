@@ -19,9 +19,15 @@ public class GamePlayer extends TransferObject {
 	private UUID gp_uuid;
 	
 	//Minecraft/Mojang UUID
+	@Column(unique=true)
 	private String player_uuid;
+	
+	@Column(unique=true)
 	private String email;
+	
 	private String name;
+	
+	@Column(unique=true)
 	private String nickName;
 	public UUID getGp_uuid() {
 		return gp_uuid;

@@ -15,11 +15,19 @@
             <Filter type="MarkerFilter" marker="EXCEPTION" onMatch="ACCEPT" onMismatch="DENY"/>
           </Filters>
         </Appender>
-      </Appenders>
+		  <Appenders>
+		    <File name="MyFile" fileName="logs/minegames.log">
+		      <PatternLayout>
+		        <Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
+		      </PatternLayout>
+		    </File>
+		  </Appenders>
+        </Appenders>
      
       <Loggers>
-        <Root level="FINEST">
+        <Root level="all">
           <AppenderRef ref="STDOUT"/>
+          <AppenderRef ref="MyFile"/>
         </Root>
       </Loggers>
      

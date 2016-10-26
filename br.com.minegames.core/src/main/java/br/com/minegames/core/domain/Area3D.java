@@ -2,6 +2,7 @@ package br.com.minegames.core.domain;
 
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,15 +19,16 @@ public class Area3D  extends TransferObject {
 	@Column(columnDefinition = "BINARY(16)")
 	private UUID area_uuid;
 	
+	@Column(unique=true)
 	private String name;
 
 	@OneToOne
 	private Arena arena;
 
-	@OneToOne
+	@OneToOne(cascade=CascadeType.MERGE)
 	private Local pointA;
 
-	@OneToOne
+	@OneToOne(cascade=CascadeType.MERGE)
 	private Local pointB;
 	
 	private String type;

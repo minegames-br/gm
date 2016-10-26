@@ -10,24 +10,22 @@ import javax.persistence.Id;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
-public class ServerInstance extends TransferObject {
+public class Schematic extends TransferObject {
 
 	@Id
 	@GeneratedValue(generator = "uuid2")
 	@GenericGenerator(name = "uuid2", strategy = "uuid2")
 	@Column(columnDefinition = "BINARY(16)")
-	private UUID server_uuid;	
-	@Column(unique=true)
-	private String name;
-	private String description;
-	private String ip_address;
-	private String hostname;
+	private UUID schematic_uuid;	
 	
-	public UUID getServer_uuid() {
-		return server_uuid;
+	private String name;
+	private String path;
+	private String description;
+	public UUID getSchematic_uuid() {
+		return schematic_uuid;
 	}
-	public void setServer_uuid(UUID _uuid) {
-		this.server_uuid = _uuid;
+	public void setSchematic_uuid(UUID schematic_uuid) {
+		this.schematic_uuid = schematic_uuid;
 	}
 	public String getName() {
 		return name;
@@ -35,23 +33,17 @@ public class ServerInstance extends TransferObject {
 	public void setName(String name) {
 		this.name = name;
 	}
+	public String getPath() {
+		return path;
+	}
+	public void setPath(String path) {
+		this.path = path;
+	}
 	public String getDescription() {
 		return description;
 	}
 	public void setDescription(String description) {
 		this.description = description;
-	}
-	public String getIp_address() {
-		return ip_address;
-	}
-	public void setIp_address(String ip_address) {
-		this.ip_address = ip_address;
-	}
-	public String getHostname() {
-		return hostname;
-	}
-	public void setHostname(String hostname) {
-		this.hostname = hostname;
 	}
 	
 	

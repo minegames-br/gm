@@ -16,6 +16,9 @@
 		<class>br.com.minegames.core.domain.Area3D</class>
 		<class>br.com.minegames.core.domain.Local</class>
 		<class>br.com.minegames.core.domain.Config</class>
+		<class>br.com.minegames.core.domain.GameConfig</class>
+		<class>br.com.minegames.core.domain.GameArenaConfig</class>
+		<class>br.com.minegames.core.domain.Schematic</class>
 		<properties>
 			<!-- 
 			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />

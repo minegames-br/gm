@@ -7,8 +7,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.LazyCollection;
@@ -26,9 +26,12 @@ public class Arena extends TransferObject {
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@OneToMany
 	private List<Area3D> areas;
-	
+	@Column(unique=true)
 	private String name;
 	private String description;
+	
+	@OneToOne
+	private Schematic schematic;
 	
 	public UUID getArena_uuid() {
 		return arena_uuid;
@@ -54,7 +57,11 @@ public class Arena extends TransferObject {
 	public void setAreas(List<Area3D> areas) {
 		this.areas = areas;
 	}
-
-	
+	public Schematic getSchematic() {
+		return schematic;
+	}
+	public void setSchematic(Schematic schematic) {
+		this.schematic = schematic;
+	}
 	
 }

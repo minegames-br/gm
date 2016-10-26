@@ -2,7 +2,6 @@ package br.com.minegames.gamemanager.rest;
 
 import java.util.Collection;
 import java.util.UUID;
-import java.util.logging.LogManager;
 
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -16,6 +15,7 @@ import javax.ws.rs.core.Response;
 import org.jboss.logging.Logger;
 
 import br.com.minegames.core.domain.Game;
+import br.com.minegames.core.domain.GameConfig;
 import br.com.minegames.core.domain.GameInstance;
 import br.com.minegames.core.json.JSONParser;
 import br.com.minegames.gamemanager.service.GameService;
@@ -52,6 +52,22 @@ public class GameREST {
 		    return Response.ok(json, MediaType.APPLICATION_JSON).build();
 		} else {
 			return Response.status(Response.Status.CONFLICT).entity("Não é possivel criar o jogo com as informações fornecidas").build();
+		}
+	}
+	
+	@Path("/config/add")
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response addGameConfig(String json) {
+		Logger.getLogger(GameREST.class).info("json recebido: " + json );
+		GameService service = new GameService();
+		GameConfig domain = (GameConfig)JSONParser.getInstance().toObject(json, GameConfig.class);
+		if(domain != null) {
+			service.addGameConfig(domain);
+			json = JSONParser.getInstance().toJSONString(domain);
+		    return Response.ok(json, MediaType.APPLICATION_JSON).build();
+		} else {
+			return Response.status(Response.Status.CONFLICT).entity("Não é possivel criar o config com as informações fornecidas").build();
 		}
 	}
 	

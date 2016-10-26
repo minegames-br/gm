@@ -25,6 +25,8 @@ public class PlayerOnClick implements Listener {
     	Bukkit.getLogger().info("PlayerInteractEvent - mg gamemanager - Interact" );
     	Bukkit.getLogger().info("event.getAction() : " + event.getAction());
     	
+    	Bukkit.getLogger().info("What is in hand?" + event.getPlayer().getInventory().getItemInMainHand());
+    	
     	if(event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_AIR) {
     		controller.setSelectionPointA(event.getClickedBlock().getLocation());
     		Local l = controller.getSelection().getPointA();

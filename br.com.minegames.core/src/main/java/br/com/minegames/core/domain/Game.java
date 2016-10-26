@@ -1,12 +1,10 @@
 package br.com.minegames.core.domain;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -24,12 +22,17 @@ public class Game extends TransferObject {
 	@Column(columnDefinition = "BINARY(16)")
 	private UUID game_uuid;	
 	
+	@Column(unique=true)
 	private String name;
 	private String description;
 	
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@OneToMany
-	private List<ServerInstance> servers;
+	private List<GameConfig> gameConfigList;
+	
+	@LazyCollection(LazyCollectionOption.FALSE)
+	@OneToMany
+	private List<Arena> arenas;
 	
 	public UUID getGame_uuid() {
 		return game_uuid;
@@ -49,19 +52,17 @@ public class Game extends TransferObject {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public List<ServerInstance> getServers() {
-		return servers;
+	public List<GameConfig> getGameConfigList() {
+		return gameConfigList;
 	}
-	public void setServers(List<ServerInstance> servers) {
-		this.servers = servers;
+	public void setGameConfigList(List<GameConfig> gameConfigList) {
+		this.gameConfigList = gameConfigList;
 	}
-	
-	public void addServer(ServerInstance server) {
-		if(servers == null) {
-			servers = new ArrayList<ServerInstance>();
-		}
-		this.servers.add(server);
+	public List<Arena> getArenas() {
+		return arenas;
 	}
-	
+	public void setArenas(List<Arena> arenas) {
+		this.arenas = arenas;
+	}
 	
 }

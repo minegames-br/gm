@@ -4,10 +4,14 @@ import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 @Entity
 public class Local  extends TransferObject {
@@ -59,6 +63,9 @@ public class Local  extends TransferObject {
 		this.z = z;
 	}
 	
-	
+	@Override
+	public String toString() {
+		return "" + x + "," + y + "," + z;
+	}
 	
 }

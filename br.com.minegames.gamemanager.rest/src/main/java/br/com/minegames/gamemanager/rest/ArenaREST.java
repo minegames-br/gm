@@ -14,6 +14,7 @@ import javax.ws.rs.core.Response;
 
 import br.com.minegames.core.domain.Arena;
 import br.com.minegames.core.json.JSONParser;
+import br.com.minegames.core.logging.MGLogger;
 import br.com.minegames.gamemanager.service.ArenaService;
 
 @Path("/arena")
@@ -23,9 +24,10 @@ public class ArenaREST {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response create(String json) {
 		ArenaService service = new ArenaService();
+		System.out.println("create arena: " + json);
 		Arena domain = (Arena)JSONParser.getInstance().toObject(json, Arena.class);
 		if(domain != null) {
-			UUID uuid = service.create(domain);
+			UUID uuid = service.save(domain);
 			domain.setArena_uuid(uuid);
 			json = JSONParser.getInstance().toJSONString(domain);
 		    return Response.ok(json, MediaType.APPLICATION_JSON).build();

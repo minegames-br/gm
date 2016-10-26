@@ -8,9 +8,10 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import br.com.minegames.core.command.CommandAction;
-import br.com.minegames.core.logging.Logger;
+import br.com.minegames.core.logging.MGLogger;
 
 public class MineGamesCommand  implements CommandExecutor {
 
@@ -25,24 +26,36 @@ public class MineGamesCommand  implements CommandExecutor {
     
 	@Override
 	public boolean onCommand(CommandSender arg0, Command arg1, String arg2, String[] arg3) {
-		Logger.debug( "CommandSender " + arg0.getName() );
-		Logger.debug( "Command " + arg1.getName() + " " + arg1.getLabel() + " " + arg1.getDescription() );
-		Logger.debug( "arg2 " + arg2);
-		Logger.info( "args length: " + arg3.length );
+		MGLogger.debug( "CommandSender " + arg0.getName() );
+		MGLogger.debug( "Command " + arg1.getName() + " " + arg1.getLabel() + " " + arg1.getDescription() );
+		MGLogger.debug( "arg2 " + arg2);
+		MGLogger.info( "args length: " + arg3.length );
 		for(String arg: arg3) {
-			Logger.info( "arg: " + arg );
+			MGLogger.info( "arg: " + arg );
 		}
 		
-		CommandAction action = getAction(arg0, arg1, arg2, arg3);
-		action.execute();
+		final CommandAction action = getAction(arg0, arg1, arg2, arg3);
+		
+        new BukkitRunnable() {
+            
+            @Override
+            public void run() {
+        		action.execute();
+            }
+            
+        }.runTaskLater(this.plugin, 1);		
 		return false;
 	}
 	
 	private void init() {
 		commandArgs.put("register", RegisterServerAction.class);
 		commandArgs.put("select", SelectAreaAction.class);
-		commandArgs.put("definearea", DefineAreaAction.class);
+		commandArgs.put("addarea", DefineAreaAction.class);
+		commandArgs.put("listareas", ListAreasAction.class);
 		commandArgs.put("listarenas", ListArenasAction.class);
+		commandArgs.put("setarena", DefineArenaAction.class);
+		commandArgs.put("createarena", CreateArenaAction.class);
+
 	}
 	
 	private CommandAction getAction(CommandSender sender, Command command, String arg2, String[] arg3) {
@@ -51,7 +64,7 @@ public class MineGamesCommand  implements CommandExecutor {
 		
 		try {
 			for(String key: commandArgs.keySet()) {
-				Logger.info(key + " " + actionName );
+				MGLogger.info(key + " " + actionName );
 				if(key.equalsIgnoreCase(actionName)) {
 					Class c = commandArgs.get(key);
 					Constructor cons = c.getConstructor(JavaPlugin.class, CommandSender.class, Command.class, String.class, String[].class);

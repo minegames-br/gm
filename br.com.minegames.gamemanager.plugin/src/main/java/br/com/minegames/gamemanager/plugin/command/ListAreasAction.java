@@ -11,18 +11,19 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import br.com.minegames.core.command.CommandAction;
+import br.com.minegames.core.domain.Area3D;
 import br.com.minegames.core.domain.Arena;
 import br.com.minegames.gamemanager.client.GameManagerDelegate;
 import br.com.minegames.gamemanager.plugin.MineGamesPlugin;
 
-public class ListArenasAction extends CommandAction {
+public class ListAreasAction extends CommandAction {
 
-	public ListArenasAction(JavaPlugin plugin, CommandSender arg0, Command arg1, String arg2, String[] arguments) {
+	public ListAreasAction(JavaPlugin plugin, CommandSender arg0, Command arg1, String arg2, String[] arguments) {
 		super(plugin, arg0, arg1, arg2, arguments);
 	}
 
 	public void execute() {
-		Bukkit.getLogger().info("Executando commando List Arenas " + this.commandSender + " "
+		Bukkit.getLogger().info("Executando commando List 3D Areas " + this.commandSender + " "
 				+ "\n" + this.command 
 				+ "\n" + this.arg2
 				+ "\n" + this.arguments);
@@ -30,21 +31,21 @@ public class ListArenasAction extends CommandAction {
 		Player player = null; 
 		if( this.commandSender instanceof Player ) {
 			player = (Player)commandSender;
+			player.getInventory().addItem(new ItemStack(Material.WOOD_AXE));
 		}else{
 			return;
 		}
 
 		String filterName = "";
-		if(arguments.length > 0) {
-			filterName = arguments[0];
+		if(arguments.length == 2) {
+			filterName = arguments[1];
 		}
 		GameManagerDelegate delegate = GameManagerDelegate.getInstance();
 		MineGamesPlugin p = (MineGamesPlugin)plugin;
-		List<Arena> arenas = delegate.findArenas(filterName);
-		p.setArenas(arenas);
+		Arena arena = delegate.findArena(p.getArena().getArena_uuid().toString());
 		int i = 0;
-		for(Arena arena: arenas) {
-			player.sendMessage((i++) + " - " + arena.getName() );
+		for(Area3D area: arena.getAreas()) {
+			player.sendMessage((i++) + " - " + area.getName() + ":" + area.getType() + ":" + area.getPointA() + "/" + area.getPointB() );
 		}
 	}
 }

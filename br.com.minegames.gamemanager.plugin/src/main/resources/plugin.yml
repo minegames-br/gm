@@ -1,4 +1,4 @@
-name: MineGamesGameManagerPlugin
+name: MGPlugin
 author: joaoemilio
 version: 1.0.0
 main: br.com.minegames.gamemanager.plugin.MineGamesPlugin

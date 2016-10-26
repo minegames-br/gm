@@ -8,7 +8,7 @@ import org.bukkit.World;
 
 import br.com.minegames.core.domain.Area3D;
 import br.com.minegames.core.domain.Local;
-import br.com.minegames.core.logging.Logger;
+import br.com.minegames.core.logging.MGLogger;
 
 public class LocationUtil {
 	
@@ -59,7 +59,7 @@ public class LocationUtil {
 			z = area.getPointB().getZ() + z;
 		}
 		
-		Logger.debug("getRamdomLocationXYZ - x: " + x + " - y: " + y + " z: " + z);
+		MGLogger.debug("getRamdomLocationXYZ - x: " + x + " - y: " + y + " z: " + z);
 		
 		Location spawnLocation = new Location(_world, x, y, z);
 		return spawnLocation;

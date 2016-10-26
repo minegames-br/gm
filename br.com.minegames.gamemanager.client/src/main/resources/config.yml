@@ -1,4 +1,5 @@
 minegames:
    gamemanager:
-      url: http://services.minegames.com.br:8080/gamemanager/webresources
+      url: http://localhost:8080/gamemanager/webresources
+      url-dev: http://services.minegames.com.br:8080/gamemanager/webresources
    

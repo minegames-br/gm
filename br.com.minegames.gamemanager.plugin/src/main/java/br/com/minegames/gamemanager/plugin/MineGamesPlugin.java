@@ -14,7 +14,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import br.com.minegames.core.domain.Area3D;
 import br.com.minegames.core.domain.Arena;
+import br.com.minegames.core.domain.Game;
 import br.com.minegames.core.domain.Local;
+import br.com.minegames.gamemanager.client.GameManagerDelegate;
 import br.com.minegames.gamemanager.plugin.command.MineGamesCommand;
 import br.com.minegames.gamemanager.plugin.listener.PlayerOnClick;
 
@@ -26,6 +28,8 @@ public class MineGamesPlugin extends JavaPlugin {
 	private Area3D selection;
 	private String server_uuid;
 	private Arena arena;
+	private Game game;
+	private GameManagerDelegate delegate;
 	
 	private List<Arena> arenas;
 	
@@ -56,6 +60,8 @@ public class MineGamesPlugin extends JavaPlugin {
 			this.configFile = YamlConfiguration.loadConfiguration(file);
 	    }
 
+	    this.delegate = GameManagerDelegate.getInstance();
+	    this.game = delegate.findGame("46bea463-7bb9-46ed-8eae-ec004ce84833");
 	    registerListeners();
 	}
 	
@@ -100,11 +106,17 @@ public class MineGamesPlugin extends JavaPlugin {
 	
 	public void setSelectionPointA(Location l) {
 		Local local = new Local(l.getBlockX(), l.getBlockY(), l.getBlockZ());
+		if(selection == null) {
+			this.selection = new Area3D();
+		}
 		selection.setPointA(local);
 	}
 
 	public void setSelectionPointB(Location l) {
 		Local local = new Local(l.getBlockX(), l.getBlockY(), l.getBlockZ());
+		if(selection == null) {
+			this.selection = new Area3D();
+		}
 		selection.setPointB(local);
 	}
 
@@ -125,5 +137,9 @@ public class MineGamesPlugin extends JavaPlugin {
 
 	public Arena getArena() {
 		return this.arena;
+	}
+	
+	public Game getGame() {
+		return this.game;
 	}
 }
