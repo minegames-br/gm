@@ -4,11 +4,13 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitScheduler;
 
 import br.com.minegames.core.command.CommandAction;
 import br.com.minegames.core.logging.MGLogger;
@@ -35,15 +37,13 @@ public class MineGamesCommand  implements CommandExecutor {
 		}
 		
 		final CommandAction action = getAction(arg0, arg1, arg2, arg3);
-		
-        new BukkitRunnable() {
-            
+		BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
+		scheduler.scheduleSyncDelayedTask(plugin, new Runnable() {
             @Override
             public void run() {
         		action.execute();
             }
-            
-        }.runTaskLater(this.plugin, 1);		
+        }, 20L);
 		return false;
 	}
 	
@@ -55,7 +55,12 @@ public class MineGamesCommand  implements CommandExecutor {
 		commandArgs.put("listarenas", ListArenasAction.class);
 		commandArgs.put("setarena", DefineArenaAction.class);
 		commandArgs.put("createarena", CreateArenaAction.class);
-
+		commandArgs.put("export", ExportSelectAction.class);
+		commandArgs.put("destroy", DestroySelectionAction.class);
+		commandArgs.put("import", ImportStructureAction.class);
+		commandArgs.put("hologram", ShowHologramAction.class);
+		commandArgs.put("listgames", ListGamesAction.class);
+		commandArgs.put("setgame", DefineGameAction.class);
 	}
 	
 	private CommandAction getAction(CommandSender sender, Command command, String arg2, String[] arg3) {

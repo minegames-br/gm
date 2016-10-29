@@ -63,12 +63,29 @@ public class GameREST {
 		GameService service = new GameService();
 		GameConfig domain = (GameConfig)JSONParser.getInstance().toObject(json, GameConfig.class);
 		if(domain != null) {
-			service.addGameConfig(domain);
+			GameConfig domain2 = service.findGameConfigByName(domain.getName());
+			if(domain2 == null) {
+				service.addGameConfig(domain);
+			} else {
+				domain.setGame_config_uuid(domain2.getGame_config_uuid());
+				service.merge(domain);
+				domain = (GameConfig)service.findByUUID( GameConfig.class, domain.getGame_config_uuid());
+			}
 			json = JSONParser.getInstance().toJSONString(domain);
 		    return Response.ok(json, MediaType.APPLICATION_JSON).build();
 		} else {
 			return Response.status(Response.Status.CONFLICT).entity("Não é possivel criar o config com as informações fornecidas").build();
 		}
+	}
+	
+	@GET
+	@Path("/config/{uuid}/list")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response findAllGameConfig(@PathParam("uuid") String _uuid) {
+		GameService service = new GameService();
+		Collection<GameConfig> list = service.findGameConfigList(_uuid);
+		String json = JSONParser.getInstance().toJSONString(list);
+		return Response.ok(json, MediaType.APPLICATION_JSON).build();
 	}
 	
 	@GET

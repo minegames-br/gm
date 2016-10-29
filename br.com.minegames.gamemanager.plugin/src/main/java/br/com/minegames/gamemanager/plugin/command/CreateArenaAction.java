@@ -35,8 +35,14 @@ public class CreateArenaAction extends CommandAction {
 		if( this.commandSender instanceof Player ) {
 			player = (Player)commandSender;
 		}
-
+		
 		MineGamesPlugin p = (MineGamesPlugin)plugin;
+		
+		if(p.getSelection() == null) {
+			player.sendMessage("Please, select the arena 3D area first: /mg select");
+			return;
+		}
+		
 		GameManagerDelegate delegate = GameManagerDelegate.getInstance();
 		String server_uuid = p.getConfigFile().getString("minegames.server.uuid");
 		if(server_uuid == null || server_uuid.equals("")) {
@@ -51,24 +57,24 @@ public class CreateArenaAction extends CommandAction {
 			return;
 		}
 		
-		if(arguments.length != 3) {
-			player.sendMessage("Please, choose a name. /mg createarena <name> <schematic>");
+		if(arguments.length != 2) {
+			player.sendMessage("Please, choose a name. /mg createarena <name>");
 		}
 		
 		String name = arguments[1];
-		String schematicFile = arguments[2];
 
 		try{
 			Schematic schematic = new Schematic();
-			schematic.setName(schematicFile);
-			schematic.setDescription(schematicFile);
+			schematic.setName(name);
+			schematic.setDescription(name);
 			player.sendMessage("Creating schematic data...");
 			schematic = delegate.createSchematic(schematic);
 			
-			WorldEditPlugin wep = (WorldEditPlugin) Bukkit.getServer().getPluginManager().getPlugin("WorldEdit");
-	        WorldEdit we = wep.getWorldEdit();			
-	        
-            File file = new File(wep.getDataFolder(), "/schematics/" + schematicFile + ".schematic");
+			File dir = p.getDataFolder();
+			if(!dir.exists()) {
+				dir.mkdirs();
+			}
+            File file = new File(dir, "selection.blocks");
 			
 			player.sendMessage("Uploading schematic...");
 			delegate.uploadSchematic(schematic, file);
@@ -88,9 +94,10 @@ public class CreateArenaAction extends CommandAction {
 			gac.setGame(game);
 			
 			player.sendMessage("Associating Game and Arena...");
-			delegate.createGameArenaConfig(gac);
+			gac = delegate.createGameArenaConfig(gac);
+			player.sendMessage("GAC: " + gac.getGa_config_uuid());
 			
-			player.sendMessage("You have created Arena: " + arena.getName() );
+			player.sendMessage("You have created arena: " + arena.getName() );
 		}catch(Exception e) {
 			e.printStackTrace();
 			player.sendMessage("Ooops. I think we are broken.");

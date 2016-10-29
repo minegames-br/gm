@@ -1,8 +1,12 @@
 package br.com.minegames.gamemanager.service;
 
+import java.util.UUID;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+
+import br.com.minegames.core.domain.TransferObject;
 
 public class Service {
 	protected EntityManagerFactory emf = Persistence.createEntityManagerFactory("game-manager"); 
@@ -23,6 +27,19 @@ public class Service {
 			this.em = emf.createEntityManager();
 			em.getTransaction().begin();
 		}
+	}
+	
+	public void merge(TransferObject domain) {
+		startTransaction();
+		em.merge(domain);
+		commitTransaction();
+	}
+	
+	public TransferObject findByUUID(Class _class, UUID uuid) {
+		startTransaction();
+		TransferObject domain = em.find(_class, uuid);
+		commitTransaction();
+		return domain;
 	}
 	
 	public void commitTransaction() {

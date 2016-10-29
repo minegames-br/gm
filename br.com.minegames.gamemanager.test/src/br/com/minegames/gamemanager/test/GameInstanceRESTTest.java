@@ -1,8 +1,5 @@
 package br.com.minegames.gamemanager.test;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -10,15 +7,7 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import br.com.minegames.core.domain.Area3D;
-import br.com.minegames.core.domain.Arena;
-import br.com.minegames.core.domain.Config;
-import br.com.minegames.core.domain.Game;
 import br.com.minegames.core.domain.GameInstance;
-import br.com.minegames.core.domain.GameWorld;
-import br.com.minegames.core.domain.Local;
-import br.com.minegames.core.domain.ServerInstance;
-import br.com.minegames.core.json.JSONParser;
 import br.com.minegames.gamemanager.client.delegate.GameDelegate;
 
 public class GameInstanceRESTTest {
@@ -28,6 +17,7 @@ public class GameInstanceRESTTest {
         String jsonString;
         GameInstance domain = GameDelegate.getInstance().joinGame("arena2");
         
+        /*
         Game game = new Game();
         domain.setGame(game);
         game.setDescription("arqueiro");
@@ -102,6 +92,8 @@ public class GameInstanceRESTTest {
 		jsonString = JSONParser.getInstance().toJSONString(domain);
 		String jsonGI = post("/gameinstance", jsonString);
 		domain = (GameInstance)JSONParser.getInstance().toObject(jsonGI,  GameInstance.class);
+		
+		*/
 	}
 	
 	public static String post(String path, String jsonString) {

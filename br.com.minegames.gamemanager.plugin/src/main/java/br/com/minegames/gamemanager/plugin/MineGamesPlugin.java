@@ -9,13 +9,19 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitScheduler;
 
 import br.com.minegames.core.domain.Area3D;
 import br.com.minegames.core.domain.Arena;
 import br.com.minegames.core.domain.Game;
+import br.com.minegames.core.domain.GameConfig;
+import br.com.minegames.core.domain.GameConfigScope;
+import br.com.minegames.core.domain.GameConfigType;
 import br.com.minegames.core.domain.Local;
+import br.com.minegames.core.hologram.HologramUtil;
 import br.com.minegames.gamemanager.client.GameManagerDelegate;
 import br.com.minegames.gamemanager.plugin.command.MineGamesCommand;
 import br.com.minegames.gamemanager.plugin.listener.PlayerOnClick;
@@ -32,6 +38,10 @@ public class MineGamesPlugin extends JavaPlugin {
 	private GameManagerDelegate delegate;
 	
 	private List<Arena> arenas;
+	private List<Game> games;
+	private GameConfig gameConfig;
+	private String configValue;
+	private List<GameConfig> configList;
 	
 	public List<Arena> getArenas() {
 		return arenas;
@@ -47,6 +57,16 @@ public class MineGamesPlugin extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
+		
+		this.gameConfig = new GameConfig();
+		this.gameConfig.setConfigScope(GameConfigScope.GLOBAL);
+		this.gameConfig.setConfigType(GameConfigType.INT);
+		this.gameConfig.setGroup("");
+		this.gameConfig.setName("thelastarcher.countdown");
+		this.gameConfig.setDisplayName("Countdown");
+		
+		this.setConfigValue("9");
+		
 		getCommand("mg").setExecutor(new MineGamesCommand(this));
 	    if(!file.exists()){
 	        file.getParentFile().mkdirs();
@@ -61,7 +81,7 @@ public class MineGamesPlugin extends JavaPlugin {
 	    }
 
 	    this.delegate = GameManagerDelegate.getInstance();
-	    this.game = delegate.findGame("46bea463-7bb9-46ed-8eae-ec004ce84833");
+	    //this.game = delegate.findGame("57b7b3df-9d18-4966-898f-f4ad8ee28a92");
 	    registerListeners();
 	}
 	
@@ -141,5 +161,58 @@ public class MineGamesPlugin extends JavaPlugin {
 	
 	public Game getGame() {
 		return this.game;
+	}
+
+	public List<Game> getGames() {
+		return this.games;
+	}
+	
+	public void setGame(Game game) {
+		this.game = game;
+	}
+
+	public void setGames(List<Game> games) {
+		this.games = games;
+	}
+
+	public String getConfigName() {
+		return this.gameConfig.getName();
+	}
+	
+	public GameConfig getGameConfig() {
+		return this.gameConfig;
+	}
+	
+	public void setGameConfig(GameConfig value) {
+		this.gameConfig = value;
+	}
+
+	public String getConfigValue() {
+		return this.configValue;
+	}
+	public void setConfigValue(String value) {
+		this.configValue = value;
+	}
+	
+	public void updateConfigHologram(Player player) {
+		HologramUtil.showPlayer( player, new String[]{this.getGameConfig().getDisplayName(), configValue.toString()}, new Location(player.getWorld(), -766, 5, 402) );
+	}
+
+	public void setConfigList(List<GameConfig> list) {
+		this.configList = list;
+	}
+	
+	public List<GameConfig> getConfigList() {
+		return this.configList;
+	}
+
+	public void saveGameConfig() {
+		BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
+		scheduler.scheduleSyncDelayedTask(this, new Runnable() {
+            @Override
+            public void run() {
+        		
+            }
+        }, 20L);
 	}
 }

@@ -26,6 +26,10 @@ public class GameConfig extends TransferObject {
 	@Column(unique=true)
 	private String name;
 	
+	private String groupName;
+	
+	private String displayName;
+	
 	@Enumerated
 	private GameConfigType configType;
 	
@@ -70,6 +74,26 @@ public class GameConfig extends TransferObject {
 
 	public void setConfigScope(GameConfigScope configScope) {
 		this.configScope = configScope;
+	}
+
+	public String getGroupName() {
+		return groupName;
+	}
+
+	public void setGroup(String groupName) {
+		this.groupName = groupName;
+	}
+
+	public String getDisplayName() {
+		return displayName;
+	}
+
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
+	}
+
+	public void setGroupName(String groupName) {
+		this.groupName = groupName;
 	}
 	
 	

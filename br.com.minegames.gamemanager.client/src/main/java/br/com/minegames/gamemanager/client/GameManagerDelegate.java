@@ -10,6 +10,7 @@ import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.commons.io.FileUtils;
+import org.bukkit.Bukkit;
 import org.jboss.resteasy.client.ClientRequest;
 import org.jboss.resteasy.client.ClientResponse;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataOutput;
@@ -22,6 +23,7 @@ import br.com.minegames.core.domain.Area3D;
 import br.com.minegames.core.domain.Arena;
 import br.com.minegames.core.domain.Game;
 import br.com.minegames.core.domain.GameArenaConfig;
+import br.com.minegames.core.domain.GameConfig;
 import br.com.minegames.core.domain.GameWorld;
 import br.com.minegames.core.domain.Local;
 import br.com.minegames.core.domain.Schematic;
@@ -134,6 +136,7 @@ public class GameManagerDelegate {
 	private String get(String path) {
 		ClientRequest client = new ClientRequest(this.gameManagerUrl + path);
 		ClientResponse response = null;
+		Bukkit.getLogger().info(this.gameManagerUrl + path);
 		try {
 			response = client.get(String.class);
 		} catch (Exception e) {
@@ -309,6 +312,7 @@ public class GameManagerDelegate {
 	
 	public Game createGame(Game game ) {
 		String json = JSONParser.getInstance().toJSONString(game);
+		System.out.println(json);
 		json = post("/game", json);
 		MGLogger.info("create game: " + json);
 		game = (Game) JSONParser.getInstance().toObject(json, Game.class);
@@ -370,6 +374,54 @@ public class GameManagerDelegate {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	public List<GameArenaConfig> listGameArenaConfig() {
+        String json = get("/gamearenaconfig/list");
+        ObjectMapper mapper = new ObjectMapper();
+        List<GameArenaConfig> myObjects = null;
+		try {
+			myObjects = mapper.readValue(json, mapper.getTypeFactory().constructCollectionType(List.class, GameArenaConfig.class));
+		} catch (JsonParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return myObjects;
+	}
+
+	public GameConfig addGameConfig(GameConfig domain) {
+		String json = JSONParser.getInstance().toJSONString(domain);
+		System.out.println("schematic json: " + json );
+		json = post("/game/config/add", json);
+		MGLogger.info("create gameconfig: " + json);
+		domain = (GameConfig) JSONParser.getInstance().toObject(json, GameConfig.class);
+		MGLogger.info("Game Config: " + domain.getGame_config_uuid().toString() );
+		return domain;
+	}
+
+	public List<GameConfig> listGameConfig(Game game) {
+        String json = get("/game/" + game.getGame_uuid().toString() + "/list");
+        ObjectMapper mapper = new ObjectMapper();
+        List<GameConfig> myObjects = null;
+		try {
+			myObjects = mapper.readValue(json, mapper.getTypeFactory().constructCollectionType(List.class, GameConfig.class));
+		} catch (JsonParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return myObjects;
 	}
 	
 }

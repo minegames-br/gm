@@ -31,7 +31,7 @@ public class GameService extends Service {
 	public UUID createGame(Game game) {
 		startTransaction();
 		GameDAO dao = new GameDAO(em);
-		dao.save(game);
+		em.merge(game);
 		commitTransaction();
 		Logger.getLogger(GameService.class).info("uuid: " + game.getGame_uuid());
 		return game.getGame_uuid();
@@ -73,7 +73,7 @@ public class GameService extends Service {
 	
 	public void addGameConfig(GameConfig gc) {
 		startTransaction();
-		em.persist(gc);
+		em.merge(gc);
 		commitTransaction();
 	}
 
@@ -105,5 +105,24 @@ public class GameService extends Service {
 		em.remove(domain);
 		commitTransaction();
 	}
-	
+
+	public Collection<GameConfig> findGameConfigList(String _uuid) {
+		startTransaction();
+		Query query = em.createQuery("SELECT gc FROM GameConfig gc where gc.game.game_uuid = :_uuid");
+		query.setParameter("_uuid", UUID.fromString(_uuid) );
+		Collection<GameConfig> list = (Collection<GameConfig>) query.getResultList();
+		commitTransaction();
+		return list;
+	}
+
+	public GameConfig findGameConfigByName(String name) {
+		GameConfig domain = null;
+		startTransaction();
+		Query query = em.createQuery("SELECT gc FROM GameConfig gc where gc.name = :_name");
+		query.setParameter("_name", name );
+		domain = (GameConfig)query.getSingleResult();
+		commitTransaction();
+		return domain;
+	}
+
 }

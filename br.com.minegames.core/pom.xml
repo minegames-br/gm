@@ -19,7 +19,7 @@
      </plugins>
   </build>
 	<repositories>
-    	<repository>
+		<repository>
         	<id>spigot-repo</id>
         	<url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
     	</repository>
@@ -29,6 +29,14 @@
 		</repository>
 	</repositories>
 	<dependencies>
+		<dependency>
+		    <groupId>org.bukkit</groupId>
+		    <artifactId>bukkit</artifactId>
+		    <version>1.10.2-R1</version>
+		    <scope>system</scope>
+		    <systemPath>C:/Users/JoaoEmilio/git/gm/br.com.minegames.core/craftbukkit-1.10.2.jar</systemPath>
+		</dependency>	
+
 		<dependency>
 		    <groupId>javax.ws.rs</groupId>
 		    <artifactId>javax.ws.rs-api</artifactId>

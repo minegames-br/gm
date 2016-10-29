@@ -78,6 +78,16 @@ public class LocationUtil {
         Location l = new Location(world, middleX, spawnPoint.getPointA().getY(), middleZ);
         return l;
 	}
+	
+	public static Location toLocation(World world, Area3D area) {
+		Location l = new Location(world, area.getPointA().getX(), area.getPointA().getY(), area.getPointA().getZ());
+		return l;
+	}
+
+	public static Location toLocation(World world, Local lobbyLocal) {
+		Location l = new Location(world, lobbyLocal.getX(), lobbyLocal.getY(), lobbyLocal.getZ());
+		return l;
+	}
 
 	/*
 	public Location getMiddle(World world) {

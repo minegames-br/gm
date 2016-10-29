@@ -16,39 +16,72 @@ import br.com.minegames.gamemanager.client.GameManagerDelegate;
 
 public class AddGameConfigRESTPostTest {
 
-	public static void main(String args[]) {
-		String restURL = "http://localhost:8080/gamemanager/webresources";
-		//String restURL = "http://jamine-bot.mybluemix.net/webresources";
-        Client client = ClientBuilder.newClient();
-        WebTarget target = client.target(restURL);
+	//public static final String URL_SERVICES = "http://services.minegames.com.br:8080/gamemanager/webresources";
+	public static final String URL_SERVICES = "http://localhost:8080/gamemanager/webresources";
+	//String restURL = "";
+	
+	public static final String FLOATING_AREA = "ARQUEIRO-FLOATING-AREA";
+	public static final String MONSTERS_SPAWN_AREA = "ARQUEIRO-MONSTERS-SPAWN-AREA";
+	public static final String LOBBY_LOCATION = "ARQUEIRO-LOBBY-LOCATION";
+	public static final String MAX_ZOMBIE_SPAWNED_PER_PLAYER = "ARQUEIRO-MAX-ZOMBIE-SPAWNED-PER-PLAYER";
+	public static final String MAX_TARGET = "ARQUEIRO-MAX-TARGET";
+	public static final String MAX_MOVING_TARGET = "ARQUEIRO-MAX-MOVING-TARGET";
+	public static final String MIN_PLAYERS = "ARQUEIRO-MIN-PLAYERS";
+	public static final String MAX_PLAYERS = "ARQUEIRO-MAX-PLAYERS";
+	public static final String ARENA = "ARQUEIRO-ARENA";
+	public static final String START_COUNTDOWN = "ARQUEIRO-START-COUNTDOWN";
+	public static final String GAME_DURATION = "ARQUEIRO-GAME-DURATION";
+	public static final String GAME_LEVELS = "ARQUEIRO-GAME-NUMBER-OF-LEVELS";
 
+	public static void createConfig(String name, String group, GameConfigType type, GameConfigScope scope ) {
+		String restURL = URL_SERVICES;
         GameManagerDelegate delegate = GameManagerDelegate.getInstance(restURL);
-        
-        /*
-        Game game = new Game();
-        game.setName("TheLastArcher");
-        game.setDescription("The Last Archer is an arcade game. 1-4 players. Goal is to hit targets and not be killed by a Zombie that can explode your base and eat you up.");
-        game = delegate.createGame(game);
-        */
-        Game game = delegate.findGame("4a2bcc03-6ec7-4cbc-805c-00270e370f5d");
-        
-        /*
-        Arena arena = new Arena();
-        arena.setName("thelastarcher.pokemongo");
-        arena.setDescription("This is the Pokemon Go Arena for The Last Archer.");
-        arena = delegate.createArena(arena);
-        */
-        
+        //Game game = delegate.findGame("d817590b-e969-44fa-a080-ef00526b94f5");
+        Game game = delegate.findGame("57b7b3df-9d18-4966-898f-f4ad8ee28a92");
         GameConfig domain = new GameConfig();
-        domain.setConfigScope(GameConfigScope.GLOBAL);
-        domain.setConfigType(GameConfigType.INT);
-        domain.setName("thelastarcher.global.countdown");
+        domain.setConfigScope(scope);
+        domain.setConfigType(type);
+        domain.setName(name);
         domain.setGame(game);
-        
-        String jsonString;
-		jsonString = JSONParser.getInstance().toJSONString(domain);
-        Entity<String> entity = Entity.entity(jsonString, MediaType.APPLICATION_JSON);
-        Response response = target.path("/game/config/add").request().post(entity);
-        System.out.println(response.readEntity(String.class));
+        domain.setGroup(group);
+
+        delegate.addGameConfig(domain);
 	}
+	
+	public static void main(String args[]) {
+		
+		GameManagerDelegate delegate = GameManagerDelegate.getInstance(URL_SERVICES);
+		
+		Game game = new Game();
+		game.setName("The Last Archer");
+		game.setDescription("The Last Archer Description");
+		//delegate.createGame(game);
+		
+		/*
+		createConfig("thelastarcher.global.startcountdown", "", GameConfigType.INT, GameConfigScope.GLOBAL );
+		createConfig(FLOATING_AREA, "", GameConfigType.AREA3D, GameConfigScope.ARENA );
+		createConfig(MONSTERS_SPAWN_AREA, "", GameConfigType.AREA3D, GameConfigScope.ARENA );
+		createConfig(LOBBY_LOCATION, "", GameConfigType.LOCAL, GameConfigScope.ARENA );
+		createConfig(MAX_ZOMBIE_SPAWNED_PER_PLAYER, "", GameConfigType.INT, GameConfigScope.ARENA );
+		createConfig(MAX_TARGET, "", GameConfigType.INT, GameConfigScope.ARENA );
+		createConfig(MAX_MOVING_TARGET, "", GameConfigType.INT, GameConfigScope.ARENA );
+		createConfig(MIN_PLAYERS, "", GameConfigType.INT, GameConfigScope.GLOBAL );
+		createConfig(MAX_PLAYERS, "", GameConfigType.INT, GameConfigScope.GLOBAL );
+		createConfig(START_COUNTDOWN, "", GameConfigType.INT, GameConfigScope.GLOBAL );
+		createConfig(GAME_DURATION, "", GameConfigType.INT, GameConfigScope.GLOBAL );
+		createConfig(GAME_LEVELS, "", GameConfigType.INT, GameConfigScope.GLOBAL );
+		*/
+		
+		createConfig("arqueiro.player1.spawn", "PLAYER-SPAWN", GameConfigType.LOCAL, GameConfigScope.ARENA);
+		createConfig("arqueiro.player2.spawn", "PLAYER-SPAWN", GameConfigType.LOCAL, GameConfigScope.ARENA);
+		createConfig("arqueiro.player3.spawn", "PLAYER-SPAWN", GameConfigType.LOCAL, GameConfigScope.ARENA);
+		createConfig("arqueiro.player4.spawn", "PLAYER-SPAWN", GameConfigType.LOCAL, GameConfigScope.ARENA);
+		
+		createConfig("arqueiro.player1.area", "PLAYER-AREA", GameConfigType.AREA3D, GameConfigScope.ARENA);
+		createConfig("arqueiro.player2.area", "PLAYER-AREA", GameConfigType.AREA3D, GameConfigScope.ARENA);
+		createConfig("arqueiro.player3.area", "PLAYER-AREA", GameConfigType.AREA3D, GameConfigScope.ARENA);
+		createConfig("arqueiro.player4.area", "PLAYER-AREA", GameConfigType.AREA3D, GameConfigScope.ARENA);
+	}
+	
+	
 }
