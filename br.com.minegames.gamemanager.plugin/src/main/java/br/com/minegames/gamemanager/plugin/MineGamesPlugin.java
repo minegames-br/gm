@@ -3,6 +3,8 @@ package br.com.minegames.gamemanager.plugin;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -17,11 +19,14 @@ import org.bukkit.scheduler.BukkitScheduler;
 import br.com.minegames.core.domain.Area3D;
 import br.com.minegames.core.domain.Arena;
 import br.com.minegames.core.domain.Game;
+import br.com.minegames.core.domain.GameArenaConfig;
 import br.com.minegames.core.domain.GameConfig;
 import br.com.minegames.core.domain.GameConfigScope;
 import br.com.minegames.core.domain.GameConfigType;
+import br.com.minegames.core.domain.GameGameConfig;
 import br.com.minegames.core.domain.Local;
 import br.com.minegames.core.hologram.HologramUtil;
+import br.com.minegames.core.util.title.TitleUtil;
 import br.com.minegames.gamemanager.client.GameManagerDelegate;
 import br.com.minegames.gamemanager.plugin.command.MineGamesCommand;
 import br.com.minegames.gamemanager.plugin.listener.PlayerOnClick;
@@ -42,6 +47,11 @@ public class MineGamesPlugin extends JavaPlugin {
 	private GameConfig gameConfig;
 	private String configValue;
 	private List<GameConfig> configList;
+	private Location setupLocation;
+	private List<GameConfig> listConfigInts;
+	private HashMap<String, GameArenaConfig> gameConfigArenaMap = new HashMap<String, GameArenaConfig>();
+	private HashMap<String, GameGameConfig> gameGameConfigMap = new HashMap<String, GameGameConfig>();
+	private int indexConfig = 0;
 	
 	public List<Arena> getArenas() {
 		return arenas;
@@ -195,7 +205,7 @@ public class MineGamesPlugin extends JavaPlugin {
 	}
 	
 	public void updateConfigHologram(Player player) {
-		HologramUtil.showPlayer( player, new String[]{this.getGameConfig().getDisplayName(), configValue.toString()}, new Location(player.getWorld(), -766, 5, 402) );
+		HologramUtil.showPlayer( player, new String[]{this.getGameConfig().getName(), configValue.toString()}, new Location(player.getWorld(), -766, 5, 402) );
 	}
 
 	public void setConfigList(List<GameConfig> list) {
@@ -215,4 +225,120 @@ public class MineGamesPlugin extends JavaPlugin {
             }
         }, 20L);
 	}
+
+	public void setupGameArenaConfig(Player player) {
+		this.setupLocation = new Location(player.getWorld(), -766, 4, 402);
+		player.teleport(this.setupLocation);
+		
+		//setup int values 
+		List<GameConfig> listInts = new ArrayList<GameConfig>();
+		for(GameConfig gc: this.configList) {
+			if(gc.getConfigType() == GameConfigType.INT) {
+				listInts.add(gc);
+			}
+		}
+		
+		this.setListConfigInts(listInts);
+		
+		this.gameConfig = listInts.get(0);
+		
+		TitleUtil.sendTitle(player, 10, 20, 10, "Time to setup the game", "Click on levers to change value and switch configs. Open the door to save your configs.");
+		
+		updateConfigHologram(player);
+	}
+	
+	public void nextConfig( Player player ) {
+		updateConfig();
+		this.indexConfig ++;
+		if(this.indexConfig > listConfigInts.size()) {
+			indexConfig = 0;
+		}
+		this.gameConfig = listConfigInts.get(indexConfig);
+		updateConfigHologram(player);
+	}
+	
+	public void previousConfig( Player player ) {
+		updateConfig();
+		this.indexConfig --;
+		if(this.indexConfig < 0 ) {
+			indexConfig = listConfigInts.size()-1;
+		}
+		this.gameConfig = listConfigInts.get(indexConfig);
+		updateConfigHologram(player);
+	}
+	
+	public void updateConfig( ) {
+		Object configObject = this.getConfigValue();
+		
+		if(configObject instanceof Integer) {
+			String key = this.getGameConfig().getName();
+			if(this.getGameConfig().getConfigScope() == GameConfigScope.ARENA) {
+				GameArenaConfig gac = gameConfigArenaMap.get(key);
+				gac.setArena(this.arena);
+				gac.setGame(this.game);
+			} else { 
+				GameGameConfig ggc = gameGameConfigMap.get(key);
+				ggc.setGame(this.game);
+				ggc.setGameConfig(this.gameConfig);
+				ggc.setIntValue( (Integer)configObject);
+			}
+		}
+	}
+
+	public void setListConfigInts(List<GameConfig> listInts) {
+		this.listConfigInts = listInts;
+	}
+	
+	public List<GameConfig> getListConfigInts() {
+		return this.listConfigInts;
+	}
+
+	public File getFile() {
+		return file;
+	}
+
+	public void setFile(File file) {
+		this.file = file;
+	}
+
+	public GameManagerDelegate getDelegate() {
+		return delegate;
+	}
+
+	public void setDelegate(GameManagerDelegate delegate) {
+		this.delegate = delegate;
+	}
+
+	public Location getSetupLocation() {
+		return setupLocation;
+	}
+
+	public void setSetupLocation(Location setupLocation) {
+		this.setupLocation = setupLocation;
+	}
+
+	public HashMap<String, GameArenaConfig> getGameConfigArenaMap() {
+		return gameConfigArenaMap;
+	}
+
+	public void setGameConfigArenaMap(HashMap<String, GameArenaConfig> gameConfigArenaMap) {
+		this.gameConfigArenaMap = gameConfigArenaMap;
+	}
+
+	public void setConfigFile(YamlConfiguration configFile) {
+		this.configFile = configFile;
+	}
+
+	public void setServer_uuid(String server_uuid) {
+		this.server_uuid = server_uuid;
+	}
+
+	public HashMap<String, GameGameConfig> getGameGameConfigMap() {
+		return gameGameConfigMap;
+	}
+
+	public void setGameGameConfigMap(HashMap<String, GameGameConfig> gameGameConfigMap) {
+		this.gameGameConfigMap = gameGameConfigMap;
+	}
+	
 }

@@ -61,6 +61,7 @@ public class MineGamesCommand  implements CommandExecutor {
 		commandArgs.put("hologram", ShowHologramAction.class);
 		commandArgs.put("listgames", ListGamesAction.class);
 		commandArgs.put("setgame", DefineGameAction.class);
+		commandArgs.put("setup", SetupGameArenaAction.class);
 	}
 	
 	private CommandAction getAction(CommandSender sender, Command command, String arg2, String[] arg3) {

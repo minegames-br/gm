@@ -120,7 +120,11 @@ public class GameService extends Service {
 		startTransaction();
 		Query query = em.createQuery("SELECT gc FROM GameConfig gc where gc.name = :_name");
 		query.setParameter("_name", name );
-		domain = (GameConfig)query.getSingleResult();
+		try{
+			domain = (GameConfig)query.getSingleResult();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
 		commitTransaction();
 		return domain;
 	}

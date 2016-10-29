@@ -18,9 +18,8 @@ public class GameGameConfig extends TransferObject {
 	private Game game;
 	
 	@Id
-	@LazyCollection(LazyCollectionOption.FALSE)
-	@OneToMany
-	private List<GameConfig> gameConfig;
+	@OneToOne
+	private GameConfig gameConfig;
 	
 	@OneToOne
 	private Local local;
@@ -46,11 +45,11 @@ public class GameGameConfig extends TransferObject {
 		this.game = game;
 	}
 
-	public List<GameConfig> getGameConfig() {
+	public GameConfig getGameConfig() {
 		return gameConfig;
 	}
 
-	public void setGameConfig(List<GameConfig> gameConfig) {
+	public void setGameConfig(GameConfig gameConfig) {
 		this.gameConfig = gameConfig;
 	}
 

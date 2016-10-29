@@ -45,5 +45,7 @@ public class DefineGameAction extends CommandAction {
 		int index = Integer.parseInt(arguments[1]);
 		Game game = p.getGames().get(index);
 		p.setGame(game);
+		
+		player.sendMessage("You have chosen game: " + game.getName() );
 	}
 }

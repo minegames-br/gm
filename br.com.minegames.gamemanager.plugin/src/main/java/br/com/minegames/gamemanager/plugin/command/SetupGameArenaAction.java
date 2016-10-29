@@ -9,7 +9,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import br.com.minegames.core.command.CommandAction;
+import br.com.minegames.core.domain.GameArenaConfig;
 import br.com.minegames.core.domain.GameConfig;
+import br.com.minegames.core.domain.GameConfigScope;
+import br.com.minegames.core.domain.GameGameConfig;
 import br.com.minegames.gamemanager.client.GameManagerDelegate;
 import br.com.minegames.gamemanager.plugin.MineGamesPlugin;
 
@@ -58,10 +61,15 @@ public class SetupGameArenaAction extends CommandAction {
 		GameManagerDelegate delegate = GameManagerDelegate.getInstance();
 		
 		List<GameConfig> list = delegate.listGameConfig(p.getGame());
+		for(GameConfig gc: list) {
+			if(gc.getConfigScope() == GameConfigScope.ARENA) {
+				p.getGameConfigArenaMap().put(gc.getName(), new GameArenaConfig());
+			} else {
+				p.getGameGameConfigMap().put(gc.getName(), new GameGameConfig());
+			}
+		}
 		p.setConfigList(list);
-		
-		
-		
+		p.setupGameArenaConfig(player);
 	}
 	
 }

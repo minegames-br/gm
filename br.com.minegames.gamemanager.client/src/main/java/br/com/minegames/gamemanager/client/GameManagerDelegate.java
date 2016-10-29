@@ -406,7 +406,7 @@ public class GameManagerDelegate {
 	}
 
 	public List<GameConfig> listGameConfig(Game game) {
-        String json = get("/game/" + game.getGame_uuid().toString() + "/list");
+        String json = get("/game/" + game.getGame_uuid().toString() + "/config/list");
         ObjectMapper mapper = new ObjectMapper();
         List<GameConfig> myObjects = null;
 		try {

@@ -72,14 +72,23 @@ public class PlayerOnClick implements Listener {
 		Integer configValue = Integer.parseInt(this.controller.getConfigValue());
 		if(block.getLocation().getBlockZ() == 400) {
 			configValue++;
-		} else {
+			this.controller.setConfigValue(configValue.toString());
+			this.controller.updateConfigHologram(player);
+		} else if (block.getLocation().getBlockZ() == 403) {
 			if(configValue > 0) {
 				configValue --;
 			}
+			this.controller.setConfigValue(configValue.toString());
+			this.controller.updateConfigHologram(player);
 		}
 		
-		this.controller.setConfigValue(configValue.toString());
-		this.controller.updateConfigHologram(player);
+		//mudar de configuração
+		if(block.getLocation().getBlockZ() == 399) {
+			this.controller.nextConfig(player);
+		} else if (block.getLocation().getBlockZ() == 404) {
+			this.controller.previousConfig(player);
+		}
+		
 	}
 
 

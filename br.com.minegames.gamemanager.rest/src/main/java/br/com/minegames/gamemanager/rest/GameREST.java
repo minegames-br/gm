@@ -79,7 +79,7 @@ public class GameREST {
 	}
 	
 	@GET
-	@Path("/config/{uuid}/list")
+	@Path("/{uuid}/config/list")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response findAllGameConfig(@PathParam("uuid") String _uuid) {
 		GameService service = new GameService();
