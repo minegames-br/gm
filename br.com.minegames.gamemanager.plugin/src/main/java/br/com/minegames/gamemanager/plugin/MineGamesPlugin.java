@@ -23,7 +23,7 @@ import br.com.minegames.core.domain.GameArenaConfig;
 import br.com.minegames.core.domain.GameConfig;
 import br.com.minegames.core.domain.GameConfigScope;
 import br.com.minegames.core.domain.GameConfigType;
-import br.com.minegames.core.domain.GameGameConfig;
+import br.com.minegames.core.domain.GameConfigInstance;
 import br.com.minegames.core.domain.Local;
 import br.com.minegames.core.hologram.HologramUtil;
 import br.com.minegames.core.util.title.TitleUtil;
@@ -50,8 +50,10 @@ public class MineGamesPlugin extends JavaPlugin {
 	private Location setupLocation;
 	private List<GameConfig> listConfigInts;
 	private HashMap<String, GameArenaConfig> gameConfigArenaMap = new HashMap<String, GameArenaConfig>();
-	private HashMap<String, GameGameConfig> gameGameConfigMap = new HashMap<String, GameGameConfig>();
+	private HashMap<String, GameConfigInstance> gameGameConfigMap = new HashMap<String, GameConfigInstance>();
 	private int indexConfig = 0;
+	private GameArenaConfig gac;
+	private GameConfigInstance gcc;
 	
 	public List<Arena> getArenas() {
 		return arenas;
@@ -218,16 +220,24 @@ public class MineGamesPlugin extends JavaPlugin {
 
 	public void saveGameConfig() {
 		BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
+		final MineGamesPlugin plugin = this;
+		final GameManagerDelegate delegate = GameManagerDelegate.getInstance();
 		scheduler.scheduleSyncDelayedTask(this, new Runnable() {
             @Override
             public void run() {
+        		for(GameConfigInstance gcc: plugin.getGameGameConfigMap().values() ) {
+        			delegate.addGameConfigInstance(gcc);
+        		}
         		
+        		for(GameArenaConfig gac: plugin.getGameConfigArenaMap().values()) {
+        			//delegate.addGameAreanaConfigInstance(gac);
+        		}
             }
         }, 20L);
 	}
 
 	public void setupGameArenaConfig(Player player) {
-		this.setupLocation = new Location(player.getWorld(), -766, 4, 402);
+		this.setupLocation = new Location(player.getWorld(), -764, 5, 402);
 		player.teleport(this.setupLocation);
 		
 		//setup int values 
@@ -247,6 +257,21 @@ public class MineGamesPlugin extends JavaPlugin {
 		updateConfigHologram(player);
 	}
 	
+	public void updateConfigValue() {
+		this.gac = getGameArenaConfigByName(this.gameConfig.getName());
+		if(this.gac == null) {
+			this.gac = new GameArenaConfig();
+			this.gameConfigArenaMap.put(this.gameConfig.getName(), this.gac);
+			this.configValue="0";
+		} else {
+			if(this.gac.getIntValue()==null) {
+				this.configValue="0";
+			}else{
+				this.configValue=this.gac.getIntValue().toString();
+			}
+		}
+	}
+	
 	public void nextConfig( Player player ) {
 		updateConfig();
 		this.indexConfig ++;
@@ -254,8 +279,10 @@ public class MineGamesPlugin extends JavaPlugin {
 			indexConfig = 0;
 		}
 		this.gameConfig = listConfigInts.get(indexConfig);
+		updateConfigValue();
 		updateConfigHologram(player);
 	}
+	
 	
 	public void previousConfig( Player player ) {
 		updateConfig();
@@ -264,6 +291,7 @@ public class MineGamesPlugin extends JavaPlugin {
 			indexConfig = listConfigInts.size()-1;
 		}
 		this.gameConfig = listConfigInts.get(indexConfig);
+		updateConfigValue();
 		updateConfigHologram(player);
 	}
 	
@@ -272,17 +300,30 @@ public class MineGamesPlugin extends JavaPlugin {
 		
 		if(configObject instanceof Integer) {
 			String key = this.getGameConfig().getName();
-			if(this.getGameConfig().getConfigScope() == GameConfigScope.ARENA) {
-				GameArenaConfig gac = gameConfigArenaMap.get(key);
-				gac.setArena(this.arena);
-				gac.setGame(this.game);
-			} else { 
-				GameGameConfig ggc = gameGameConfigMap.get(key);
-				ggc.setGame(this.game);
-				ggc.setGameConfig(this.gameConfig);
-				ggc.setIntValue( (Integer)configObject);
+			if(this.gameConfig.getConfigScope() == GameConfigScope.ARENA) {
+				this.gac.setArena(this.arena);
+				this.gac.setGameConfig(this.gameConfig);
+				if(this.gameConfig.getConfigType() == GameConfigType.INT) {
+					this.gac.setIntValue(Integer.parseInt(this.configValue));
+				}
+			} else {
+				this.gcc.setGameConfig(this.gameConfig);
+				if(this.gameConfig.getConfigType() == GameConfigType.INT) {
+					this.gcc.setIntValue(Integer.parseInt(this.configValue));
+				}
 			}
+			
 		}
+	}
+	
+	public GameArenaConfig getGameArenaConfigByName(String name) {
+		GameArenaConfig gac = null;
+		
+		if(gameConfigArenaMap.get(name) != null) {
+			gac = gameConfigArenaMap.get(name);
+		}
+		
+		return gac;
 	}
 
 	public void setListConfigInts(List<GameConfig> listInts) {
@@ -333,11 +374,11 @@ public class MineGamesPlugin extends JavaPlugin {
 		this.server_uuid = server_uuid;
 	}
 
-	public HashMap<String, GameGameConfig> getGameGameConfigMap() {
+	public HashMap<String, GameConfigInstance> getGameGameConfigMap() {
 		return gameGameConfigMap;
 	}
 
-	public void setGameGameConfigMap(HashMap<String, GameGameConfig> gameGameConfigMap) {
+	public void setGameGameConfigMap(HashMap<String, GameConfigInstance> gameGameConfigMap) {
 		this.gameGameConfigMap = gameGameConfigMap;
 	}
 	

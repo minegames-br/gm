@@ -62,7 +62,7 @@ public class DefineAreaAction extends CommandAction {
 			area.setType(arguments[2]);			
 		}
 		
-		arena = delegate.addArea3D(arena, area);
+		arena = delegate.addArenaArea3D(arena, area);
 		player.sendMessage("Listing Areas...");
 		for(Area3D a: arena.getAreas()) {
 			player.sendMessage(a.getName() + ":" + a.getType() );

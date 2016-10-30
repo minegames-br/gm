@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.List;
-import java.util.UUID;
 
 import javax.ws.rs.core.MediaType;
 
@@ -24,6 +23,7 @@ import br.com.minegames.core.domain.Arena;
 import br.com.minegames.core.domain.Game;
 import br.com.minegames.core.domain.GameArenaConfig;
 import br.com.minegames.core.domain.GameConfig;
+import br.com.minegames.core.domain.GameConfigInstance;
 import br.com.minegames.core.domain.GameWorld;
 import br.com.minegames.core.domain.Local;
 import br.com.minegames.core.domain.Schematic;
@@ -82,16 +82,15 @@ public class GameManagerDelegate {
 		return server;
 	}
 	
-	public Arena addArea3D(Arena arena, Area3D area) {
+	public Area3D addArea3D(Area3D area) {
 		Area3D result = null;
 		
-		arena.getAreas().add(area);
-		String json = JSONParser.getInstance().toJSONString(arena);
-		json = post("/arena", json);
-		MGLogger.info("arena: " + json);
-		arena = (Arena)JSONParser.getInstance().toObject(json, Arena.class);
+		String json = JSONParser.getInstance().toJSONString(area);
+		json = post("/area", json);
+		MGLogger.info("area: " + json);
+		result = (Area3D)JSONParser.getInstance().toObject(json, Area3D.class);
 		
-		return arena;
+		return result;
 	}
 	
 	public Local addLocal(Local local) {
@@ -227,66 +226,13 @@ public class GameManagerDelegate {
 		return arenas;
 	}
 	
-	public static void main(String args[]) {
-		GameManagerClientPlugin.setMinegamesGameManagerUrl("http://localhost:8080/gamemanager/webresources");
-		GameManagerDelegate delegate = GameManagerDelegate.getInstance("http://localhost:8080/gamemanager/webresources");
-		
-		/*
-		List<Arena> arenas = delegate.findArenas("");
-		for(Arena a: arenas) {
-			System.out.println(a.getArena_uuid());
-		}
-		
-		*/
-		Arena arena = new Arena();
-		arena.setArena_uuid(UUID.fromString("fad5f5fc-e770-4049-bfa2-3ef9616a8ecf"));
-		arena.setDescription("arena1");
-		arena.setDescription("the last archer arena pokemon go");
-		
-		File file = new File("d:/minecraft/worlds/schematics/s2.schematic");
-		Schematic schematic = new Schematic();
-		schematic.setName("arena1-schematic");
-		schematic.setDescription("the last archer arena pokemon go");
-		
-		System.out.println("create schematic");
-		schematic = delegate.createSchematic(schematic);
-		
-		System.out.println("upload schematic");
-		delegate.uploadSchematic(schematic, file);
-		
-		Game game = delegate.findGame("46bea463-7bb9-46ed-8eae-ec004ce84833");
-
-		GameArenaConfig config = new GameArenaConfig();
-		config.setArena(arena);
-		config.setGame(game);
-
-		delegate.createGameArenaConfig(config);
-/*
-		arena.setSchematic(schematic);
-		System.out.println("create arena");
-		delegate.createArena(arena);
-		
-		List<Arena> arenas = delegate.findArenas("");
-		for(Arena a: arenas) {
-			System.out.println(a.getName());
-		}
-		
-		Game game = delegate.findGame("46bea463-7bb9-46ed-8eae-ec004ce84833");
-		System.out.println(game.getName());
-		
-		List<Game> games = delegate.findGames();
-		for(Game g: games) {
-			System.out.println(g.getName() + ":" + g.getGame_uuid().toString());
-		}
-		*/
-	}
-
 	public GameArenaConfig createGameArenaConfig(GameArenaConfig config) {
 		String json = JSONParser.getInstance().toJSONString(config);
+		System.out.println("createGameArenaConfig: " + json);
 		json = post("/gamearenaconfig", json);
 		MGLogger.info("create game arena config: " + json);
 		config = (GameArenaConfig) JSONParser.getInstance().toObject(json, GameArenaConfig.class);
-		MGLogger.info("Arena: " + config.getGa_config_uuid().toString() );
+		MGLogger.info("Arena: " + config.getGac_uuid().toString() );
 		return config;
 	}
 
@@ -397,9 +343,9 @@ public class GameManagerDelegate {
 
 	public GameConfig addGameConfig(GameConfig domain) {
 		String json = JSONParser.getInstance().toJSONString(domain);
-		System.out.println("schematic json: " + json );
+		System.out.println("GameConfig json request: " + json );
 		json = post("/game/config/add", json);
-		MGLogger.info("create gameconfig: " + json);
+		MGLogger.info("create gameconfig response: " + json);
 		domain = (GameConfig) JSONParser.getInstance().toObject(json, GameConfig.class);
 		MGLogger.info("Game Config: " + domain.getGame_config_uuid().toString() );
 		return domain;
@@ -423,5 +369,110 @@ public class GameManagerDelegate {
 		}
 		return myObjects;
 	}
+
+	public GameConfigInstance addGameConfigInstance(GameConfigInstance domain) {
+		String json = JSONParser.getInstance().toJSONString(domain);
+		System.out.println("game config instance json: " + json );
+		json = post("/game/config/instance/add", json);
+		MGLogger.info("create gameconfig instance: " + json);
+		domain = (GameConfigInstance) JSONParser.getInstance().toObject(json, GameConfigInstance.class);
+		MGLogger.info("Game Config Instance : " + domain.toString() );
+		return domain;
+	}
+
 	
+	public static void main(String args[]) {
+		GameManagerClientPlugin.setMinegamesGameManagerUrl("http://localhost:8080/gamemanager/webresources");
+		GameManagerDelegate delegate = GameManagerDelegate.getInstance("http://localhost:8080/gamemanager/webresources");
+		Game game = delegate.findGame("46bea463-7bb9-46ed-8eae-ec004ce84833");
+	}
+
+	public Game updateGame(Game game) {
+		String json = JSONParser.getInstance().toJSONString(game);
+		System.out.println(json);
+		json = post("/game/" + game.getGame_uuid(), json);
+		MGLogger.info("update game: " + json);
+		game = (Game) JSONParser.getInstance().toObject(json, Game.class);
+		MGLogger.info("Game: " + game.getGame_uuid().toString() );
+		return game;
+	}
+
+	public Arena addArenaArea3D(Arena arena, Area3D area) {
+		String json = JSONParser.getInstance().toJSONString(arena);
+		arena.getAreas().add(area);
+		json = post("/arena", json);
+		MGLogger.info("update arena: " + json);
+		arena = (Arena) JSONParser.getInstance().toObject(json, Arena.class);
+		MGLogger.info("Arena: " + arena.getArena_uuid().toString() );
+		return arena;
+	}
+
+	public GameConfig findGameConfig(String uuid, String gameConfigUuid) {
+		GameConfig domain = null;
+		
+		MGLogger.info("findGameConfig request: " + uuid);
+		String json = get("/game/" + uuid + "/config", gameConfigUuid);
+		MGLogger.info("findGameConfig response: " + json);
+		domain = (GameConfig)JSONParser.getInstance().toObject(json, GameConfig.class);
+		
+		return domain;
+	}
+
+	public Area3D findArea3D(String uuid) {
+		Area3D domain = null;
+		
+		MGLogger.info("findArea3D request: " + uuid);
+		String json = get("/area", uuid);
+		MGLogger.info("findArea3D response: " + json);
+		domain = (Area3D)JSONParser.getInstance().toObject(json, Area3D.class);
+		
+		return domain;
+	}
 }
+
+/*	public static void main(String args[]) {
+GameManagerClientPlugin.setMinegamesGameManagerUrl("http://localhost:8080/gamemanager/webresources");
+GameManagerDelegate delegate = GameManagerDelegate.getInstance("http://localhost:8080/gamemanager/webresources");
+
+Arena arena = new Arena();
+arena.setArena_uuid(UUID.fromString("fad5f5fc-e770-4049-bfa2-3ef9616a8ecf"));
+arena.setDescription("arena1");
+arena.setDescription("the last archer arena pokemon go");
+
+File file = new File("d:/minecraft/worlds/schematics/s2.schematic");
+Schematic schematic = new Schematic();
+schematic.setName("arena1-schematic");
+schematic.setDescription("the last archer arena pokemon go");
+
+System.out.println("create schematic");
+schematic = delegate.createSchematic(schematic);
+
+System.out.println("upload schematic");
+delegate.uploadSchematic(schematic, file);
+
+Game game = delegate.findGame("46bea463-7bb9-46ed-8eae-ec004ce84833");
+
+GameArenaConfig config = new GameArenaConfig();
+config.setArena(arena);
+config.setGame(game);
+
+delegate.createGameArenaConfig(config);
+
+arena.setSchematic(schematic);
+System.out.println("create arena");
+delegate.createArena(arena);
+
+List<Arena> arenas = delegate.findArenas("");
+for(Arena a: arenas) {
+	System.out.println(a.getName());
+}
+
+Game game = delegate.findGame("46bea463-7bb9-46ed-8eae-ec004ce84833");
+System.out.println(game.getName());
+
+List<Game> games = delegate.findGames();
+for(Game g: games) {
+	System.out.println(g.getName() + ":" + g.getGame_uuid().toString());
+}
+}
+*/

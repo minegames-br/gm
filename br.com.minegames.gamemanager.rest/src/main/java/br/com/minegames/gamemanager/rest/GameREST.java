@@ -16,7 +16,9 @@ import org.jboss.logging.Logger;
 
 import br.com.minegames.core.domain.Game;
 import br.com.minegames.core.domain.GameConfig;
+import br.com.minegames.core.domain.GameConfigInstance;
 import br.com.minegames.core.domain.GameInstance;
+import br.com.minegames.core.exception.MineGamesException;
 import br.com.minegames.core.json.JSONParser;
 import br.com.minegames.gamemanager.service.GameService;
 
@@ -30,7 +32,13 @@ public class GameREST {
 		GameService service = new GameService();
 		Game game = (Game)JSONParser.getInstance().toObject(json, Game.class);
 		if(game != null) {
-			UUID uuid = service.createGame(game);
+			UUID uuid;
+			try {
+				uuid = service.createGame(game);
+			} catch (MineGamesException e) {
+				e.printStackTrace();
+				return Response.status(Response.Status.CONFLICT).entity( e.getMessage() ).build();
+			}
 			game.setGame_uuid(uuid);
 			json = JSONParser.getInstance().toJSONString(game);
 		    return Response.ok(json, MediaType.APPLICATION_JSON).build();
@@ -65,7 +73,7 @@ public class GameREST {
 		if(domain != null) {
 			GameConfig domain2 = service.findGameConfigByName(domain.getName());
 			if(domain2 == null) {
-				service.addGameConfig(domain);
+				domain = service.addGameConfig(domain);
 			} else {
 				domain.setGame_config_uuid(domain2.getGame_config_uuid());
 				service.merge(domain);
@@ -76,6 +84,18 @@ public class GameREST {
 		} else {
 			return Response.status(Response.Status.CONFLICT).entity("Não é possivel criar o config com as informações fornecidas").build();
 		}
+	}
+	
+	@Path("/config/instance/add")
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response addGameConfigInstance(String json) {
+		Logger.getLogger(GameREST.class).info("json recebido: " + json );
+		GameService service = new GameService();
+		GameConfigInstance domain = (GameConfigInstance)JSONParser.getInstance().toObject(json, GameConfigInstance.class);
+		System.out.println("uuid no rest: " + domain.getGameConfig().getGame_config_uuid());
+		service.create(domain);
+	    return Response.ok(json, MediaType.APPLICATION_JSON).build();
 	}
 	
 	@GET
@@ -89,14 +109,44 @@ public class GameREST {
 	}
 	
 	@GET
+	@Path("/{uuid}/config/{config_uuid}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response findGameConfig(@PathParam("uuid") String _uuid, @PathParam("config_uuid") String _configUuid) {
+		GameService service = new GameService();
+		System.err.println("_game uuid: " +_uuid + " config uuid: " + _configUuid);
+		GameConfig domain = (GameConfig)service.findByUUID(GameConfig.class, UUID.fromString(_configUuid) );
+		String json = JSONParser.getInstance().toJSONString(domain);
+		return Response.ok(json, MediaType.APPLICATION_JSON).build();
+	}
+	
+	@GET
 	@Path("/{uuid}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response get(@PathParam("uuid") String _uuid) {
-		Logger.getLogger(GameREST.class).info("uuid recebido: ");
+		Logger.getLogger(GameREST.class).info("uuid recebido: " + _uuid );
 		GameService service = new GameService();
 		Game game = service.find( UUID.fromString(_uuid) );
 		if( game != null) {
 			String json = JSONParser.getInstance().toJSONString(game);
+		    return Response.ok( json , MediaType.APPLICATION_JSON).build();
+		} else {
+			return Response.status(Response.Status.NOT_FOUND).entity("Jogo não encontrado: " + _uuid).build();
+		}
+	}
+	
+	@POST
+	@Path("/{uuid}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response updateGame(@PathParam("uuid") String _uuid, String json ) {
+		Logger.getLogger(GameREST.class).info("uuid recebido: " + _uuid );
+		GameService service = new GameService();
+		Game _game = service.find( UUID.fromString(_uuid) );
+		if( _game != null) {
+			
+			Game game = (Game)JSONParser.getInstance().toObject(json, Game.class);
+			service.merge(game);
+			
+			json = JSONParser.getInstance().toJSONString(game);
 		    return Response.ok( json , MediaType.APPLICATION_JSON).build();
 		} else {
 			return Response.status(Response.Status.NOT_FOUND).entity("Jogo não encontrado: " + _uuid).build();

@@ -36,6 +36,8 @@ public class GameConfig extends TransferObject {
 	@Enumerated
 	private GameConfigScope configScope;
 
+	private String description;
+
 	public UUID getGame_config_uuid() {
 		return game_config_uuid;
 	}
@@ -94,6 +96,14 @@ public class GameConfig extends TransferObject {
 
 	public void setGroupName(String groupName) {
 		this.groupName = groupName;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	
+	public String getDescription() {
+		return this.description;
 	}
 	
 	

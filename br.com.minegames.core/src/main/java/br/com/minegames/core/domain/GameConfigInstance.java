@@ -7,16 +7,9 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
-
 @Entity
-public class GameGameConfig extends TransferObject {
+public class GameConfigInstance extends TransferObject {
 
-	@Id
-	@OneToOne
-	private Game game;
-	
 	@Id
 	@OneToOne
 	private GameConfig gameConfig;
@@ -29,21 +22,11 @@ public class GameGameConfig extends TransferObject {
 	
 	private int intValue;
 	
-	private GameConfigType type;
-	
 	@OneToMany
 	private List<Local> localList;
 	
 	@OneToMany
 	private List<Area3D> areaList;
-
-	public Game getGame() {
-		return game;
-	}
-
-	public void setGame(Game game) {
-		this.game = game;
-	}
 
 	public GameConfig getGameConfig() {
 		return gameConfig;
@@ -77,14 +60,6 @@ public class GameGameConfig extends TransferObject {
 		this.intValue = intValue;
 	}
 
-	public GameConfigType getType() {
-		return type;
-	}
-
-	public void setType(GameConfigType type) {
-		this.type = type;
-	}
-
 	public List<Local> getLocalList() {
 		return localList;
 	}
@@ -101,6 +76,16 @@ public class GameGameConfig extends TransferObject {
 		this.areaList = areaList;
 	}
 
-	
+	@Override
+	public boolean equals(Object object) {
+		boolean result = false;
+		
+		if(object instanceof GameConfigInstance) {
+			GameConfigInstance gci = (GameConfigInstance)object;
+			gci.gameConfig.equals(this.gameConfig);
+		}
+		
+		return result;
+	}
 	
 }

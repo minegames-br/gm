@@ -2,11 +2,8 @@ package br.com.minegames.gamemanager.service;
 
 import java.util.Collection;
 import java.util.UUID;
-import java.util.logging.LogManager;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.persistence.Query;
 
 import org.jboss.logging.Logger;
@@ -15,6 +12,14 @@ import br.com.minegames.core.domain.Local;
 import br.com.minegames.gamemanager.dao.LocalDAO;
 
 public class LocalService extends Service {
+
+	public LocalService() {
+		
+	}
+	
+	public LocalService(EntityManager em) {
+		super(em);
+	}
 
 	public UUID create(Local domain) {
 		startTransaction();

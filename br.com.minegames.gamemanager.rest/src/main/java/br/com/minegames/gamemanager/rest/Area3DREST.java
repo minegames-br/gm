@@ -29,6 +29,7 @@ public class Area3DREST {
 			UUID uuid = service.create(domain);
 			domain.setArea_uuid(uuid);
 			json = JSONParser.getInstance().toJSONString(domain);
+			System.out.println("json create area: " + json);
 		    return Response.ok(json, MediaType.APPLICATION_JSON).build();
 		} else {
 			return Response.status(Response.Status.CONFLICT).entity("Não é possivel criar o Area3D com as informações fornecidas").build();

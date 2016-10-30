@@ -17,6 +17,7 @@
 		<class>br.com.minegames.core.domain.Local</class>
 		<class>br.com.minegames.core.domain.Config</class>
 		<class>br.com.minegames.core.domain.GameConfig</class>
+		<class>br.com.minegames.core.domain.GameConfigInstance</class>
 		<class>br.com.minegames.core.domain.GameArenaConfig</class>
 		<class>br.com.minegames.core.domain.Schematic</class>
 		<properties>

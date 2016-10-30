@@ -1,5 +1,7 @@
 package br.com.minegames.core.domain;
 
-public class TransferObject {
+import java.io.Serializable;
+
+public class TransferObject implements Serializable {
 
 }

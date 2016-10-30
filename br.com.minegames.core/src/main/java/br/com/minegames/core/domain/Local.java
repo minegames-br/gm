@@ -26,6 +26,8 @@ public class Local  extends TransferObject {
 	private int y;
 	private int z;
 	
+	private String name;
+	
 	public Local() {
 		super();
 	}
@@ -67,5 +69,15 @@ public class Local  extends TransferObject {
 	public String toString() {
 		return "" + x + "," + y + "," + z;
 	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	
 	
 }

@@ -12,7 +12,7 @@ import br.com.minegames.core.command.CommandAction;
 import br.com.minegames.core.domain.GameArenaConfig;
 import br.com.minegames.core.domain.GameConfig;
 import br.com.minegames.core.domain.GameConfigScope;
-import br.com.minegames.core.domain.GameGameConfig;
+import br.com.minegames.core.domain.GameConfigInstance;
 import br.com.minegames.gamemanager.client.GameManagerDelegate;
 import br.com.minegames.gamemanager.plugin.MineGamesPlugin;
 
@@ -46,7 +46,7 @@ public class SetupGameArenaAction extends CommandAction {
 		
 		if(p.getArena() == null ) {
 			if(player != null) {
-				player.sendMessage("Choose one of the existing arenas: /mg listarenas [name]");
+				player.sendMessage("Choose one of the existing arenas: /mg listarenas [name] or create one /mg createarena <name>");
 			}
 			return;
 		}
@@ -65,7 +65,7 @@ public class SetupGameArenaAction extends CommandAction {
 			if(gc.getConfigScope() == GameConfigScope.ARENA) {
 				p.getGameConfigArenaMap().put(gc.getName(), new GameArenaConfig());
 			} else {
-				p.getGameGameConfigMap().put(gc.getName(), new GameGameConfig());
+				p.getGameGameConfigMap().put(gc.getName(), new GameConfigInstance());
 			}
 		}
 		p.setConfigList(list);

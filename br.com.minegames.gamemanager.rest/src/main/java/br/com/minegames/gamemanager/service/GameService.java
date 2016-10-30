@@ -9,13 +9,17 @@ import javax.persistence.Query;
 
 import org.jboss.logging.Logger;
 
+import br.com.minegames.core.domain.Area3D;
 import br.com.minegames.core.domain.Arena;
 import br.com.minegames.core.domain.Game;
 import br.com.minegames.core.domain.GameArenaConfig;
 import br.com.minegames.core.domain.GameConfig;
+import br.com.minegames.core.domain.GameConfigType;
 import br.com.minegames.core.domain.GameInstance;
 import br.com.minegames.core.domain.GameState;
+import br.com.minegames.core.domain.Local;
 import br.com.minegames.core.domain.ServerInstance;
+import br.com.minegames.core.exception.MineGamesException;
 import br.com.minegames.gamemanager.dao.GameDAO;
 
 public class GameService extends Service {
@@ -28,11 +32,21 @@ public class GameService extends Service {
 		super(em);
 	}
 
-	public UUID createGame(Game game) {
+	public UUID createGame(Game game) throws MineGamesException {
 		startTransaction();
 		GameDAO dao = new GameDAO(em);
-		em.merge(game);
-		commitTransaction();
+		
+		Game _game = this.findGameByName(game.getName());
+		if(_game != null) {
+			throw new MineGamesException("Game already exits with this name.");
+		}
+		
+		game = (Game)em.merge(game);
+		try{
+			commitTransaction();
+		}catch(Exception e) {
+			return null;
+		}
 		Logger.getLogger(GameService.class).info("uuid: " + game.getGame_uuid());
 		return game.getGame_uuid();
 	}
@@ -53,6 +67,20 @@ public class GameService extends Service {
 		return list;
 	}
 
+	public Game findGameByName(String name) {
+		startTransaction();
+		Query query = em.createQuery("SELECT g FROM Game g where g.name = :_name");
+		query.setParameter("_name", name);
+		Game game = null;
+		try{
+			game = (Game)query.getSingleResult();
+		}catch(Exception e) {
+			return null;
+		}
+		commitTransaction();
+		return game;
+	}
+
 	public void delete(Game game) {
 		startTransaction();
 		em.remove(game);
@@ -71,10 +99,11 @@ public class GameService extends Service {
 		commitTransaction();
 	}
 	
-	public void addGameConfig(GameConfig gc) {
+	public GameConfig addGameConfig(GameConfig gc) {
 		startTransaction();
-		em.merge(gc);
+		gc = (GameConfig)em.merge(gc);
 		commitTransaction();
+		return gc;
 	}
 
 	public UUID createGameArenaConfig(GameArenaConfig domain) {
@@ -85,12 +114,24 @@ public class GameService extends Service {
 		domain.setArena(a);
 		
 		GameService gservice = new GameService(em);
-		Game g = gservice.find(domain.getGame().getGame_uuid());
-		domain.setGame(g);
+		GameConfig gc = em.find(GameConfig.class, domain.getGameConfig().getGame_config_uuid());
+		domain.setGameConfig(gc);
+		
+		if(gc.getConfigType() == GameConfigType.LOCAL) {
+			LocalService lService = new LocalService(em);
+			Local local = domain.getLocalValue();
+			local = lService.find(local.getLocal_uuid());
+			domain.setLocalValue(local);
+		} else if(gc.getConfigType() == GameConfigType.AREA3D) {
+			Area3DService aService = new Area3DService(em);
+			Area3D area = domain.getAreaValue();
+			area = aService.find(area.getArea_uuid());
+			domain.setAreaValue(area);
+		}
 		
 		em.persist(domain);
 		commitTransaction();
-		return domain.getGa_config_uuid();
+		return domain.getGac_uuid();
 	}
 
 	public GameArenaConfig findGameArenaConfig(UUID uuid) {

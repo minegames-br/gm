@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitScheduler;
@@ -27,8 +28,8 @@ public class MineGamesCommand  implements CommandExecutor {
 	}
     
 	@Override
-	public boolean onCommand(CommandSender arg0, Command arg1, String arg2, String[] arg3) {
-		MGLogger.debug( "CommandSender " + arg0.getName() );
+	public boolean onCommand(CommandSender commandSender, Command arg1, String arg2, String[] arg3) {
+		MGLogger.debug( "CommandSender " + commandSender.getName() );
 		MGLogger.debug( "Command " + arg1.getName() + " " + arg1.getLabel() + " " + arg1.getDescription() );
 		MGLogger.debug( "arg2 " + arg2);
 		MGLogger.info( "args length: " + arg3.length );
@@ -36,7 +37,17 @@ public class MineGamesCommand  implements CommandExecutor {
 			MGLogger.info( "arg: " + arg );
 		}
 		
-		final CommandAction action = getAction(arg0, arg1, arg2, arg3);
+		final CommandAction action = getAction(commandSender, arg1, arg2, arg3);
+		Player player = null; 
+		if( commandSender instanceof Player ) {
+			player = (Player)commandSender;
+		}
+		
+		if(action == null) {
+			player.sendMessage("Invalid Command");
+			return false;
+		}
+		
 		BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
 		scheduler.scheduleSyncDelayedTask(plugin, new Runnable() {
             @Override
@@ -62,6 +73,7 @@ public class MineGamesCommand  implements CommandExecutor {
 		commandArgs.put("listgames", ListGamesAction.class);
 		commandArgs.put("setgame", DefineGameAction.class);
 		commandArgs.put("setup", SetupGameArenaAction.class);
+		commandArgs.put("npc", SpawnNPCAction.class);
 	}
 	
 	private CommandAction getAction(CommandSender sender, Command command, String arg2, String[] arg3) {

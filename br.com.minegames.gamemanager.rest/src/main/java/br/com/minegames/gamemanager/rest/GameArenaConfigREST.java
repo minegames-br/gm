@@ -28,7 +28,7 @@ public class GameArenaConfigREST {
 		GameArenaConfig domain = (GameArenaConfig)JSONParser.getInstance().toObject(json, GameArenaConfig.class);
 		if(domain != null) {
 			UUID uuid = service.createGameArenaConfig(domain);
-			domain.setGa_config_uuid(uuid);
+			domain.setGac_uuid(uuid);
 			json = JSONParser.getInstance().toJSONString(domain);
 		    return Response.ok(json, MediaType.APPLICATION_JSON).build();
 		} else {

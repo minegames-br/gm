@@ -35,6 +35,12 @@ public class Service {
 		commitTransaction();
 	}
 	
+	public void create(TransferObject domain) {
+		startTransaction();
+		em.persist(domain);
+		commitTransaction();
+	}
+	
 	public TransferObject findByUUID(Class _class, UUID uuid) {
 		startTransaction();
 		TransferObject domain = em.find(_class, uuid);

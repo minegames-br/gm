@@ -21,34 +21,52 @@ public class GameArenaConfig extends TransferObject {
 	@GeneratedValue(generator = "uuid2")
 	@GenericGenerator(name = "uuid2", strategy = "uuid2")
 	@Column(columnDefinition = "BINARY(16)")
-	private UUID ga_config_uuid;
+	private UUID gac_uuid;
 	
 	@OneToOne
-	private Game game;
+	private GameConfig gameConfig;
 	
 	@OneToOne
 	private Arena arena;
 	
-	@OneToMany
-	private List<Config> simpleConfigList;
+	private Integer intValue;
 	
-	@ElementCollection
-	private Map<String, Config> configMap;
+	@OneToOne
+	private Local localValue;
+	
+	@OneToOne
+	private Area3D areaValue;
 
-	public UUID getGa_config_uuid() {
-		return ga_config_uuid;
+	public UUID getGac_uuid() {
+		return gac_uuid;
 	}
 
-	public void setGa_config_uuid(UUID ga_config_uuid) {
-		this.ga_config_uuid = ga_config_uuid;
+	public void setGac_uuid(UUID ga_config_uuid) {
+		this.gac_uuid = ga_config_uuid;
 	}
 
-	public Game getGame() {
-		return game;
+	public GameConfig getGameConfig() {
+		return gameConfig;
 	}
 
-	public void setGame(Game game) {
-		this.game = game;
+	public void setGameConfig(GameConfig gameConfig) {
+		this.gameConfig = gameConfig;
+	}
+
+	public Local getLocalValue() {
+		return localValue;
+	}
+
+	public void setLocalValue(Local localValue) {
+		this.localValue = localValue;
+	}
+
+	public Area3D getAreaValue() {
+		return areaValue;
+	}
+
+	public void setAreaValue(Area3D areaValue) {
+		this.areaValue = areaValue;
 	}
 
 	public Arena getArena() {
@@ -59,20 +77,13 @@ public class GameArenaConfig extends TransferObject {
 		this.arena = arena;
 	}
 
-	public List<Config> getSimpleConfigList() {
-		return simpleConfigList;
+	public Integer getIntValue() {
+		// TODO Auto-generated method stub
+		return this.intValue;
 	}
-
-	public void setSimpleConfigList(List<Config> simpleConfigList) {
-		this.simpleConfigList = simpleConfigList;
-	}
-
-	public Map<String, Config> getConfigMap() {
-		return configMap;
-	}
-
-	public void setConfigMap(Map<String, Config> configMap) {
-		this.configMap = configMap;
+	
+	public void setIntValue(Integer value) {
+		this.intValue = value;
 	}
 	
 	

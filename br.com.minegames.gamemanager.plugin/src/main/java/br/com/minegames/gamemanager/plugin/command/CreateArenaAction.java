@@ -88,14 +88,11 @@ public class CreateArenaAction extends CommandAction {
 			p.setArena(arena);
 			
 			Game game = p.getGame();
-			
-			GameArenaConfig gac = new GameArenaConfig();
-			gac.setArena(arena);
-			gac.setGame(game);
+
+			p.getArenas().add(arena);
 			
 			player.sendMessage("Associating Game and Arena...");
-			gac = delegate.createGameArenaConfig(gac);
-			player.sendMessage("GAC: " + gac.getGa_config_uuid());
+			game = delegate.updateGame(game);
 			
 			player.sendMessage("You have created arena: " + arena.getName() );
 		}catch(Exception e) {
