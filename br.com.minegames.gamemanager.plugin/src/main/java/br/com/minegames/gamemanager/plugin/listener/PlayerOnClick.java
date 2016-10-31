@@ -36,6 +36,11 @@ public class PlayerOnClick implements Listener {
     	
     	Bukkit.getLogger().info("What is in hand?" + event.getPlayer().getInventory().getItemInMainHand());
     	
+    	if(controller.getSetupArena()) {
+    		controller.onPlayerClickSetupArena(event);
+    		return;
+    	} 
+    	
     	if(event.getAction() == Action.LEFT_CLICK_BLOCK ) {
     		Block block = event.getClickedBlock();
     		blockDetails(block, event.getPlayer());
@@ -66,19 +71,19 @@ public class PlayerOnClick implements Listener {
     
     private void updateHologram(Block block, Lever lever, Player player) {
 		if(this.controller.getConfigValue() == null) {
-			this.controller.setConfigValue("0");
+			this.controller.setConfigValue(new Integer(0) );
 		}
 		
-		Integer configValue = Integer.parseInt(this.controller.getConfigValue());
+		Integer configValue = Integer.parseInt(this.controller.getConfigValue().toString());
 		if(block.getLocation().getBlockZ() == 400) {
 			configValue++;
-			this.controller.setConfigValue(configValue.toString());
+			this.controller.setConfigValue(configValue);
 			this.controller.updateConfigHologram(player);
 		} else if (block.getLocation().getBlockZ() == 403) {
 			if(configValue > 0) {
 				configValue --;
 			}
-			this.controller.setConfigValue(configValue.toString());
+			this.controller.setConfigValue(configValue);
 			this.controller.updateConfigHologram(player);
 		}
 		
@@ -89,6 +94,10 @@ public class PlayerOnClick implements Listener {
 			this.controller.previousConfig(player);
 		}
 		
+		if(block.getLocation().getBlockZ() == 397) {
+			this.controller.startArenaSetupTask();
+		}
+
 	}
 
 

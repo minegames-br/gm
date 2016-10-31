@@ -15,6 +15,7 @@ import javax.ws.rs.core.Response;
 import org.jboss.logging.Logger;
 
 import br.com.minegames.core.domain.Game;
+import br.com.minegames.core.domain.GameArenaConfig;
 import br.com.minegames.core.domain.GameConfig;
 import br.com.minegames.core.domain.GameConfigInstance;
 import br.com.minegames.core.domain.GameInstance;
@@ -94,7 +95,7 @@ public class GameREST {
 		GameService service = new GameService();
 		GameConfigInstance domain = (GameConfigInstance)JSONParser.getInstance().toObject(json, GameConfigInstance.class);
 		System.out.println("uuid no rest: " + domain.getGameConfig().getGame_config_uuid());
-		service.create(domain);
+		service.merge(domain);
 	    return Response.ok(json, MediaType.APPLICATION_JSON).build();
 	}
 	
@@ -122,7 +123,7 @@ public class GameREST {
 	@GET
 	@Path("/{uuid}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response get(@PathParam("uuid") String _uuid) {
+	public Response getGame(@PathParam("uuid") String _uuid) {
 		Logger.getLogger(GameREST.class).info("uuid recebido: " + _uuid );
 		GameService service = new GameService();
 		Game game = service.find( UUID.fromString(_uuid) );
@@ -176,6 +177,36 @@ public class GameREST {
 		} else {
 			return Response.status(Response.Status.NOT_FOUND).entity("Jogo não encontrado: " + _uuid).build();
 		}
+	}
+	
+	@GET
+	@Path("/{uuid}/gamearenaconfig/list")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response findAllGameArenaConfig(@PathParam("uuid") String _uuid) {
+		GameService service = new GameService();
+		Collection<GameArenaConfig> list = service.findAllGameArenaConfigByGame(UUID.fromString(_uuid));
+		String json = JSONParser.getInstance().toJSONString(list);
+		return Response.ok(json, MediaType.APPLICATION_JSON).build();
+	}
+	
+	@GET
+	@Path("/{gameUuid}/gamearenaconfig/{arenaUuid}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response findAllGameArenaConfig(@PathParam("gameUuid") String gameUuid, @PathParam("arenaUuid") String arenaUuid) {
+		GameService service = new GameService();
+		Collection<GameArenaConfig> list = service.findAllGameArenaConfigByGameArena(UUID.fromString(gameUuid), UUID.fromString(arenaUuid));
+		String json = JSONParser.getInstance().toJSONString(list);
+		return Response.ok(json, MediaType.APPLICATION_JSON).build();
+	}
+	
+	@GET
+	@Path("/{uuid}/gameconfiginstance/list")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response findAllGameConfigInstance(@PathParam("uuid") String _uuid) {
+		GameService service = new GameService();
+		Collection<GameConfigInstance> list = service.findAllGameConfigInstanceByGame(UUID.fromString(_uuid));
+		String json = JSONParser.getInstance().toJSONString(list);
+		return Response.ok(json, MediaType.APPLICATION_JSON).build();
 	}
 	
 	

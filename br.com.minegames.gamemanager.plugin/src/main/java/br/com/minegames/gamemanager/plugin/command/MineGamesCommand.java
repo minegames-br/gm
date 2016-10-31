@@ -54,7 +54,7 @@ public class MineGamesCommand  implements CommandExecutor {
             public void run() {
         		action.execute();
             }
-        }, 20L);
+        }, 5L);
 		return false;
 	}
 	
@@ -74,6 +74,7 @@ public class MineGamesCommand  implements CommandExecutor {
 		commandArgs.put("setgame", DefineGameAction.class);
 		commandArgs.put("setup", SetupGameArenaAction.class);
 		commandArgs.put("npc", SpawnNPCAction.class);
+		commandArgs.put("createworld", CreateWorldAction.class);
 	}
 	
 	private CommandAction getAction(CommandSender sender, Command command, String arg2, String[] arg3) {

@@ -15,5 +15,6 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="minecraft_server.1.10.2.jar"/>
 	<classpathentry kind="lib" path="craftbukkit-1.10.2.jar"/>
+	<classpathentry kind="lib" path="Multiverse-Core-2.5-b717.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

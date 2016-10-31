@@ -2,6 +2,7 @@ package br.com.minegames.gamemanager.service;
 
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.EntityManager;
@@ -14,6 +15,7 @@ import br.com.minegames.core.domain.Arena;
 import br.com.minegames.core.domain.Game;
 import br.com.minegames.core.domain.GameArenaConfig;
 import br.com.minegames.core.domain.GameConfig;
+import br.com.minegames.core.domain.GameConfigInstance;
 import br.com.minegames.core.domain.GameConfigType;
 import br.com.minegames.core.domain.GameInstance;
 import br.com.minegames.core.domain.GameState;
@@ -49,6 +51,20 @@ public class GameService extends Service {
 		}
 		Logger.getLogger(GameService.class).info("uuid: " + game.getGame_uuid());
 		return game.getGame_uuid();
+	}
+	
+	public Game updateGame(Game game) throws MineGamesException {
+		startTransaction();
+		GameDAO dao = new GameDAO(em);
+		
+		game = (Game)em.merge(game);
+		try{
+			commitTransaction();
+		}catch(Exception e) {
+			return null;
+		}
+		Logger.getLogger(GameService.class).info("uuid: " + game.getGame_uuid());
+		return game;
 	}
 	
 	public Game find(UUID uuid) {
@@ -120,16 +136,27 @@ public class GameService extends Service {
 		if(gc.getConfigType() == GameConfigType.LOCAL) {
 			LocalService lService = new LocalService(em);
 			Local local = domain.getLocalValue();
-			local = lService.find(local.getLocal_uuid());
+			if(local.getLocal_uuid() == null) {
+				local.setLocal_uuid( lService.create(local) );
+			} else {
+				local = lService.find(local.getLocal_uuid());
+			}
 			domain.setLocalValue(local);
 		} else if(gc.getConfigType() == GameConfigType.AREA3D) {
 			Area3DService aService = new Area3DService(em);
 			Area3D area = domain.getAreaValue();
-			area = aService.find(area.getArea_uuid());
+			if(area.getArea_uuid() == null) {
+				area.setArea_uuid( aService.create(area) );
+			} else {
+				area = aService.find(area.getArea_uuid()); 
+			}
 			domain.setAreaValue(area);
 		}
-		
-		em.persist(domain);
+		if(domain.getGac_uuid() == null) {
+			em.persist(domain);
+		} else {
+			em.merge(domain);
+		}
 		commitTransaction();
 		return domain.getGac_uuid();
 	}
@@ -149,7 +176,7 @@ public class GameService extends Service {
 
 	public Collection<GameConfig> findGameConfigList(String _uuid) {
 		startTransaction();
-		Query query = em.createQuery("SELECT gc FROM GameConfig gc where gc.game.game_uuid = :_uuid");
+		Query query = em.createQuery("SELECT gc FROM GameConfig gc where gc.game.game_uuid = :_uuid order by gc.groupName, gc.name");
 		query.setParameter("_uuid", UUID.fromString(_uuid) );
 		Collection<GameConfig> list = (Collection<GameConfig>) query.getResultList();
 		commitTransaction();
@@ -159,7 +186,7 @@ public class GameService extends Service {
 	public GameConfig findGameConfigByName(String name) {
 		GameConfig domain = null;
 		startTransaction();
-		Query query = em.createQuery("SELECT gc FROM GameConfig gc where gc.name = :_name");
+		Query query = em.createQuery("SELECT gc FROM GameConfig gc where gc.name = :_name order by gc.groupName, gc.name");
 		query.setParameter("_name", name );
 		try{
 			domain = (GameConfig)query.getSingleResult();
@@ -168,6 +195,49 @@ public class GameService extends Service {
 		}
 		commitTransaction();
 		return domain;
+	}
+
+	public Collection<GameArenaConfig> findAllGameArenaConfigByGame(UUID uuid) {
+		List<GameArenaConfig> list = null;
+		startTransaction();
+		Query query = em.createQuery("SELECT gac FROM GameArenaConfig gac where gac.gameConfig.game.game_uuid = :_uuid");
+		query.setParameter("_uuid", uuid );
+		try{
+			list = query.getResultList();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		commitTransaction();
+		return list;
+	}
+
+	public Collection<GameConfigInstance> findAllGameConfigInstanceByGame(UUID uuid) {
+		List<GameConfigInstance> list = null;
+		startTransaction();
+		Query query = em.createQuery("SELECT gci FROM GameConfigInstance gci where gci.gameConfig.game.game_uuid = :_uuid order by gci.gameConfig.groupName, gci.gameConfig.name");
+		query.setParameter("_uuid", uuid );
+		try{
+			list = query.getResultList();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		commitTransaction();
+		return list;
+	}
+
+	public Collection<GameArenaConfig> findAllGameArenaConfigByGameArena(UUID gameUUID, UUID arenaUUID) {
+		List<GameArenaConfig> list = null;
+		startTransaction();
+		Query query = em.createQuery("SELECT gac FROM GameArenaConfig gac where gac.gameConfig.game.game_uuid = :_gameUuid and gac.arena.arena_uuid = :_arenaUuid order by gac.gameConfig.groupName, gac.gameConfig.name");
+		query.setParameter("_gameUuid", gameUUID );
+		query.setParameter("_arenaUuid", arenaUUID );
+		try{
+			list = query.getResultList();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		commitTransaction();
+		return list;
 	}
 
 }

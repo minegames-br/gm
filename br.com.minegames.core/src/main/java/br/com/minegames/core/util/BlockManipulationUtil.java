@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.PrintWriter;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -20,10 +19,11 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.material.Directional;
-import org.bukkit.material.MaterialData;
 import org.bukkit.material.Sandstone;
 import org.bukkit.material.Stairs;
 import org.bukkit.material.Wool;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitScheduler;
 
 import br.com.minegames.core.domain.Area3D;
 import br.com.minegames.core.domain.Local;
@@ -198,7 +198,31 @@ public class BlockManipulationUtil {
 		}*/
 	}
 
-	public static void importSelection(File file, Player player) {
+	public static void importSelection(final JavaPlugin plugin, File file, final Player player) {
+	}
+	
+	public static void createBlock(final JavaPlugin plugin, final World world, final ExportBlock block) {
+    	Location l = new Location(world, block.getX(), block.getY(), block.getZ(), block.getYaw(), block.getPitch());
+    	Block b = l.getBlock();
+    	b.setType(block.getMaterial());
+		BlockState state = b.getState();
+
+    	if(block.getMaterial() == Material.WOOL) {
+    		Wool wool = (Wool)state.getData();
+    		wool.setColor(block.getColor());
+    	} else if(block.getMaterial() == Material.SANDSTONE) {
+    		Sandstone sandstone = (Sandstone)state.getData();
+    		sandstone.setType(block.getSandstoneType());
+    	} else if(block.getMaterial() == Material.QUARTZ_STAIRS) {
+    		Stairs stairs = (Stairs)state.getData();
+    		stairs.setData((byte)0);
+    		stairs.setFacingDirection(BlockFace.WEST);
+    	}
+	
+    	b.getState().update();
+	}
+
+	public static List<ExportBlock> loadSchematic(JavaPlugin plugin, File file, Player player) {
 		long time = System.currentTimeMillis();
 		List<ExportBlock> blocks = new ArrayList<ExportBlock>();
 		try(BufferedReader br = new BufferedReader(new FileReader(file))) {
@@ -222,12 +246,11 @@ public class BlockManipulationUtil {
 		    BlockManipulationUtil.destroyArea3D(player, selection);
 		    line = br.readLine();
 
-		    CopyOnWriteArrayList<ExportBlock> listBlocks = new CopyOnWriteArrayList<ExportBlock>();
 	    	World world = player.getWorld();
 		    
 		    while (line != null) {
 		    	String[] fields = line.split(",");
-		        Bukkit.getLogger().info(line);
+		        //Bukkit.getLogger().info(line);
 		    	ExportBlock block = new ExportBlock();
 		    	block.setX( Integer.parseInt(fields[0]));
 		    	block.setY( Integer.parseInt(fields[1]));
@@ -241,7 +264,7 @@ public class BlockManipulationUtil {
 		    	} else if(block.getMaterial() == Material.SANDSTONE) {
 		    		block.setSantstoneType(SandstoneType.valueOf(fields[7]));
 		    	}
-		    	Bukkit.getLogger().info("fields.length" + fields.length);
+		    	//Bukkit.getLogger().info("fields.length" + fields.length);
 		    	if(fields.length >= 9 && !fields[8].trim().equals("")) {
 			    	Bukkit.getLogger().info("fields[8)" + fields[8]);
 		    		block.setFace(BlockFace.valueOf(fields[8]));
@@ -259,7 +282,8 @@ public class BlockManipulationUtil {
 		    		block.setData(fields[11]);
 		    	}
 		    	
-		    	listBlocks.add(block);
+		    	blocks.add(block);
+		    	
 		    	line = br.readLine();
 		    	if(line == null || line.trim().equals("")) {
 		    		break;
@@ -270,38 +294,9 @@ public class BlockManipulationUtil {
 			time = System.currentTimeMillis();
 
 		    br.close();
-		    
-		    
-		    
-		    for(ExportBlock block: listBlocks) {
-		    	Location l = new Location(world, block.getX(), block.getY(), block.getZ(), block.getYaw(), block.getPitch());
-		    	Block b = l.getBlock();
-		    	b.setType(block.getMaterial());
-	    		BlockState state = b.getState();
-
-		    	if(block.getMaterial() == Material.WOOL) {
-		    		Wool wool = (Wool)state.getData();
-		    		wool.setColor(block.getColor());
-		    	} else if(block.getMaterial() == Material.SANDSTONE) {
-		    		Sandstone sandstone = (Sandstone)state.getData();
-		    		sandstone.setType(block.getSandstoneType());
-		    	} else if(block.getMaterial() == Material.QUARTZ_STAIRS) {
-		    		Stairs stairs = (Stairs)state.getData();
-		    		stairs.setData((byte)0);
-		    		stairs.setFacingDirection(BlockFace.WEST);
-		    	}
-		    	/*
-	    		if(block.getFace() != null) {
-		    		Directional directional = (Directional)b.getState().getData();
-		    		directional.setFacingDirection(block.getFace());
-		    	} else {
-		    	}*/
-		    	
-		    	b.getState().update();
-		    	
-		    }
 		}catch(Exception e){
 			e.printStackTrace();
 		}
+		return blocks;
 	}
 }

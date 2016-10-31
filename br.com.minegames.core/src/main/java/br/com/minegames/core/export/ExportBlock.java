@@ -23,6 +23,16 @@ public class ExportBlock {
 	private BlockFace face;
 	private String inverted;
 	
+	private Boolean created = false;
+	
+	public Boolean isCreated() {
+		return created;
+	}
+
+	public void setCreated(Boolean created) {
+		this.created = created;
+	}
+
 	public Material getMaterial() {
 		return material;
 	}

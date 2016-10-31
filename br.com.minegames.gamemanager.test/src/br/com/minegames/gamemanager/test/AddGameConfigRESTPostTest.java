@@ -33,6 +33,15 @@ public class AddGameConfigRESTPostTest {
 	public static final String GAME_LEVELS = "ARQUEIRO-GAME-NUMBER-OF-LEVELS";
 
 	public static void main(String args[]) {
+		GameManagerDelegate delegate = GameManagerDelegate.getInstance(URL_SERVICES);
+		Game game = delegate.findGame("c6905743-6514-49ba-9257-420743f65b65");
+		Arena arena = delegate.findArena("c5253674-8c19-4620-b500-51645a620f64");
+		game.getArenas().add(arena);
+		
+		delegate.updateGame(game);
+	}
+	
+	public static void main2(String args[]) {
 		
 		GameManagerDelegate delegate = GameManagerDelegate.getInstance(URL_SERVICES);
 

@@ -1,11 +1,18 @@
 package br.com.minegames.gamemanager.client;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.URL;
 import java.net.UnknownHostException;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 import java.util.List;
+import java.util.UUID;
 
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.commons.io.FileUtils;
@@ -43,11 +50,11 @@ public class GameManagerDelegate {
 	
 	public static GameManagerDelegate getInstance() {
 		String gamemanagerUrl = GameManagerClientPlugin.getMinegamesGameManagerUrl();
-		//Bukkit.getLogger().info("URL: "+ gamemanagerUrl);
+		Bukkit.getLogger().info("URL: "+ gamemanagerUrl);
 		if(me == null) {
 			me = new GameManagerDelegate();
-			me.gameManagerUrl = gamemanagerUrl;
 		}
+		me.gameManagerUrl = gamemanagerUrl;
 		return me;
 	}
 	
@@ -135,7 +142,7 @@ public class GameManagerDelegate {
 	private String get(String path) {
 		ClientRequest client = new ClientRequest(this.gameManagerUrl + path);
 		ClientResponse response = null;
-		Bukkit.getLogger().info(this.gameManagerUrl + path);
+		System.out.println(this.gameManagerUrl + path);
 		try {
 			response = client.get(String.class);
 		} catch (Exception e) {
@@ -370,6 +377,49 @@ public class GameManagerDelegate {
 		return myObjects;
 	}
 
+	public List<GameArenaConfig> findAllGameConfigArenaByGameUUID(String uuid) {
+        System.out.println("findAllGameConfigArenaByGameUUID request: " + uuid);
+        String json = get("/game/" + uuid + "/gamearenaconfig/list");
+        System.out.println("findAllGameConfigArenaByGameUUID response: " + json);
+        ObjectMapper mapper = new ObjectMapper();
+        List<GameArenaConfig> myObjects = null;
+		try {
+			myObjects = mapper.readValue(json, mapper.getTypeFactory().constructCollectionType(List.class, GameArenaConfig.class));
+		} catch (JsonParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return myObjects;
+	}
+
+
+	public List<GameConfigInstance> findAllGameConfigInstanceByGameUUID(String uuid) {
+        System.out.println("findAllGameConfigInstanceByGameUUID request: " + uuid);
+        String json = get("/game/" + uuid + "/gameconfiginstance/list");
+        System.out.println("findAllGameConfigInstanceByGameUUID response: " + json);
+        ObjectMapper mapper = new ObjectMapper();
+        List<GameConfigInstance> myObjects = null;
+		try {
+			myObjects = mapper.readValue(json, mapper.getTypeFactory().constructCollectionType(List.class, GameConfigInstance.class));
+		} catch (JsonParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return myObjects;
+	}
+
 	public GameConfigInstance addGameConfigInstance(GameConfigInstance domain) {
 		String json = JSONParser.getInstance().toJSONString(domain);
 		System.out.println("game config instance json: " + json );
@@ -428,6 +478,82 @@ public class GameManagerDelegate {
 		
 		return domain;
 	}
+
+	public Arena findArenaByName(String name) {
+		String json = get("/arena/search", name );
+		
+		Arena arena = (Arena)JSONParser.getInstance().toObject(json, Arena.class);
+		
+		return arena;
+	}
+
+	public List<Arena> findArenasByGameUUID(UUID uuid) {
+		String json = get("/" + uuid.toString() + "/arena/list" );
+		
+        ObjectMapper mapper = new ObjectMapper();
+        List<Arena> myObjects = null;
+		try {
+			myObjects = mapper.readValue(json, mapper.getTypeFactory().constructCollectionType(List.class, Arena.class));
+		} catch (JsonParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return myObjects;
+	}
+	
+	public File downloadArenaSchematic(UUID uuid, String path) {
+		File file = null;
+		Arena arena = findArena(uuid.toString());
+	    String URL=this.gameManagerUrl + "/arena/" + uuid.toString() + "/schematic";
+	    ClientRequest client = new ClientRequest(URL);
+	    try {
+	        URL website = new URL(URL);
+	        file = new File(path + "/" + arena.getArena_uuid().toString() + ".schematic");
+	        FileUtils.copyURLToFile(website, file);
+	    } catch ( Exception ex) {
+	    	ex.printStackTrace();
+	    }  
+        return file;
+	}
+
+	public List<GameArenaConfig> findAllGameConfigArenaByGameArena(String gameUuid, String arenaUuid) {
+        System.out.println("findAllGameConfigArenaByGameArena request: " + gameUuid);
+        String json = get("/game/" + gameUuid + "/gamearenaconfig/" + arenaUuid);
+        System.out.println("findAllGameConfigArenaByGameArena response: " + json);
+        ObjectMapper mapper = new ObjectMapper();
+        List<GameArenaConfig> myObjects = null;
+		try {
+			myObjects = mapper.readValue(json, mapper.getTypeFactory().constructCollectionType(List.class, GameArenaConfig.class));
+		} catch (JsonParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return myObjects;
+	}
+
+	public Arena updateArena(Arena arena) {
+		String json = JSONParser.getInstance().toJSONString(arena);
+		System.out.println(json);
+		json = post("/arena/" + arena.getArena_uuid(), json);
+		MGLogger.info("update arena: " + json);
+		arena = (Arena) JSONParser.getInstance().toObject(json, Arena.class);
+		MGLogger.info("Arena: " + arena.getArena_uuid().toString() );
+		return arena;
+	}
+
 }
 
 /*	public static void main(String args[]) {

@@ -1,6 +1,9 @@
 package br.com.minegames.gamemanager.plugin.command;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.WorldCreator;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -9,17 +12,15 @@ import org.bukkit.plugin.java.JavaPlugin;
 import br.com.minegames.core.command.CommandAction;
 import br.com.minegames.gamemanager.plugin.MineGamesPlugin;
 
-public class ShowHologramAction extends CommandAction {
+public class CreateWorldAction extends CommandAction {
 
-	private int threads = 3;
-	
-	public ShowHologramAction(JavaPlugin plugin, CommandSender arg0, Command arg1, String arg2, String[] arguments) {
+	public CreateWorldAction(JavaPlugin plugin, CommandSender arg0, Command arg1, String arg2, String[] arguments) {
 		super(plugin, arg0, arg1, arg2, arguments);
 	}
 
 	@Override
 	public void execute() {
-		Bukkit.getLogger().info("Executando commando Show Hologram " + this.commandSender + " "
+		Bukkit.getLogger().info("Executando commando Create World " + this.commandSender + " "
 				+ "\n" + this.command 
 				+ "\n" + this.arg2
 				+ "\n" + this.arguments);
@@ -30,11 +31,11 @@ public class ShowHologramAction extends CommandAction {
 		}
 		
 		MineGamesPlugin p = (MineGamesPlugin)plugin;
-		
-		String configName = p.getGameConfig().getDisplayName();
-		Integer configValue = Integer.parseInt( p.getConfigValue().toString() );
+		long time = System.currentTimeMillis();
 
-		p.updateConfigHologram(player);
+		WorldCreator wc = new WorldCreator("palace");
+		World world = Bukkit.createWorld(wc);
+		player.teleport(new Location(world, 0, 0, 0));
 	}
 
 }

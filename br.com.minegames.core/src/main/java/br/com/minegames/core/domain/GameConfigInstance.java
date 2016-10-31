@@ -3,28 +3,34 @@ package br.com.minegames.core.domain;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 @Entity
 public class GameConfigInstance extends TransferObject {
 
 	@Id
-	@OneToOne
+	@OneToOne(fetch = FetchType.EAGER)
 	private GameConfig gameConfig;
 	
-	@OneToOne
+	@OneToOne(fetch = FetchType.EAGER)
 	private Local local;
 	
-	@OneToOne
+	@OneToOne(fetch = FetchType.EAGER)
 	private Area3D area;
 	
 	private int intValue;
-	
+
+	@LazyCollection(LazyCollectionOption.FALSE)
 	@OneToMany
 	private List<Local> localList;
 	
+	@LazyCollection(LazyCollectionOption.FALSE)
 	@OneToMany
 	private List<Area3D> areaList;
 

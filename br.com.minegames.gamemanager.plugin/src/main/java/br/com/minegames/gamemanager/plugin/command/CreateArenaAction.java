@@ -89,7 +89,7 @@ public class CreateArenaAction extends CommandAction {
 			
 			Game game = p.getGame();
 
-			p.getArenas().add(arena);
+			game.getArenas().add(arena);
 			
 			player.sendMessage("Associating Game and Arena...");
 			game = delegate.updateGame(game);

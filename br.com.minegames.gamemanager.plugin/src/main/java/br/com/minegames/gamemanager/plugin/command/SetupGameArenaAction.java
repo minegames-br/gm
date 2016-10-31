@@ -1,6 +1,7 @@
 package br.com.minegames.gamemanager.plugin.command;
 
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -9,9 +10,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import br.com.minegames.core.command.CommandAction;
+import br.com.minegames.core.domain.Arena;
+import br.com.minegames.core.domain.Game;
 import br.com.minegames.core.domain.GameArenaConfig;
 import br.com.minegames.core.domain.GameConfig;
-import br.com.minegames.core.domain.GameConfigScope;
 import br.com.minegames.core.domain.GameConfigInstance;
 import br.com.minegames.gamemanager.client.GameManagerDelegate;
 import br.com.minegames.gamemanager.plugin.MineGamesPlugin;
@@ -36,6 +38,14 @@ public class SetupGameArenaAction extends CommandAction {
 
 		MineGamesPlugin p = (MineGamesPlugin)this.plugin;
 
+		player.sendMessage("Loading game data...");
+		GameManagerDelegate delegate = GameManagerDelegate.getInstance();
+		Game game = delegate.findGame("c6905743-6514-49ba-9257-420743f65b65");
+		player.sendMessage("Loading arena data...");
+		Arena arena = delegate.findArena("04cdb0ab-bbc2-41b9-8ccb-5cd555838f68");
+		p.setGame(game);
+		p.setArena(arena);
+		
 		String server_uuid = p.getConfigFile().getString("minegames.server.uuid");
 		if(server_uuid == null || server_uuid.equals("")) {
 			if(player != null) {
@@ -58,17 +68,23 @@ public class SetupGameArenaAction extends CommandAction {
 			return;
 		}
 		
-		GameManagerDelegate delegate = GameManagerDelegate.getInstance();
-		
-		List<GameConfig> list = delegate.listGameConfig(p.getGame());
-		for(GameConfig gc: list) {
-			if(gc.getConfigScope() == GameConfigScope.ARENA) {
-				p.getGameConfigArenaMap().put(gc.getName(), new GameArenaConfig());
-			} else {
-				p.getGameGameConfigMap().put(gc.getName(), new GameConfigInstance());
-			}
+		player.sendMessage("Loading game configurations already set up...");
+		List<GameConfigInstance> listGCI = delegate.findAllGameConfigInstanceByGameUUID(p.getGame().getGame_uuid().toString());
+		for(GameConfigInstance gci: listGCI) {
+			p.getGameGameConfigMap().put(gci.getGameConfig().getName(), gci);
 		}
+		
+		List<GameArenaConfig> listGCA = delegate.findAllGameConfigArenaByGameArena(p.getGame().getGame_uuid().toString(), p.getArena().getArena_uuid().toString());
+		for(GameArenaConfig gca: listGCA) {
+			p.getGameConfigArenaMap().put(gca.getGameConfig().getName(), gca);
+		}
+		
+		player.sendMessage("Loading game data to be set up...");
+		List<GameConfig> list = delegate.listGameConfig(p.getGame());
+		Bukkit.getLogger().info("game config list: " + list.size());
+		
 		p.setConfigList(list);
+		p.setPlayer(player);
 		p.setupGameArenaConfig(player);
 	}
 	

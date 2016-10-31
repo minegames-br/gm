@@ -33,6 +33,9 @@ public class Arena extends TransferObject {
 	@OneToOne
 	private Schematic schematic;
 	
+	@OneToOne
+	private Area3D area;
+	
 	public UUID getArena_uuid() {
 		return arena_uuid;
 	}
@@ -62,6 +65,12 @@ public class Arena extends TransferObject {
 	}
 	public void setSchematic(Schematic schematic) {
 		this.schematic = schematic;
+	}
+	public Area3D getArea() {
+		return area;
+	}
+	public void setArea(Area3D area) {
+		this.area = area;
 	}
 	
 }

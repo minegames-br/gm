@@ -56,7 +56,7 @@ public class ImportStructureAction extends CommandAction {
 		long time = System.currentTimeMillis();
 		player.sendMessage("Reading blocks");
 		File file = new File(p.getDataFolder(), "selection.blocks");
-		BlockManipulationUtil.importSelection(file, player);
+		BlockManipulationUtil.importSelection(this.plugin, file, player);
 		player.sendMessage((System.currentTimeMillis()-time)/1000 + " secs import blocks");
 
 	}

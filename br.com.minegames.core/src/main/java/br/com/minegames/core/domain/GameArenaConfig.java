@@ -1,15 +1,12 @@
 package br.com.minegames.core.domain;
 
-import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -23,18 +20,18 @@ public class GameArenaConfig extends TransferObject {
 	@Column(columnDefinition = "BINARY(16)")
 	private UUID gac_uuid;
 	
-	@OneToOne
+	@OneToOne(fetch = FetchType.EAGER)
 	private GameConfig gameConfig;
 	
-	@OneToOne
+	@OneToOne(fetch = FetchType.EAGER)
 	private Arena arena;
 	
 	private Integer intValue;
 	
-	@OneToOne
+	@OneToOne(fetch = FetchType.EAGER)
 	private Local localValue;
 	
-	@OneToOne
+	@OneToOne(fetch = FetchType.EAGER)
 	private Area3D areaValue;
 
 	public UUID getGac_uuid() {

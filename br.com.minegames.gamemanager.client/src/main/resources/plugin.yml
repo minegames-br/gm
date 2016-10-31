@@ -2,5 +2,5 @@ name: GameManager-Client
 author: joaoemilio
 version: 1.0.0
 main: br.com.minegames.gamemanager.client.GameManagerClientPlugin
-depend: 
+depend: [MineGames-Core]
 commands:

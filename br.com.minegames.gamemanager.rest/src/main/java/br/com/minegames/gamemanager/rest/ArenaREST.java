@@ -1,5 +1,6 @@
 package br.com.minegames.gamemanager.rest;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -11,10 +12,10 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
 
 import br.com.minegames.core.domain.Arena;
 import br.com.minegames.core.json.JSONParser;
-import br.com.minegames.core.logging.MGLogger;
 import br.com.minegames.gamemanager.service.ArenaService;
 
 @Path("/arena")
@@ -50,6 +51,23 @@ public class ArenaREST {
 		}
 	}
 	
+	@POST
+	@Path("/{uuid}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response update(@PathParam("uuid") String _uuid, String json) {
+		ArenaService service = new ArenaService();
+		Arena domain = service.find( UUID.fromString(_uuid) );
+		if( domain != null) {
+			domain = (Arena)JSONParser.getInstance().toObject(json, Arena.class);
+			service.merge(domain);
+			domain = service.find( UUID.fromString(_uuid) );
+			json = JSONParser.getInstance().toJSONString(domain);
+		    return Response.ok( json , MediaType.APPLICATION_JSON).build();
+		} else {
+			return Response.status(Response.Status.NOT_FOUND).entity("Arena não encontrado: " + _uuid).build();
+		}
+	}
+	
 	@GET
 	@Path("/list")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -74,5 +92,23 @@ public class ArenaREST {
 		}
 	}
 	
-	
+    @GET
+    @Path("/{uuid}/schematic")
+    @Produces("text/plain")
+    public Response getFileInTextFormat(@PathParam("uuid") String uuid) 
+    {
+        System.out.println("Download structure file for arena: " + uuid);
+
+		ArenaService service = new ArenaService();
+		Arena domain = service.find( UUID.fromString(uuid) );
+		if( domain != null) {
+	        File file = new File( domain.getSchematic().getPath() + "/" + domain.getArena_uuid().toString() + ".schematic" );
+	        ResponseBuilder response = Response.ok((Object) file);
+	        response.header("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"");
+	        return response.build();
+		} else {
+			return Response.status(Response.Status.NOT_FOUND).entity("Arena not found: " + uuid).build();
+		}
+        
+    }	
 }

@@ -84,6 +84,20 @@ public class ArenaService extends Service {
 		return list;
 	}
 
+	public Arena findArenaByName(String name) {
+		startTransaction();
+		Query query = em.createQuery("SELECT a FROM Arena a where a.name = :_name");
+		query.setParameter("_name", name);
+		Arena arena = null;
+		try{
+			arena = (Arena)query.getSingleResult();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		commitTransaction();
+		return arena;
+	}
+
 	public void delete(Arena domain) {
 		startTransaction();
 		em.remove(domain);
