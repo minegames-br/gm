@@ -27,14 +27,6 @@ public class Game extends TransferObject {
 	private String name;
 	private String description;
 	
-	@LazyCollection(LazyCollectionOption.FALSE)
-	@OneToMany
-	private List<GameConfig> gameConfigList;
-	
-	@LazyCollection(LazyCollectionOption.FALSE)
-	@OneToMany
-	private List<Arena> arenas;
-	
 	public UUID getGame_uuid() {
 		return game_uuid;
 	}
@@ -52,18 +44,6 @@ public class Game extends TransferObject {
 	}
 	public void setDescription(String description) {
 		this.description = description;
-	}
-	public List<GameConfig> getGameConfigList() {
-		return gameConfigList;
-	}
-	public void setGameConfigList(List<GameConfig> gameConfigList) {
-		this.gameConfigList = gameConfigList;
-	}
-	public List<Arena> getArenas() {
-		return arenas;
-	}
-	public void setArenas(List<Arena> arenas) {
-		this.arenas = arenas;
 	}
 	
 }

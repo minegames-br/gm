@@ -10,6 +10,7 @@ public class MultiVerseWrapper {
 	
 	public static World cloneWorld(JavaPlugin plugin, String oldName, String newName) {
 		MultiverseCore mvc = (MultiverseCore)Bukkit.getPluginManager().getPlugin("Multiverse-Core");
+		Bukkit.getLogger().info("MV Clone World - " + "old: " + oldName + " new: " + newName); 
 		mvc.cloneWorld(oldName, newName, "VoidWorld");
 		mvc.getMVWorldManager().loadWorld( newName );
 		return Bukkit.getWorld( newName );

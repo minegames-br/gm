@@ -36,6 +36,28 @@ public class GameArenaConfigREST {
 		}
 	}
 	
+	@POST
+	@Path("/{uuid}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response update(@PathParam("uuid") String _uuid, String json) {
+		Logger.getLogger(GameArenaConfigREST.class).info("json recebido: " + json );
+		GameService service = new GameService();
+		
+		GameArenaConfig _domain = (GameArenaConfig)service.findByUUID( GameArenaConfig.class, UUID.fromString(_uuid));
+		if( _domain == null) {
+			return Response.status(Response.Status.CONFLICT).entity("GameArenaConfig does not exist: " + _uuid ).build();
+		}
+		GameArenaConfig domain = (GameArenaConfig)JSONParser.getInstance().toObject(json, GameArenaConfig.class);
+		
+		if(domain != null) {
+			service.merge(domain);
+			json = JSONParser.getInstance().toJSONString(domain);
+		    return Response.ok(json, MediaType.APPLICATION_JSON).build();
+		} else {
+			return Response.status(Response.Status.CONFLICT).entity("Não é possivel criar a configuração com as informações fornecidas").build();
+		}
+	}
+	
 	@GET
 	@Path("/{uuid}")
 	@Produces(MediaType.APPLICATION_JSON)

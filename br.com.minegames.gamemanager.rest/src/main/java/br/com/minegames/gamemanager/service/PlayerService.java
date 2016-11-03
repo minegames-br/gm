@@ -11,41 +11,41 @@ import javax.persistence.Query;
 
 import org.jboss.logging.Logger;
 
-import br.com.minegames.core.domain.GamePlayer;
+import br.com.minegames.core.domain.MineCraftPlayer;
 import br.com.minegames.gamemanager.dao.PlayerDAO;
 
 public class PlayerService extends Service {
 	
-	public UUID create(GamePlayer domain) {
+	public UUID create(MineCraftPlayer domain) {
 		startTransaction();
 		PlayerDAO dao = new PlayerDAO(em);
 		dao.save(domain);
 		commitTransaction();
-		Logger.getLogger(PlayerService.class).info("uuid: " + domain.getGp_uuid());
-		return domain.getGp_uuid();
+		Logger.getLogger(PlayerService.class).info("uuid: " + domain.getMcp_uuid());
+		return domain.getMcp_uuid();
 	}
 	
-	public GamePlayer find(UUID uuid) {
+	public MineCraftPlayer find(UUID uuid) {
 		startTransaction();
 		PlayerDAO dao = new PlayerDAO(em);
-		GamePlayer domain = dao.find(uuid);
+		MineCraftPlayer domain = dao.find(uuid);
 		commitTransaction();
 		return domain;
 	}
 	
-	public Collection<GamePlayer> findAll() {
+	public Collection<MineCraftPlayer> findAll() {
 		startTransaction();
 		Query query = em.createQuery("SELECT gp FROM GamePlayer gp");
-		Collection<GamePlayer> list = (Collection<GamePlayer>) query.getResultList();
+		Collection<MineCraftPlayer> list = (Collection<MineCraftPlayer>) query.getResultList();
 		commitTransaction();
 		return list;
 	}
 
-	public void delete(GamePlayer domain) {
+	public void delete(MineCraftPlayer domain) {
 		startTransaction();
 		em.remove(domain);
 		commitTransaction();
-		Logger.getLogger(PlayerService.class).info("uuid: " + domain.getGp_uuid() + " deletado");
+		Logger.getLogger(PlayerService.class).info("uuid: " + domain.getMcp_uuid() + " deletado");
 	}
 	
 }

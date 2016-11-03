@@ -10,7 +10,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import br.com.minegames.core.command.CommandAction;
@@ -75,6 +74,7 @@ public class MineGamesCommand  implements CommandExecutor {
 		commandArgs.put("setup", SetupGameArenaAction.class);
 		commandArgs.put("npc", SpawnNPCAction.class);
 		commandArgs.put("createworld", CreateWorldAction.class);
+		commandArgs.put("update", UpdateArenaSchematicAction.class);
 	}
 	
 	private CommandAction getAction(CommandSender sender, Command command, String arg2, String[] arg3) {

@@ -38,13 +38,7 @@ public class SetupGameArenaAction extends CommandAction {
 
 		MineGamesPlugin p = (MineGamesPlugin)this.plugin;
 
-		player.sendMessage("Loading game data...");
 		GameManagerDelegate delegate = GameManagerDelegate.getInstance();
-		Game game = delegate.findGame("c6905743-6514-49ba-9257-420743f65b65");
-		player.sendMessage("Loading arena data...");
-		Arena arena = delegate.findArena("04cdb0ab-bbc2-41b9-8ccb-5cd555838f68");
-		p.setGame(game);
-		p.setArena(arena);
 		
 		String server_uuid = p.getConfigFile().getString("minegames.server.uuid");
 		if(server_uuid == null || server_uuid.equals("")) {

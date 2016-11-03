@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -168,6 +169,21 @@ public class MineGamesPlugin extends JavaPlugin {
 			this.selection = new Area3D();
 		}
 		selection.setPointA(local);
+		//Fazer o Y ser um bloco acima do menor Y 
+		updateYPosition();
+	}
+
+	/**
+	 * Esse método corrige o Y para evitar, por exemplo, de um zumbi nascer dentro de um bloco
+	 */
+	private void updateYPosition() {
+		if(this.selection.getPointB() != null && this.selection.getPointA() != null) {
+			if(this.selection.getPointA().getY() <= this.selection.getPointB().getY() ) {
+				this.selection.getPointA().setY( this.selection.getPointA().getY() +1 );
+			} else {
+				this.selection.getPointB().setY( this.selection.getPointB().getY() +1 );
+			}
+		}
 	}
 
 	public void setSelectionPointB(Location l) {
@@ -176,6 +192,8 @@ public class MineGamesPlugin extends JavaPlugin {
 			this.selection = new Area3D();
 		}
 		selection.setPointB(local);
+		//Fazer o Y ser um bloco acima do menor Y 
+		updateYPosition();
 	}
 
 	public String getServer_uuid() {
@@ -252,11 +270,19 @@ public class MineGamesPlugin extends JavaPlugin {
             @Override
             public void run() {
             	for(final GameConfigInstance gcc: plugin.getGameGameConfigMap().values() ) {
-	            	delegate.addGameConfigInstance(gcc);
+            		if(gcc.getGameConfig().getGame_config_uuid() == null) {
+    	            	delegate.createGameConfigInstance(gcc);
+            		} else {
+            			delegate.updateGameConfigInstance(gcc);
+            		}
 	            }
         		
 	            for(final GameArenaConfig gac: plugin.getGameConfigArenaMap().values()) {
-	            	delegate.createGameArenaConfig(gac);
+	            	if(gac.getGac_uuid() == null) {
+		            	delegate.createGameArenaConfig(gac);
+	            	} else {
+	            		delegate.updateGameArenaConfig(gac);
+	            	}
 	            }
             }
 		});
@@ -266,6 +292,9 @@ public class MineGamesPlugin extends JavaPlugin {
 		this.setupLocation = new Location(player.getWorld(), -764, 5, 402);
 		this.player = player;
 		player.teleport(this.setupLocation);
+		player.setAllowFlight(true);
+		player.setFlying(true);
+		player.setGameMode(GameMode.CREATIVE);
 		
 		//setup int values 
 		List<GameConfig> listInts = new ArrayList<GameConfig>();
@@ -287,7 +316,7 @@ public class MineGamesPlugin extends JavaPlugin {
 		}
 		updateConfigValue();
 		
-		TitleUtil.sendTitle(player, 10, 20, 10, "Time to setup the game", "Click on levers to change value and switch configs. Open the door to save your configs.");
+		TitleUtil.sendTitle(player, 10, 20, 10, "Click on levers to change value and switch configs.", "Open the door to save.");
 		
 		updateConfigHologram(player);
 	}
@@ -588,6 +617,7 @@ public class MineGamesPlugin extends JavaPlugin {
 		BukkitScheduler scheduler = Bukkit.getScheduler();
 		scheduler.cancelTask( this.arenaSetupTaskThreadID );
 		this.setupArena = false;
+		this.setupLocation = new Location(player.getWorld(), -764, 5, 402);
 		saveGameConfig();
 	}
 

@@ -95,7 +95,24 @@ public class GameREST {
 		GameService service = new GameService();
 		GameConfigInstance domain = (GameConfigInstance)JSONParser.getInstance().toObject(json, GameConfigInstance.class);
 		System.out.println("uuid no rest: " + domain.getGameConfig().getGame_config_uuid());
-		service.merge(domain);
+		service.create(domain);
+	    return Response.ok(json, MediaType.APPLICATION_JSON).build();
+	}
+	
+	@Path("/config/instance/{uuid}")
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response addGameConfigInstance(@PathParam("uuid") String _uuid, String json) {
+		Logger.getLogger(GameREST.class).info("json recebido: " + json );
+		GameService service = new GameService();
+		
+		GameConfigInstance _domain = service.findGameConfigInstanceByGameConfigUUID(UUID.fromString(_uuid));
+		GameConfigInstance domain = (GameConfigInstance)JSONParser.getInstance().toObject(json, GameConfigInstance.class);
+		if(_domain == null) {
+			service.create(domain);
+		} else {
+			service.merge(domain);
+		}
 	    return Response.ok(json, MediaType.APPLICATION_JSON).build();
 	}
 	

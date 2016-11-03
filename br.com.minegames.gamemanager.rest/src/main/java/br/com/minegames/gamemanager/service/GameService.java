@@ -240,4 +240,18 @@ public class GameService extends Service {
 		return list;
 	}
 
+	public GameConfigInstance findGameConfigInstanceByGameConfigUUID(UUID uuid) {
+		GameConfigInstance domain = null;
+		startTransaction();
+		Query query = em.createQuery("SELECT gci FROM GameConfigInstance gci where gci.gameConfig.game_config_uuid = :_uuid");
+		query.setParameter("_uuid", uuid );
+		try{
+			domain = (GameConfigInstance)query.getSingleResult();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		commitTransaction();
+		return domain;
+	}
+
 }

@@ -8,13 +8,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.sk89q.worldedit.WorldEdit;
-import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-
 import br.com.minegames.core.command.CommandAction;
+import br.com.minegames.core.domain.Area3D;
 import br.com.minegames.core.domain.Arena;
 import br.com.minegames.core.domain.Game;
-import br.com.minegames.core.domain.GameArenaConfig;
 import br.com.minegames.core.domain.Schematic;
 import br.com.minegames.gamemanager.client.GameManagerDelegate;
 import br.com.minegames.gamemanager.plugin.MineGamesPlugin;
@@ -83,16 +80,15 @@ public class CreateArenaAction extends CommandAction {
 			arena.setName(name);
 			arena.setDescription(name);
 			arena.setSchematic(schematic);
+
+			player.sendMessage("Creating Area3D data...");
+			Area3D area = delegate.addArea3D(p.getSelection());
+			arena.setArea(area);
+			arena = delegate.updateArena(arena);
+			
 			player.sendMessage("Creating Arena data...");
 			arena = delegate.createArena(arena);
 			p.setArena(arena);
-			
-			Game game = p.getGame();
-
-			game.getArenas().add(arena);
-			
-			player.sendMessage("Associating Game and Arena...");
-			game = delegate.updateGame(game);
 			
 			player.sendMessage("You have created arena: " + arena.getName() );
 		}catch(Exception e) {

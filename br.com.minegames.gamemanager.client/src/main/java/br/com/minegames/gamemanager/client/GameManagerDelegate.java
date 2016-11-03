@@ -243,6 +243,15 @@ public class GameManagerDelegate {
 		return config;
 	}
 
+	public GameArenaConfig updateGameArenaConfig(GameArenaConfig domain) {
+		String json = JSONParser.getInstance().toJSONString(domain);
+		System.out.println(json);
+		json = post("/gamearenaconfig/" + domain.getGac_uuid().toString(), json);
+		MGLogger.info("update game config instance: " + json);
+		domain = (GameArenaConfig) JSONParser.getInstance().toObject(json, GameArenaConfig.class);
+		return domain;
+	}
+	
 	public Arena findArena(String arena_uuid) {
 		Arena arena = null;
 		
@@ -420,7 +429,7 @@ public class GameManagerDelegate {
 		return myObjects;
 	}
 
-	public GameConfigInstance addGameConfigInstance(GameConfigInstance domain) {
+	public GameConfigInstance createGameConfigInstance(GameConfigInstance domain) {
 		String json = JSONParser.getInstance().toJSONString(domain);
 		System.out.println("game config instance json: " + json );
 		json = post("/game/config/instance/add", json);
@@ -430,6 +439,15 @@ public class GameManagerDelegate {
 		return domain;
 	}
 
+	public GameConfigInstance updateGameConfigInstance(GameConfigInstance domain) {
+		String json = JSONParser.getInstance().toJSONString(domain);
+		System.out.println(json);
+		json = post("/game/config/instance/" + domain.getGameConfig().getGame_config_uuid().toString(), json);
+		MGLogger.info("update game config instance: " + json);
+		domain = (GameConfigInstance) JSONParser.getInstance().toObject(json, GameConfigInstance.class);
+		MGLogger.info("Game Config Instance: " + domain.getGameConfig().getGame_config_uuid().toString() );
+		return domain;
+	}
 	
 	public static void main(String args[]) {
 		GameManagerClientPlugin.setMinegamesGameManagerUrl("http://localhost:8080/gamemanager/webresources");
@@ -509,13 +527,20 @@ public class GameManagerDelegate {
 	}
 	
 	public File downloadArenaSchematic(UUID uuid, String path) {
+		File dir = null;
 		File file = null;
 		Arena arena = findArena(uuid.toString());
 	    String URL=this.gameManagerUrl + "/arena/" + uuid.toString() + "/schematic";
 	    ClientRequest client = new ClientRequest(URL);
 	    try {
 	        URL website = new URL(URL);
-	        file = new File(path + "/" + arena.getArena_uuid().toString() + ".schematic");
+	        dir = new File(path);
+	        if(!dir.exists() ) {
+	        	dir.mkdirs();
+	        }
+	        
+	        file = new File( dir, arena.getArena_uuid().toString() + ".schematic");
+	        
 	        FileUtils.copyURLToFile(website, file);
 	    } catch ( Exception ex) {
 	    	ex.printStackTrace();

@@ -10,7 +10,7 @@
 		<class>br.com.minegames.core.domain.Game</class>
 		<class>br.com.minegames.core.domain.ServerInstance</class>
 		<class>br.com.minegames.core.domain.GameInstance</class>
-		<class>br.com.minegames.core.domain.GamePlayer</class>
+		<class>br.com.minegames.core.domain.MineCraftPlayer</class>
 		<class>br.com.minegames.core.domain.GameWorld</class>
 		<class>br.com.minegames.core.domain.Arena</class>
 		<class>br.com.minegames.core.domain.Area3D</class>

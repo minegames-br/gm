@@ -102,7 +102,7 @@ public class ArenaREST {
 		ArenaService service = new ArenaService();
 		Arena domain = service.find( UUID.fromString(uuid) );
 		if( domain != null) {
-	        File file = new File( domain.getSchematic().getPath() + "/" + domain.getArena_uuid().toString() + ".schematic" );
+	        File file = new File( domain.getSchematic().getPath() + "/" + domain.getSchematic().getSchematic_uuid() + ".schematic" );
 	        ResponseBuilder response = Response.ok((Object) file);
 	        response.header("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"");
 	        return response.build();

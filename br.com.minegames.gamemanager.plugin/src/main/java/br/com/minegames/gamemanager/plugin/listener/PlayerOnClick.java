@@ -43,7 +43,7 @@ public class PlayerOnClick implements Listener {
     	
     	if(event.getAction() == Action.LEFT_CLICK_BLOCK ) {
     		Block block = event.getClickedBlock();
-    		blockDetails(block, event.getPlayer());
+    		//blockDetails(block, event.getPlayer());
     		controller.setSelectionPointA(event.getClickedBlock().getLocation());
     		Local l = controller.getSelection().getPointA();
     		event.getPlayer().sendMessage("Area 3D PointA selected " + l.getX() + "," + l.getY() + "," + l.getZ() + " block: " + block.getState().getData() );
@@ -51,7 +51,7 @@ public class PlayerOnClick implements Listener {
         
     	if(event.getAction() == Action.RIGHT_CLICK_BLOCK) {
     		Block block = event.getClickedBlock();
-    		blockDetails(block, event.getPlayer());
+    		//blockDetails(block, event.getPlayer());
     		controller.setSelectionPointB(event.getClickedBlock().getLocation());
     		Local l = controller.getSelection().getPointB();
     		event.getPlayer().sendMessage("Area 3D PointB selected " + l.getX() + "," + l.getY() + "," + l.getZ() + " block: " + block.getState().getData() );

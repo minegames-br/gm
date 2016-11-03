@@ -4,7 +4,7 @@ import java.util.UUID;
 
 import javax.persistence.EntityManager;
 
-import br.com.minegames.core.domain.GamePlayer;
+import br.com.minegames.core.domain.MineCraftPlayer;
 
 public class PlayerDAO extends AbstractDAO {
 
@@ -12,11 +12,11 @@ public class PlayerDAO extends AbstractDAO {
 		super(em);
 	}
 	
-	public GamePlayer find(UUID uuid) {
-		return em.find(GamePlayer.class, uuid);
+	public MineCraftPlayer find(UUID uuid) {
+		return em.find(MineCraftPlayer.class, uuid);
 	}
 	
-	public void save(GamePlayer domain) {
+	public void save(MineCraftPlayer domain) {
 		em.persist(domain);
 	}
 	

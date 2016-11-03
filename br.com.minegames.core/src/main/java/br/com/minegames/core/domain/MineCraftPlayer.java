@@ -7,34 +7,28 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+import org.bukkit.Location;
+import org.bukkit.boss.BossBar;
+import org.bukkit.entity.Player;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
-public class GamePlayer extends TransferObject {
+public class MineCraftPlayer extends TransferObject {
 
 	@Id
 	@GeneratedValue(generator = "uuid2")
 	@GenericGenerator(name = "uuid2", strategy = "uuid2")
 	@Column(columnDefinition = "BINARY(16)")
-	private UUID gp_uuid;
+	private UUID mcp_uuid;
 	
-	//Minecraft/Mojang UUID
 	@Column(unique=true)
 	private String player_uuid;
-	
-	@Column(unique=true)
 	private String email;
 	
-	private String name;
-	
 	@Column(unique=true)
+	private String name;
 	private String nickName;
-	public UUID getGp_uuid() {
-		return gp_uuid;
-	}
-	public void setGp_uuid(UUID gp_uuid) {
-		this.gp_uuid = gp_uuid;
-	}
+
 	public String getPlayer_uuid() {
 		return player_uuid;
 	}
@@ -59,7 +53,12 @@ public class GamePlayer extends TransferObject {
 	public void setNickName(String nickName) {
 		this.nickName = nickName;
 	}
+	public UUID getMcp_uuid() {
+		return mcp_uuid;
+	}
+	public void setMcp_uuid(UUID mcp_uuid) {
+		this.mcp_uuid = mcp_uuid;
+	}
 	
 	
-
 }
