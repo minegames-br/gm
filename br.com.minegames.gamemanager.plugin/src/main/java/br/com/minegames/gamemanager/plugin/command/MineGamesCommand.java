@@ -28,14 +28,6 @@ public class MineGamesCommand  implements CommandExecutor {
     
 	@Override
 	public boolean onCommand(CommandSender commandSender, Command arg1, String arg2, String[] arg3) {
-		MGLogger.debug( "CommandSender " + commandSender.getName() );
-		MGLogger.debug( "Command " + arg1.getName() + " " + arg1.getLabel() + " " + arg1.getDescription() );
-		MGLogger.debug( "arg2 " + arg2);
-		MGLogger.info( "args length: " + arg3.length );
-		for(String arg: arg3) {
-			MGLogger.info( "arg: " + arg );
-		}
-		
 		final CommandAction action = getAction(commandSender, arg1, arg2, arg3);
 		Player player = null; 
 		if( commandSender instanceof Player ) {
@@ -75,6 +67,7 @@ public class MineGamesCommand  implements CommandExecutor {
 		commandArgs.put("npc", SpawnNPCAction.class);
 		commandArgs.put("createworld", CreateWorldAction.class);
 		commandArgs.put("update", UpdateArenaSchematicAction.class);
+		commandArgs.put("loadarena", LoadArenaAction.class);
 	}
 	
 	private CommandAction getAction(CommandSender sender, Command command, String arg2, String[] arg3) {

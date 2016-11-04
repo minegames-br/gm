@@ -31,11 +31,6 @@ public class PlayerOnClick implements Listener {
     @EventHandler
     public void onClick(PlayerInteractEvent event) {
 
-    	Bukkit.getLogger().info("PlayerInteractEvent - mg gamemanager - Interact" );
-    	Bukkit.getLogger().info("event.getAction() : " + event.getAction());
-    	
-    	Bukkit.getLogger().info("What is in hand?" + event.getPlayer().getInventory().getItemInMainHand());
-    	
     	if(controller.getSetupArena()) {
     		controller.onPlayerClickSetupArena(event);
     		return;
@@ -46,7 +41,6 @@ public class PlayerOnClick implements Listener {
     		//blockDetails(block, event.getPlayer());
     		controller.setSelectionPointA(event.getClickedBlock().getLocation());
     		Local l = controller.getSelection().getPointA();
-    		event.getPlayer().sendMessage("Area 3D PointA selected " + l.getX() + "," + l.getY() + "," + l.getZ() + " block: " + block.getState().getData() );
     	}
         
     	if(event.getAction() == Action.RIGHT_CLICK_BLOCK) {
@@ -54,7 +48,6 @@ public class PlayerOnClick implements Listener {
     		//blockDetails(block, event.getPlayer());
     		controller.setSelectionPointB(event.getClickedBlock().getLocation());
     		Local l = controller.getSelection().getPointB();
-    		event.getPlayer().sendMessage("Area 3D PointB selected " + l.getX() + "," + l.getY() + "," + l.getZ() + " block: " + block.getState().getData() );
     		MaterialData data = block.getState().getData();
 
 			if(block.getType() == Material.LEVER) {

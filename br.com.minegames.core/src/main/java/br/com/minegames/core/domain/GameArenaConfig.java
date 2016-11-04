@@ -8,10 +8,13 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
+@Table(uniqueConstraints=@UniqueConstraint(columnNames = {"gameconfig_game_config_uuid", "arena_arena_uuid"}))
 public class GameArenaConfig extends TransferObject {
 
 	@Id

@@ -254,4 +254,43 @@ public class GameService extends Service {
 		return domain;
 	}
 
+	public UUID updateGameArenaConfig(GameArenaConfig domain) {
+		startTransaction();
+		
+		ArenaService aservice = new ArenaService(em);
+		Arena a = aservice.find(domain.getArena().getArena_uuid());
+		domain.setArena(a);
+		
+		GameService gservice = new GameService(em);
+		GameConfig gc = em.find(GameConfig.class, domain.getGameConfig().getGame_config_uuid());
+		domain.setGameConfig(gc);
+		
+		if(gc.getConfigType() == GameConfigType.LOCAL) {
+			LocalService lService = new LocalService(em);
+			Local local = domain.getLocalValue();
+			if(local.getLocal_uuid() == null) {
+				local.setLocal_uuid( lService.create(local) );
+			} else {
+				local = lService.find(local.getLocal_uuid());
+			}
+			domain.setLocalValue(local);
+		} else if(gc.getConfigType() == GameConfigType.AREA3D) {
+			Area3DService aService = new Area3DService(em);
+			Area3D area = domain.getAreaValue();
+			if(area.getArea_uuid() == null) {
+				area.setArea_uuid( aService.create(area) );
+			} else {
+				area = aService.find(area.getArea_uuid()); 
+			}
+			domain.setAreaValue(area);
+		}
+		if(domain.getGac_uuid() == null) {
+			em.persist(domain);
+		} else {
+			em.merge(domain);
+		}
+		commitTransaction();
+		return domain.getGac_uuid();
+	}
+
 }

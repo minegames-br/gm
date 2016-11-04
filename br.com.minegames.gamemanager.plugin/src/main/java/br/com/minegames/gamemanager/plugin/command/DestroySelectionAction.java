@@ -31,7 +31,7 @@ public class DestroySelectionAction extends CommandAction {
 		MineGamesPlugin p = (MineGamesPlugin)plugin;
 
 		
-		BlockManipulationUtil.destroyArea3D(player, p.getSelection());
+		new BlockManipulationUtil().destroyArea3D(player, p.getSelection());
 		
 	}
 

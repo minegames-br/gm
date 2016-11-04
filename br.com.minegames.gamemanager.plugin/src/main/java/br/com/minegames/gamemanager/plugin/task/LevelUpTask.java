@@ -1,13 +1,12 @@
 package br.com.minegames.gamemanager.plugin.task;
 
-import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.Bukkit;
 
-import br.com.minegames.core.logging.MGLogger;
 import br.com.minegames.gamemanager.domain.GameState;
 import br.com.minegames.gamemanager.domain.MyCloudCraftGame;
 import br.com.minegames.gamemanager.plugin.MyCloudCraftPlugin;
 
-public class LevelUpTask extends BukkitRunnable {
+public class LevelUpTask implements Runnable {
 	
 	private MyCloudCraftPlugin controller;
 	
@@ -20,6 +19,7 @@ public class LevelUpTask extends BukkitRunnable {
     	
     	MyCloudCraftGame game = controller.getMyCloudCraftGame();
     	if(!game.isStarted()) {
+    		Bukkit.getLogger().info("LEVELUPTASK - Game not started");
     		return;
     	}
     	
@@ -31,7 +31,6 @@ public class LevelUpTask extends BukkitRunnable {
     			controller.endGame();
     		} else {
         		controller.levelUp();
-        		MGLogger.debug("LevelUp " + game.getLevel().getLevel());
     		}
     	}
     	

@@ -33,8 +33,7 @@ public class DefineArenaAction extends CommandAction {
 
 		MineGamesPlugin p = (MineGamesPlugin)plugin;
 		GameManagerDelegate delegate = GameManagerDelegate.getInstance();
-		String server_uuid = p.getConfigFile().getString("minegames.server.uuid");
-		if(server_uuid == null || server_uuid.equals("")) {
+		if(p.isServerRegistered()) {
 			if(player != null) {
 				player.sendMessage("Please, register server first. /mg register <name>");
 				return;

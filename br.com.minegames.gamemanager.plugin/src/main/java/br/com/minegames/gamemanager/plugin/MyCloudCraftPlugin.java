@@ -69,7 +69,7 @@ public abstract class MyCloudCraftPlugin extends JavaPlugin {
 	private int endGameThreadID;
 	private int countDown;
 	private GamePlayer winner;
-	private Runnable startGameTask;
+	private StartGameTask startGameTask;
 	private int startGameThreadID;
 	private int startCountDownThreadID;
 	private Runnable startCountDownTask;
@@ -78,13 +78,15 @@ public abstract class MyCloudCraftPlugin extends JavaPlugin {
 	
 	private Runnable levelUpTask;
 	private int levelUpThreadID;
-	private MyCloudCraftGame myCloudCraftGame;
+	protected MyCloudCraftGame myCloudCraftGame;
 
 	@Override
 	public void onEnable() {
 		this.mgplugin = (MineGamesPlugin)Bukkit.getPluginManager().getPlugin("MGPlugin");
 		getCommand("jogar").setExecutor(new JoinGameCommand(this));
 
+		registerListeners();
+		
 		// inicializar em que mundo o jogador está. Só deve ter um.
 		// não deixar mudar dia/noite
 		// não deixar fazer spawn de mobs automatico
@@ -194,27 +196,26 @@ public abstract class MyCloudCraftPlugin extends JavaPlugin {
 		return this.livePlayers;
 	}
 
-	public void startArenaBuild(List<ExportBlock> arenaBlocks) {
+	public void startArenaBuild(String arenaName, List<ExportBlock> arenaBlocks) {
 		
-        //criar mundo void para tentar ver se a recriacao da arena fica pronta mais rapidamente
-		String worldName = "" + System.currentTimeMillis();
-		Bukkit.getLogger().info("cloneWorld void para " + worldName);
-		MultiVerseWrapper.cloneWorld(this, "voidworld", worldName );
-
-		Bukkit.getLogger().info("bukkit geWorld");
-		this.world = Bukkit.getWorld(worldName);
-		
-		Bukkit.getLogger().info("bukkit getworld - " + world);
+		Bukkit.getLogger().info("startArenaBuild - " + arenaName);
+		this.world = Bukkit.getWorld(arenaName);
+		if(this.world == null) {
+	        //criar mundo void para tentar ver se a recriacao da arena fica pronta mais rapidamente
+			this.world = new MultiVerseWrapper().createWorldVoid( arenaName );
+			Bukkit.getLogger().info("startArenaBuild - mundo criado: " + arenaName);
+		} else {
+			Bukkit.getLogger().info("startArenaBuild - mundo existente: " + arenaName);
+		}
 		
 		this.setArenaBlocks(arenaBlocks);
 
-		Bukkit.getConsoleSender().sendMessage("&6startArenaBuild: " + arenaBlocks.size() + " blocks");
 		this.indexBlock = 0;
 		BukkitScheduler scheduler = Bukkit.getScheduler();
 		this.buildArenaTask = new BuildArenaTask(this);
 		this.threadIds = new CopyOnWriteArrayList<Integer>();
-		for(int i = 0; i < 5; i++) {
-			Integer _buildArenaThreadID = scheduler.scheduleSyncRepeatingTask(this, this.buildArenaTask, 5L, 200L);
+		for(int i = 0; i < 1; i++) {
+			Integer _buildArenaThreadID = scheduler.scheduleSyncRepeatingTask(this, this.buildArenaTask, 5L, 10L);
 			this.threadIds.add(_buildArenaThreadID);
 		}
 	}
@@ -298,11 +299,13 @@ public abstract class MyCloudCraftPlugin extends JavaPlugin {
 			if(gac.getGameConfig().getName().equals(name)) {
 				if(gac.getGameConfig().getConfigType() == GameConfigType.INT) {
 					result = gac.getIntValue();
+					break;
 				}if(gac.getGameConfig().getConfigType() == GameConfigType.LOCAL) {
 					result = gac.getLocalValue();
+					break;
 				}if(gac.getGameConfig().getConfigType() == GameConfigType.AREA3D) {
-					
 					result = gac.getAreaValue();
+					break;
 				}
 			}
 		}
@@ -316,13 +319,9 @@ public abstract class MyCloudCraftPlugin extends JavaPlugin {
 		return this.myCloudCraftGame;
 	}
 
-	public boolean isLastLevel() {
-		return false;
-	}
+	public abstract boolean isLastLevel();
 
-	public void levelUp() {
-		
-	}
+	public abstract void levelUp();
 
 	public GamePlayer getWinner() {
 		return winner;
@@ -354,9 +353,6 @@ public abstract class MyCloudCraftPlugin extends JavaPlugin {
 	protected void start() {
 		this.myCloudCraftGame = new MyCloudCraftGame();
 		
-		MGLogger.info("setting debug level");
-		Bukkit.getLogger().setLevel(Level.FINEST);
-
 		// Remover qualquer entidade que tenha ficado no mapa
 		for(World world: Bukkit.getWorlds() ) {
 			world.setTime(1000);
@@ -452,16 +448,17 @@ public abstract class MyCloudCraftPlugin extends JavaPlugin {
 
 	public void addPlayer(Player player) {
 		if (findGamePlayerByPlayer(player) == null) {
-			GamePlayer gp = new GamePlayer();
+			GamePlayer gp = createGamePlayer();
 			gp.setPlayer(player);
 			playerList.add(gp);
 			livePlayers.add(gp);
 			player.sendMessage(Utils.color("&aBem vindo, Arqueiro!"));
 			playerNames.add(player.getName());
 		} else {
-			MGLogger.debug("Jogador já está na lista");
 		}
 	}
+	
+	public abstract GamePlayer createGamePlayer();
 
 	public abstract void killPlayer(Player player);
 

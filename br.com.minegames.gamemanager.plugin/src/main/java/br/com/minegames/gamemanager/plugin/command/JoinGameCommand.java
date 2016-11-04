@@ -58,8 +58,8 @@ public class JoinGameCommand implements CommandExecutor {
     		controller.init( game, arena ); //setGameArenaConfigList( delegate.getInstance().findAllGameConfigArenaByGameArena(game.getGame_uuid().toString(), arena.getArena_uuid().toString() ) );
             File dir = mgplugin.getDataFolder();
         	File schematicFile = delegate.downloadArenaSchematic(arena.getArena_uuid(), dir.getAbsolutePath());
-        	List<ExportBlock> arenaBlocks = BlockManipulationUtil.loadSchematic(this.controller, schematicFile, player);
-        	controller.startArenaBuild(arenaBlocks);
+        	List<ExportBlock> arenaBlocks = new BlockManipulationUtil().loadSchematic(this.controller, schematicFile, player);
+        	controller.startArenaBuild(arena.getName(), arenaBlocks);
             controller.addPlayer(player);
 
         }

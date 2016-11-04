@@ -22,7 +22,6 @@ public class PlayerQuit implements Listener {
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         event.setQuitMessage(null);
-        Bukkit.getConsoleSender().sendMessage(Utils.color("&6PlayerQuit.onQuit"));
         Player player = event.getPlayer();
         
         MyCloudCraftGame game = controller.getMyCloudCraftGame();

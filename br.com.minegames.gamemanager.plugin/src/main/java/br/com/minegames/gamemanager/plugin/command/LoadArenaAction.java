@@ -27,22 +27,26 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import br.com.minegames.core.command.CommandAction;
 import br.com.minegames.core.domain.Area3D;
+import br.com.minegames.core.domain.Arena;
+import br.com.minegames.core.domain.Game;
 import br.com.minegames.core.domain.Local;
 import br.com.minegames.core.export.ExportBlock;
 import br.com.minegames.core.util.BlockManipulationUtil;
+import br.com.minegames.gamemanager.client.GameManagerDelegate;
 import br.com.minegames.gamemanager.plugin.MineGamesPlugin;
+import br.com.minegames.gamemanager.plugin.MyCloudCraftPlugin;
 
-public class ImportStructureAction extends CommandAction {
+public class LoadArenaAction extends CommandAction {
 
 	private int threads = 3;
 	
-	public ImportStructureAction(JavaPlugin plugin, CommandSender arg0, Command arg1, String arg2, String[] arguments) {
+	public LoadArenaAction(JavaPlugin plugin, CommandSender arg0, Command arg1, String arg2, String[] arguments) {
 		super(plugin, arg0, arg1, arg2, arguments);
 	}
 
 	@Override
 	public void execute() {
-		Bukkit.getLogger().info("Executando commando Import Structure " + this.commandSender + " "
+		Bukkit.getLogger().info("Executando commando Load Arena " + this.commandSender + " "
 				+ "\n" + this.command 
 				+ "\n" + this.arg2
 				+ "\n" + this.arguments);
@@ -52,14 +56,20 @@ public class ImportStructureAction extends CommandAction {
 			player = (Player)commandSender;
 		}
 		
-		MineGamesPlugin p = (MineGamesPlugin)plugin;
-		long time = System.currentTimeMillis();
-		player.sendMessage("Reading blocks");
-		File file = new File(p.getDataFolder(), "selection.blocks");
-		List<ExportBlock> blocks = new BlockManipulationUtil().loadSchematic(this.plugin, file, player);
-		p.setArenaBlocks(blocks);
-		p.startArenaBuild(player.getWorld().getName(), blocks);
-		player.sendMessage((System.currentTimeMillis()-time)/1000 + " secs import blocks");
+		GameManagerDelegate delegate = GameManagerDelegate.getInstance();
+		MineGamesPlugin mgplugin = (MineGamesPlugin)Bukkit.getPluginManager().getPlugin("MGPlugin");
+		Arena arena = mgplugin.getArena();
+		Game game = mgplugin.getGame();
+		
+		if(arena.getArea() == null || arena.getArea().getPointA() == null || arena.getArea().getPointB() == null) {
+			player.sendMessage("Game is not correctly configured yet. Try /mg setup");
+			return;
+		}
+		
+        File dir = mgplugin.getDataFolder();
+    	File schematicFile = delegate.downloadArenaSchematic(arena.getArena_uuid(), dir.getAbsolutePath());
+    	List<ExportBlock> arenaBlocks = new BlockManipulationUtil().loadSchematic( this.plugin , schematicFile, player);
+    	mgplugin.startArenaBuild(player.getWorld().getName(), arenaBlocks);
 
 	}
 

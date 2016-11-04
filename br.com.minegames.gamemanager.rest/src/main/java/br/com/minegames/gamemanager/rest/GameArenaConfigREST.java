@@ -50,7 +50,7 @@ public class GameArenaConfigREST {
 		GameArenaConfig domain = (GameArenaConfig)JSONParser.getInstance().toObject(json, GameArenaConfig.class);
 		
 		if(domain != null) {
-			service.merge(domain);
+			service.updateGameArenaConfig(domain);
 			json = JSONParser.getInstance().toJSONString(domain);
 		    return Response.ok(json, MediaType.APPLICATION_JSON).build();
 		} else {

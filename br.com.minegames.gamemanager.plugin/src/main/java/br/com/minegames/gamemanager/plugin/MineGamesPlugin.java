@@ -3,10 +3,11 @@ package br.com.minegames.gamemanager.plugin;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -14,14 +15,12 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.Stairs;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
@@ -35,7 +34,10 @@ import br.com.minegames.core.domain.GameConfigInstance;
 import br.com.minegames.core.domain.GameConfigScope;
 import br.com.minegames.core.domain.GameConfigType;
 import br.com.minegames.core.domain.Local;
+import br.com.minegames.core.domain.ServerInstance;
+import br.com.minegames.core.export.ExportBlock;
 import br.com.minegames.core.hologram.HologramUtil;
+import br.com.minegames.core.multiverse.MultiVerseWrapper;
 import br.com.minegames.core.util.LocationUtil;
 import br.com.minegames.core.util.title.TitleUtil;
 import br.com.minegames.gamemanager.client.GameManagerDelegate;
@@ -43,12 +45,10 @@ import br.com.minegames.gamemanager.plugin.command.MineGamesCommand;
 import br.com.minegames.gamemanager.plugin.listener.BlockBreakListener;
 import br.com.minegames.gamemanager.plugin.listener.PlayerOnClick;
 import br.com.minegames.gamemanager.plugin.task.ArenaSetupTask;
+import br.com.minegames.gamemanager.plugin.task.BuildArenaTask;
 
 public class MineGamesPlugin extends JavaPlugin {
 
-    private YamlConfiguration configFile;
-	private File file = new File(getDataFolder(), "minegames.yml");
-	
 	private Area3D selection;
 	private String server_uuid;
 	private Arena arena;
@@ -66,6 +66,12 @@ public class MineGamesPlugin extends JavaPlugin {
 
 	private Player player;
 	private World world;
+
+	protected List<ExportBlock> arenaBlocks;
+	protected int indexBlock = 0;
+	
+	protected BuildArenaTask buildArenaTask;
+	protected List<Integer> threadIds;
 	
 	private Boolean setupArena = false;
 	
@@ -80,6 +86,7 @@ public class MineGamesPlugin extends JavaPlugin {
 
 	private ArenaSetupTask arenaSetupTask;
 	private int arenaSetupTaskThreadID;
+	private LocationUtil locationUtil = new LocationUtil();
 	
 	public List<Arena> getArenas() {
 		return arenas;
@@ -90,63 +97,33 @@ public class MineGamesPlugin extends JavaPlugin {
 	}
 
 	public void setArena(Arena arena) {
+		this.setProperty("thecraftcloud.arena.uuid", arena.getArena_uuid().toString());
 		this.arena = arena;
 	}
 
 	@Override
 	public void onEnable() {
-		Bukkit.getLogger().info("MineGamesPlugin - onEnable");
-		this.gameConfig = new GameConfig();
-		this.gameConfig.setConfigScope(GameConfigScope.GLOBAL);
-		this.gameConfig.setConfigType(GameConfigType.INT);
-		this.gameConfig.setGroup("");
-		this.gameConfig.setName("thelastarcher.countdown");
-		this.gameConfig.setDisplayName("Countdown");
-		
-		this.setConfigValue("9");
+	    loadConfiguration();
+	    System.out.print("[TheCraftCloud] TheCraftCloud Plugin Enabled!");
 		
 		getCommand("mg").setExecutor(new MineGamesCommand(this));
-	    if(!file.exists()){
-	        file.getParentFile().mkdirs();
-	        try {
-				file.createNewFile();
-				this.configFile = YamlConfiguration.loadConfiguration(file);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-	    } else {
-			this.configFile = YamlConfiguration.loadConfiguration(file);
-	    }
-
+		
 	    this.delegate = GameManagerDelegate.getInstance();
 	    //this.game = delegate.findGame("57b7b3df-9d18-4966-898f-f4ad8ee28a92");
+		String game_uuid = this.getConfig().getString("thecraftcloud.game.uuid");
+		String arena_uuid = this.getConfig().getString("thecraftcloud.arena.uuid");
+		this.server_uuid = this.getConfig().getString("thecraftcloud.server.uuid");
+		
+		if(game_uuid != null) {
+			this.game = delegate.getInstance().findGame(game_uuid);
+		}
+		
+		if(arena_uuid != null) {
+			this.arena = delegate.getInstance().findArena(arena_uuid);
+		}
+		
+		
 	    registerListeners();
-	}
-	
-	public YamlConfiguration getConfigFile() {
-		try {
-			this.configFile.load(this.file);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InvalidConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return this.configFile;
-	}
-
-	public void setConfig(String path, String value) {
-		configFile.set(path, value);
-		try {
-			configFile.save(file);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	
 	private void registerListeners() {
@@ -177,6 +154,7 @@ public class MineGamesPlugin extends JavaPlugin {
 	 * Esse método corrige o Y para evitar, por exemplo, de um zumbi nascer dentro de um bloco
 	 */
 	private void updateYPosition() {
+		/*
 		if(this.selection.getPointB() != null && this.selection.getPointA() != null) {
 			if(this.selection.getPointA().getY() <= this.selection.getPointB().getY() ) {
 				this.selection.getPointA().setY( this.selection.getPointA().getY() +1 );
@@ -184,6 +162,7 @@ public class MineGamesPlugin extends JavaPlugin {
 				this.selection.getPointB().setY( this.selection.getPointB().getY() +1 );
 			}
 		}
+		*/
 	}
 
 	public void setSelectionPointB(Location l) {
@@ -201,9 +180,7 @@ public class MineGamesPlugin extends JavaPlugin {
 	}
 
 	public boolean isServerRegistered() {
-		YamlConfiguration config = this.getConfigFile();
-		String value = config.getString("minegames.server.uuid");
-		Bukkit.getLogger().info("minegames.server.uuid: " + value);
+		String value = this.getConfig().getString("thecraftcloud.server.uuid");
 		if(value != null && !value.trim().equals("")) {
 			return false;
 		}
@@ -224,6 +201,7 @@ public class MineGamesPlugin extends JavaPlugin {
 	}
 	
 	public void setGame(Game game) {
+		this.setProperty("thecraftcloud.game.uuid", game.getGame_uuid().toString() );
 		this.game = game;
 	}
 
@@ -542,14 +520,6 @@ public class MineGamesPlugin extends JavaPlugin {
 		return this.listConfigInts;
 	}
 
-	public File getFile() {
-		return file;
-	}
-
-	public void setFile(File file) {
-		this.file = file;
-	}
-
 	public GameManagerDelegate getDelegate() {
 		return delegate;
 	}
@@ -574,10 +544,6 @@ public class MineGamesPlugin extends JavaPlugin {
 		this.gameConfigArenaMap = gameConfigArenaMap;
 	}
 
-	public void setConfigFile(YamlConfiguration configFile) {
-		this.configFile = configFile;
-	}
-
 	public void setServer_uuid(String server_uuid) {
 		this.server_uuid = server_uuid;
 	}
@@ -596,7 +562,7 @@ public class MineGamesPlugin extends JavaPlugin {
 		this.arenaSetupTask = new ArenaSetupTask(this);
 		this.arenaSetupTaskThreadID = scheduler.scheduleSyncRepeatingTask(this, this.arenaSetupTask, 1L, 20L);
 		player.getInventory().setItemInMainHand(new ItemStack(Material.IRON_AXE));
-		Location loc = LocationUtil.getMiddle(player.getWorld(), this.arena.getArea());
+		Location loc = locationUtil .getMiddle(player.getWorld(), this.arena.getArea());
 		player.teleport(loc);
 		this.setupArena = true;
 		this.selection = new Area3D();
@@ -618,6 +584,7 @@ public class MineGamesPlugin extends JavaPlugin {
 		scheduler.cancelTask( this.arenaSetupTaskThreadID );
 		this.setupArena = false;
 		this.setupLocation = new Location(player.getWorld(), -764, 5, 402);
+		player.teleport(this.setupLocation);
 		saveGameConfig();
 	}
 
@@ -744,4 +711,68 @@ public class MineGamesPlugin extends JavaPlugin {
 		}
 	}
 	
+	public void startArenaBuild(String arenaName, List<ExportBlock> arenaBlocks) {
+		this.world = Bukkit.getWorld(arenaName);
+		if(this.world == null) {
+	        //criar mundo void para tentar ver se a recriacao da arena fica pronta mais rapidamente
+			String worldName = "" + System.currentTimeMillis();
+			Bukkit.getLogger().info("cloneWorld void para " + worldName);
+			this.world = new MultiVerseWrapper().createWorldVoid( worldName );
+		}
+		this.setArenaBlocks(arenaBlocks);
+
+		Bukkit.getConsoleSender().sendMessage("&6startArenaBuild: " + arenaBlocks.size() + " blocks");
+		this.indexBlock = 0;
+		BukkitScheduler scheduler = Bukkit.getScheduler();
+		this.buildArenaTask = new BuildArenaTask(this);
+		this.threadIds = new CopyOnWriteArrayList<Integer>();
+		for(int i = 0; i < 5; i++) {
+			Integer _buildArenaThreadID = scheduler.scheduleSyncRepeatingTask(this, this.buildArenaTask, 5L, 200L);
+			this.threadIds.add(_buildArenaThreadID);
+		}
+	}
+	
+	public void setArenaBlocks(List<ExportBlock> arenaBlocks) {
+		this.arenaBlocks = arenaBlocks;
+	}
+
+	public void completeBuildArenaTask() {
+		BukkitScheduler scheduler = Bukkit.getScheduler();
+		for(int i = 0; i < threadIds.size(); i++) {
+			scheduler.cancelTask( threadIds.get(i) );
+		}
+		threadIds.clear();
+	}
+
+	public ExportBlock getNextBlock() {
+		if(indexBlock < arenaBlocks.size()) {
+			ExportBlock block = arenaBlocks.get(indexBlock);
+			indexBlock++;
+			return block;
+		} else {
+			return null;
+		}
+	}
+
+	public World getWorld() {
+		return this.world;
+	}
+
+	public void setProperty(String path, String value) {
+		this.getConfig().set(path, value);
+		this.saveConfig();
+	}
+
+	public void registerServer(ServerInstance server) {
+		String value = server.getServer_uuid().toString();
+		this.setProperty("thecraftcloud.server.uuid", value);
+	}
+
+	public void loadConfiguration(){
+	     //See "Creating you're defaults"
+	     this.getConfig().options().copyDefaults(true); // NOTE: You do not have to use "plugin." if the class extends the java plugin
+	     //Save the config whenever you manipulate it
+	     this.saveConfig();
+	     
+	}
 }

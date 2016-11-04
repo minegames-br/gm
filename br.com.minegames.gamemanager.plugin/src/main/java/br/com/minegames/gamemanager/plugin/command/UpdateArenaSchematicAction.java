@@ -1,7 +1,6 @@
 package br.com.minegames.gamemanager.plugin.command;
 
 import java.io.File;
-import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -10,11 +9,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import br.com.minegames.core.command.CommandAction;
+import br.com.minegames.core.domain.Area3D;
 import br.com.minegames.core.domain.Arena;
 import br.com.minegames.core.domain.Schematic;
+import br.com.minegames.core.util.BlockManipulationUtil;
 import br.com.minegames.gamemanager.client.GameManagerDelegate;
 import br.com.minegames.gamemanager.plugin.MineGamesPlugin;
-import net.dragonode.npcs.NPC;
 
 public class UpdateArenaSchematicAction extends CommandAction {
 
@@ -44,16 +44,23 @@ public class UpdateArenaSchematicAction extends CommandAction {
 		schematic.setDescription("schematic da arena: " + arena.getDescription());
 		player.sendMessage("Creating schematic data...");
 		schematic = delegate.createSchematic(schematic);
-		
+
 		File dir = p.getDataFolder();
 		if(!dir.exists()) {
 			dir.mkdirs();
 		}
+		new BlockManipulationUtil().exportSelection(player, p.getSelection(), dir);
+		
         File file = new File(dir, "selection.blocks");
 		
 		player.sendMessage("Uploading schematic...");
 		delegate.uploadSchematic(schematic, file);
+		Area3D area = new Area3D();
+		area = p.getSelection();
 		
+		area = delegate.addArea3D(area);
+		
+		arena.setArea(area);
 		arena.setSchematic(schematic);
 		player.sendMessage("Updating Arena's structure data...");
 		arena = delegate.updateArena(arena);

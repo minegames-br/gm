@@ -42,12 +42,12 @@ public class RegisterServerAction extends CommandAction {
 		
 		if(arguments.length != 2) {
 			player.sendMessage("syntax: /mg register <servername>");
+			return;
 		}
 
 		GameManagerDelegate delegate = GameManagerDelegate.getInstance();
 		ServerInstance server = delegate.registerServer(arguments[1]);
-		value = server.getServer_uuid().toString();
-		plugin.setConfig("minegames.server.uuid", value);
+		plugin.registerServer(server);
 		if(player!= null) {
 			player.sendMessage("Server registered successfully: "+ value );
 		}else{

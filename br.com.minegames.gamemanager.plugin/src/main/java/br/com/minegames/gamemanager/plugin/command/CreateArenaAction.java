@@ -41,7 +41,7 @@ public class CreateArenaAction extends CommandAction {
 		}
 		
 		GameManagerDelegate delegate = GameManagerDelegate.getInstance();
-		String server_uuid = p.getConfigFile().getString("minegames.server.uuid");
+		String server_uuid = p.getConfig().getString("thecraftcloud.server.uuid");
 		if(server_uuid == null || server_uuid.equals("")) {
 			if(player != null) {
 				player.sendMessage("Please, register server first. /mg register <name>");

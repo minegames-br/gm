@@ -39,7 +39,7 @@ public class ExportSelectAction extends CommandAction {
 		
 		Area3D area = p.getSelection();
 		File folder = p.getDataFolder();
-		BlockManipulationUtil.exportSelection(player, area, folder);
+		new BlockManipulationUtil().exportSelection(player, area, folder);
 		
 
 	}

@@ -4,8 +4,6 @@ public class MyCloudCraftGame {
 	protected GameState state;
     protected long gameStartTime;
     protected Level level;
-	private Runnable startCountDownTask;
-	private int startCountDownThreadID;
 
 	public MyCloudCraftGame() {
 

@@ -6,7 +6,6 @@ import java.io.FileReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
@@ -23,7 +22,6 @@ import org.bukkit.material.Sandstone;
 import org.bukkit.material.Stairs;
 import org.bukkit.material.Wool;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitScheduler;
 
 import br.com.minegames.core.domain.Area3D;
 import br.com.minegames.core.domain.Local;
@@ -31,8 +29,11 @@ import br.com.minegames.core.export.ExportBlock;
 
 public class BlockManipulationUtil {
 	
-    public static Block createNewWool(World world, double x, double y, double z, DyeColor color) {
-    	
+    private LocationUtil locationUtil = new LocationUtil();
+
+	public Block createNewWool(World world, double x, double y, double z, DyeColor color) {
+
+    	Bukkit.getLogger().info("x:" + x + " y:" + y + "z: " + z);
     	Location targetLocation = new Location(world, x, y, z);
     	//Bukkit.getConsoleSender().sendMessage(Utils.color("&6Creating New Block " + targetLocation + " - " + world));
         Block block = world.getBlockAt(targetLocation);
@@ -51,14 +52,14 @@ public class BlockManipulationUtil {
        	return block;
     }
     
-    public static void createWoolBlocks(Location l1, Location l2, DyeColor color) {
+    public void createWoolBlocks(Location l1, Location l2, DyeColor color) {
     	List<Block> blocks = blocksFromTwoPoints(l1, l2);
     	for(Block block: blocks) {
        		createNewWool(block.getWorld(), block.getX(), block.getY(), block.getZ(), color);
     	}
     }
 
-    public static List<Block> blocksFromTwoPoints(Location loc1, Location loc2)
+    public List<Block> blocksFromTwoPoints(Location loc1, Location loc2)
     {
         List<Block> blocks = new ArrayList<Block>();
  
@@ -87,19 +88,19 @@ public class BlockManipulationUtil {
         return blocks;
     }
 
-	public static void clearBlocks(Location l1, Location l2) {
+	public void clearBlocks(Location l1, Location l2) {
     	List<Block> blocks = blocksFromTwoPoints(l1, l2);
     	for(Block block: blocks) {
     		block.setType(Material.AIR);
     	}
 	}
 
-	public static void destroyArea3D(Player player, Area3D selection) {
+	public void destroyArea3D(Player player, Area3D selection) {
 		long time = System.currentTimeMillis();
 		player.sendMessage("Reading blocks");
-		Location pointA = LocationUtil.toLocation(player.getWorld(), selection.getPointA());
-		Location pointB = LocationUtil.toLocation(player.getWorld(), selection.getPointB());
-		List<Block> list = BlockManipulationUtil.blocksFromTwoPoints(pointA, pointB);
+		Location pointA = locationUtil .toLocation(player.getWorld(), selection.getPointA());
+		Location pointB = locationUtil.toLocation(player.getWorld(), selection.getPointB());
+		List<Block> list = blocksFromTwoPoints(pointA, pointB);
 		player.sendMessage((System.currentTimeMillis()-time)/1000 + " secs to read " +  list.size() + " blocks");
 		time = System.currentTimeMillis();
 		
@@ -113,14 +114,14 @@ public class BlockManipulationUtil {
 		player.sendMessage((System.currentTimeMillis()-time)/1000 + " secs to destroy " +  list.size() + " blocks");
 	}
 
-	public static void exportSelection(Player player, Area3D area, File folder) {
+	public void exportSelection(Player player, Area3D area, File folder) {
 		Location pointA = Utils.toLocation(player.getWorld(), area.getPointA());
 		Location pointB = Utils.toLocation(player.getWorld(), area.getPointB());
 		
 		long time = System.currentTimeMillis();
 		
 		player.sendMessage("Reading blocks");
-		List<Block> list = BlockManipulationUtil.blocksFromTwoPoints(pointA, pointB);
+		List<Block> list = blocksFromTwoPoints(pointA, pointB);
 		player.sendMessage((System.currentTimeMillis()-time)/1000 + " secs to read " +  list.size() + " blocks");
 		time = System.currentTimeMillis();
 		
@@ -198,10 +199,10 @@ public class BlockManipulationUtil {
 		}*/
 	}
 
-	public static void importSelection(final JavaPlugin plugin, File file, final Player player) {
+	public void importSelection(final JavaPlugin plugin, File file, final Player player) {
 	}
 	
-	public static void createBlock(final JavaPlugin plugin, final World world, final ExportBlock block) {
+	public void createBlock(final JavaPlugin plugin, final World world, final ExportBlock block) {
     	Location l = new Location(world, block.getX(), block.getY(), block.getZ(), block.getYaw(), block.getPitch());
     	Block b = l.getBlock();
     	b.setType(block.getMaterial());
@@ -222,7 +223,7 @@ public class BlockManipulationUtil {
     	b.getState().update();
 	}
 
-	public static List<ExportBlock> loadSchematic(JavaPlugin plugin, File file, Player player) {
+	public List<ExportBlock> loadSchematic(JavaPlugin plugin, File file, Player player) {
 		long time = System.currentTimeMillis();
 		List<ExportBlock> blocks = new ArrayList<ExportBlock>();
 		try(BufferedReader br = new BufferedReader(new FileReader(file))) {
@@ -243,7 +244,7 @@ public class BlockManipulationUtil {
 		    selection.setPointA(pointA);
 		    selection.setPointB(pointB);
 		    
-		    BlockManipulationUtil.destroyArea3D(player, selection);
+		    //destroyArea3D(player, selection);
 		    line = br.readLine();
 
 	    	World world = player.getWorld();
@@ -266,7 +267,7 @@ public class BlockManipulationUtil {
 		    	}
 		    	//Bukkit.getLogger().info("fields.length" + fields.length);
 		    	if(fields.length >= 9 && !fields[8].trim().equals("")) {
-			    	Bukkit.getLogger().info("fields[8)" + fields[8]);
+			    	//Bukkit.getLogger().info("fields[8)" + fields[8]);
 		    		block.setFace(BlockFace.valueOf(fields[8]));
 		    	}
 		    	

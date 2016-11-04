@@ -11,8 +11,8 @@ import br.com.minegames.core.domain.Local;
 import br.com.minegames.core.logging.MGLogger;
 
 public class LocationUtil {
-	
-	public static Location getRandomLocationXYZ( World _world, Area3D area ) {
+
+	public Location getRandomLocationXYZ( World _world, Area3D area ) {
 		Local pointA = area.getPointA();
 		Local pointB = area.getPointB();
 		
@@ -65,26 +65,26 @@ public class LocationUtil {
 		return spawnLocation;
 	}
 	
-	public static void main(String args[]) {
+	public void main(String args[]) {
 		System.out.println(Math.abs(3-(-3)));
 		System.out.println(Math.abs(-9-(-3)));
 		System.out.println(Math.abs(+9-(-3)));
 		System.out.println(Math.abs(+9-(3)));
 	}
 
-	public static Location getMiddle(World world, Area3D spawnPoint) {
+	public Location getMiddle(World world, Area3D spawnPoint) {
         int middleX = (spawnPoint.getPointA().getX() + spawnPoint.getPointB().getX()) / 2;
         int middleZ = (spawnPoint.getPointA().getZ() + spawnPoint.getPointB().getZ()) / 2;
         Location l = new Location(world, middleX, spawnPoint.getPointA().getY(), middleZ);
         return l;
 	}
 	
-	public static Location toLocation(World world, Area3D area) {
+	public Location toLocation(World world, Area3D area) {
 		Location l = new Location(world, area.getPointA().getX(), area.getPointA().getY(), area.getPointA().getZ());
 		return l;
 	}
 
-	public static Location toLocation(World world, Local lobbyLocal) {
+	public Location toLocation(World world, Local lobbyLocal) {
 		Location l = new Location(world, lobbyLocal.getX(), lobbyLocal.getY(), lobbyLocal.getZ());
 		return l;
 	}
