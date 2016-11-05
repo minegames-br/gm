@@ -14,8 +14,10 @@ import javax.ws.rs.core.Response;
 
 import org.jboss.logging.Logger;
 
+import br.com.minegames.core.domain.Local;
 import br.com.minegames.core.domain.ServerInstance;
 import br.com.minegames.core.json.JSONParser;
+import br.com.minegames.gamemanager.service.LocalService;
 import br.com.minegames.gamemanager.service.ServerService;
 
 @Path("/server")
@@ -46,6 +48,29 @@ public class ServerREST {
 		ServerInstance domain = service.find( UUID.fromString(_uuid) );
 		if( domain != null) {
 			String json = JSONParser.getInstance().toJSONString(domain);
+		    return Response.ok( json , MediaType.APPLICATION_JSON).build();
+		} else {
+			return Response.status(Response.Status.NOT_FOUND).entity("Servidor não encontrado: " + _uuid).build();
+		}
+	}
+	
+	@POST
+	@Path("/{uuid}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response update(@PathParam("uuid") String _uuid, String json) {
+		Logger.getLogger(ServerREST.class).info("uuid recebido: ");
+		ServerService service = new ServerService();
+		ServerInstance domain = service.find( UUID.fromString(_uuid) );
+		if( domain != null) {
+			domain = (ServerInstance)JSONParser.getInstance().toObject(json, ServerInstance.class);
+			if(domain.getLobby().getLocal_uuid() == null) {
+				LocalService lService = new LocalService();
+				UUID uuid = lService.create(domain.getLobby());
+				domain.getLobby().setLocal_uuid(uuid);
+			}
+			service.merge(domain);
+			domain = service.find( UUID.fromString(_uuid) );
+			json = JSONParser.getInstance().toJSONString(domain);
 		    return Response.ok( json , MediaType.APPLICATION_JSON).build();
 		} else {
 			return Response.status(Response.Status.NOT_FOUND).entity("Servidor não encontrado: " + _uuid).build();

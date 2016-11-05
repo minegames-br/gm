@@ -25,7 +25,13 @@ public class LevelUpTask implements Runnable {
     	
     	//Aumentar de nível depois de 15 segundos
     	//Caso seja o último nível, terminar o jogo
-    	if(game.getLevel().lifeTime() >= 15000) {
+    	
+    	Integer duration = (Integer)this.controller.getGameConfigInstance("ARQUEIRO-GAME-DURATION");
+    	duration = duration * 60; // segundos
+    	duration = duration * 1000; //milissegundos
+    	Integer levelDuration = (duration/10);
+    	
+    	if(game.getLevel().lifeTime() >= levelDuration) {
     		game.setGameState(GameState.LEVELUP);
     		if(controller.isLastLevel()) {
     			controller.endGame();

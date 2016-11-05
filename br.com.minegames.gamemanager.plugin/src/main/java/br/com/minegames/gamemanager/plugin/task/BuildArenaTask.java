@@ -1,6 +1,7 @@
 package br.com.minegames.gamemanager.plugin.task;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import br.com.minegames.core.export.ExportBlock;
@@ -11,6 +12,7 @@ import br.com.minegames.gamemanager.plugin.MyCloudCraftPlugin;
 public class BuildArenaTask implements Runnable {
 	
 	private JavaPlugin controller;
+	private BlockManipulationUtil blockManipulationUtil = new BlockManipulationUtil();
 	
 	public BuildArenaTask(JavaPlugin controller) {
 		this.controller = controller;
@@ -28,13 +30,19 @@ public class BuildArenaTask implements Runnable {
     	        	p.completeBuildArenaTask();
     	        	return;
     	    	}
-    			//Bukkit.getConsoleSender().sendMessage("&6creating block: " + block + " p.getWorld() " + p.getWorld());
-    	    	new BlockManipulationUtil().createBlock(p, p.getWorld(), block);
+    	    	
+    	    	if(block.getMaterial() == Material.AIR) {
+    	    		blockManipulationUtil.createBlock(p, p.getWorld(), block);
+    	    	} else {
+        			//Bukkit.getConsoleSender().sendMessage("&6creating block: " + block + " p.getWorld() " + p.getWorld());
+        	    	blockManipulationUtil.createBlock(p, p.getWorld(), block);
+    	    	}
+    	    	
         	}
     	} else if( this.controller instanceof MyCloudCraftPlugin ) {
     		MyCloudCraftPlugin p = (MyCloudCraftPlugin)this.controller;
-        	for(int i=0; i<1000; i++) {
-        		if( (i % 100) == 0) {
+        	for(int i=0; i<5000; i++) {
+        		if( (i % 500) == 0) {
         			Bukkit.getLogger().info(" - " + i + " blocks created" );
         		}
             	ExportBlock block = p.getNextBlock();

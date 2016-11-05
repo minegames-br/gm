@@ -27,7 +27,7 @@ public class StartGameCommand implements CommandExecutor {
             return false;
         }
 
-        game.startGameEngine();
+        game.startCoundDown();
         
         return true;
     }

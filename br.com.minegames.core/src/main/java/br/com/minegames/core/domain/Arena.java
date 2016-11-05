@@ -30,6 +30,8 @@ public class Arena extends TransferObject {
 	private String name;
 	private String description;
 	
+	private Integer time = 12000;
+	
 	@OneToOne
 	private Schematic schematic;
 	
@@ -71,6 +73,12 @@ public class Arena extends TransferObject {
 	}
 	public void setArea(Area3D area) {
 		this.area = area;
+	}
+	public Integer getTime() {
+		return time;
+	}
+	public void setTime(Integer time) {
+		this.time = time;
 	}
 	
 }

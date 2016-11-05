@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -22,6 +23,11 @@ public class ServerInstance extends TransferObject {
 	private String description;
 	private String ip_address;
 	private String hostname;
+	
+	@OneToOne
+	private Local lobby;
+	
+	private String world;
 	
 	public UUID getServer_uuid() {
 		return server_uuid;
@@ -52,6 +58,18 @@ public class ServerInstance extends TransferObject {
 	}
 	public void setHostname(String hostname) {
 		this.hostname = hostname;
+	}
+	public Local getLobby() {
+		return lobby;
+	}
+	public void setLobby(Local lobby) {
+		this.lobby = lobby;
+	}
+	public String getWorld() {
+		return world;
+	}
+	public void setWorld(String world) {
+		this.world = world;
 	}
 	
 	

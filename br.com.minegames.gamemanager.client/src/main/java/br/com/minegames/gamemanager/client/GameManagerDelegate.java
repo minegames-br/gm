@@ -89,6 +89,16 @@ public class GameManagerDelegate {
 		return server;
 	}
 	
+	public ServerInstance updateServer(ServerInstance server) {
+		String json = JSONParser.getInstance().toJSONString(server);
+		json = post("/server/" + server.getServer_uuid().toString(), json);
+		MGLogger.info("update server: " + json);
+		server = (ServerInstance)JSONParser.getInstance().toObject(json, ServerInstance.class);
+		MGLogger.info("Server: " + server.getServer_uuid());
+
+		return server;
+	}
+	
 	public Area3D addArea3D(Area3D area) {
 		Area3D result = null;
 		

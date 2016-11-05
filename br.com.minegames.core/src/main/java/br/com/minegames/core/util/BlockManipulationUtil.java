@@ -114,6 +114,22 @@ public class BlockManipulationUtil {
 		player.sendMessage((System.currentTimeMillis()-time)/1000 + " secs to destroy " +  list.size() + " blocks");
 	}
 
+	public void destroyArea3D(World world, Area3D selection) {
+		long time = System.currentTimeMillis();
+		Location pointA = locationUtil .toLocation(world, selection.getPointA());
+		Location pointB = locationUtil.toLocation(world, selection.getPointB());
+		List<Block> list = blocksFromTwoPoints(pointA, pointB);
+		time = System.currentTimeMillis();
+		
+		Bukkit.getLogger().info("Destroying blocks");
+		time = System.currentTimeMillis();
+		for(Block block: list ) {
+	    	block.setType(Material.AIR);
+		    block.getState().update();
+	    }
+		Bukkit.getLogger().info((System.currentTimeMillis()-time)/1000 + " secs to destroy " +  list.size() + " blocks");
+	}
+
 	public void exportSelection(Player player, Area3D area, File folder) {
 		Location pointA = Utils.toLocation(player.getWorld(), area.getPointA());
 		Location pointB = Utils.toLocation(player.getWorld(), area.getPointB());
@@ -220,10 +236,14 @@ public class BlockManipulationUtil {
     		stairs.setFacingDirection(BlockFace.WEST);
     	}
 	
-    	b.getState().update();
+    	//b.getState().update();
 	}
 
 	public List<ExportBlock> loadSchematic(JavaPlugin plugin, File file, Player player) {
+		return this.loadSchematic(plugin, file, player.getWorld());
+	}
+	
+	public List<ExportBlock> loadSchematic(JavaPlugin plugin, File file, World world) {
 		long time = System.currentTimeMillis();
 		List<ExportBlock> blocks = new ArrayList<ExportBlock>();
 		try(BufferedReader br = new BufferedReader(new FileReader(file))) {
@@ -247,8 +267,6 @@ public class BlockManipulationUtil {
 		    //destroyArea3D(player, selection);
 		    line = br.readLine();
 
-	    	World world = player.getWorld();
-		    
 		    while (line != null) {
 		    	String[] fields = line.split(",");
 		        //Bukkit.getLogger().info(line);
@@ -291,7 +309,6 @@ public class BlockManipulationUtil {
 		    	}
 		    	
 		    }
-			player.sendMessage((System.currentTimeMillis()-time)/1000 + " secs to read the file");
 			time = System.currentTimeMillis();
 
 		    br.close();

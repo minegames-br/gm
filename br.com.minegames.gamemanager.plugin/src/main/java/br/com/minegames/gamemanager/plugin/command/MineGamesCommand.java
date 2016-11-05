@@ -68,6 +68,7 @@ public class MineGamesCommand  implements CommandExecutor {
 		commandArgs.put("createworld", CreateWorldAction.class);
 		commandArgs.put("update", UpdateArenaSchematicAction.class);
 		commandArgs.put("loadarena", LoadArenaAction.class);
+		commandArgs.put("setlobby", SetServerSpawnPointAction.class);
 	}
 	
 	private CommandAction getAction(CommandSender sender, Command command, String arg2, String[] arg3) {

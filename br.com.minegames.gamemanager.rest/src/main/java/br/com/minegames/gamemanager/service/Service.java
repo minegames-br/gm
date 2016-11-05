@@ -29,10 +29,11 @@ public class Service {
 		}
 	}
 	
-	public void merge(TransferObject domain) {
+	public TransferObject merge(TransferObject domain) {
 		startTransaction();
-		em.merge(domain);
+		TransferObject to = em.merge(domain);
 		commitTransaction();
+		return to;
 	}
 	
 	public void create(TransferObject domain) {

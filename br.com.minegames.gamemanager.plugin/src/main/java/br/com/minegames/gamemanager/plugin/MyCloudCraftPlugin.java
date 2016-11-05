@@ -1,13 +1,16 @@
 package br.com.minegames.gamemanager.plugin;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CopyOnWriteArraySet;
-import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -24,9 +27,12 @@ import br.com.minegames.core.domain.GameArenaConfig;
 import br.com.minegames.core.domain.GameConfigInstance;
 import br.com.minegames.core.domain.GameConfigType;
 import br.com.minegames.core.domain.Local;
+import br.com.minegames.core.domain.ServerInstance;
 import br.com.minegames.core.export.ExportBlock;
 import br.com.minegames.core.logging.MGLogger;
 import br.com.minegames.core.multiverse.MultiVerseWrapper;
+import br.com.minegames.core.util.BlockManipulationUtil;
+import br.com.minegames.core.util.LocationUtil;
 import br.com.minegames.core.util.Utils;
 import br.com.minegames.gamemanager.client.GameManagerDelegate;
 import br.com.minegames.gamemanager.domain.GamePlayer;
@@ -79,10 +85,21 @@ public abstract class MyCloudCraftPlugin extends JavaPlugin {
 	private Runnable levelUpTask;
 	private int levelUpThreadID;
 	protected MyCloudCraftGame myCloudCraftGame;
+	protected Location lobby;
 
 	@Override
 	public void onEnable() {
 		this.mgplugin = (MineGamesPlugin)Bukkit.getPluginManager().getPlugin("MGPlugin");
+		ServerInstance server = null;
+		try{
+			server = delegate.findServerInstance(mgplugin.getServer_uuid());
+			Local l = server.getLobby();
+			String worldName = server.getWorld();
+			this.lobby = new Location(Bukkit.getWorld(worldName), l.getX(), l.getY(), l.getZ()); 
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+
 		getCommand("jogar").setExecutor(new JoinGameCommand(this));
 
 		registerListeners();
@@ -102,11 +119,23 @@ public abstract class MyCloudCraftPlugin extends JavaPlugin {
 		getCommand("sair").setExecutor(new LeaveGameCommand(this));
 		getCommand("fwk").setExecutor(new TriggerFireworkCommand(this));
 
-	}
-	
-	public void init(Game game, Arena arena) {
+		GameManagerDelegate delegate = GameManagerDelegate.getInstance();
+		MineGamesPlugin mgplugin = (MineGamesPlugin)Bukkit.getPluginManager().getPlugin("MGPlugin");
+		Arena arena = mgplugin.getArena();
+		Game game = mgplugin.getGame();
 		this.game = game;
 		this.arena = arena;
+		
+		if(arena.getArea() == null || arena.getArea().getPointA() == null || arena.getArea().getPointB() == null) {
+			Bukkit.getLogger().info("Game is not correctly configured yet. Try /mg setup");
+		}
+        File dir = mgplugin.getDataFolder();
+    	File schematicFile = delegate.downloadArenaSchematic(arena.getArena_uuid(), dir.getAbsolutePath());
+    	List<ExportBlock> arenaBlocks = new BlockManipulationUtil().loadSchematic(this, schematicFile, this.world);
+    	this.startArenaBuild(arena.getName(), arenaBlocks);
+	}
+	
+	public void init() {
 		this.endGameTask = new EndGameTask(this);
 		this.levelUpTask = new LevelUpTask(this);
 		this.myCloudCraftGame = new MyCloudCraftGame();
@@ -127,17 +156,41 @@ public abstract class MyCloudCraftPlugin extends JavaPlugin {
 		if(this.countDown == 0) {
 			this.countDown = 10;
 		}
-
 	}
 
+	protected void loadLobby() {
+		this.mgplugin = (MineGamesPlugin)Bukkit.getPluginManager().getPlugin("MGPlugin");
+		
+		try{
+			ServerInstance server = delegate.findServerInstance(mgplugin.getServer_uuid());
+			Local l = server.getLobby();
+			String worldName = server.getWorld();
+			this.world = Bukkit.getWorld(worldName);
+			this.lobby = new Location(this.world, l.getX(), l.getY(), l.getZ());
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void startGameEngine() {
 		BukkitScheduler scheduler = getServer().getScheduler();
+		
+		if(this.lobby == null) {
+			loadLobby();
+		}
+		
 		// Terminar threads de preparacao do jogo
 		scheduler.cancelTask(startCountDownThreadID);
 		scheduler.cancelTask(startGameThreadID);
 
 		this.endGameThreadID = scheduler.scheduleSyncRepeatingTask(this, this.endGameTask, 0L, 50L);
 		this.levelUpThreadID = scheduler.scheduleSyncRepeatingTask(this, this.levelUpTask, 0L, 50L);
+		this.start();
+		this.myCloudCraftGame.start();
+		
+		//mudar horário da arena
+		Integer time = this.arena.getTime();
+		this.world.setTime(time);
 	}
 
 	public void endGame() {
@@ -147,49 +200,39 @@ public abstract class MyCloudCraftPlugin extends JavaPlugin {
 		// remover as bossbars
 		removeBossBars();
 		// mandar os jogadores de volta para o lobby
-		// teleportPlayersBackToLobby();
+		teleportPlayersBackToLobby();
 
 		// limpar inventario do jogador
 		clearPlayersInventory();
 
-		if (!this.myCloudCraftGame.isShuttingDown()) {
-			// limpar a arena e reiniciar o plugin
-			restart();
+        File dir = mgplugin.getDataFolder();
+    	File schematicFile = delegate.downloadArenaSchematic(arena.getArena_uuid(), dir.getAbsolutePath());
+    	List<ExportBlock> arenaBlocks = new BlockManipulationUtil().loadSchematic(this, schematicFile, this.world);
+		this.arenaBlocks = arenaBlocks;
+		LocationUtil locationUtil = new LocationUtil();
+		Location pointA = locationUtil.toLocation(this.getWorld(), arena.getArea().getPointA());
+		Location pointB = locationUtil.toLocation(this.getWorld(), arena.getArea().getPointB());
+		List<Block> list = new BlockManipulationUtil().blocksFromTwoPoints(pointA, pointB);
+		List<ExportBlock> blocks = new ArrayList<ExportBlock>();
+		for(Block block: list) {
+			ExportBlock eb = new ExportBlock();
+			eb.setX(block.getX());
+			eb.setY(block.getY());
+			eb.setZ(block.getZ());
+			eb.setMaterial(Material.AIR);
+			blocks.add(eb);
 		}
+		arenaBlocks.addAll(blocks);
+		startArenaBuild(this.arena.getName(), this.arenaBlocks);
 
 	}
 	
 	
-	protected void restart() {
-		// zerar lista de players
-		this.playerList.clear();
-		this.livePlayers.clear();
-		this.playerNames.clear();
-
-		// Remover qualquer entidade que tenha ficado no mapa
-		for(World world: Bukkit.getWorlds() ) {
-			world.setTime(1000);
-			world.setSpawnFlags(false, false);
-			world.setGameRuleValue("doMobSpawning", "false");
-			world.setGameRuleValue("doDaylightCycle", "false");
-			for (Entity entity : world.getEntities()) {
-				if (!(entity instanceof Player) && entity instanceof LivingEntity) {
-					entity.remove();
-				}
-			}
+	protected void teleportPlayersBackToLobby() {
+		for(GamePlayer gp: this.livePlayers) {
+			Player p = gp.getPlayer();
+			p.teleport(lobby);
 		}
-
-		this.winner = null;
-
-		this.countDown = (Integer)getGameConfigInstance(Constants.START_COUNTDOWN);
-		MGLogger.info(Constants.START_COUNTDOWN + " " + this.countDown );
-		if(this.countDown == 0) {
-			this.countDown = 10;
-		}
-		BukkitScheduler scheduler = getServer().getScheduler();
-		this.startGameThreadID = scheduler.scheduleSyncRepeatingTask(this, this.startGameTask, 0L, 20L);
-		this.startCountDownThreadID = scheduler.scheduleSyncRepeatingTask(this, this.startCountDownTask, 0L, 25L);
-		
 	}
 
 	public CopyOnWriteArraySet<GamePlayer> getLivePlayers() {
@@ -341,6 +384,7 @@ public abstract class MyCloudCraftPlugin extends JavaPlugin {
 			this.countDown--;
 			Bukkit.broadcastMessage(Utils.color("&6O jogo vai começar em " + this.countDown + " ..."));
 		} else {
+			this.startGameEngine();
 			Bukkit.getScheduler().cancelTask(startCountDownThreadID);
 		}
 	}
@@ -351,7 +395,6 @@ public abstract class MyCloudCraftPlugin extends JavaPlugin {
 	}
 
 	protected void start() {
-		this.myCloudCraftGame = new MyCloudCraftGame();
 		
 		// Remover qualquer entidade que tenha ficado no mapa
 		for(World world: Bukkit.getWorlds() ) {
@@ -463,5 +506,13 @@ public abstract class MyCloudCraftPlugin extends JavaPlugin {
 	public abstract void killPlayer(Player player);
 
 	public abstract void killEntity(Entity z);
+
+	public Location getLobby() {
+		return lobby;
+	}
+
+	public void setLobby(Location lobby) {
+		this.lobby = lobby;
+	}
 
 }

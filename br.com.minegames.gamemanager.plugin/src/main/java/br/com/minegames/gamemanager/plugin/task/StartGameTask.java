@@ -21,11 +21,10 @@ public class StartGameTask implements Runnable {
     	int maxPlayers = (Integer)this.controller.getGameConfigInstance(Constants.MAX_PLAYERS);
     	
     	if( controller.getLivePlayers().size() == maxPlayers && game.isWaitingPlayers()) {
-            controller.startGameEngine();
+            controller.startCoundDown();;
     	} else if ( (controller.getLivePlayers().size() >= minPlayers)
     			&& controller.getCountDown() == 0 && game.isWaitingPlayers() ) {
-    		game.start();
-            controller.startGameEngine();
+            controller.startCoundDown();
     	}
     	
     	
