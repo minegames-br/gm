@@ -14,8 +14,8 @@ import br.com.minegames.gamemanager.client.GameManagerDelegate;
 
 public class AddGameConfigRESTPostTest {
 
-	//public static final String URL_SERVICES = "http://services.minegames.com.br:8080/gamemanager/webresources";
-	public static final String URL_SERVICES = "http://localhost:8080/gamemanager/webresources";
+	public static final String URL_SERVICES = "http://services.minegames.com.br:8080/gamemanager/webresources";
+	//public static final String URL_SERVICES = "http://localhost:8080/gamemanager/webresources";
 	//String restURL = "";
     private static GameManagerDelegate delegate = GameManagerDelegate.getInstance(URL_SERVICES);
 	
@@ -53,7 +53,7 @@ public class AddGameConfigRESTPostTest {
 		Local pointA = null;
 		Local pointB = null;
 
-		Game game = delegate.findGame("d7ce9890-f7a3-4296-9778-e285ca76b1c5");
+		Game game = delegate.findGame("00000000-0000-0000-0000-000000000000");
 		
 		System.out.println("creating configs");
 		gameConfig = createConfig("thelastarcher.global.startcountdown", "Countdown", "", "", GameConfigType.INT, GameConfigScope.GLOBAL, game );

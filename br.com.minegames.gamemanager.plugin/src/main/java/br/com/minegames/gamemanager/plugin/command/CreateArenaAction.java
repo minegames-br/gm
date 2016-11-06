@@ -84,7 +84,6 @@ public class CreateArenaAction extends CommandAction {
 			player.sendMessage("Creating Area3D data...");
 			Area3D area = delegate.addArea3D(p.getSelection());
 			arena.setArea(area);
-			arena = delegate.updateArena(arena);
 			
 			player.sendMessage("Creating Arena data...");
 			arena = delegate.createArena(arena);

@@ -13,7 +13,7 @@ import br.com.minegames.gamemanager.dao.SchematicDAO;
 
 public class SchematicService extends Service {
 	
-	public static final String SCHEMATIC_PATH = "c:/temp";
+	public static final String SCHEMATIC_PATH = "/opt/mg/schematics/";
 	
 	public SchematicService() {
 		super();
