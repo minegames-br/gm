@@ -7,19 +7,19 @@
 		<!-- provider>org.hibernate.ejb.HibernatePersistence</provider -->
 		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 		<jta-data-source>java:/jdbc/minegames</jta-data-source>
-		<class>br.com.minegames.core.domain.Game</class>
-		<class>br.com.minegames.core.domain.ServerInstance</class>
-		<class>br.com.minegames.core.domain.GameInstance</class>
-		<class>br.com.minegames.core.domain.MineCraftPlayer</class>
-		<class>br.com.minegames.core.domain.GameWorld</class>
-		<class>br.com.minegames.core.domain.Arena</class>
-		<class>br.com.minegames.core.domain.Area3D</class>
-		<class>br.com.minegames.core.domain.Local</class>
-		<class>br.com.minegames.core.domain.Config</class>
-		<class>br.com.minegames.core.domain.GameConfig</class>
-		<class>br.com.minegames.core.domain.GameConfigInstance</class>
-		<class>br.com.minegames.core.domain.GameArenaConfig</class>
-		<class>br.com.minegames.core.domain.Schematic</class>
+		<class>com.thecraftcloud.core.domain.Game</class>
+		<class>com.thecraftcloud.core.domain.ServerInstance</class>
+		<class>com.thecraftcloud.core.domain.GameInstance</class>
+		<class>com.thecraftcloud.core.domain.MineCraftPlayer</class>
+		<class>com.thecraftcloud.core.domain.GameWorld</class>
+		<class>com.thecraftcloud.core.domain.Arena</class>
+		<class>com.thecraftcloud.core.domain.Area3D</class>
+		<class>com.thecraftcloud.core.domain.Local</class>
+		<class>com.thecraftcloud.core.domain.Config</class>
+		<class>com.thecraftcloud.core.domain.GameConfig</class>
+		<class>com.thecraftcloud.core.domain.GameConfigInstance</class>
+		<class>com.thecraftcloud.core.domain.GameArenaConfig</class>
+		<class>com.thecraftcloud.core.domain.Schematic</class>
 		<properties>
 			<!-- 
 			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
