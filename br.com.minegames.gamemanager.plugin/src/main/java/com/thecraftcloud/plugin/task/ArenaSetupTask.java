@@ -9,13 +9,13 @@ import com.thecraftcloud.core.domain.GameConfig;
 import com.thecraftcloud.core.domain.GameConfigInstance;
 import com.thecraftcloud.core.domain.GameConfigScope;
 import com.thecraftcloud.core.domain.GameConfigType;
-import com.thecraftcloud.plugin.MineGamesPlugin;
+import com.thecraftcloud.plugin.TheCraftCloudPlugin;
 
 public class ArenaSetupTask implements Runnable {
 	
-	private MineGamesPlugin controller;
+	private TheCraftCloudPlugin controller;
 	
-	public ArenaSetupTask(MineGamesPlugin controller) {
+	public ArenaSetupTask(TheCraftCloudPlugin controller) {
 		this.controller = controller;
 	}
 	

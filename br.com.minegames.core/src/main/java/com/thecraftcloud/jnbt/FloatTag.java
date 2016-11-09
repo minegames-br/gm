@@ -1,4 +1,4 @@
-/*    */ package org.jnbt;
+/*    */ package com.thecraftcloud.jnbt;
 /*    */ 
 /*    */ 
 /*    */ 
@@ -22,10 +22,10 @@
 /*    */ 
 /*    */ 
 /*    */ 
-/*    */ public final class ShortTag
+/*    */ public final class FloatTag
 /*    */   extends Tag
 /*    */ {
-/*    */   private final short value;
+/*    */   private final float value;
 /*    */   
 /*    */ 
 /*    */ 
@@ -49,15 +49,15 @@
 /*    */ 
 /*    */ 
 /*    */ 
-/*    */   public ShortTag(String name, short value)
+/*    */   public FloatTag(String name, float value)
 /*    */   {
 /* 54 */     super(name);
 /* 55 */     this.value = value;
 /*    */   }
 /*    */   
-/*    */   public Short getValue()
+/*    */   public Float getValue()
 /*    */   {
-/* 60 */     return Short.valueOf(this.value);
+/* 60 */     return Float.valueOf(this.value);
 /*    */   }
 /*    */   
 /*    */   public String toString()
@@ -67,12 +67,12 @@
 /* 67 */     if ((name != null) && (!name.equals(""))) {
 /* 68 */       append = "(\"" + getName() + "\")";
 /*    */     }
-/* 70 */     return "TAG_Short" + append + ": " + this.value;
+/* 70 */     return "TAG_Float" + append + ": " + this.value;
 /*    */   }
 /*    */ }
 
 
-/* Location:              C:\Users\voigo\Downloads\jnbt-1.1\jnbt-1.1.jar!\org\jnbt\ShortTag.class
+/* Location:              C:\Users\voigo\Downloads\jnbt-1.1\jnbt-1.1.jar!\org\jnbt\FloatTag.class
  * Java compiler version: 6 (50.0)
  * JD-Core Version:       0.7.1
  */

@@ -1,6 +1,6 @@
-name: MineGames-Core
+name: TheCraftCloud-Core
 author: joaoemilio
 version: 1.0.0
-main: br.com.minegames.core.CorePlugin
+main: com.thecraftcloud.core.TheCraftCloudCorePlugin
 depend: [WorldEdit]
 commands:

@@ -1,39 +1,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>br.com.minegames.gamemanager.client</groupId>
-  <artifactId>br.com.minegames.gamemanager.client</artifactId>
+  <groupId>com.thecraftcloud.client</groupId>
+  <artifactId>com.thecraftcloud.client</artifactId>
   <version>1.0.0</version>
-  <name>br.com.minegames.gamemanager.client</name>
+  <name>com.thecraftcloud.client</name>
 
 	<properties>
 		<targetDir>D:/minecraft/</targetDir>
 	</properties>
-	<profiles>
-		<profile>
-			<id>renato</id>
-			<activation>
-				<property>
-					<name>developer</name>
-					<value>renato</value>
-				</property>
-			</activation>
-			<properties>
-				<targetDir>c:/temp/</targetDir>
-			</properties>
-		</profile>
-		<profile>
-			<id>joao</id>
-			<activation>
-				<property>
-					<name>developer</name>
-					<value>joao</value>
-				</property>
-			</activation>
-			<properties>
-				<targetDir>D:/minecraft/minecraft-arqueiro/plugins</targetDir>
-			</properties>
-		</profile>
-	</profiles>
 
   <build>
     <sourceDirectory>src</sourceDirectory>
@@ -46,31 +20,6 @@
           <target>1.7</target>
         </configuration>
       </plugin>
-		<plugin>
-    		<artifactId>maven-resources-plugin</artifactId>
-    		<version>3.0.0</version>
-    		<executions>
-        		<execution>
-            		<id>copy-files-on-build</id>
-            		<phase>validate</phase>
-            		<goals>
-                		<goal>copy-resources</goal>
-            		</goals>
-            		<configuration>
-                		<outputDirectory>${targetDir}</outputDirectory>
-                		<resources>
-                    		<resource>
-								<directory>target</directory>
-                        		<includes>
-                        			<include>*.jar</include>
-                        		</includes>
-                        		<filtering>false</filtering>
-                    		</resource>
-                		</resources>
-            		</configuration>
-        		</execution>
-    		</executions>
-		</plugin>
     </plugins>
   </build>
 	<repositories>
@@ -96,8 +45,8 @@
 		</dependency>
 
   		<dependency>
-  			<groupId>br.com.minegames.core</groupId>
-  			<artifactId>br.com.minegames.core</artifactId>
+  			<groupId>com.thecraftcloud.core</groupId>
+  			<artifactId>com.thecraftcloud.core</artifactId>
   			<version>1.0.0</version>
   		</dependency>
 		<dependency>

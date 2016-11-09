@@ -30,7 +30,7 @@ import com.thecraftcloud.core.domain.Area3D;
 import com.thecraftcloud.core.domain.Local;
 import com.thecraftcloud.core.export.ExportBlock;
 import com.thecraftcloud.core.util.BlockManipulationUtil;
-import com.thecraftcloud.plugin.MineGamesPlugin;
+import com.thecraftcloud.plugin.TheCraftCloudPlugin;
 
 public class ImportStructureAction extends CommandAction {
 
@@ -52,7 +52,7 @@ public class ImportStructureAction extends CommandAction {
 			player = (Player)commandSender;
 		}
 		
-		MineGamesPlugin p = (MineGamesPlugin)plugin;
+		TheCraftCloudPlugin p = (TheCraftCloudPlugin)plugin;
 		long time = System.currentTimeMillis();
 		player.sendMessage("Reading blocks");
 		File file = new File(p.getDataFolder(), "selection.blocks");

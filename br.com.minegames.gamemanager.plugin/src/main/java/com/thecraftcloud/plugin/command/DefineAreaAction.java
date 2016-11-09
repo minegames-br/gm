@@ -6,13 +6,13 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.thecraftcloud.client.GameManagerDelegate;
+import com.thecraftcloud.client.TheCraftCloudDelegate;
 import com.thecraftcloud.core.command.CommandAction;
 import com.thecraftcloud.core.domain.Area3D;
 import com.thecraftcloud.core.domain.Arena;
 import com.thecraftcloud.core.domain.GameWorld;
 import com.thecraftcloud.core.domain.ServerInstance;
-import com.thecraftcloud.plugin.MineGamesPlugin;
+import com.thecraftcloud.plugin.TheCraftCloudPlugin;
 
 public class DefineAreaAction extends CommandAction {
 
@@ -31,8 +31,8 @@ public class DefineAreaAction extends CommandAction {
 			player = (Player)commandSender;
 		}
 
-		MineGamesPlugin p = (MineGamesPlugin)plugin;
-		GameManagerDelegate delegate = GameManagerDelegate.getInstance();
+		TheCraftCloudPlugin p = (TheCraftCloudPlugin)plugin;
+		TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance();
 		if(p.isServerRegistered()) {
 			if(player != null) {
 				player.sendMessage("Please, register server first. /mg register <name>");

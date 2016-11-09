@@ -16,13 +16,13 @@ import org.bukkit.material.MaterialData;
 import org.bukkit.material.Stairs;
 
 import com.thecraftcloud.core.domain.Local;
-import com.thecraftcloud.plugin.MineGamesPlugin;
+import com.thecraftcloud.plugin.TheCraftCloudPlugin;
 
 public class PlayerOnClick implements Listener {
 
-	private MineGamesPlugin controller;
+	private TheCraftCloudPlugin controller;
 	
-    public PlayerOnClick(MineGamesPlugin plugin) {
+    public PlayerOnClick(TheCraftCloudPlugin plugin) {
 		super();
 		this.controller = plugin;
 	}
@@ -87,8 +87,12 @@ public class PlayerOnClick implements Listener {
 			this.controller.previousConfig(player);
 		}
 		
-		if(block.getLocation().getBlockZ() == 397) {
+		if(block.getLocation().getBlockZ() == 397 && block.getLocation().getBlockX() == -765) {
 			this.controller.startArenaSetupTask();
+		}
+
+		if(block.getLocation().getBlockZ() == 397 && block.getLocation().getBlockX() == -764) {
+			this.controller.cancelArenaSetupTask();
 		}
 
 	}

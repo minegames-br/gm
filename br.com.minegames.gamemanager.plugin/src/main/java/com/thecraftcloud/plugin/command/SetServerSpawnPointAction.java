@@ -7,12 +7,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.thecraftcloud.client.GameManagerDelegate;
+import com.thecraftcloud.client.TheCraftCloudDelegate;
 import com.thecraftcloud.core.command.CommandAction;
 import com.thecraftcloud.core.domain.Local;
 import com.thecraftcloud.core.domain.ServerInstance;
 import com.thecraftcloud.core.json.JSONParser;
-import com.thecraftcloud.plugin.MineGamesPlugin;
+import com.thecraftcloud.plugin.TheCraftCloudPlugin;
 
 public class SetServerSpawnPointAction extends CommandAction {
 
@@ -31,7 +31,7 @@ public class SetServerSpawnPointAction extends CommandAction {
 			player = (Player)commandSender;
 		}
 
-		MineGamesPlugin p = (MineGamesPlugin)plugin;
+		TheCraftCloudPlugin p = (TheCraftCloudPlugin)plugin;
 		if(p.isServerRegistered()) {
 			if(player != null) {
 				player.sendMessage("Please, register server first. /mg register <name>");
@@ -39,7 +39,7 @@ public class SetServerSpawnPointAction extends CommandAction {
 			}
 		}
 		
-		GameManagerDelegate delegate = GameManagerDelegate.getInstance();
+		TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance();
 		
 		Location loc = player.getLocation();
 		Local l = new Local(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());

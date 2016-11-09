@@ -1,20 +1,18 @@
 package com.thecraftcloud.plugin.listener;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import com.thecraftcloud.core.util.Utils;
 import com.thecraftcloud.domain.MyCloudCraftGame;
-import com.thecraftcloud.plugin.MyCloudCraftPlugin;
+import com.thecraftcloud.plugin.TheCraftCloudMiniGameAbstract;
 
 public class PlayerQuit implements Listener {
 
-	private MyCloudCraftPlugin controller;
+	private TheCraftCloudMiniGameAbstract controller;
 
-    public PlayerQuit(MyCloudCraftPlugin controller) {
+    public PlayerQuit(TheCraftCloudMiniGameAbstract controller) {
 		super();
 		this.controller = controller;
 	}
@@ -26,7 +24,7 @@ public class PlayerQuit implements Listener {
         
         MyCloudCraftGame game = controller.getMyCloudCraftGame();
         
-        if( !game.isOver() ) {
+        if(game != null && !game.isOver() ) {
         	controller.removeLivePlayer(player);
         }
         

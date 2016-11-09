@@ -25,7 +25,7 @@ import org.bukkit.material.Stairs;
 import org.bukkit.material.Wool;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.thecraftcloud.client.GameManagerDelegate;
+import com.thecraftcloud.client.TheCraftCloudDelegate;
 import com.thecraftcloud.core.command.CommandAction;
 import com.thecraftcloud.core.domain.Area3D;
 import com.thecraftcloud.core.domain.Arena;
@@ -33,8 +33,8 @@ import com.thecraftcloud.core.domain.Game;
 import com.thecraftcloud.core.domain.Local;
 import com.thecraftcloud.core.export.ExportBlock;
 import com.thecraftcloud.core.util.BlockManipulationUtil;
-import com.thecraftcloud.plugin.MineGamesPlugin;
-import com.thecraftcloud.plugin.MyCloudCraftPlugin;
+import com.thecraftcloud.plugin.TheCraftCloudPlugin;
+import com.thecraftcloud.plugin.TheCraftCloudMiniGameAbstract;
 
 public class LoadArenaAction extends CommandAction {
 
@@ -56,8 +56,8 @@ public class LoadArenaAction extends CommandAction {
 			player = (Player)commandSender;
 		}
 		
-		GameManagerDelegate delegate = GameManagerDelegate.getInstance();
-		MineGamesPlugin mgplugin = (MineGamesPlugin)Bukkit.getPluginManager().getPlugin("MGPlugin");
+		TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance();
+		TheCraftCloudPlugin mgplugin = (TheCraftCloudPlugin)Bukkit.getPluginManager().getPlugin(TheCraftCloudPlugin.THE_CRAFT_CLOUD_PLUGIN);
 		Arena arena = mgplugin.getArena();
 		Game game = mgplugin.getGame();
 		

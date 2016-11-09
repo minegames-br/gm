@@ -9,11 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.jnbt.ByteArrayTag;
-import org.jnbt.CompoundTag;
-import org.jnbt.NBTInputStream;
-import org.jnbt.ShortTag;
-import org.jnbt.Tag;
+import com.thecraftcloud.jnbt.ByteArrayTag;
+import com.thecraftcloud.jnbt.CompoundTag;
+import com.thecraftcloud.jnbt.NBTInputStream;
+import com.thecraftcloud.jnbt.ShortTag;
+import com.thecraftcloud.jnbt.Tag;
 
 public class SchematicToCSV {
 

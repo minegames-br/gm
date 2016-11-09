@@ -1,4 +1,4 @@
-/*    */ package org.jnbt;
+/*    */ package com.thecraftcloud.jnbt;
 /*    */ 
 /*    */ 
 /*    */ 
@@ -22,10 +22,10 @@
 /*    */ 
 /*    */ 
 /*    */ 
-/*    */ public final class StringTag
+/*    */ public final class IntTag
 /*    */   extends Tag
 /*    */ {
-/*    */   private final String value;
+/*    */   private final int value;
 /*    */   
 /*    */ 
 /*    */ 
@@ -49,15 +49,15 @@
 /*    */ 
 /*    */ 
 /*    */ 
-/*    */   public StringTag(String name, String value)
+/*    */   public IntTag(String name, int value)
 /*    */   {
 /* 54 */     super(name);
 /* 55 */     this.value = value;
 /*    */   }
 /*    */   
-/*    */   public String getValue()
+/*    */   public Integer getValue()
 /*    */   {
-/* 60 */     return this.value;
+/* 60 */     return Integer.valueOf(this.value);
 /*    */   }
 /*    */   
 /*    */   public String toString()
@@ -67,12 +67,12 @@
 /* 67 */     if ((name != null) && (!name.equals(""))) {
 /* 68 */       append = "(\"" + getName() + "\")";
 /*    */     }
-/* 70 */     return "TAG_String" + append + ": " + this.value;
+/* 70 */     return "TAG_Int" + append + ": " + this.value;
 /*    */   }
 /*    */ }
 
 
-/* Location:              C:\Users\voigo\Downloads\jnbt-1.1\jnbt-1.1.jar!\org\jnbt\StringTag.class
+/* Location:              C:\Users\voigo\Downloads\jnbt-1.1\jnbt-1.1.jar!\org\jnbt\IntTag.class
  * Java compiler version: 6 (50.0)
  * JD-Core Version:       0.7.1
  */

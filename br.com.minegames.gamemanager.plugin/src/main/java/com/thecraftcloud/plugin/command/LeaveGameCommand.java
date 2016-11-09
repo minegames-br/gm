@@ -6,13 +6,13 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.thecraftcloud.core.logging.MGLogger;
-import com.thecraftcloud.plugin.MyCloudCraftPlugin;
+import com.thecraftcloud.plugin.TheCraftCloudMiniGameAbstract;
 
 public class LeaveGameCommand implements CommandExecutor {
 
-	private MyCloudCraftPlugin controller;
+	private TheCraftCloudMiniGameAbstract controller;
 
-    public LeaveGameCommand(MyCloudCraftPlugin plugin) {
+    public LeaveGameCommand(TheCraftCloudMiniGameAbstract plugin) {
 		super();
 		this.controller = plugin;
 	}

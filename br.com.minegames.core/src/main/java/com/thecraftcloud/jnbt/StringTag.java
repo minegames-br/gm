@@ -1,4 +1,4 @@
-/*    */ package org.jnbt;
+/*    */ package com.thecraftcloud.jnbt;
 /*    */ 
 /*    */ 
 /*    */ 
@@ -22,10 +22,10 @@
 /*    */ 
 /*    */ 
 /*    */ 
-/*    */ public final class DoubleTag
+/*    */ public final class StringTag
 /*    */   extends Tag
 /*    */ {
-/*    */   private final double value;
+/*    */   private final String value;
 /*    */   
 /*    */ 
 /*    */ 
@@ -49,15 +49,15 @@
 /*    */ 
 /*    */ 
 /*    */ 
-/*    */   public DoubleTag(String name, double value)
+/*    */   public StringTag(String name, String value)
 /*    */   {
 /* 54 */     super(name);
 /* 55 */     this.value = value;
 /*    */   }
 /*    */   
-/*    */   public Double getValue()
+/*    */   public String getValue()
 /*    */   {
-/* 60 */     return Double.valueOf(this.value);
+/* 60 */     return this.value;
 /*    */   }
 /*    */   
 /*    */   public String toString()
@@ -67,12 +67,12 @@
 /* 67 */     if ((name != null) && (!name.equals(""))) {
 /* 68 */       append = "(\"" + getName() + "\")";
 /*    */     }
-/* 70 */     return "TAG_Double" + append + ": " + this.value;
+/* 70 */     return "TAG_String" + append + ": " + this.value;
 /*    */   }
 /*    */ }
 
 
-/* Location:              C:\Users\voigo\Downloads\jnbt-1.1\jnbt-1.1.jar!\org\jnbt\DoubleTag.class
+/* Location:              C:\Users\voigo\Downloads\jnbt-1.1\jnbt-1.1.jar!\org\jnbt\StringTag.class
  * Java compiler version: 6 (50.0)
  * JD-Core Version:       0.7.1
  */

@@ -9,20 +9,20 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.thecraftcloud.client.GameManagerDelegate;
+import com.thecraftcloud.client.TheCraftCloudDelegate;
 import com.thecraftcloud.core.domain.Arena;
 import com.thecraftcloud.core.domain.Game;
 import com.thecraftcloud.core.export.ExportBlock;
 import com.thecraftcloud.core.logging.MGLogger;
 import com.thecraftcloud.core.util.BlockManipulationUtil;
-import com.thecraftcloud.plugin.MineGamesPlugin;
-import com.thecraftcloud.plugin.MyCloudCraftPlugin;
+import com.thecraftcloud.plugin.TheCraftCloudPlugin;
+import com.thecraftcloud.plugin.TheCraftCloudMiniGameAbstract;
 
 public class JoinGameCommand implements CommandExecutor {
 
-	private MyCloudCraftPlugin controller;
+	private TheCraftCloudMiniGameAbstract controller;
 
-    public JoinGameCommand(MyCloudCraftPlugin plugin) {
+    public JoinGameCommand(TheCraftCloudMiniGameAbstract plugin) {
 		super();
 		this.controller = plugin;
 	}
@@ -38,24 +38,30 @@ public class JoinGameCommand implements CommandExecutor {
         }
         
         Player player = (Player) commandSender;
-        if(controller.getLivePlayers() != null && controller.getLivePlayers().size() > 0) {
+        if(controller.getMyCloudCraftGame().isWaitingPlayers() && controller.getLivePlayers() != null && controller.getLivePlayers().size() > 0) {
         	if(args != null || args.length > 0) {
         		player.sendMessage("Uma arena está ativa. Vou te mandar pra lá.");
         	}
             controller.addPlayer(player);
         } else {
 	        
-    		GameManagerDelegate delegate = GameManagerDelegate.getInstance();
-    		MineGamesPlugin mgplugin = (MineGamesPlugin)Bukkit.getPluginManager().getPlugin("MGPlugin");
-    		Arena arena = mgplugin.getArena();
-    		Game game = mgplugin.getGame();
+    		TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance();
+    		TheCraftCloudPlugin mgplugin = (TheCraftCloudPlugin)Bukkit.getPluginManager().getPlugin(TheCraftCloudPlugin.THE_CRAFT_CLOUD_PLUGIN);
     		
-    		if(arena.getArea() == null || arena.getArea().getPointA() == null || arena.getArea().getPointB() == null) {
-    			player.sendMessage("Game is not correctly configured yet. Try /mg setup");
+    		if(!mgplugin.isGameReady() || !controller.isGameReady() ) {
+    			player.sendMessage("Game is not yet ready. Run the check list to find out what is missing /tcc checklist");
     			return false;
     		}
     		
-    		controller.init(); //setGameArenaConfigList( delegate.getInstance().findAllGameConfigArenaByGameArena(game.getGame_uuid().toString(), arena.getArena_uuid().toString() ) );
+    		Arena arena = mgplugin.getArena();
+    		Game game = mgplugin.getGame();
+    		
+    		if(arena == null || arena.getArea() == null || arena.getArea().getPointA() == null || arena.getArea().getPointB() == null) {
+    			player.sendMessage("Game is not correctly configured yet. Have you selected the game and arena? If so, try /tcc setup");
+    			return false;
+    		}
+    		
+    		controller.init( player.getWorld(), mgplugin.getServerInstance().getLobby() ); //setGameArenaConfigList( delegate.getInstance().findAllGameConfigArenaByGameArena(game.getGame_uuid().toString(), arena.getArena_uuid().toString() ) );
             controller.addPlayer(player);
         }
         

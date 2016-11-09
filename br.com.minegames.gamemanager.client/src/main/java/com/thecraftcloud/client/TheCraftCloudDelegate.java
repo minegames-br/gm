@@ -38,28 +38,28 @@ import com.thecraftcloud.core.dto.SearchGameWorldDTO;
 import com.thecraftcloud.core.json.JSONParser;
 import com.thecraftcloud.core.logging.MGLogger;
 
-public class GameManagerDelegate {
+public class TheCraftCloudDelegate {
 
-	private static GameManagerDelegate me;
+	private static TheCraftCloudDelegate me;
 	private String gameManagerUrl;
 	
-	private GameManagerDelegate() {
+	private TheCraftCloudDelegate() {
 		
 	}
 	
-	public static GameManagerDelegate getInstance() {
-		String gamemanagerUrl = GameManagerClientPlugin.getMinegamesGameManagerUrl();
+	public static TheCraftCloudDelegate getInstance() {
+		String gamemanagerUrl = TheCraftCloudClientPlugin.getMinegamesGameManagerUrl();
 		Bukkit.getLogger().info("URL: "+ gamemanagerUrl);
 		if(me == null) {
-			me = new GameManagerDelegate();
+			me = new TheCraftCloudDelegate();
 		}
 		me.gameManagerUrl = gamemanagerUrl;
 		return me;
 	}
 	
-	public static GameManagerDelegate getInstance(String url) {
+	public static TheCraftCloudDelegate getInstance(String url) {
 		if(me == null) {
-			me = new GameManagerDelegate();
+			me = new TheCraftCloudDelegate();
 			me.gameManagerUrl = url;
 		}
 		return me;
@@ -459,8 +459,8 @@ public class GameManagerDelegate {
 	}
 	
 	public static void main(String args[]) {
-		GameManagerClientPlugin.setMinegamesGameManagerUrl("http://localhost:8080/gamemanager/webresources");
-		GameManagerDelegate delegate = GameManagerDelegate.getInstance("http://localhost:8080/gamemanager/webresources");
+		TheCraftCloudClientPlugin.setMinegamesGameManagerUrl("http://localhost:8080/gamemanager/webresources");
+		TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance("http://localhost:8080/gamemanager/webresources");
 		Game game = delegate.findGame("46bea463-7bb9-46ed-8eae-ec004ce84833");
 	}
 

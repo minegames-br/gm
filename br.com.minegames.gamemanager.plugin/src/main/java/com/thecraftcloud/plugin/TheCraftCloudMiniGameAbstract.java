@@ -21,7 +21,7 @@ import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Scoreboard;
 
-import com.thecraftcloud.client.GameManagerDelegate;
+import com.thecraftcloud.client.TheCraftCloudDelegate;
 import com.thecraftcloud.core.domain.Arena;
 import com.thecraftcloud.core.domain.Game;
 import com.thecraftcloud.core.domain.GameArenaConfig;
@@ -50,7 +50,7 @@ import com.thecraftcloud.plugin.task.LevelUpTask;
 import com.thecraftcloud.plugin.task.StartCoundDownTask;
 import com.thecraftcloud.plugin.task.StartGameTask;
 
-public abstract class MyCloudCraftPlugin extends JavaPlugin {
+public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 	
 	protected CopyOnWriteArraySet<GamePlayer> playerList = new CopyOnWriteArraySet<GamePlayer>();
 	protected CopyOnWriteArraySet<GamePlayer> livePlayers = new CopyOnWriteArraySet<GamePlayer>();
@@ -60,11 +60,11 @@ public abstract class MyCloudCraftPlugin extends JavaPlugin {
 	protected World world;
 
 	private Scoreboard scoreboard;
-	private GameManagerDelegate delegate =GameManagerDelegate.getInstance();
+	private TheCraftCloudDelegate delegate =TheCraftCloudDelegate.getInstance();
 	private List<GameConfigInstance> gameConfigInstanceList;
 	private List<GameArenaConfig> gameArenaConfigList;
-	private GameManagerDelegate gameManagerDelegate = GameManagerDelegate.getInstance();
-	private MineGamesPlugin mgplugin;
+	private TheCraftCloudDelegate gameManagerDelegate = TheCraftCloudDelegate.getInstance();
+	private TheCraftCloudPlugin mgplugin;
 	
 	protected List<ExportBlock> arenaBlocks;
 	protected int indexBlock = 0;
@@ -73,7 +73,7 @@ public abstract class MyCloudCraftPlugin extends JavaPlugin {
 	protected List<Integer> threadIds;
 	private Runnable endGameTask;
 	private int endGameThreadID;
-	private int countDown;
+	protected int countDown;
 	private GamePlayer winner;
 	private StartGameTask startGameTask;
 	private int startGameThreadID;
@@ -86,10 +86,11 @@ public abstract class MyCloudCraftPlugin extends JavaPlugin {
 	private int levelUpThreadID;
 	protected MyCloudCraftGame myCloudCraftGame;
 	protected Location lobby;
+	private boolean arenaReady;
 
 	@Override
 	public void onEnable() {
-		this.mgplugin = (MineGamesPlugin)Bukkit.getPluginManager().getPlugin("MGPlugin");
+		this.mgplugin = (TheCraftCloudPlugin)Bukkit.getPluginManager().getPlugin(TheCraftCloudPlugin.THE_CRAFT_CLOUD_PLUGIN);
 		ServerInstance server = null;
 		try{
 			server = delegate.findServerInstance(mgplugin.getServer_uuid());
@@ -119,29 +120,38 @@ public abstract class MyCloudCraftPlugin extends JavaPlugin {
 		getCommand("sair").setExecutor(new LeaveGameCommand(this));
 		getCommand("fwk").setExecutor(new TriggerFireworkCommand(this));
 
-		GameManagerDelegate delegate = GameManagerDelegate.getInstance();
-		MineGamesPlugin mgplugin = (MineGamesPlugin)Bukkit.getPluginManager().getPlugin("MGPlugin");
+		TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance();
+		TheCraftCloudPlugin mgplugin = (TheCraftCloudPlugin)Bukkit.getPluginManager().getPlugin(TheCraftCloudPlugin.THE_CRAFT_CLOUD_PLUGIN);
 		Arena arena = mgplugin.getArena();
 		Game game = mgplugin.getGame();
 		this.game = game;
 		this.arena = arena;
 		
-		if(arena.getArea() == null || arena.getArea().getPointA() == null || arena.getArea().getPointB() == null) {
+		if(arena == null || arena.getArea() == null || arena.getArea().getPointA() == null || arena.getArea().getPointB() == null) {
 			Bukkit.getLogger().info("Game is not correctly configured yet. Try /mg setup");
+		} else {
+			File dir = mgplugin.getDataFolder();
+			File schematicFile = delegate.downloadArenaSchematic(arena.getArena_uuid(), dir.getAbsolutePath());
+			List<ExportBlock> arenaBlocks = new BlockManipulationUtil().loadSchematic(this, schematicFile, this.world);
+			this.startArenaBuild(arena.getName(), arenaBlocks);
 		}
-        File dir = mgplugin.getDataFolder();
-    	File schematicFile = delegate.downloadArenaSchematic(arena.getArena_uuid(), dir.getAbsolutePath());
-    	List<ExportBlock> arenaBlocks = new BlockManipulationUtil().loadSchematic(this, schematicFile, this.world);
-    	this.startArenaBuild(arena.getName(), arenaBlocks);
 	}
 	
-	public void init() {
+	public void init(World _world, Local _lobby) {
+		Arena arena = mgplugin.getArena();
+		Game game = mgplugin.getGame();
+		this.game = game;
+		this.arena = arena;
+		
+		this.world = _world;
+		this.lobby = Utils.toLocation(_world, _lobby);
+
 		this.endGameTask = new EndGameTask(this);
 		this.levelUpTask = new LevelUpTask(this);
 		this.myCloudCraftGame = new MyCloudCraftGame();
-
-		this.gameConfigInstanceList = delegate.findAllGameConfigInstanceByGameUUID(this.game.getGame_uuid().toString());
-		this.gameArenaConfigList = delegate.findAllGameConfigArenaByGameArena(this.game.getGame_uuid().toString(), this.arena.getArena_uuid().toString());
+		
+		this.gameConfigInstanceList = delegate.findAllGameConfigInstanceByGameUUID(this.mgplugin.getGame().getGame_uuid().toString());
+		this.gameArenaConfigList = delegate.findAllGameConfigArenaByGameArena(this.mgplugin.getGame().getGame_uuid().toString(), this.mgplugin.getArena().getArena_uuid().toString());
 		
 		// Agendar as threads que vão detectar se o jogo pode comecar
 		this.startCountDownTask = new StartCoundDownTask(this);
@@ -151,15 +161,11 @@ public abstract class MyCloudCraftPlugin extends JavaPlugin {
 		this.startGameThreadID = scheduler.scheduleSyncRepeatingTask(this, this.startGameTask, 0L, 20L);
 		this.startCountDownThreadID = scheduler.scheduleSyncRepeatingTask(this, this.startCountDownTask, 0L, 25L);
 
-		this.countDown = (Integer)getGameConfigInstance(Constants.START_COUNTDOWN);
-		MGLogger.info(Constants.START_COUNTDOWN + " " + this.countDown );
-		if(this.countDown == 0) {
-			this.countDown = 10;
-		}
+		this.setStartCountDown();
 	}
 
 	protected void loadLobby() {
-		this.mgplugin = (MineGamesPlugin)Bukkit.getPluginManager().getPlugin("MGPlugin");
+		this.mgplugin = (TheCraftCloudPlugin)Bukkit.getPluginManager().getPlugin(TheCraftCloudPlugin.THE_CRAFT_CLOUD_PLUGIN);
 		
 		try{
 			ServerInstance server = delegate.findServerInstance(mgplugin.getServer_uuid());
@@ -173,6 +179,11 @@ public abstract class MyCloudCraftPlugin extends JavaPlugin {
 	}
 	
 	public void startGameEngine() {
+		Arena arena = mgplugin.getArena();
+		Game game = mgplugin.getGame();
+		this.game = game;
+		this.arena = arena;
+
 		BukkitScheduler scheduler = getServer().getScheduler();
 		
 		if(this.lobby == null) {
@@ -190,7 +201,9 @@ public abstract class MyCloudCraftPlugin extends JavaPlugin {
 		
 		//mudar horário da arena
 		Integer time = this.arena.getTime();
-		this.world.setTime(time);
+		if( time != null) {
+			this.world.setTime(time);
+		}
 	}
 
 	public void endGame() {
@@ -240,7 +253,7 @@ public abstract class MyCloudCraftPlugin extends JavaPlugin {
 	}
 
 	public void startArenaBuild(String arenaName, List<ExportBlock> arenaBlocks) {
-		
+		this.arenaReady = false;
 		Bukkit.getLogger().info("startArenaBuild - " + arenaName);
 		this.world = Bukkit.getWorld(arenaName);
 		if(this.world == null) {
@@ -273,6 +286,7 @@ public abstract class MyCloudCraftPlugin extends JavaPlugin {
 			scheduler.cancelTask( threadIds.get(i) );
 		}
 		threadIds.clear();
+		this.arenaReady = true;
 	}
 
 	public ExportBlock getNextBlock() {
@@ -389,11 +403,6 @@ public abstract class MyCloudCraftPlugin extends JavaPlugin {
 		}
 	}
 
-	public int getCountDown() {
-		// TODO Auto-generated method stub
-		return countDown;
-	}
-
 	protected void start() {
 		
 		// Remover qualquer entidade que tenha ficado no mapa
@@ -409,11 +418,7 @@ public abstract class MyCloudCraftPlugin extends JavaPlugin {
 			}
 		}
 
-		this.countDown = (Integer)getGameConfigInstance(Constants.START_COUNTDOWN);
-		MGLogger.info(Constants.START_COUNTDOWN + " " + this.countDown );
-		if(this.countDown == 0) {
-			this.countDown = 10;
-		}
+		this.setStartCountDown();
 		
 	}
 
@@ -445,9 +450,7 @@ public abstract class MyCloudCraftPlugin extends JavaPlugin {
 	
 	public void teleportPlayersBackToLobby(Player player) {
 		
-		Local lobbyLocal = (Local)getGameArenaConfig(Constants.LOBBY_LOCATION);
-		MGLogger.info("teleportPlayersBackToLobby - lobby local: " + lobbyLocal);
-		Location l = Utils.toLocation(player.getWorld(), lobbyLocal);
+		Location l = Utils.toLocation(this.getWorld(), this.getLobby());
 		player.teleport(l);
 	}
 	
@@ -462,17 +465,23 @@ public abstract class MyCloudCraftPlugin extends JavaPlugin {
 
 	private void removeBossBars() {
 		for (GamePlayer gp : livePlayers) {
-			gp.getBaseBar().removeAll();
+			if(gp.getBaseBar() != null) {
+				gp.getBaseBar().removeAll();
+			}
 		}
 	}
 
 	private void removeBossBar(Player player) {
 		GamePlayer gp = findGamePlayerByPlayer(player);
-		gp.getBaseBar().removeAll();
+		if(gp.getBaseBar() != null) {
+			gp.getBaseBar().removeAll();
+		}
 	}
 
 	private void removeBossBar(GamePlayer gp) {
-		gp.getBaseBar().removeAll();
+		if(gp.getBaseBar() != null) {
+			gp.getBaseBar().removeAll();
+		}
 	}
 
 	private void clearPlayersInventory() {
@@ -506,13 +515,21 @@ public abstract class MyCloudCraftPlugin extends JavaPlugin {
 	public abstract void killPlayer(Player player);
 
 	public abstract void killEntity(Entity z);
+	
+	public abstract Integer getStartCountDown();
 
-	public Location getLobby() {
-		return lobby;
-	}
+	public abstract void setStartCountDown();
 
-	public void setLobby(Location lobby) {
-		this.lobby = lobby;
+	public abstract Local getLobby();
+
+	public abstract void setLobby();
+
+	public abstract Integer getMinPlayers();
+
+	public abstract Integer getMaxPlayers();
+
+	public boolean isGameReady() {
+		return this.arenaReady;
 	}
 
 }

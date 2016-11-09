@@ -15,12 +15,12 @@ import org.bukkit.scheduler.BukkitScheduler;
 import com.thecraftcloud.core.command.CommandAction;
 import com.thecraftcloud.core.logging.MGLogger;
 
-public class MineGamesCommand  implements CommandExecutor {
+public class TheCraftCloudCommand  implements CommandExecutor {
 
 	private JavaPlugin plugin;
 	private HashMap<String,Class> commandArgs = new HashMap<String, Class>();
 	
-    public MineGamesCommand(JavaPlugin plugin) {
+    public TheCraftCloudCommand(JavaPlugin plugin) {
 		super();
 		this.plugin = plugin;
 		init();
@@ -70,6 +70,9 @@ public class MineGamesCommand  implements CommandExecutor {
 		commandArgs.put("loadarena", LoadArenaAction.class);
 		commandArgs.put("setlobby", SetServerSpawnPointAction.class);
 		commandArgs.put("addserver", AddServerCommand.class);
+		commandArgs.put("pointa", SelectPointAAction.class);
+		commandArgs.put("pointb", SelectPointBAction.class);
+		commandArgs.put("checklist", CheckListAction.class);
 	}
 	
 	private CommandAction getAction(CommandSender sender, Command command, String arg2, String[] arg3) {

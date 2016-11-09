@@ -11,7 +11,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.thecraftcloud.core.command.CommandAction;
 import com.thecraftcloud.core.domain.Area3D;
 import com.thecraftcloud.core.util.BlockManipulationUtil;
-import com.thecraftcloud.plugin.MineGamesPlugin;
+import com.thecraftcloud.plugin.TheCraftCloudPlugin;
 
 public class ExportSelectAction extends CommandAction {
 
@@ -31,7 +31,7 @@ public class ExportSelectAction extends CommandAction {
 			player = (Player)commandSender;
 		}
 		
-		MineGamesPlugin p = (MineGamesPlugin)plugin;
+		TheCraftCloudPlugin p = (TheCraftCloudPlugin)plugin;
 		if(p.getSelection() == null) {
 			player.sendMessage("Please, select the 3D area first: /mg select");
 			return;

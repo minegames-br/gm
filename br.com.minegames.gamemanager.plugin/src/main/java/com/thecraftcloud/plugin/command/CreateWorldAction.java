@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.thecraftcloud.core.command.CommandAction;
-import com.thecraftcloud.plugin.MineGamesPlugin;
+import com.thecraftcloud.plugin.TheCraftCloudPlugin;
 
 public class CreateWorldAction extends CommandAction {
 
@@ -30,7 +30,7 @@ public class CreateWorldAction extends CommandAction {
 			player = (Player)commandSender;
 		}
 		
-		MineGamesPlugin p = (MineGamesPlugin)plugin;
+		TheCraftCloudPlugin p = (TheCraftCloudPlugin)plugin;
 		long time = System.currentTimeMillis();
 
 		WorldCreator wc = new WorldCreator("palace");

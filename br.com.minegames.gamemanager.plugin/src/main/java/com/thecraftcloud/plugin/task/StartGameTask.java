@@ -1,14 +1,13 @@
 package com.thecraftcloud.plugin.task;
 
 import com.thecraftcloud.domain.MyCloudCraftGame;
-import com.thecraftcloud.plugin.Constants;
-import com.thecraftcloud.plugin.MyCloudCraftPlugin;
+import com.thecraftcloud.plugin.TheCraftCloudMiniGameAbstract;
 
 public class StartGameTask implements Runnable {
 	
-	private MyCloudCraftPlugin controller;
+	private TheCraftCloudMiniGameAbstract controller;
 	
-	public StartGameTask(MyCloudCraftPlugin controller) {
+	public StartGameTask(TheCraftCloudMiniGameAbstract controller) {
 		this.controller = controller;
 	}
 	
@@ -17,13 +16,13 @@ public class StartGameTask implements Runnable {
 
     	MyCloudCraftGame game = controller.getMyCloudCraftGame();
     	
-    	int minPlayers = (Integer)this.controller.getGameConfigInstance(Constants.MIN_PLAYERS);
-    	int maxPlayers = (Integer)this.controller.getGameConfigInstance(Constants.MAX_PLAYERS);
+    	int minPlayers = (Integer)this.controller.getMinPlayers();
+    	int maxPlayers = (Integer)this.controller.getMaxPlayers();
     	
     	if( controller.getLivePlayers().size() == maxPlayers && game.isWaitingPlayers()) {
             controller.startCoundDown();;
     	} else if ( (controller.getLivePlayers().size() >= minPlayers)
-    			&& controller.getCountDown() == 0 && game.isWaitingPlayers() ) {
+    			&& controller.getStartCountDown() == 0 && game.isWaitingPlayers() ) {
             controller.startCoundDown();
     	}
     	

@@ -10,13 +10,13 @@ import org.bukkit.entity.Player;
 import com.thecraftcloud.core.logging.MGLogger;
 import com.thecraftcloud.core.util.Utils;
 import com.thecraftcloud.core.worldedit.WorldEditWrapper;
-import com.thecraftcloud.plugin.MyCloudCraftPlugin;
+import com.thecraftcloud.plugin.TheCraftCloudMiniGameAbstract;
 
 public class TriggerFireworkCommand implements CommandExecutor {
 
-	private MyCloudCraftPlugin game;
+	private TheCraftCloudMiniGameAbstract game;
 
-    public TriggerFireworkCommand(MyCloudCraftPlugin plugin) {
+    public TriggerFireworkCommand(TheCraftCloudMiniGameAbstract plugin) {
 		super();
 		this.game = plugin;
 	}

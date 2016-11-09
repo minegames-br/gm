@@ -1,7 +1,7 @@
-name: MGPlugin
+name: TheCraftCloud-Plugin
 author: joaoemilio
 version: 1.0.0
-main: br.com.minegames.gamemanager.plugin.MineGamesPlugin
-depend: [GameManager-Client,MineGames-Core]
+main: com.thecraftcloud.plugin.TheCraftCloudPlugin
+depend: [TheCraftCloud-Client,TheCraftCloud-Core]
 commands:
-  mg:
+  tcc:

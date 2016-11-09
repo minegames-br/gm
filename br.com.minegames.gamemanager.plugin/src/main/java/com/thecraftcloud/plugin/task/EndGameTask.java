@@ -2,13 +2,13 @@ package com.thecraftcloud.plugin.task;
 
 import org.bukkit.scheduler.BukkitRunnable;
 
-import com.thecraftcloud.plugin.MyCloudCraftPlugin;
+import com.thecraftcloud.plugin.TheCraftCloudMiniGameAbstract;
 
 public class EndGameTask extends BukkitRunnable {
 	
-	private MyCloudCraftPlugin controller;
+	private TheCraftCloudMiniGameAbstract controller;
 	
-	public EndGameTask(MyCloudCraftPlugin controller) {
+	public EndGameTask(TheCraftCloudMiniGameAbstract controller) {
 		this.controller = controller;
 	}
 	

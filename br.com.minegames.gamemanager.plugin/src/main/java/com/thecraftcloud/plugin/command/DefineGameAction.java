@@ -6,10 +6,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.thecraftcloud.client.GameManagerDelegate;
+import com.thecraftcloud.client.TheCraftCloudDelegate;
 import com.thecraftcloud.core.command.CommandAction;
 import com.thecraftcloud.core.domain.Game;
-import com.thecraftcloud.plugin.MineGamesPlugin;
+import com.thecraftcloud.plugin.TheCraftCloudPlugin;
 
 public class DefineGameAction extends CommandAction {
 
@@ -18,7 +18,7 @@ public class DefineGameAction extends CommandAction {
 	}
 
 	public void execute() {
-		Bukkit.getLogger().info("Executando commando Define Area " + this.commandSender + " "
+		Bukkit.getLogger().info("Executando commando Define Game " + this.commandSender + " "
 				+ "\n" + this.command 
 				+ "\n" + this.arg2
 				+ "\n" + this.arguments);
@@ -28,17 +28,17 @@ public class DefineGameAction extends CommandAction {
 			player = (Player)commandSender;
 		}
 
-		MineGamesPlugin p = (MineGamesPlugin)plugin;
-		GameManagerDelegate delegate = GameManagerDelegate.getInstance();
+		TheCraftCloudPlugin p = (TheCraftCloudPlugin)plugin;
+		TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance();
 		if(p.isServerRegistered()) {
 			if(player != null) {
-				player.sendMessage("Please, register server first. /mg register <name>");
+				player.sendMessage("Please, register server first. /tcc register <name>");
 				return;
 			}
 		}
 		
 		if(arguments.length < 2) {
-			player.sendMessage("Please, send game #. List games /mg listgames then /mg setgame <#>");
+			player.sendMessage("Please, send game #. List games /tcc listgames then /tcc setgame <#>");
 			return;
 		}
 		int index = Integer.parseInt(arguments[1]);

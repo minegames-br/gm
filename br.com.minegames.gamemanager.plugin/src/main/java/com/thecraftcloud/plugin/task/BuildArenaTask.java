@@ -6,8 +6,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.thecraftcloud.core.export.ExportBlock;
 import com.thecraftcloud.core.util.BlockManipulationUtil;
-import com.thecraftcloud.plugin.MineGamesPlugin;
-import com.thecraftcloud.plugin.MyCloudCraftPlugin;
+import com.thecraftcloud.plugin.TheCraftCloudPlugin;
+import com.thecraftcloud.plugin.TheCraftCloudMiniGameAbstract;
 
 public class BuildArenaTask implements Runnable {
 	
@@ -20,8 +20,8 @@ public class BuildArenaTask implements Runnable {
 	
     @Override
     public void run() {
-    	if( this.controller instanceof MineGamesPlugin) {
-    		MineGamesPlugin p = (MineGamesPlugin)this.controller;
+    	if( this.controller instanceof TheCraftCloudPlugin) {
+    		TheCraftCloudPlugin p = (TheCraftCloudPlugin)this.controller;
 			Bukkit.getLogger().info(" MineGamesPlugin - BuildArenaTask" );
         	for(int i=0; i<1000; i++) {
             	ExportBlock block = p.getNextBlock();
@@ -39,8 +39,8 @@ public class BuildArenaTask implements Runnable {
     	    	}
     	    	
         	}
-    	} else if( this.controller instanceof MyCloudCraftPlugin ) {
-    		MyCloudCraftPlugin p = (MyCloudCraftPlugin)this.controller;
+    	} else if( this.controller instanceof TheCraftCloudMiniGameAbstract ) {
+    		TheCraftCloudMiniGameAbstract p = (TheCraftCloudMiniGameAbstract)this.controller;
         	for(int i=0; i<5000; i++) {
         		if( (i % 500) == 0) {
         			Bukkit.getLogger().info(" - " + i + " blocks created" );

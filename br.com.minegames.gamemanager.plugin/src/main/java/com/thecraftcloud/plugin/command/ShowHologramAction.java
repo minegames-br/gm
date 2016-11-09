@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.thecraftcloud.core.command.CommandAction;
-import com.thecraftcloud.plugin.MineGamesPlugin;
+import com.thecraftcloud.plugin.TheCraftCloudPlugin;
 
 public class ShowHologramAction extends CommandAction {
 
@@ -29,7 +29,7 @@ public class ShowHologramAction extends CommandAction {
 			player = (Player)commandSender;
 		}
 		
-		MineGamesPlugin p = (MineGamesPlugin)plugin;
+		TheCraftCloudPlugin p = (TheCraftCloudPlugin)plugin;
 		
 		String configName = p.getGameConfig().getDisplayName();
 		Integer configValue = Integer.parseInt( p.getConfigValue().toString() );

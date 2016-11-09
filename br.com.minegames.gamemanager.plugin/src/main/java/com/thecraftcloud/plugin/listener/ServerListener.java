@@ -6,13 +6,13 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
 
-import com.thecraftcloud.plugin.MyCloudCraftPlugin;
+import com.thecraftcloud.plugin.TheCraftCloudMiniGameAbstract;
 
 public class ServerListener implements Listener {
 
-	private MyCloudCraftPlugin game;
+	private TheCraftCloudMiniGameAbstract game;
 
-    public ServerListener(MyCloudCraftPlugin plugin) {
+    public ServerListener(TheCraftCloudMiniGameAbstract plugin) {
 		super();
 		this.game = plugin;
 	}

@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>br.com.minegames</groupId>
+  <groupId>com.thecraftcloud</groupId>
   <packaging>war</packaging>
   <version>0.0.1</version>
   <name>GameManager Maven Webapp</name>
@@ -104,8 +104,8 @@
 			    <scope>provided</scope>
 			</dependency>
   		<dependency>
-  			<groupId>br.com.minegames.core</groupId>
-  			<artifactId>br.com.minegames.core</artifactId>
+  			<groupId>com.thecraftcloud.core</groupId>
+  			<artifactId>com.thecraftcloud.core</artifactId>
   			<version>1.0.0</version>
   			<scope>runtime</scope>
   		</dependency>

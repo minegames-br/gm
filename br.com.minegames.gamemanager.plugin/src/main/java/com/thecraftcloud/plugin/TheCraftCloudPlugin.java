@@ -19,7 +19,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
-import com.thecraftcloud.client.GameManagerDelegate;
+import com.thecraftcloud.client.TheCraftCloudDelegate;
 import com.thecraftcloud.core.domain.Area3D;
 import com.thecraftcloud.core.domain.Arena;
 import com.thecraftcloud.core.domain.Game;
@@ -35,19 +35,22 @@ import com.thecraftcloud.core.hologram.HologramUtil;
 import com.thecraftcloud.core.multiverse.MultiVerseWrapper;
 import com.thecraftcloud.core.util.LocationUtil;
 import com.thecraftcloud.core.util.title.TitleUtil;
-import com.thecraftcloud.plugin.command.MineGamesCommand;
+import com.thecraftcloud.plugin.command.TheCraftCloudCommand;
 import com.thecraftcloud.plugin.listener.BlockBreakListener;
 import com.thecraftcloud.plugin.listener.PlayerOnClick;
 import com.thecraftcloud.plugin.task.ArenaSetupTask;
 import com.thecraftcloud.plugin.task.BuildArenaTask;
 
-public class MineGamesPlugin extends JavaPlugin {
+public class TheCraftCloudPlugin extends JavaPlugin {
 
+	public static String THE_CRAFT_CLOUD_PLUGIN = "TheCraftCloud-Plugin";
+	
 	private Area3D selection;
 	private String server_uuid;
+	private ServerInstance serverInstance;
 	private Arena arena;
 	private Game game;
-	private GameManagerDelegate delegate;
+	private TheCraftCloudDelegate delegate;
 	
 	private List<Arena> arenas;
 	private List<Game> games;
@@ -100,9 +103,9 @@ public class MineGamesPlugin extends JavaPlugin {
 	    loadConfiguration();
 	    System.out.print("[TheCraftCloud] TheCraftCloud Plugin Enabled!");
 		
-		getCommand("mg").setExecutor(new MineGamesCommand(this));
+		getCommand("tcc").setExecutor(new TheCraftCloudCommand(this));
 		
-	    this.delegate = GameManagerDelegate.getInstance();
+	    this.delegate = TheCraftCloudDelegate.getInstance();
 	    //this.game = delegate.findGame("57b7b3df-9d18-4966-898f-f4ad8ee28a92");
 		String game_uuid = this.getConfig().getString("thecraftcloud.game.uuid");
 		String arena_uuid = this.getConfig().getString("thecraftcloud.arena.uuid");
@@ -114,6 +117,10 @@ public class MineGamesPlugin extends JavaPlugin {
 		
 		if(arena_uuid != null) {
 			this.arena = delegate.getInstance().findArena(arena_uuid);
+		}
+		
+		if(this.server_uuid != null) {
+			this.serverInstance = delegate.getInstance().findServerInstance(this.server_uuid);
 		}
 		
 		
@@ -235,29 +242,37 @@ public class MineGamesPlugin extends JavaPlugin {
 	}
 
 	public void saveGameConfig() {
+		if(!this.setupArena) {
+			return;
+		}
 		BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
-		final MineGamesPlugin plugin = this;
-		final GameManagerDelegate delegate = GameManagerDelegate.getInstance();
-		scheduler.runTaskAsynchronously(this, new Runnable() {
-            @Override
-            public void run() {
-            	for(final GameConfigInstance gcc: plugin.getGameGameConfigMap().values() ) {
+		final TheCraftCloudPlugin plugin = this;
+		final TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance();
+    	for(final GameConfigInstance gcc: plugin.getGameGameConfigMap().values() ) {
+    		scheduler.runTaskAsynchronously(this, new Runnable() {
+    			@Override
+    			public void run() {
             		if(gcc.getGameConfig().getGame_config_uuid() == null) {
     	            	delegate.createGameConfigInstance(gcc);
             		} else {
             			delegate.updateGameConfigInstance(gcc);
             		}
 	            }
+    		});
+    	}
         		
-	            for(final GameArenaConfig gac: plugin.getGameConfigArenaMap().values()) {
+	    for(final GameArenaConfig gac: plugin.getGameConfigArenaMap().values()) {
+    		scheduler.runTaskAsynchronously(this, new Runnable() {
+    			@Override
+    			public void run() {
 	            	if(gac.getGac_uuid() == null) {
 		            	delegate.createGameArenaConfig(gac);
 	            	} else {
 	            		delegate.updateGameArenaConfig(gac);
 	            	}
 	            }
-            }
-		});
+            });
+		}
 	}
 
 	public void setupGameArenaConfig(Player player) {
@@ -396,6 +411,7 @@ public class MineGamesPlugin extends JavaPlugin {
 			return;
 		}
 		
+		this.selection = null;
 		boolean hasNext = false;
 		for(int i = indexArenaConfig; i < configList.size(); i++) {
 			this.gameConfig = configList.get(i);
@@ -514,11 +530,11 @@ public class MineGamesPlugin extends JavaPlugin {
 		return this.listConfigInts;
 	}
 
-	public GameManagerDelegate getDelegate() {
+	public TheCraftCloudDelegate getDelegate() {
 		return delegate;
 	}
 
-	public void setDelegate(GameManagerDelegate delegate) {
+	public void setDelegate(TheCraftCloudDelegate delegate) {
 		this.delegate = delegate;
 	}
 
@@ -572,14 +588,29 @@ public class MineGamesPlugin extends JavaPlugin {
 		this.updateArenaConfigValue();
 	}
 	
-	public void completeArenaSetupTask() {
-		Bukkit.getLogger().info("completeArenaSetupTask");
+	public void cancelArenaSetupTask( ) {
+		Bukkit.getLogger().info("cancelArenaSetupTask");
 		BukkitScheduler scheduler = Bukkit.getScheduler();
 		scheduler.cancelTask( this.arenaSetupTaskThreadID );
 		this.setupArena = false;
 		this.setupLocation = new Location(player.getWorld(), -764, 5, 402);
 		player.teleport(this.setupLocation);
+
+		player.getInventory().setItemInMainHand(null);
+		this.setupArena = false;
+		this.selection = null;
+		this.configArenaValue = null;
+		player.sendMessage("Setup has been cancelled");
+	}
+	
+	public void completeArenaSetupTask() {
+		Bukkit.getLogger().info("completeArenaSetupTask");
+		BukkitScheduler scheduler = Bukkit.getScheduler();
+		scheduler.cancelTask( this.arenaSetupTaskThreadID );
+		this.setupLocation = new Location(player.getWorld(), -764, 5, 402);
+		player.teleport(this.setupLocation);
 		saveGameConfig();
+		this.setupArena = false;
 	}
 
 	public Player getPlayer() {
@@ -759,6 +790,7 @@ public class MineGamesPlugin extends JavaPlugin {
 
 	public void registerServer(ServerInstance server) {
 		String value = server.getServer_uuid().toString();
+		this.server_uuid = server.getServer_uuid().toString();
 		this.setProperty("thecraftcloud.server.uuid", value);
 	}
 
@@ -769,4 +801,32 @@ public class MineGamesPlugin extends JavaPlugin {
 	     this.saveConfig();
 	     
 	}
+
+	public boolean isGameReady() {
+		boolean result = true;
+		
+		if(this.game == null) {
+			return false;
+		}
+		
+		if(this.arena == null) {
+			return false;
+		}
+		
+		if(this.server_uuid == null) {
+			return false;
+		}
+		
+		return result;
+	}
+
+	public ServerInstance getServerInstance() {
+		return serverInstance;
+	}
+
+	public void setServerInstance(ServerInstance serverInstance) {
+		this.serverInstance = serverInstance;
+	}
+
+
 }

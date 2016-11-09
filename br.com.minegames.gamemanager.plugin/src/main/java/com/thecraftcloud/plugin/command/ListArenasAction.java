@@ -10,10 +10,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.thecraftcloud.client.GameManagerDelegate;
+import com.thecraftcloud.client.TheCraftCloudDelegate;
 import com.thecraftcloud.core.command.CommandAction;
 import com.thecraftcloud.core.domain.Arena;
-import com.thecraftcloud.plugin.MineGamesPlugin;
+import com.thecraftcloud.plugin.TheCraftCloudPlugin;
 
 public class ListArenasAction extends CommandAction {
 
@@ -38,8 +38,8 @@ public class ListArenasAction extends CommandAction {
 		if(arguments.length > 0) {
 			filterName = arguments[0];
 		}
-		GameManagerDelegate delegate = GameManagerDelegate.getInstance();
-		MineGamesPlugin p = (MineGamesPlugin)plugin;
+		TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance();
+		TheCraftCloudPlugin p = (TheCraftCloudPlugin)plugin;
 		List<Arena> arenas = delegate.findArenas(filterName);
 		p.setArenas(arenas);
 		int i = 0;

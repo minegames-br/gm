@@ -1,4 +1,4 @@
-/*    */ package org.jnbt;
+/*    */ package com.thecraftcloud.jnbt;
 /*    */ 
 /*    */ 
 /*    */ 
@@ -22,10 +22,10 @@
 /*    */ 
 /*    */ 
 /*    */ 
-/*    */ public final class IntTag
+/*    */ public final class ByteTag
 /*    */   extends Tag
 /*    */ {
-/*    */   private final int value;
+/*    */   private final byte value;
 /*    */   
 /*    */ 
 /*    */ 
@@ -49,15 +49,15 @@
 /*    */ 
 /*    */ 
 /*    */ 
-/*    */   public IntTag(String name, int value)
+/*    */   public ByteTag(String name, byte value)
 /*    */   {
 /* 54 */     super(name);
 /* 55 */     this.value = value;
 /*    */   }
 /*    */   
-/*    */   public Integer getValue()
+/*    */   public Byte getValue()
 /*    */   {
-/* 60 */     return Integer.valueOf(this.value);
+/* 60 */     return Byte.valueOf(this.value);
 /*    */   }
 /*    */   
 /*    */   public String toString()
@@ -67,12 +67,12 @@
 /* 67 */     if ((name != null) && (!name.equals(""))) {
 /* 68 */       append = "(\"" + getName() + "\")";
 /*    */     }
-/* 70 */     return "TAG_Int" + append + ": " + this.value;
+/* 70 */     return "TAG_Byte" + append + ": " + this.value;
 /*    */   }
 /*    */ }
 
 
-/* Location:              C:\Users\voigo\Downloads\jnbt-1.1\jnbt-1.1.jar!\org\jnbt\IntTag.class
+/* Location:              C:\Users\voigo\Downloads\jnbt-1.1\jnbt-1.1.jar!\org\jnbt\ByteTag.class
  * Java compiler version: 6 (50.0)
  * JD-Core Version:       0.7.1
  */

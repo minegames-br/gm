@@ -9,13 +9,13 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
 import com.thecraftcloud.core.logging.MGLogger;
-import com.thecraftcloud.plugin.MyCloudCraftPlugin;
+import com.thecraftcloud.plugin.TheCraftCloudMiniGameAbstract;
 
 public class PlayerDeath implements Listener {
 
-    private MyCloudCraftPlugin controller;
+    private TheCraftCloudMiniGameAbstract controller;
 
-    public PlayerDeath(MyCloudCraftPlugin controller) {
+    public PlayerDeath(TheCraftCloudMiniGameAbstract controller) {
         this.controller = controller;
     }
 

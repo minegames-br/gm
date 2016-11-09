@@ -10,7 +10,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.thecraftcloud.core.command.CommandAction;
 import com.thecraftcloud.core.npcs.NPC;
-import com.thecraftcloud.plugin.MineGamesPlugin;
+import com.thecraftcloud.plugin.TheCraftCloudPlugin;
 
 public class SpawnNPCAction extends CommandAction {
 
@@ -30,7 +30,7 @@ public class SpawnNPCAction extends CommandAction {
 			player = (Player)commandSender;
 		}
 		
-		MineGamesPlugin p = (MineGamesPlugin)plugin;
+		TheCraftCloudPlugin p = (TheCraftCloudPlugin)plugin;
 		
 		String uuid = "88165e7f-a83a-49f8-9f75-5cb77c23f8d3";
 		if(arguments.length >= 2) {

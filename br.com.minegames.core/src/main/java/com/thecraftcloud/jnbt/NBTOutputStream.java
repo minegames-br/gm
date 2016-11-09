@@ -1,4 +1,4 @@
-/*     */ package org.jnbt;
+/*     */ package com.thecraftcloud.jnbt;
 /*     */ 
 /*     */ import java.io.Closeable;
 /*     */ import java.io.DataOutputStream;

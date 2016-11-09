@@ -4,13 +4,13 @@ import org.bukkit.Bukkit;
 
 import com.thecraftcloud.domain.GameState;
 import com.thecraftcloud.domain.MyCloudCraftGame;
-import com.thecraftcloud.plugin.MyCloudCraftPlugin;
+import com.thecraftcloud.plugin.TheCraftCloudMiniGameAbstract;
 
 public class LevelUpTask implements Runnable {
 	
-	private MyCloudCraftPlugin controller;
+	private TheCraftCloudMiniGameAbstract controller;
 	
-	public LevelUpTask(MyCloudCraftPlugin game) {
+	public LevelUpTask(TheCraftCloudMiniGameAbstract game) {
 		this.controller = game;
 	}
 	

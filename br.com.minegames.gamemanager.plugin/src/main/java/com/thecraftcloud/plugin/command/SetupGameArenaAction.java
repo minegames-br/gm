@@ -9,14 +9,14 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.thecraftcloud.client.GameManagerDelegate;
+import com.thecraftcloud.client.TheCraftCloudDelegate;
 import com.thecraftcloud.core.command.CommandAction;
 import com.thecraftcloud.core.domain.Arena;
 import com.thecraftcloud.core.domain.Game;
 import com.thecraftcloud.core.domain.GameArenaConfig;
 import com.thecraftcloud.core.domain.GameConfig;
 import com.thecraftcloud.core.domain.GameConfigInstance;
-import com.thecraftcloud.plugin.MineGamesPlugin;
+import com.thecraftcloud.plugin.TheCraftCloudPlugin;
 
 public class SetupGameArenaAction extends CommandAction {
 
@@ -36,9 +36,9 @@ public class SetupGameArenaAction extends CommandAction {
 			player = (Player)commandSender;
 		}
 
-		MineGamesPlugin p = (MineGamesPlugin)this.plugin;
+		TheCraftCloudPlugin p = (TheCraftCloudPlugin)this.plugin;
 
-		GameManagerDelegate delegate = GameManagerDelegate.getInstance();
+		TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance();
 		
 		if(p.isServerRegistered()) {
 			if(player != null) {

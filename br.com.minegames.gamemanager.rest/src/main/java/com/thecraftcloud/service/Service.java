@@ -9,7 +9,7 @@ import javax.persistence.Persistence;
 import com.thecraftcloud.core.domain.TransferObject;
 
 public class Service {
-	protected EntityManagerFactory emf = Persistence.createEntityManagerFactory("game-manager"); 
+	protected EntityManagerFactory emf; 
 	protected EntityManager em;
 	protected boolean slave = false; 
 	
@@ -24,6 +24,7 @@ public class Service {
 	
 	protected void startTransaction() {
 		if(!this.slave) {
+			this.emf = Persistence.createEntityManagerFactory("game-manager");
 			this.em = emf.createEntityManager();
 			em.getTransaction().begin();
 		}
@@ -55,6 +56,7 @@ public class Service {
 				em.getTransaction().commit();
 			}finally{
 				em.close();
+				emf.close();
 			}
 		}
 	}

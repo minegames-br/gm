@@ -10,11 +10,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.thecraftcloud.client.GameManagerDelegate;
+import com.thecraftcloud.client.TheCraftCloudDelegate;
 import com.thecraftcloud.core.command.CommandAction;
 import com.thecraftcloud.core.domain.Area3D;
 import com.thecraftcloud.core.domain.Arena;
-import com.thecraftcloud.plugin.MineGamesPlugin;
+import com.thecraftcloud.plugin.TheCraftCloudPlugin;
 
 public class ListAreasAction extends CommandAction {
 
@@ -40,8 +40,8 @@ public class ListAreasAction extends CommandAction {
 		if(arguments.length == 2) {
 			filterName = arguments[1];
 		}
-		GameManagerDelegate delegate = GameManagerDelegate.getInstance();
-		MineGamesPlugin p = (MineGamesPlugin)plugin;
+		TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance();
+		TheCraftCloudPlugin p = (TheCraftCloudPlugin)plugin;
 		Arena arena = delegate.findArena(p.getArena().getArena_uuid().toString());
 		int i = 0;
 		for(Area3D area: arena.getAreas()) {

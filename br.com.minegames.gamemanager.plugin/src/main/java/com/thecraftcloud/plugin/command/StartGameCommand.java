@@ -6,13 +6,13 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.thecraftcloud.core.logging.MGLogger;
-import com.thecraftcloud.plugin.MyCloudCraftPlugin;
+import com.thecraftcloud.plugin.TheCraftCloudMiniGameAbstract;
 
 public class StartGameCommand implements CommandExecutor {
 
-	private MyCloudCraftPlugin game;
+	private TheCraftCloudMiniGameAbstract game;
 
-    public StartGameCommand(MyCloudCraftPlugin plugin) {
+    public StartGameCommand(TheCraftCloudMiniGameAbstract plugin) {
 		super();
 		this.game = plugin;
 	}

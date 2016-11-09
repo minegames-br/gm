@@ -1,6 +1,6 @@
-name: GameManager-Client
+name: TheCraftCloud-Client
 author: joaoemilio
 version: 1.0.0
-main: br.com.minegames.gamemanager.client.GameManagerClientPlugin
-depend: [MineGames-Core]
+main: com.thecraftcloud.client.TheCraftCloudClientPlugin
+depend: [TheCraftCloud-Core]
 commands:

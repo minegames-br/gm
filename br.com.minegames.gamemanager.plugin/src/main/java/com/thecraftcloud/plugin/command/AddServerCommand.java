@@ -8,7 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.thecraftcloud.core.logging.MGLogger;
-import com.thecraftcloud.plugin.MyCloudCraftPlugin;
+import com.thecraftcloud.plugin.TheCraftCloudMiniGameAbstract;
 
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -16,9 +16,9 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 public class AddServerCommand implements CommandExecutor {
 
-	private MyCloudCraftPlugin game;
+	private TheCraftCloudMiniGameAbstract game;
 
-    public AddServerCommand(MyCloudCraftPlugin plugin) {
+    public AddServerCommand(TheCraftCloudMiniGameAbstract plugin) {
 		super();
 		this.game = plugin;
 	}

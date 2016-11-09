@@ -1,4 +1,4 @@
-/*    */ package org.jnbt;
+/*    */ package com.thecraftcloud.jnbt;
 /*    */ 
 /*    */ 
 /*    */ 
@@ -22,10 +22,10 @@
 /*    */ 
 /*    */ 
 /*    */ 
-/*    */ public final class LongTag
+/*    */ public final class ShortTag
 /*    */   extends Tag
 /*    */ {
-/*    */   private final long value;
+/*    */   private final short value;
 /*    */   
 /*    */ 
 /*    */ 
@@ -49,15 +49,15 @@
 /*    */ 
 /*    */ 
 /*    */ 
-/*    */   public LongTag(String name, long value)
+/*    */   public ShortTag(String name, short value)
 /*    */   {
 /* 54 */     super(name);
 /* 55 */     this.value = value;
 /*    */   }
 /*    */   
-/*    */   public Long getValue()
+/*    */   public Short getValue()
 /*    */   {
-/* 60 */     return Long.valueOf(this.value);
+/* 60 */     return Short.valueOf(this.value);
 /*    */   }
 /*    */   
 /*    */   public String toString()
@@ -67,12 +67,12 @@
 /* 67 */     if ((name != null) && (!name.equals(""))) {
 /* 68 */       append = "(\"" + getName() + "\")";
 /*    */     }
-/* 70 */     return "TAG_Long" + append + ": " + this.value;
+/* 70 */     return "TAG_Short" + append + ": " + this.value;
 /*    */   }
 /*    */ }
 
 
-/* Location:              C:\Users\voigo\Downloads\jnbt-1.1\jnbt-1.1.jar!\org\jnbt\LongTag.class
+/* Location:              C:\Users\voigo\Downloads\jnbt-1.1\jnbt-1.1.jar!\org\jnbt\ShortTag.class
  * Java compiler version: 6 (50.0)
  * JD-Core Version:       0.7.1
  */

@@ -6,10 +6,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.thecraftcloud.client.GameManagerDelegate;
+import com.thecraftcloud.client.TheCraftCloudDelegate;
 import com.thecraftcloud.core.command.CommandAction;
 import com.thecraftcloud.core.domain.Arena;
-import com.thecraftcloud.plugin.MineGamesPlugin;
+import com.thecraftcloud.plugin.TheCraftCloudPlugin;
 
 public class SetArenaTimeAction extends CommandAction {
 
@@ -28,7 +28,7 @@ public class SetArenaTimeAction extends CommandAction {
 			player = (Player)commandSender;
 		}
 
-		MineGamesPlugin p = (MineGamesPlugin)plugin;
+		TheCraftCloudPlugin p = (TheCraftCloudPlugin)plugin;
 		if(p.isServerRegistered()) {
 			if(player != null) {
 				player.sendMessage("Please, register server first. /mg register <name>");
@@ -36,7 +36,7 @@ public class SetArenaTimeAction extends CommandAction {
 			}
 		}
 		
-		GameManagerDelegate delegate = GameManagerDelegate.getInstance();
+		TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance();
 
 		try{
 			p.getArena().setTime(Integer.parseInt(arguments[2]));

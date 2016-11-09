@@ -6,10 +6,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.thecraftcloud.client.GameManagerDelegate;
+import com.thecraftcloud.client.TheCraftCloudDelegate;
 import com.thecraftcloud.core.command.CommandAction;
 import com.thecraftcloud.core.domain.ServerInstance;
-import com.thecraftcloud.plugin.MineGamesPlugin;
+import com.thecraftcloud.plugin.TheCraftCloudPlugin;
 
 public class RegisterServerAction extends CommandAction {
 
@@ -29,7 +29,7 @@ public class RegisterServerAction extends CommandAction {
 			player = (Player)commandSender;
 		}
 
-		MineGamesPlugin plugin = (MineGamesPlugin)this.plugin;
+		TheCraftCloudPlugin plugin = (TheCraftCloudPlugin)this.plugin;
 		String value = plugin.getServer_uuid();
 		if(plugin.isServerRegistered()) {
 			if(player != null) {
@@ -45,7 +45,7 @@ public class RegisterServerAction extends CommandAction {
 			return;
 		}
 
-		GameManagerDelegate delegate = GameManagerDelegate.getInstance();
+		TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance();
 		ServerInstance server = delegate.registerServer(arguments[1]);
 		plugin.registerServer(server);
 		if(player!= null) {

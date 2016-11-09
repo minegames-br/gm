@@ -5,13 +5,13 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 
-import com.thecraftcloud.plugin.MineGamesPlugin;
+import com.thecraftcloud.plugin.TheCraftCloudPlugin;
 
 public class BlockBreakListener implements Listener {
 
-	private MineGamesPlugin plugin;
+	private TheCraftCloudPlugin plugin;
 	
-	public BlockBreakListener(MineGamesPlugin plugin) {
+	public BlockBreakListener(TheCraftCloudPlugin plugin) {
 		this.plugin = plugin;
 	}
 

@@ -1,4 +1,4 @@
-/*    */ package org.jnbt;
+/*    */ package com.thecraftcloud.jnbt;
 /*    */ 
 /*    */ 
 /*    */ 
@@ -22,10 +22,10 @@
 /*    */ 
 /*    */ 
 /*    */ 
-/*    */ public final class ByteTag
+/*    */ public final class DoubleTag
 /*    */   extends Tag
 /*    */ {
-/*    */   private final byte value;
+/*    */   private final double value;
 /*    */   
 /*    */ 
 /*    */ 
@@ -49,15 +49,15 @@
 /*    */ 
 /*    */ 
 /*    */ 
-/*    */   public ByteTag(String name, byte value)
+/*    */   public DoubleTag(String name, double value)
 /*    */   {
 /* 54 */     super(name);
 /* 55 */     this.value = value;
 /*    */   }
 /*    */   
-/*    */   public Byte getValue()
+/*    */   public Double getValue()
 /*    */   {
-/* 60 */     return Byte.valueOf(this.value);
+/* 60 */     return Double.valueOf(this.value);
 /*    */   }
 /*    */   
 /*    */   public String toString()
@@ -67,12 +67,12 @@
 /* 67 */     if ((name != null) && (!name.equals(""))) {
 /* 68 */       append = "(\"" + getName() + "\")";
 /*    */     }
-/* 70 */     return "TAG_Byte" + append + ": " + this.value;
+/* 70 */     return "TAG_Double" + append + ": " + this.value;
 /*    */   }
 /*    */ }
 
 
-/* Location:              C:\Users\voigo\Downloads\jnbt-1.1\jnbt-1.1.jar!\org\jnbt\ByteTag.class
+/* Location:              C:\Users\voigo\Downloads\jnbt-1.1\jnbt-1.1.jar!\org\jnbt\DoubleTag.class
  * Java compiler version: 6 (50.0)
  * JD-Core Version:       0.7.1
  */

@@ -1,6 +1,6 @@
 package com.thecraftcloud.test;
 
-import com.thecraftcloud.client.GameManagerDelegate;
+import com.thecraftcloud.client.TheCraftCloudDelegate;
 import com.thecraftcloud.core.domain.Game;
 
 public class CreateGameRESTPostTest {
@@ -10,7 +10,7 @@ public class CreateGameRESTPostTest {
 		game.setDescription("The Last Archer");
 		game.setName("thelastarcher" );
 
-		GameManagerDelegate delegate = GameManagerDelegate.getInstance("http://localhost:8080/gamemanager/webresources");
+		TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance("http://localhost:8080/gamemanager/webresources");
 		delegate.createGame(game);
 	}
 }

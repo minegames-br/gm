@@ -1,6 +1,6 @@
 package com.thecraftcloud.test;
 
-import com.thecraftcloud.client.GameManagerDelegate;
+import com.thecraftcloud.client.TheCraftCloudDelegate;
 import com.thecraftcloud.core.domain.Area3D;
 import com.thecraftcloud.core.domain.Arena;
 import com.thecraftcloud.core.domain.Game;
@@ -17,7 +17,7 @@ public class AddGameConfigRESTPostTest {
 	public static final String URL_SERVICES = "http://services.minegames.com.br:8080/gamemanager/webresources";
 	//public static final String URL_SERVICES = "http://localhost:8080/gamemanager/webresources";
 	//String restURL = "";
-    private static GameManagerDelegate delegate = GameManagerDelegate.getInstance(URL_SERVICES);
+    private static TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance(URL_SERVICES);
 	
 	public static final String FLOATING_AREA = "ARQUEIRO-FLOATING-AREA";
 	public static final String MONSTERS_SPAWN_AREA = "ARQUEIRO-MONSTERS-SPAWN-AREA";
@@ -33,7 +33,7 @@ public class AddGameConfigRESTPostTest {
 	public static final String GAME_LEVELS = "ARQUEIRO-GAME-NUMBER-OF-LEVELS";
 
 	public static void main2(String args[]) {
-		GameManagerDelegate delegate = GameManagerDelegate.getInstance(URL_SERVICES);
+		TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance(URL_SERVICES);
 		Game game = delegate.findGame("c6905743-6514-49ba-9257-420743f65b65");
 		Arena arena = delegate.findArena("c5253674-8c19-4620-b500-51645a620f64");
 		
@@ -42,7 +42,7 @@ public class AddGameConfigRESTPostTest {
 	
 	public static void main(String args[]) {
 		
-		GameManagerDelegate delegate = GameManagerDelegate.getInstance(URL_SERVICES);
+		TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance(URL_SERVICES);
 
 		createGameConfig();
         
@@ -220,7 +220,7 @@ public class AddGameConfigRESTPostTest {
 
 	public static GameConfig createConfig(String name, String displayName, String description, String group, GameConfigType type, GameConfigScope scope, Game game ) {
 		String restURL = URL_SERVICES;
-        GameManagerDelegate delegate = GameManagerDelegate.getInstance(restURL);
+		TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance(restURL);
 
 		System.out.println("creating config " + name);
 

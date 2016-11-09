@@ -8,13 +8,13 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.thecraftcloud.client.GameManagerDelegate;
+import com.thecraftcloud.client.TheCraftCloudDelegate;
 import com.thecraftcloud.core.command.CommandAction;
 import com.thecraftcloud.core.domain.Area3D;
 import com.thecraftcloud.core.domain.Arena;
 import com.thecraftcloud.core.domain.Game;
 import com.thecraftcloud.core.domain.Schematic;
-import com.thecraftcloud.plugin.MineGamesPlugin;
+import com.thecraftcloud.plugin.TheCraftCloudPlugin;
 
 public class CreateArenaAction extends CommandAction {
 
@@ -33,14 +33,14 @@ public class CreateArenaAction extends CommandAction {
 			player = (Player)commandSender;
 		}
 		
-		MineGamesPlugin p = (MineGamesPlugin)plugin;
+		TheCraftCloudPlugin p = (TheCraftCloudPlugin)plugin;
 		
 		if(p.getSelection() == null) {
 			player.sendMessage("Please, select the arena 3D area first: /mg select");
 			return;
 		}
 		
-		GameManagerDelegate delegate = GameManagerDelegate.getInstance();
+		TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance();
 		String server_uuid = p.getConfig().getString("thecraftcloud.server.uuid");
 		if(server_uuid == null || server_uuid.equals("")) {
 			if(player != null) {
