@@ -64,6 +64,7 @@ public class TheCraftCloudCommand  implements CommandExecutor {
 		commandArgs.put("listgames", ListGamesAction.class);
 		commandArgs.put("setgame", DefineGameAction.class);
 		commandArgs.put("setup", SetupGameArenaAction.class);
+		commandArgs.put("cancelsetup", SetupGameArenaAction.class);
 		commandArgs.put("npc", SpawnNPCAction.class);
 		commandArgs.put("createworld", CreateWorldAction.class);
 		commandArgs.put("update", UpdateArenaSchematicAction.class);

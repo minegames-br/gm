@@ -91,6 +91,7 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		this.mgplugin = (TheCraftCloudPlugin)Bukkit.getPluginManager().getPlugin(TheCraftCloudPlugin.THE_CRAFT_CLOUD_PLUGIN);
+		
 		ServerInstance server = null;
 		try{
 			server = delegate.findServerInstance(mgplugin.getServer_uuid());

@@ -44,6 +44,14 @@ import com.thecraftcloud.plugin.task.BuildArenaTask;
 public class TheCraftCloudPlugin extends JavaPlugin {
 
 	public static String THE_CRAFT_CLOUD_PLUGIN = "TheCraftCloud-Plugin";
+	public static Integer TIME_SET_SUNRISE = 24000;
+	public static Integer TIME_SET_SUNRISE2 = 500;
+	public static Integer TIME_SET_DAY = 1000;
+	public static Integer TIME_SET_SUNSET = 11615;
+	public static Integer TIME_SET_SUNSET2 = 12500;
+	public static Integer TIME_SET_NIGHT = 13000;
+	public static Integer TIME_SET_NIGHT2 = 14000;
+	
 	
 	private Area3D selection;
 	private String server_uuid;
@@ -84,6 +92,7 @@ public class TheCraftCloudPlugin extends JavaPlugin {
 	private ArenaSetupTask arenaSetupTask;
 	private int arenaSetupTaskThreadID;
 	private LocationUtil locationUtil = new LocationUtil();
+	private boolean setup;
 	
 	public List<Arena> getArenas() {
 		return arenas;
@@ -709,6 +718,7 @@ public class TheCraftCloudPlugin extends JavaPlugin {
 			} else if(this.gameConfig.getConfigType() == GameConfigType.AREA3D) { 
 				this.selection.setPointA(l);
 				player.sendMessage("setPointA - config: " + this.gameConfig.getName() );
+				player.sendMessage("point B - " + this.selection.getPointB() );
 				if(this.selection.getPointB() == null) {
 					player.sendMessage("Remember to select Area3D point B");
 				}
@@ -721,6 +731,7 @@ public class TheCraftCloudPlugin extends JavaPlugin {
     		if(this.gameConfig.getConfigType() == GameConfigType.AREA3D) { 
 				this.selection.setPointB(l);
 				player.sendMessage("setPointB - config: " + this.gameConfig.getName() );
+				player.sendMessage("point A - " + this.selection.getPointA() );
 				if(this.selection.getPointA() == null) {
 					player.sendMessage("Remember to select Area3D point A");
 				}
@@ -826,6 +837,51 @@ public class TheCraftCloudPlugin extends JavaPlugin {
 
 	public void setServerInstance(ServerInstance serverInstance) {
 		this.serverInstance = serverInstance;
+	}
+
+	public void switchArenaTime() {
+		if(!this.isSetup()) {
+			return;
+		}
+		if( this.arena.getTime() != null) {
+			Integer time = arena.getTime();
+			if(time.equals(TIME_SET_SUNRISE)) {
+				arena.setTime(TIME_SET_SUNRISE2);
+			} else if(time.equals(TIME_SET_SUNRISE2)) {
+				arena.setTime(TIME_SET_DAY);
+			} else if(time.equals(TIME_SET_DAY)) {
+				arena.setTime(TIME_SET_SUNSET);
+			}else if(time.equals(TIME_SET_SUNSET)) {
+				arena.setTime(TIME_SET_SUNSET2);
+			}else if(time.equals(TIME_SET_SUNSET2)) {
+				arena.setTime(TIME_SET_NIGHT);
+			}else if(time.equals(TIME_SET_NIGHT)) {
+				arena.setTime(TIME_SET_NIGHT2);
+			}else if(time.equals(TIME_SET_NIGHT2)) {
+				arena.setTime(TIME_SET_SUNRISE);
+			} else {
+				this.arena.setTime(TIME_SET_SUNRISE);
+			}
+		} else {
+			this.arena.setTime(TIME_SET_SUNRISE);
+		}
+		this.player.getWorld().setTime(arena.getTime());
+		//this.world.setTime(arena.getTime());
+		player.sendMessage("Time Set: " + arena.getTime() );
+		HologramUtil.showPlayer( player, new String[]{ "Time Set", this.arena.getTime().toString()}, new Location(player.getWorld(), -766, 4, 397) );
+		Bukkit.getScheduler().runTaskAsynchronously(this, new Runnable(){
+			public void run() {
+				delegate.updateArena(arena);
+			}
+		});
+	}
+
+	public void setSetup(boolean b) {
+		this.setup = b;
+	}
+	
+	public boolean isSetup() {
+		return this.setup;
 	}
 
 

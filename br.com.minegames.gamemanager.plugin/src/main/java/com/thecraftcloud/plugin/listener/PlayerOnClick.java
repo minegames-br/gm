@@ -95,6 +95,10 @@ public class PlayerOnClick implements Listener {
 			this.controller.cancelArenaSetupTask();
 		}
 
+		if(block.getLocation().getBlockZ() == 397 && block.getLocation().getBlockX() == -766) {
+			this.controller.switchArenaTime();
+		}
+
 	}
 
 

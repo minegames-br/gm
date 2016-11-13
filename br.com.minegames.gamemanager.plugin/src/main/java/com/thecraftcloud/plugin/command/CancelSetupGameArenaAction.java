@@ -18,15 +18,15 @@ import com.thecraftcloud.core.domain.GameConfig;
 import com.thecraftcloud.core.domain.GameConfigInstance;
 import com.thecraftcloud.plugin.TheCraftCloudPlugin;
 
-public class SetupGameArenaAction extends CommandAction {
+public class CancelSetupGameArenaAction extends CommandAction {
 
 	
-	public SetupGameArenaAction(JavaPlugin plugin, CommandSender arg0, Command arg1, String arg2, String[] arguments) {
+	public CancelSetupGameArenaAction(JavaPlugin plugin, CommandSender arg0, Command arg1, String arg2, String[] arguments) {
 		super(plugin, arg0, arg1, arg2, arguments);
 	}
 
 	public void execute() {
-		Bukkit.getLogger().info("Executando commando Setup " + this.commandSender + " "
+		Bukkit.getLogger().info("Executando commando Cancel Setup " + this.commandSender + " "
 				+ "\n" + this.command 
 				+ "\n" + this.arg2
 				+ "\n" + this.arguments);
@@ -39,6 +39,11 @@ public class SetupGameArenaAction extends CommandAction {
 		TheCraftCloudPlugin p = (TheCraftCloudPlugin)this.plugin;
 
 		TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance();
+		
+		if(!p.getSetupArena()) {
+			player.sendMessage("Setup was not on going. Nothing has been done.");
+			return;
+		}
 		
 		if(p.isServerRegistered()) {
 			if(player != null) {
@@ -61,25 +66,12 @@ public class SetupGameArenaAction extends CommandAction {
 			return;
 		}
 		
-		player.sendMessage("Loading game configurations already set up...");
-		List<GameConfigInstance> listGCI = delegate.findAllGameConfigInstanceByGameUUID(p.getGame().getGame_uuid().toString());
-		for(GameConfigInstance gci: listGCI) {
-			p.getGameGameConfigMap().put(gci.getGameConfig().getName(), gci);
-		}
-		
-		List<GameArenaConfig> listGCA = delegate.findAllGameConfigArenaByGameArena(p.getGame().getGame_uuid().toString(), p.getArena().getArena_uuid().toString());
-		for(GameArenaConfig gca: listGCA) {
-			p.getGameConfigArenaMap().put(gca.getGameConfig().getName(), gca);
-		}
-		
-		player.sendMessage("Loading game data to be set up...");
-		List<GameConfig> list = delegate.listGameConfig(p.getGame());
-		Bukkit.getLogger().info("game config list: " + list.size());
-		
-		p.setSetup(true);
-		p.setConfigList(list);
+		p.setGameGameConfigMap(null);
+		p.setGameConfigArenaMap(null);
+		p.setConfigList(null);
 		p.setPlayer(player);
-		p.setupGameArenaConfig(player);
+		p.cancelArenaSetupTask();
+		p.setSetup(false);
 	}
 	
 }
