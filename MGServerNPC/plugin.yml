@@ -1,0 +1,12 @@
+name: MGServerNPC
+author: renatocesar
+version: 1.0.0
+main: br.com.minegames.main.Main
+depend: [ProtocolLib]
+commands:
+   mgnpc:
+      usage: /<command> <args>
+      description: Create a NPC at PlayerLocation
+
+
+

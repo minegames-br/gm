@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="WINDOWS-1252" standalone="no"?>
+<jardesc>
+    <jar path="D:/Documentos/M I N E G A M E S/minecraft-1.10-minegames-20160921T211503Z/minecraft-1.10-minegames/plugins/cmdnpc.jar"/>
+    <options buildIfNeeded="true" compress="true" descriptionLocation="/MGServerNPC/MGServerNPC.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="false" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
+    <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
+    <selectedProjects/>
+    <manifest generateManifest="true" manifestLocation="/OArqueiro/RenatoArqueiro" manifestVersion="1.0" reuseManifest="false" saveManifest="true" usesManifest="true">
+        <sealing sealJar="false">
+            <packagesToSeal/>
+            <packagesToUnSeal/>
+        </sealing>
+    </manifest>
+    <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
+        <file path="/MGServerNPC/MGServerNPC.jardesc"/>
+        <file path="/MGServerNPC/.gitignore"/>
+        <file path="/MGServerNPC/.project"/>
+        <file path="/MGServerNPC/plugin.yml"/>
+        <javaElement handleIdentifier="=MGServerNPC/src"/>
+        <file path="/MGServerNPC/.classpath"/>
+        <file path="/MGServerNPC/config.yml"/>
+    </selectedElements>
+</jardesc>
