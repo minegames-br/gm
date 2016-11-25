@@ -4,14 +4,11 @@ import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 
 @Entity
 public class Local  extends TransferObject {
@@ -26,6 +23,12 @@ public class Local  extends TransferObject {
 	private int y;
 	private int z;
 	
+	private float yaw;
+	private float pitch;
+	
+	@Enumerated
+	private FacingDirection facingDirection;
+	
 	private String name;
 	
 	public Local() {
@@ -36,6 +39,14 @@ public class Local  extends TransferObject {
 		this.x = x;
 		this.y = y;
 		this.z = z;
+	}
+	
+	public Local(int x, int y, int z, float yaw, float pitch) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		this.yaw = yaw;      
+		this.pitch = pitch;
 	}
 	
 	public UUID getLocal_uuid() {
@@ -76,6 +87,30 @@ public class Local  extends TransferObject {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public float getYaw() {
+		return yaw;
+	}
+
+	public void setYaw(float yaw) {
+		this.yaw = yaw;
+	}
+
+	public float getPitch() {
+		return pitch;
+	}
+
+	public void setPitch(float pitch) {
+		this.pitch = pitch;
+	}
+
+	public FacingDirection getFacingDirection() {
+		return facingDirection;
+	}
+
+	public void setFacingDirection(FacingDirection facingDirection) {
+		this.facingDirection = facingDirection;
 	}
 
 	

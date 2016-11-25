@@ -9,14 +9,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.thecraftcloud.client.TheCraftCloudDelegate;
-import com.thecraftcloud.core.command.CommandAction;
 import com.thecraftcloud.core.domain.Area3D;
 import com.thecraftcloud.core.domain.Arena;
 import com.thecraftcloud.core.domain.Schematic;
 import com.thecraftcloud.core.util.BlockManipulationUtil;
 import com.thecraftcloud.plugin.TheCraftCloudPlugin;
 
-public class UpdateArenaSchematicAction extends CommandAction {
+public class UpdateArenaSchematicAction extends TheCraftCloudCommandAction {
 
 	public UpdateArenaSchematicAction(JavaPlugin plugin, CommandSender arg0, Command arg1, String arg2, String[] arguments) {
 		super(plugin, arg0, arg1, arg2, arguments);
@@ -37,7 +36,7 @@ public class UpdateArenaSchematicAction extends CommandAction {
 		TheCraftCloudPlugin p = (TheCraftCloudPlugin)plugin;
 		TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance();
 
-		Arena arena = p.getArena();
+		Arena arena = this.config.getArena();
 		
 		Schematic schematic = new Schematic();
 		schematic.setName(arena.getName());

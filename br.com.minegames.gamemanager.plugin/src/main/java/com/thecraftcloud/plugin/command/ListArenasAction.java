@@ -3,19 +3,16 @@ package com.thecraftcloud.plugin.command;
 import java.util.List;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.thecraftcloud.client.TheCraftCloudDelegate;
-import com.thecraftcloud.core.command.CommandAction;
 import com.thecraftcloud.core.domain.Arena;
 import com.thecraftcloud.plugin.TheCraftCloudPlugin;
 
-public class ListArenasAction extends CommandAction {
+public class ListArenasAction extends TheCraftCloudCommandAction {
 
 	public ListArenasAction(JavaPlugin plugin, CommandSender arg0, Command arg1, String arg2, String[] arguments) {
 		super(plugin, arg0, arg1, arg2, arguments);

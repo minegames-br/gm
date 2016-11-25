@@ -1,7 +1,5 @@
 package com.thecraftcloud.plugin.command;
 
-import java.util.List;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -16,7 +14,7 @@ import com.thecraftcloud.core.domain.Area3D;
 import com.thecraftcloud.core.domain.Arena;
 import com.thecraftcloud.plugin.TheCraftCloudPlugin;
 
-public class ListAreasAction extends CommandAction {
+public class ListAreasAction extends TheCraftCloudCommandAction {
 
 	public ListAreasAction(JavaPlugin plugin, CommandSender arg0, Command arg1, String arg2, String[] arguments) {
 		super(plugin, arg0, arg1, arg2, arguments);
@@ -42,7 +40,7 @@ public class ListAreasAction extends CommandAction {
 		}
 		TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance();
 		TheCraftCloudPlugin p = (TheCraftCloudPlugin)plugin;
-		Arena arena = delegate.findArena(p.getArena().getArena_uuid().toString());
+		Arena arena = delegate.findArena(this.config.getArena().getArena_uuid().toString());
 		int i = 0;
 		for(Area3D area: arena.getAreas()) {
 			player.sendMessage((i++) + " - " + area.getName() + ":" + area.getType() + ":" + area.getPointA() + "/" + area.getPointB() );

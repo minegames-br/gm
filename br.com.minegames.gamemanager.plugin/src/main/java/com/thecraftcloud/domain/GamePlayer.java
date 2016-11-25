@@ -13,13 +13,14 @@ public class GamePlayer extends TransferObject {
 
 	private UUID gp_uuid;
 	
-	private String player_uuid;
-	private String email;
-	private String name;
-	private String nickName;
-	private Area3D spawnPoint;
-	private Player player;
-	private BossBar baseBar;
+	protected String player_uuid;
+	protected String email;
+	protected String name;
+	protected String nickName;
+	protected Area3D spawnPoint;
+	protected Player player;
+	protected BossBar baseBar;
+	protected Integer point = 0;
 
 	public Player getPlayer() {
 		return player;
@@ -74,6 +75,24 @@ public class GamePlayer extends TransferObject {
 	public BossBar getBaseBar() {
 		return this.baseBar;
 	}
+	public Integer getPoint() {
+		return point;
+	}
+	public void setPoint(Integer point) {
+		this.point = point;
+	}
+	
+	public void addPoints( int value ) {
+		this.point = this.point + value;
+	}
+	
+	public void removePoints( int value ) {
+		this.point = this.point - value;
+		if( this.point < 0) {
+			this.point = 0;
+		}
+	}
+	
 	
 	public boolean isNear(Location l) {
 		int x = l.getBlockX();

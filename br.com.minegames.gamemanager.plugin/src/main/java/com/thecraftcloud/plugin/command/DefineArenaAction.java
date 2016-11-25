@@ -1,20 +1,20 @@
 package com.thecraftcloud.plugin.command;
 
+import java.io.File;
+
 import org.bukkit.Bukkit;
+import org.bukkit.WorldCreator;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.thecraftcloud.client.TheCraftCloudDelegate;
-import com.thecraftcloud.core.command.CommandAction;
-import com.thecraftcloud.core.domain.Area3D;
 import com.thecraftcloud.core.domain.Arena;
-import com.thecraftcloud.core.domain.GameWorld;
-import com.thecraftcloud.core.domain.ServerInstance;
+import com.thecraftcloud.core.util.zip.ExtractZipContents;
 import com.thecraftcloud.plugin.TheCraftCloudPlugin;
 
-public class DefineArenaAction extends CommandAction {
+public class DefineArenaAction extends TheCraftCloudCommandAction {
 
 	public DefineArenaAction(JavaPlugin plugin, CommandSender arg0, Command arg1, String arg2, String[] arguments) {
 		super(plugin, arg0, arg1, arg2, arguments);
@@ -57,7 +57,13 @@ public class DefineArenaAction extends CommandAction {
 			}
 			Arena arena = p.getArenas().get(indexArena);
 			p.setArena(arena);
-			player.sendMessage("You have selected Arena: " + arena.getName() );
+			player.sendMessage("Downloading arena: " + arena.getName() );
+			File zipFile = delegate.downloadArenaWorld(arena, p.getDataFolder() );
+			player.sendMessage("Preparing arena..." );
+			ExtractZipContents.unzip(zipFile);
+			WorldCreator wc = new WorldCreator( p.getDataFolder() + "/" + arena.getName() );
+			wc.createWorld();
+			player.sendMessage("Arena: " + arena.getName() + " is ready.");
 		}catch(Exception e) {
 			e.printStackTrace();
 			player.sendMessage("Try again. You have " + p.getArenas().size() + " arenas that matched your query.");

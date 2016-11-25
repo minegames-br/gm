@@ -7,11 +7,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.thecraftcloud.client.TheCraftCloudDelegate;
-import com.thecraftcloud.core.command.CommandAction;
 import com.thecraftcloud.core.domain.ServerInstance;
 import com.thecraftcloud.plugin.TheCraftCloudPlugin;
 
-public class RegisterServerAction extends CommandAction {
+public class RegisterServerAction extends TheCraftCloudCommandAction {
 
 	
 	public RegisterServerAction(JavaPlugin plugin, CommandSender arg0, Command arg1, String arg2, String[] arguments) {
@@ -30,7 +29,7 @@ public class RegisterServerAction extends CommandAction {
 		}
 
 		TheCraftCloudPlugin plugin = (TheCraftCloudPlugin)this.plugin;
-		String value = plugin.getServer_uuid();
+		String value = this.config.getServer_uuid();
 		if(plugin.isServerRegistered()) {
 			if(player != null) {
 				player.sendMessage("Server already registered: " + value);
@@ -47,7 +46,7 @@ public class RegisterServerAction extends CommandAction {
 
 		TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance();
 		ServerInstance server = delegate.registerServer(arguments[1]);
-		plugin.registerServer(server);
+		this.configService.registerServer(plugin, server);
 		if(player!= null) {
 			player.sendMessage("Server registered successfully: "+ value );
 		}else{

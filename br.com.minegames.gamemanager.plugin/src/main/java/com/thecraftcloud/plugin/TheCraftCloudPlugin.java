@@ -20,6 +20,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import com.thecraftcloud.client.TheCraftCloudDelegate;
+import com.thecraftcloud.client.exception.InvalidRegistrationException;
 import com.thecraftcloud.core.domain.Area3D;
 import com.thecraftcloud.core.domain.Arena;
 import com.thecraftcloud.core.domain.Game;
@@ -38,6 +39,7 @@ import com.thecraftcloud.core.util.title.TitleUtil;
 import com.thecraftcloud.plugin.command.TheCraftCloudCommand;
 import com.thecraftcloud.plugin.listener.BlockBreakListener;
 import com.thecraftcloud.plugin.listener.PlayerOnClick;
+import com.thecraftcloud.plugin.service.ConfigService;
 import com.thecraftcloud.plugin.task.ArenaSetupTask;
 import com.thecraftcloud.plugin.task.BuildArenaTask;
 
@@ -54,10 +56,6 @@ public class TheCraftCloudPlugin extends JavaPlugin {
 	
 	
 	private Area3D selection;
-	private String server_uuid;
-	private ServerInstance serverInstance;
-	private Arena arena;
-	private Game game;
 	private TheCraftCloudDelegate delegate;
 	
 	private List<Arena> arenas;
@@ -94,6 +92,8 @@ public class TheCraftCloudPlugin extends JavaPlugin {
 	private LocationUtil locationUtil = new LocationUtil();
 	private boolean setup;
 	
+	private ConfigService configService = ConfigService.getInstance();
+
 	public List<Arena> getArenas() {
 		return arenas;
 	}
@@ -103,8 +103,7 @@ public class TheCraftCloudPlugin extends JavaPlugin {
 	}
 
 	public void setArena(Arena arena) {
-		this.setProperty("thecraftcloud.arena.uuid", arena.getArena_uuid().toString());
-		this.arena = arena;
+		this.configService.setArena(this, arena);
 	}
 
 	@Override
@@ -113,27 +112,18 @@ public class TheCraftCloudPlugin extends JavaPlugin {
 	    System.out.print("[TheCraftCloud] TheCraftCloud Plugin Enabled!");
 		
 		getCommand("tcc").setExecutor(new TheCraftCloudCommand(this));
-		
-	    this.delegate = TheCraftCloudDelegate.getInstance();
-	    //this.game = delegate.findGame("57b7b3df-9d18-4966-898f-f4ad8ee28a92");
-		String game_uuid = this.getConfig().getString("thecraftcloud.game.uuid");
-		String arena_uuid = this.getConfig().getString("thecraftcloud.arena.uuid");
-		this.server_uuid = this.getConfig().getString("thecraftcloud.server.uuid");
-		
-		if(game_uuid != null) {
-			this.game = delegate.getInstance().findGame(game_uuid);
+		try{
+		    loadTheCraftCloudData();
+		} catch(InvalidRegistrationException e) {
+			//e.printStackTrace();
+			Bukkit.getLogger().severe("The Craft Cloud is not correctly set up");
 		}
-		
-		if(arena_uuid != null) {
-			this.arena = delegate.getInstance().findArena(arena_uuid);
-		}
-		
-		if(this.server_uuid != null) {
-			this.serverInstance = delegate.getInstance().findServerInstance(this.server_uuid);
-		}
-		
 		
 	    registerListeners();
+	}
+	
+	public void loadTheCraftCloudData() throws InvalidRegistrationException {
+		this.configService.loadTheCraftCloudData(this, false);
 	}
 	
 	private void registerListeners() {
@@ -185,10 +175,6 @@ public class TheCraftCloudPlugin extends JavaPlugin {
 		updateYPosition();
 	}
 
-	public String getServer_uuid() {
-		return this.server_uuid;
-	}
-
 	public boolean isServerRegistered() {
 		String value = this.getConfig().getString("thecraftcloud.server.uuid");
 		if(value != null && !value.trim().equals("")) {
@@ -198,23 +184,10 @@ public class TheCraftCloudPlugin extends JavaPlugin {
 		return false;
 	}
 
-	public Arena getArena() {
-		return this.arena;
-	}
-	
-	public Game getGame() {
-		return this.game;
-	}
-
 	public List<Game> getGames() {
 		return this.games;
 	}
 	
-	public void setGame(Game game) {
-		this.setProperty("thecraftcloud.game.uuid", game.getGame_uuid().toString() );
-		this.game = game;
-	}
-
 	public void setGames(List<Game> games) {
 		this.games = games;
 	}
@@ -411,6 +384,26 @@ public class TheCraftCloudPlugin extends JavaPlugin {
 				this.gci.setArea((Area3D)this.configArenaValue);
 			}
 		}
+		BukkitScheduler scheduler = Bukkit.getScheduler();
+		scheduler.runTaskAsynchronously(this, new Runnable() {
+			@Override
+			public void run() {
+        		if(gameConfig.getConfigScope() == GameConfigScope.GLOBAL) {
+        			if(gci.getGameConfig().getGame_config_uuid() == null) {
+        				delegate.createGameConfigInstance(gci);
+        			} else {
+        				delegate.updateGameConfigInstance(gci);
+        			}
+        		} else {
+	            	if(gac.getGac_uuid() == null) {
+		            	delegate.createGameArenaConfig(gac);
+	            	} else {
+	            		delegate.updateGameArenaConfig(gac);
+	            	}
+        		}
+            }
+		});
+
 		
 		Bukkit.getLogger().info("nextArenaConfig");
 		this.indexArenaConfig ++;
@@ -456,7 +449,7 @@ public class TheCraftCloudPlugin extends JavaPlugin {
 			if(this.gac == null) {
 				this.gac = new GameArenaConfig();
 				this.gac.setGameConfig(this.gameConfig);
-				this.gac.setArena(this.arena);
+				this.gac.setArena(this.configService.getArena() );
 				this.gameConfigArenaMap.put(this.gameConfig.getName(), this.gac);
 				this.configArenaValue = null;
 			} else {
@@ -493,7 +486,7 @@ public class TheCraftCloudPlugin extends JavaPlugin {
 			Bukkit.getConsoleSender().sendMessage("&6updateConfig: "  + this.gameConfig.getConfigScope() + " " + this.gameConfig.getName() + ": " + configObject.toString());
 			String key = this.getGameConfig().getName();
 			if(this.gameConfig.getConfigScope() == GameConfigScope.ARENA) {
-				this.gac.setArena(this.arena);
+				this.gac.setArena(this.configService.getArena() );
 				this.gac.setGameConfig(this.gameConfig);
 				if(this.gameConfig.getConfigType() == GameConfigType.INT) {
 					this.gac.setIntValue(Integer.parseInt(this.configValue.toString()));
@@ -506,6 +499,22 @@ public class TheCraftCloudPlugin extends JavaPlugin {
 					gameGameConfigMap.put(this.getConfigName(), gci);
 				}
 			}
+
+			Bukkit.getLogger().info("GameConfig: " + this.gameConfig.getName() + " Scope:" + this.gameConfig.getConfigScope() + " type: " + gameConfig.getConfigType() );
+       		if(gameConfig.getConfigScope() == GameConfigScope.GLOBAL) {
+       			if(gci.getGameConfig().getGame_config_uuid() == null) {
+       				delegate.createGameConfigInstance(gci);
+       			} else {
+       				delegate.updateGameConfigInstance(gci);
+       			}
+       		} else {
+            	if(gac.getGac_uuid() == null) {
+	            	delegate.createGameArenaConfig(gac);
+            	} else {
+            		delegate.updateGameArenaConfig(gac);
+            	}
+       		}
+		
 		}else{
 			Bukkit.getConsoleSender().sendMessage("&6Nao era pra entrar aqui");
 		}
@@ -563,10 +572,6 @@ public class TheCraftCloudPlugin extends JavaPlugin {
 		this.gameConfigArenaMap = gameConfigArenaMap;
 	}
 
-	public void setServer_uuid(String server_uuid) {
-		this.server_uuid = server_uuid;
-	}
-
 	public HashMap<String, GameConfigInstance> getGameGameConfigMap() {
 		return gameGameConfigMap;
 	}
@@ -581,7 +586,7 @@ public class TheCraftCloudPlugin extends JavaPlugin {
 		this.arenaSetupTask = new ArenaSetupTask(this);
 		this.arenaSetupTaskThreadID = scheduler.scheduleSyncRepeatingTask(this, this.arenaSetupTask, 1L, 20L);
 		player.getInventory().setItemInMainHand(new ItemStack(Material.IRON_AXE));
-		Location loc = locationUtil .getMiddle(player.getWorld(), this.arena.getArea());
+		Location loc = locationUtil .getMiddle(player.getWorld(), this.configService.getArena().getArea());
 		player.teleport(loc);
 		this.setupArena = true;
 		this.selection = new Area3D();
@@ -794,17 +799,6 @@ public class TheCraftCloudPlugin extends JavaPlugin {
 		return this.world;
 	}
 
-	public void setProperty(String path, String value) {
-		this.getConfig().set(path, value);
-		this.saveConfig();
-	}
-
-	public void registerServer(ServerInstance server) {
-		String value = server.getServer_uuid().toString();
-		this.server_uuid = server.getServer_uuid().toString();
-		this.setProperty("thecraftcloud.server.uuid", value);
-	}
-
 	public void loadConfiguration(){
 	     //See "Creating you're defaults"
 	     this.getConfig().options().copyDefaults(true); // NOTE: You do not have to use "plugin." if the class extends the java plugin
@@ -816,34 +810,18 @@ public class TheCraftCloudPlugin extends JavaPlugin {
 	public boolean isGameReady() {
 		boolean result = true;
 		
-		if(this.game == null) {
-			return false;
-		}
+		return this.configService.isGameReady();
 		
-		if(this.arena == null) {
-			return false;
-		}
-		
-		if(this.server_uuid == null) {
-			return false;
-		}
-		
-		return result;
-	}
-
-	public ServerInstance getServerInstance() {
-		return serverInstance;
-	}
-
-	public void setServerInstance(ServerInstance serverInstance) {
-		this.serverInstance = serverInstance;
 	}
 
 	public void switchArenaTime() {
 		if(!this.isSetup()) {
 			return;
 		}
-		if( this.arena.getTime() != null) {
+		
+		final Arena arena = this.configService.getArena();
+		
+		if( arena.getTime() != null) {
 			Integer time = arena.getTime();
 			if(time.equals(TIME_SET_SUNRISE)) {
 				arena.setTime(TIME_SET_SUNRISE2);
@@ -860,15 +838,15 @@ public class TheCraftCloudPlugin extends JavaPlugin {
 			}else if(time.equals(TIME_SET_NIGHT2)) {
 				arena.setTime(TIME_SET_SUNRISE);
 			} else {
-				this.arena.setTime(TIME_SET_SUNRISE);
+				arena.setTime(TIME_SET_SUNRISE);
 			}
 		} else {
-			this.arena.setTime(TIME_SET_SUNRISE);
+			arena.setTime(TIME_SET_SUNRISE);
 		}
 		this.player.getWorld().setTime(arena.getTime());
 		//this.world.setTime(arena.getTime());
 		player.sendMessage("Time Set: " + arena.getTime() );
-		HologramUtil.showPlayer( player, new String[]{ "Time Set", this.arena.getTime().toString()}, new Location(player.getWorld(), -766, 4, 397) );
+		HologramUtil.showPlayer( player, new String[]{ "Time Set", arena.getTime().toString()}, new Location(player.getWorld(), -766, 4, 397) );
 		Bukkit.getScheduler().runTaskAsynchronously(this, new Runnable(){
 			public void run() {
 				delegate.updateArena(arena);
@@ -883,6 +861,5 @@ public class TheCraftCloudPlugin extends JavaPlugin {
 	public boolean isSetup() {
 		return this.setup;
 	}
-
 
 }

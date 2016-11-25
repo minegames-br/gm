@@ -7,6 +7,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import com.thecraftcloud.domain.MyCloudCraftGame;
 import com.thecraftcloud.plugin.TheCraftCloudMiniGameAbstract;
+import com.thecraftcloud.plugin.service.PlayerManager;
 
 public class PlayerQuit implements Listener {
 
@@ -33,5 +34,12 @@ public class PlayerQuit implements Listener {
         
         controller.teleportPlayersBackToLobby(player);
     }
+    
+	@EventHandler
+	public void onPlayerQuit(PlayerQuitEvent event) {
+		Player player = event.getPlayer();
+		PlayerManager.getInstance().removePlayer(player);
+	}
+
 
 }

@@ -1,18 +1,13 @@
 package com.thecraftcloud.client;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
 import java.util.List;
 import java.util.UUID;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.commons.io.FileUtils;
@@ -24,6 +19,7 @@ import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataOutput;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.thecraftcloud.client.exception.InvalidRegistrationException;
 import com.thecraftcloud.core.domain.Area3D;
 import com.thecraftcloud.core.domain.Arena;
 import com.thecraftcloud.core.domain.Game;
@@ -31,6 +27,8 @@ import com.thecraftcloud.core.domain.GameArenaConfig;
 import com.thecraftcloud.core.domain.GameConfig;
 import com.thecraftcloud.core.domain.GameConfigInstance;
 import com.thecraftcloud.core.domain.GameWorld;
+import com.thecraftcloud.core.domain.Item;
+import com.thecraftcloud.core.domain.Kit;
 import com.thecraftcloud.core.domain.Local;
 import com.thecraftcloud.core.domain.Schematic;
 import com.thecraftcloud.core.domain.ServerInstance;
@@ -42,6 +40,7 @@ public class TheCraftCloudDelegate {
 
 	private static TheCraftCloudDelegate me;
 	private String gameManagerUrl;
+	private String serverUuid;
 	
 	private TheCraftCloudDelegate() {
 		
@@ -291,7 +290,7 @@ public class TheCraftCloudDelegate {
 		return game;
 	}
 
-	public Game findGame(String uuid) {
+	public Game findGame(String uuid) throws InvalidRegistrationException {
 		Game domain = null;
 		
 		MGLogger.info("findGame: " + uuid);
@@ -458,7 +457,7 @@ public class TheCraftCloudDelegate {
 		return domain;
 	}
 	
-	public static void main(String args[]) {
+	public static void main(String args[]) throws InvalidRegistrationException {
 		TheCraftCloudClientPlugin.setMinegamesGameManagerUrl("http://localhost:8080/gamemanager/webresources");
 		TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance("http://localhost:8080/gamemanager/webresources");
 		Game game = delegate.findGame("46bea463-7bb9-46ed-8eae-ec004ce84833");
@@ -557,6 +556,25 @@ public class TheCraftCloudDelegate {
         return file;
 	}
 
+	public File downloadArenaWorld(Arena arena, File dir) {
+		File file = null;
+	    String URL=this.gameManagerUrl + "/arena/" + arena.getArena_uuid().toString() + "/world";
+	    ClientRequest client = new ClientRequest(URL);
+	    try {
+	        URL website = new URL(URL);
+	        if(!dir.exists() ) {
+	        	dir.mkdirs();
+	        }
+	        
+	        file = new File( dir + "/", arena.getName() + ".zip");
+	        System.out.println("Download to: " + file.getAbsolutePath() );
+	        FileUtils.copyURLToFile(website, file);
+	    } catch ( Exception ex) {
+	    	ex.printStackTrace();
+	    }  
+        return file;
+	}
+
 	public List<GameArenaConfig> findAllGameConfigArenaByGameArena(String gameUuid, String arenaUuid) {
         System.out.println("findAllGameConfigArenaByGameArena request: " + gameUuid);
         String json = get("/game/" + gameUuid + "/gamearenaconfig/" + arenaUuid);
@@ -588,6 +606,42 @@ public class TheCraftCloudDelegate {
 		return arena;
 	}
 
+	public ServerInstance validateRegistration(String server_uuid) {
+		this.serverUuid = server_uuid;
+		ServerInstance domain = findServerInstance(server_uuid);
+		return domain;
+	}
+
+	public Item addItem(Item item) {
+		String json = JSONParser.getInstance().toJSONString(item);
+		json = post("/item", json);
+		MGLogger.info("addItem: " + json);
+		item = (Item) JSONParser.getInstance().toObject(json, Item.class);
+		MGLogger.info("Item: " + item.getItem_uuid().toString() );
+		return item;
+	}
+
+	public Kit addKit(Kit kit) {
+		String json = JSONParser.getInstance().toJSONString(kit);
+		json = post("/kit", json);
+		MGLogger.info("addkit: " + json);
+		kit = (Kit) JSONParser.getInstance().toObject(json, Kit.class);
+		MGLogger.info("Item: " + kit.getKit_uuid().toString() );
+		return kit;
+	}
+
+	public Item findItemByName(String name) {
+		Item item = null;
+		String json = "{}";
+		json = get("/item/search/" + name);
+		System.out.println(json);
+		item = (Item)JSONParser.getInstance().toObject(json, Item.class);
+		if( item == null) {
+			System.err.println("Não encontrou item: " + name);
+		}
+		return item;
+	}
+	
 }
 
 /*	public static void main(String args[]) {

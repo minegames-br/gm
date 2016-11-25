@@ -14,7 +14,7 @@ import com.thecraftcloud.core.domain.GameWorld;
 import com.thecraftcloud.core.domain.ServerInstance;
 import com.thecraftcloud.plugin.TheCraftCloudPlugin;
 
-public class DefineAreaAction extends CommandAction {
+public class DefineAreaAction extends TheCraftCloudCommandAction {
 
 	public DefineAreaAction(JavaPlugin plugin, CommandSender arg0, Command arg1, String arg2, String[] arguments) {
 		super(plugin, arg0, arg1, arg2, arguments);
@@ -39,7 +39,7 @@ public class DefineAreaAction extends CommandAction {
 				return;
 			}
 		}
-		Arena arena = p.getArena();
+		Arena arena = this.config.getArena();
 		if(arena == null) {
 			if(player != null) {
 				player.sendMessage("Find available arenas: /mg listarenas [name]");
@@ -54,7 +54,7 @@ public class DefineAreaAction extends CommandAction {
 		}
 		String areaName = arguments[1];
 		
-		ServerInstance server = delegate.findServerInstance(p.getServer_uuid());
+		ServerInstance server = this.config.getServerInstance();
 		Area3D area = p.getSelection();
 		area.setName(areaName);
 		if(arguments.length == 3) {

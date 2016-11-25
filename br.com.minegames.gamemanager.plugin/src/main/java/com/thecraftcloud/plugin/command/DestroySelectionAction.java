@@ -10,7 +10,7 @@ import com.thecraftcloud.core.command.CommandAction;
 import com.thecraftcloud.core.util.BlockManipulationUtil;
 import com.thecraftcloud.plugin.TheCraftCloudPlugin;
 
-public class DestroySelectionAction extends CommandAction {
+public class DestroySelectionAction extends TheCraftCloudCommandAction {
 
 	public DestroySelectionAction(JavaPlugin plugin, CommandSender arg0, Command arg1, String arg2, String[] arguments) {
 		super(plugin, arg0, arg1, arg2, arguments);

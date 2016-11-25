@@ -9,7 +9,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.thecraftcloud.core.command.CommandAction;
 import com.thecraftcloud.plugin.TheCraftCloudPlugin;
 
-public class ShowHologramAction extends CommandAction {
+public class ShowHologramAction extends TheCraftCloudCommandAction {
 
 	private int threads = 3;
 	

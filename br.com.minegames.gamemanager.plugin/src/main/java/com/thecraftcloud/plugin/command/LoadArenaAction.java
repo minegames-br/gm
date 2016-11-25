@@ -36,7 +36,7 @@ import com.thecraftcloud.core.util.BlockManipulationUtil;
 import com.thecraftcloud.plugin.TheCraftCloudPlugin;
 import com.thecraftcloud.plugin.TheCraftCloudMiniGameAbstract;
 
-public class LoadArenaAction extends CommandAction {
+public class LoadArenaAction extends TheCraftCloudCommandAction {
 
 	private int threads = 3;
 	
@@ -58,8 +58,8 @@ public class LoadArenaAction extends CommandAction {
 		
 		TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance();
 		TheCraftCloudPlugin mgplugin = (TheCraftCloudPlugin)Bukkit.getPluginManager().getPlugin(TheCraftCloudPlugin.THE_CRAFT_CLOUD_PLUGIN);
-		Arena arena = mgplugin.getArena();
-		Game game = mgplugin.getGame();
+		Arena arena = this.config.getArena();
+		Game game = this.config.getGame();
 		
 		if(arena.getArea() == null || arena.getArea().getPointA() == null || arena.getArea().getPointB() == null) {
 			player.sendMessage("Game is not correctly configured yet. Try /mg setup");

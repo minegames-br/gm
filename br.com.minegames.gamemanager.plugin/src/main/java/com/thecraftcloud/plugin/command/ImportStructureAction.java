@@ -32,7 +32,7 @@ import com.thecraftcloud.core.export.ExportBlock;
 import com.thecraftcloud.core.util.BlockManipulationUtil;
 import com.thecraftcloud.plugin.TheCraftCloudPlugin;
 
-public class ImportStructureAction extends CommandAction {
+public class ImportStructureAction extends TheCraftCloudCommandAction {
 
 	private int threads = 3;
 	

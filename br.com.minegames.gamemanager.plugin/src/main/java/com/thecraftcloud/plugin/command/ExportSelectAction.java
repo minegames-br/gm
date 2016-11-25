@@ -13,7 +13,7 @@ import com.thecraftcloud.core.domain.Area3D;
 import com.thecraftcloud.core.util.BlockManipulationUtil;
 import com.thecraftcloud.plugin.TheCraftCloudPlugin;
 
-public class ExportSelectAction extends CommandAction {
+public class ExportSelectAction extends TheCraftCloudCommandAction {
 
 	public ExportSelectAction(JavaPlugin plugin, CommandSender arg0, Command arg1, String arg2, String[] arguments) {
 		super(plugin, arg0, arg1, arg2, arguments);

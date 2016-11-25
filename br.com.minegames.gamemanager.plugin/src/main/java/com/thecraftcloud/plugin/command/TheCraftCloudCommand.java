@@ -74,6 +74,8 @@ public class TheCraftCloudCommand  implements CommandExecutor {
 		commandArgs.put("pointa", SelectPointAAction.class);
 		commandArgs.put("pointb", SelectPointBAction.class);
 		commandArgs.put("checklist", CheckListAction.class);
+		commandArgs.put("setuparena", SetupArenaAction.class);
+		commandArgs.put("updateconfig", UpdateOfflineConfigAction.class);
 	}
 	
 	private CommandAction getAction(CommandSender sender, Command command, String arg2, String[] arg3) {

@@ -1,16 +1,17 @@
 package com.thecraftcloud.plugin;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.block.Block;
+import org.bukkit.World.Environment;
+import org.bukkit.WorldType;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -21,7 +22,12 @@ import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Scoreboard;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.onarandombox.MultiverseCore.MultiverseCore;
 import com.thecraftcloud.client.TheCraftCloudDelegate;
+import com.thecraftcloud.client.exception.InvalidRegistrationException;
 import com.thecraftcloud.core.domain.Arena;
 import com.thecraftcloud.core.domain.Game;
 import com.thecraftcloud.core.domain.GameArenaConfig;
@@ -30,20 +36,21 @@ import com.thecraftcloud.core.domain.GameConfigType;
 import com.thecraftcloud.core.domain.Local;
 import com.thecraftcloud.core.domain.ServerInstance;
 import com.thecraftcloud.core.export.ExportBlock;
-import com.thecraftcloud.core.logging.MGLogger;
-import com.thecraftcloud.core.multiverse.MultiVerseWrapper;
-import com.thecraftcloud.core.util.BlockManipulationUtil;
+import com.thecraftcloud.core.json.JSONParser;
 import com.thecraftcloud.core.util.LocationUtil;
 import com.thecraftcloud.core.util.Utils;
+import com.thecraftcloud.core.util.zip.ExtractZipContents;
+import com.thecraftcloud.domain.EntityPlayer;
 import com.thecraftcloud.domain.GamePlayer;
 import com.thecraftcloud.domain.MyCloudCraftGame;
 import com.thecraftcloud.plugin.command.JoinGameCommand;
 import com.thecraftcloud.plugin.command.LeaveGameCommand;
 import com.thecraftcloud.plugin.command.StartGameCommand;
 import com.thecraftcloud.plugin.command.TriggerFireworkCommand;
-import com.thecraftcloud.plugin.listener.PlayerDeath;
 import com.thecraftcloud.plugin.listener.PlayerQuit;
 import com.thecraftcloud.plugin.listener.ServerListener;
+import com.thecraftcloud.plugin.service.ConfigService;
+import com.thecraftcloud.plugin.service.PlayerService;
 import com.thecraftcloud.plugin.task.BuildArenaTask;
 import com.thecraftcloud.plugin.task.EndGameTask;
 import com.thecraftcloud.plugin.task.LevelUpTask;
@@ -55,6 +62,7 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 	protected CopyOnWriteArraySet<GamePlayer> playerList = new CopyOnWriteArraySet<GamePlayer>();
 	protected CopyOnWriteArraySet<GamePlayer> livePlayers = new CopyOnWriteArraySet<GamePlayer>();
 	protected CopyOnWriteArraySet<String> playerNames = new CopyOnWriteArraySet<String>();
+	protected CopyOnWriteArraySet<EntityPlayer> livingEntities = new CopyOnWriteArraySet<EntityPlayer>();
 	protected Game game;
 	protected Arena arena;
 	protected World world;
@@ -62,10 +70,16 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 	private Scoreboard scoreboard;
 	private TheCraftCloudDelegate delegate =TheCraftCloudDelegate.getInstance();
 	private List<GameConfigInstance> gameConfigInstanceList;
+	private HashMap<Player, Local> mapPlayerLocal = new HashMap<Player,Local>();
 	private List<GameArenaConfig> gameArenaConfigList;
 	private TheCraftCloudDelegate gameManagerDelegate = TheCraftCloudDelegate.getInstance();
 	private TheCraftCloudPlugin mgplugin;
+
+	protected Integer maxPlayers;
+	protected Integer minPlayers;
+	protected Local lobbyLocal;
 	
+
 	protected List<ExportBlock> arenaBlocks;
 	protected int indexBlock = 0;
 	
@@ -86,7 +100,11 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 	private int levelUpThreadID;
 	protected MyCloudCraftGame myCloudCraftGame;
 	protected Location lobby;
-	private boolean arenaReady;
+	private boolean arenaReady = true;
+
+	protected LocationUtil locationUtil = new LocationUtil();
+	protected PlayerService playerService = new PlayerService(this);
+	protected ConfigService configService = ConfigService.getInstance();
 
 	@Override
 	public void onEnable() {
@@ -94,7 +112,7 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 		
 		ServerInstance server = null;
 		try{
-			server = delegate.findServerInstance(mgplugin.getServer_uuid());
+			server = this.configService.getServerInstance();
 			Local l = server.getLobby();
 			String worldName = server.getWorld();
 			this.lobby = new Location(Bukkit.getWorld(worldName), l.getX(), l.getY(), l.getZ()); 
@@ -102,8 +120,9 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 			e.printStackTrace();
 		}
 
-		getCommand("jogar").setExecutor(new JoinGameCommand(this));
-
+		Bukkit.getLogger().info( this.getCommand("jogar") + "");
+		this.getCommand("jogar").setExecutor(new JoinGameCommand(this));
+		
 		registerListeners();
 		
 		// inicializar em que mundo o jogador está. Só deve ter um.
@@ -123,24 +142,21 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 
 		TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance();
 		TheCraftCloudPlugin mgplugin = (TheCraftCloudPlugin)Bukkit.getPluginManager().getPlugin(TheCraftCloudPlugin.THE_CRAFT_CLOUD_PLUGIN);
-		Arena arena = mgplugin.getArena();
-		Game game = mgplugin.getGame();
+		Arena arena = configService.getArena();
+		Game game = configService.getGame();
 		this.game = game;
 		this.arena = arena;
 		
 		if(arena == null || arena.getArea() == null || arena.getArea().getPointA() == null || arena.getArea().getPointB() == null) {
 			Bukkit.getLogger().info("Game is not correctly configured yet. Try /mg setup");
 		} else {
-			File dir = mgplugin.getDataFolder();
-			File schematicFile = delegate.downloadArenaSchematic(arena.getArena_uuid(), dir.getAbsolutePath());
-			List<ExportBlock> arenaBlocks = new BlockManipulationUtil().loadSchematic(this, schematicFile, this.world);
-			this.startArenaBuild(arena.getName(), arenaBlocks);
+			this.startArenaBuild(arena.getName());
 		}
 	}
 	
 	public void init(World _world, Local _lobby) {
-		Arena arena = mgplugin.getArena();
-		Game game = mgplugin.getGame();
+		Arena arena = configService.getArena();
+		Game game = configService.getGame();
 		this.game = game;
 		this.arena = arena;
 		
@@ -151,8 +167,18 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 		this.levelUpTask = new LevelUpTask(this);
 		this.myCloudCraftGame = new MyCloudCraftGame();
 		
-		this.gameConfigInstanceList = delegate.findAllGameConfigInstanceByGameUUID(this.mgplugin.getGame().getGame_uuid().toString());
-		this.gameArenaConfigList = delegate.findAllGameConfigArenaByGameArena(this.mgplugin.getGame().getGame_uuid().toString(), this.mgplugin.getArena().getArena_uuid().toString());
+		try {
+			mgplugin.loadTheCraftCloudData();
+		} catch (InvalidRegistrationException e) {
+			e.printStackTrace();
+		}
+
+		try {
+			Bukkit.getLogger().info("Loading offline config");
+			this.updateOfflineConfig(false);
+		} catch (InvalidRegistrationException e) {
+			e.printStackTrace();
+		}
 		
 		// Agendar as threads que vão detectar se o jogo pode comecar
 		this.startCountDownTask = new StartCoundDownTask(this);
@@ -169,22 +195,79 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 		this.mgplugin = (TheCraftCloudPlugin)Bukkit.getPluginManager().getPlugin(TheCraftCloudPlugin.THE_CRAFT_CLOUD_PLUGIN);
 		
 		try{
-			ServerInstance server = delegate.findServerInstance(mgplugin.getServer_uuid());
+			ServerInstance server = configService.getServerInstance();
 			Local l = server.getLobby();
 			String worldName = server.getWorld();
 			this.world = Bukkit.getWorld(worldName);
 			this.lobby = new Location(this.world, l.getX(), l.getY(), l.getZ());
+			Bukkit.getLogger().info("lobby: " + this.world.getName() + l);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
 	}
+
+	private void updateOfflineConfig(Boolean force) throws InvalidRegistrationException {
+		try{
+	    	File configDir = getDataFolder();
+	
+			String json = null;
+	        ObjectMapper mapper = new ObjectMapper();
+	
+			File gameConfigListJsonFile = new File( configDir, "gameConfigList" + ".json");
+			if( gameConfigListJsonFile.exists() && !force ) {
+				Bukkit.getLogger().info("Game Config List Json exists");
+				json = FileUtils.readFileToString(gameConfigListJsonFile);
+				try {
+					this.gameConfigInstanceList = mapper.readValue(json, mapper.getTypeFactory().constructCollectionType(List.class, GameConfigInstance.class));
+				} catch (JsonParseException e) {
+					e.printStackTrace();
+				} catch (JsonMappingException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				Bukkit.getLogger().info("GameConfigList size: " + this.gameConfigInstanceList.size() );
+			} else {
+				this.gameConfigInstanceList = delegate.findAllGameConfigInstanceByGameUUID(this.game.getGame_uuid().toString());
+				json = JSONParser.getInstance().toJSONString(this.gameConfigInstanceList);
+				FileUtils.writeStringToFile(gameConfigListJsonFile, json);
+			}
+			
+			File gameArenaConfigListJsonFile = new File( configDir, "gameArenaConfigList" + ".json");
+			if( gameArenaConfigListJsonFile.exists() && !force ) {
+				Bukkit.getLogger().info("Game Arena Config List Json exists");
+				json = FileUtils.readFileToString(gameArenaConfigListJsonFile);
+				try {
+					this.gameArenaConfigList = mapper.readValue(json, mapper.getTypeFactory().constructCollectionType(List.class, GameArenaConfig.class));
+				} catch (JsonParseException e) {
+					e.printStackTrace();
+				} catch (JsonMappingException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				Bukkit.getLogger().info("GameArenaConfigList size: " + this.gameArenaConfigList.size() );
+			} else {
+				this.gameArenaConfigList = delegate.findAllGameConfigArenaByGameArena(this.game.getGame_uuid().toString(), this.arena.getArena_uuid().toString());
+				json = JSONParser.getInstance().toJSONString(this.gameArenaConfigList);
+				FileUtils.writeStringToFile(gameArenaConfigListJsonFile, json);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new InvalidRegistrationException("Server not registered or Game/Arena config is invalid.");
+		}
+		Bukkit.getLogger().info("GameConfigList size: " + this.gameConfigInstanceList.size() );
+		Bukkit.getLogger().info("GameArenaConfigList size: " + this.gameArenaConfigList.size() );
+
+	}
+
 	
 	public void startGameEngine() {
-		Arena arena = mgplugin.getArena();
-		Game game = mgplugin.getGame();
+		Arena arena = configService.getArena();
+		Game game = configService.getGame();
 		this.game = game;
 		this.arena = arena;
-
+		
 		BukkitScheduler scheduler = getServer().getScheduler();
 		
 		if(this.lobby == null) {
@@ -219,33 +302,17 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 		// limpar inventario do jogador
 		clearPlayersInventory();
 
-        File dir = mgplugin.getDataFolder();
-    	File schematicFile = delegate.downloadArenaSchematic(arena.getArena_uuid(), dir.getAbsolutePath());
-    	List<ExportBlock> arenaBlocks = new BlockManipulationUtil().loadSchematic(this, schematicFile, this.world);
-		this.arenaBlocks = arenaBlocks;
-		LocationUtil locationUtil = new LocationUtil();
-		Location pointA = locationUtil.toLocation(this.getWorld(), arena.getArea().getPointA());
-		Location pointB = locationUtil.toLocation(this.getWorld(), arena.getArea().getPointB());
-		List<Block> list = new BlockManipulationUtil().blocksFromTwoPoints(pointA, pointB);
-		List<ExportBlock> blocks = new ArrayList<ExportBlock>();
-		for(Block block: list) {
-			ExportBlock eb = new ExportBlock();
-			eb.setX(block.getX());
-			eb.setY(block.getY());
-			eb.setZ(block.getZ());
-			eb.setMaterial(Material.AIR);
-			blocks.add(eb);
-		}
-		arenaBlocks.addAll(blocks);
-		startArenaBuild(this.arena.getName(), this.arenaBlocks);
-
+		startArenaBuild(this.arena.getName());
 	}
 	
 	
 	protected void teleportPlayersBackToLobby() {
+		
 		for(GamePlayer gp: this.livePlayers) {
 			Player p = gp.getPlayer();
-			p.teleport(lobby);
+			Local l = mapPlayerLocal.get(p);
+			Location loc = locationUtil.toLocation(Bukkit.getWorld(l.getName()), l);
+			p.teleport(loc);
 		}
 	}
 
@@ -253,28 +320,39 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 		return this.livePlayers;
 	}
 
-	public void startArenaBuild(String arenaName, List<ExportBlock> arenaBlocks) {
-		this.arenaReady = false;
-		Bukkit.getLogger().info("startArenaBuild - " + arenaName);
-		this.world = Bukkit.getWorld(arenaName);
-		if(this.world == null) {
-	        //criar mundo void para tentar ver se a recriacao da arena fica pronta mais rapidamente
-			this.world = new MultiVerseWrapper().createWorldVoid( arenaName );
-			Bukkit.getLogger().info("startArenaBuild - mundo criado: " + arenaName);
-		} else {
-			Bukkit.getLogger().info("startArenaBuild - mundo existente: " + arenaName);
-		}
+	public void startArenaBuild(String arenaName) {
+		File dir = this.getServer().getWorldContainer();
+		//File schematicFile = delegate.downloadArenaSchematic(arena.getArena_uuid(), dir.getAbsolutePath());
+		File arenaWorldFile = new File(dir, arena.getName());
 		
-		this.setArenaBlocks(arenaBlocks);
-
-		this.indexBlock = 0;
-		BukkitScheduler scheduler = Bukkit.getScheduler();
-		this.buildArenaTask = new BuildArenaTask(this);
-		this.threadIds = new CopyOnWriteArrayList<Integer>();
-		for(int i = 0; i < 1; i++) {
-			Integer _buildArenaThreadID = scheduler.scheduleSyncRepeatingTask(this, this.buildArenaTask, 5L, 10L);
-			this.threadIds.add(_buildArenaThreadID);
+		MultiverseCore mvplugin = (MultiverseCore)Bukkit.getPluginManager().getPlugin("Multiverse-Core");
+		String worldPath = dir.getAbsolutePath() + "/" + arena.getName();
+				
+		if(!arenaWorldFile.exists()) {
+			File zipFile = delegate.downloadArenaWorld(arena, dir);
+			ExtractZipContents.unzip(zipFile);
+			Bukkit.getLogger().info("world path: " + worldPath);
+			mvplugin.getCore().getMVWorldManager().addWorld(arena.getName(), Environment.NORMAL, new Integer( arena.getName().hashCode() ).toString(), WorldType.NORMAL, new Boolean(false), null, false);
+		} else {
+			//Remover o mundo do multi verse para recarregar
+			mvplugin.getMVWorldManager().unloadWorld(arena.getName());
+			
+			//Apagar o diretório
+			try {
+				FileUtils.deleteDirectory(arenaWorldFile);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			//Descompactar arena
+			File zipFile = new File( dir, arena.getName() + ".zip");
+			ExtractZipContents.unzip(zipFile);
+			
+			//Carregar o mundo no multiverse
+			Bukkit.getLogger().info("world path: " + worldPath);
+			mvplugin.getCore().getMVWorldManager().addWorld(arena.getName(), Environment.NORMAL, new Integer( arena.getName().hashCode() ).toString(), WorldType.NORMAL, new Boolean(false), null, false);
 		}
+		this.world = Bukkit.getWorld(this.arena.getName());
 	}
 	
 	public void setArenaBlocks(List<ExportBlock> arenaBlocks) {
@@ -321,23 +399,6 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 	}
 
 
-	public Object getGameConfigInstance(String name) {
-		Object result = null;
-		for(GameConfigInstance gci: this.gameConfigInstanceList) {
-			if(gci.getGameConfig().getName().equals(name)) {
-				if(gci.getGameConfig().getConfigType() == GameConfigType.INT) {
-					result = gci.getIntValue();
-				}if(gci.getGameConfig().getConfigType() == GameConfigType.LOCAL) {
-					result = gci.getLocal();
-				}if(gci.getGameConfig().getConfigType() == GameConfigType.AREA3D) {
-					result = gci.getArea();
-				}
-			}
-		}
-		
-		return result;
-	}
-
 	public CopyOnWriteArraySet<GameArenaConfig> getGameArenaConfigByGroup(String group) {
 		
 		CopyOnWriteArraySet<GameArenaConfig> gacs = new CopyOnWriteArraySet<GameArenaConfig>();
@@ -350,26 +411,6 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 		return gacs;
 	}
 
-
-	public Object getGameArenaConfig(String name) {
-		Object result = null;
-		for(GameArenaConfig gac: this.gameArenaConfigList) {
-			if(gac.getGameConfig().getName().equals(name)) {
-				if(gac.getGameConfig().getConfigType() == GameConfigType.INT) {
-					result = gac.getIntValue();
-					break;
-				}if(gac.getGameConfig().getConfigType() == GameConfigType.LOCAL) {
-					result = gac.getLocalValue();
-					break;
-				}if(gac.getGameConfig().getConfigType() == GameConfigType.AREA3D) {
-					result = gac.getAreaValue();
-					break;
-				}
-			}
-		}
-		
-		return result;
-	}
 
 	public abstract boolean shouldEndGame();
 
@@ -424,13 +465,16 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 	}
 
 	public void removeLivePlayer(Player player) {
-		GamePlayer gp = findGamePlayerByPlayer(player);
+		GamePlayer gp = this.playerService.findGamePlayerByPlayer(player);
 
 		if (gp != null) {
 			if (player != null) {
 				player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
 				player.getInventory().clear();
-				teleportPlayersBackToLobby(player);
+				
+				Local l = (Local)mapPlayerLocal.get(player);
+				Location loc = locationUtil.toLocation(Bukkit.getWorld(l.getName() ), l );
+				player.teleport(loc);
 			}
 			removeBossBar(gp);
 			livePlayers.remove(gp);
@@ -445,25 +489,15 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 	protected void registerListeners() {
 		PluginManager pm = Bukkit.getPluginManager();
 		pm.registerEvents(new PlayerQuit(this), this);
-		pm.registerEvents(new PlayerDeath(this), this);
 		pm.registerEvents(new ServerListener(this), this);
 	}
 	
 	public void teleportPlayersBackToLobby(Player player) {
-		
-		Location l = Utils.toLocation(this.getWorld(), this.getLobby());
+		Local local = mapPlayerLocal.get(player);
+		Location l = locationUtil.toLocation(Bukkit.getWorld(local.getName()), local);
 		player.teleport(l);
 	}
 	
-	public GamePlayer findGamePlayerByPlayer(Player player) {
-		for (GamePlayer gp : playerList) {
-			if (gp.getPlayer().equals(player)) {
-				return gp;
-			}
-		}
-		return null;
-	}
-
 	private void removeBossBars() {
 		for (GamePlayer gp : livePlayers) {
 			if(gp.getBaseBar() != null) {
@@ -473,7 +507,7 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 	}
 
 	private void removeBossBar(Player player) {
-		GamePlayer gp = findGamePlayerByPlayer(player);
+		GamePlayer gp = this.playerService.findGamePlayerByPlayer(player);
 		if(gp.getBaseBar() != null) {
 			gp.getBaseBar().removeAll();
 		}
@@ -500,12 +534,12 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 	}
 
 	public void addPlayer(Player player) {
-		if (findGamePlayerByPlayer(player) == null) {
+		if (this.playerService.findGamePlayerByPlayer(player) == null) {
 			GamePlayer gp = createGamePlayer();
 			gp.setPlayer(player);
 			playerList.add(gp);
 			livePlayers.add(gp);
-			player.sendMessage(Utils.color("&aBem vindo, Arqueiro!"));
+			//player.sendMessage(Utils.color("&aBem vindo, Arqueiro!"));
 			playerNames.add(player.getName());
 		} else {
 		}
@@ -513,10 +547,6 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 	
 	public abstract GamePlayer createGamePlayer();
 
-	public abstract void killPlayer(Player player);
-
-	public abstract void killEntity(Entity z);
-	
 	public abstract Integer getStartCountDown();
 
 	public abstract void setStartCountDown();
@@ -532,5 +562,19 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 	public boolean isGameReady() {
 		return this.arenaReady;
 	}
+
+	public void addPlayer(Player player, Local l) {
+		this.mapPlayerLocal.put(player, l);
+		this.addPlayer(player);
+	}
+
+	public void addEntityPlayer(EntityPlayer entityPlayer) {
+		livingEntities.add(entityPlayer);
+	}
+
+	public CopyOnWriteArraySet<EntityPlayer> getLivingEntities() {
+		return this.livingEntities;
+	}
+
 
 }

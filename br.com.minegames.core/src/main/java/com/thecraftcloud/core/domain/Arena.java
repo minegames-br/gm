@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -37,6 +38,9 @@ public class Arena extends TransferObject {
 	
 	@OneToOne
 	private Area3D area;
+	
+	@Enumerated
+	private FacingDirection facing;
 	
 	public UUID getArena_uuid() {
 		return arena_uuid;
@@ -79,6 +83,12 @@ public class Arena extends TransferObject {
 	}
 	public void setTime(Integer time) {
 		this.time = time;
+	}
+	public FacingDirection getFacing() {
+		return facing;
+	}
+	public void setFacing(FacingDirection facing) {
+		this.facing = facing;
 	}
 	
 }

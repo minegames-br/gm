@@ -94,6 +94,10 @@ public class GameREST {
 		Logger.getLogger(GameREST.class).info("json recebido: " + json );
 		GameService service = new GameService();
 		GameConfigInstance domain = (GameConfigInstance)JSONParser.getInstance().toObject(json, GameConfigInstance.class);
+		
+		System.out.println("gcInstance: " + domain );
+		System.out.println("gameConfig: " + domain.getGameConfig() );
+		
 		System.out.println("uuid no rest: " + domain.getGameConfig().getGame_config_uuid());
 		service.create(domain);
 	    return Response.ok(json, MediaType.APPLICATION_JSON).build();

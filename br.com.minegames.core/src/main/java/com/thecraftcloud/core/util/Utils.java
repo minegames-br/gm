@@ -47,4 +47,11 @@ public class Utils {
 		Location l = new Location(world, lobbyLocal.getX(), lobbyLocal.getY(), lobbyLocal.getZ());
 		return l;
 	}
+
+	/*
+	public static String color(String msg) {
+		return ChatColor.translateAlternateColorCodes('&', msg);
+	}
+	*/
+
 }

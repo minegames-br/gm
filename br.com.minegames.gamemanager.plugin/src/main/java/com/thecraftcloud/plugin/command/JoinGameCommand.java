@@ -1,9 +1,7 @@
 package com.thecraftcloud.plugin.command;
 
-import java.io.File;
-import java.util.List;
-
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -12,15 +10,18 @@ import org.bukkit.entity.Player;
 import com.thecraftcloud.client.TheCraftCloudDelegate;
 import com.thecraftcloud.core.domain.Arena;
 import com.thecraftcloud.core.domain.Game;
-import com.thecraftcloud.core.export.ExportBlock;
+import com.thecraftcloud.core.domain.Local;
 import com.thecraftcloud.core.logging.MGLogger;
-import com.thecraftcloud.core.util.BlockManipulationUtil;
-import com.thecraftcloud.plugin.TheCraftCloudPlugin;
+import com.thecraftcloud.plugin.TheCraftCloudConfig;
 import com.thecraftcloud.plugin.TheCraftCloudMiniGameAbstract;
+import com.thecraftcloud.plugin.TheCraftCloudPlugin;
+import com.thecraftcloud.plugin.service.ConfigService;
 
 public class JoinGameCommand implements CommandExecutor {
 
 	private TheCraftCloudMiniGameAbstract controller;
+	private ConfigService configService = ConfigService.getInstance();
+	private TheCraftCloudConfig config = configService.getConfig();
 
     public JoinGameCommand(TheCraftCloudMiniGameAbstract plugin) {
 		super();
@@ -38,10 +39,10 @@ public class JoinGameCommand implements CommandExecutor {
         }
         
         Player player = (Player) commandSender;
+        Bukkit.getLogger().info( "Controler " + controller );
+        Bukkit.getLogger().info( "Game " + controller.getMyCloudCraftGame() );
+        Bukkit.getLogger().info( "Live players" + controller.getLivePlayers() );
         if(controller.getMyCloudCraftGame().isWaitingPlayers() && controller.getLivePlayers() != null && controller.getLivePlayers().size() > 0) {
-        	if(args != null || args.length > 0) {
-        		player.sendMessage("Uma arena está ativa. Vou te mandar pra lá.");
-        	}
             controller.addPlayer(player);
         } else {
 	        
@@ -53,16 +54,23 @@ public class JoinGameCommand implements CommandExecutor {
     			return false;
     		}
     		
-    		Arena arena = mgplugin.getArena();
-    		Game game = mgplugin.getGame();
+    		Arena arena = this.config.getArena();
+    		Game game = this.config.getGame();
     		
     		if(arena == null || arena.getArea() == null || arena.getArea().getPointA() == null || arena.getArea().getPointB() == null) {
     			player.sendMessage("Game is not correctly configured yet. Have you selected the game and arena? If so, try /tcc setup");
     			return false;
     		}
     		
-    		controller.init( player.getWorld(), mgplugin.getServerInstance().getLobby() ); //setGameArenaConfigList( delegate.getInstance().findAllGameConfigArenaByGameArena(game.getGame_uuid().toString(), arena.getArena_uuid().toString() ) );
-            controller.addPlayer(player);
+    		//quando o jogo acabar, mandar o jogador de volta pra onde estava
+    		Local l = new Local();
+    		Location loc = player.getLocation();
+    		l.setX(loc.getBlockX());
+    		l.setY(loc.getBlockY());
+    		l.setZ(loc.getBlockZ());
+    		l.setName( player.getWorld().getName() );
+    		controller.init( Bukkit.getWorld(arena.getName()), this.config.getServerInstance().getLobby() ); //setGameArenaConfigList( delegate.getInstance().findAllGameConfigArenaByGameArena(game.getGame_uuid().toString(), arena.getArena_uuid().toString() ) );
+            controller.addPlayer(player, l);
         }
         
         return true;

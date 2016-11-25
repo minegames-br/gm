@@ -71,5 +71,21 @@ public class MyCloudCraftGame {
 		this.state = state;
 	}
 
+	public boolean hasLevels() {
+		return false;
+	}
+
+	public long getGameStartTime() {
+		return gameStartTime;
+	}
+
+	public void setGameStartTime(long gameStartTime) {
+		this.gameStartTime = gameStartTime;
+	}
+
+	public void setState(GameState state) {
+		this.state = state;
+	}
+
 
 }

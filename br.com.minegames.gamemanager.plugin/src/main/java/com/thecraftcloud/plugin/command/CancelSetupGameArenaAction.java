@@ -18,7 +18,7 @@ import com.thecraftcloud.core.domain.GameConfig;
 import com.thecraftcloud.core.domain.GameConfigInstance;
 import com.thecraftcloud.plugin.TheCraftCloudPlugin;
 
-public class CancelSetupGameArenaAction extends CommandAction {
+public class CancelSetupGameArenaAction extends TheCraftCloudCommandAction {
 
 	
 	public CancelSetupGameArenaAction(JavaPlugin plugin, CommandSender arg0, Command arg1, String arg2, String[] arguments) {
@@ -52,14 +52,14 @@ public class CancelSetupGameArenaAction extends CommandAction {
 			return;
 		}
 		
-		if(p.getArena() == null ) {
+		if(this.config.getArena() == null ) {
 			if(player != null) {
 				player.sendMessage("Choose one of the existing arenas: /mg listarenas [name] or create one /mg createarena <name>");
 			}
 			return;
 		}
 		
-		if(p.getGame() == null) {
+		if(this.config.getGame() == null) {
 			if(player != null) {
 				player.sendMessage("Please, select the game first: /mg listgames and /mg setgame <game>");
 			}

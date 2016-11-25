@@ -37,6 +37,9 @@ public class GameArenaConfig extends TransferObject {
 	@OneToOne(fetch = FetchType.EAGER)
 	private Area3D areaValue;
 
+	@OneToOne(fetch = FetchType.EAGER)
+	private Item itemValue;
+
 	public UUID getGac_uuid() {
 		return gac_uuid;
 	}
@@ -84,6 +87,14 @@ public class GameArenaConfig extends TransferObject {
 	
 	public void setIntValue(Integer value) {
 		this.intValue = value;
+	}
+
+	public Object getItemValue() {
+		return this.itemValue;
+	}
+
+	public void setItemValue(Item itemValue) {
+		this.itemValue = itemValue;
 	}
 	
 	

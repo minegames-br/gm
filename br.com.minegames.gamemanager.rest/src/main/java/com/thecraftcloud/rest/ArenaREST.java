@@ -14,6 +14,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 
+import org.jboss.logging.Logger;
+
 import com.thecraftcloud.core.domain.Arena;
 import com.thecraftcloud.core.json.JSONParser;
 import com.thecraftcloud.service.ArenaService;
@@ -56,10 +58,12 @@ public class ArenaREST {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response update(@PathParam("uuid") String _uuid, String json) {
 		ArenaService service = new ArenaService();
+		System.out.println("json: " + json);
+		Logger.getLogger(this.getClass()).info("json: " + json);
 		Arena domain = service.find( UUID.fromString(_uuid) );
 		if( domain != null) {
 			domain = (Arena)JSONParser.getInstance().toObject(json, Arena.class);
-			service.merge(domain);
+			service.update(domain);
 			domain = service.find( UUID.fromString(_uuid) );
 			json = JSONParser.getInstance().toJSONString(domain);
 		    return Response.ok( json , MediaType.APPLICATION_JSON).build();
@@ -103,6 +107,26 @@ public class ArenaREST {
 		Arena domain = service.find( UUID.fromString(uuid) );
 		if( domain != null) {
 	        File file = new File( domain.getSchematic().getPath() + "/" + domain.getSchematic().getSchematic_uuid() + ".schematic" );
+	        ResponseBuilder response = Response.ok((Object) file);
+	        response.header("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"");
+	        return response.build();
+		} else {
+			return Response.status(Response.Status.NOT_FOUND).entity("Arena not found: " + uuid).build();
+		}
+        
+    }	
+	
+    @GET
+    @Path("/{uuid}/world")
+    @Produces("text/plain")
+    public Response downloadWorldDirectory(@PathParam("uuid") String uuid) 
+    {
+        System.out.println("Download world ZIPed directory for arena: " + uuid);
+
+		ArenaService service = new ArenaService();
+		Arena domain = service.find( UUID.fromString(uuid) );
+		if( domain != null) {
+	        File file = new File( "/opt/mg/worlds/" + domain.getName()+ ".zip" );
 	        ResponseBuilder response = Response.ok((Object) file);
 	        response.header("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"");
 	        return response.build();

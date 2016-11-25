@@ -68,6 +68,16 @@ public class ArenaService extends Service {
 		return domain.getArena_uuid();
 	}
 	
+	public UUID update(Arena domain) {
+		startTransaction();
+		ArenaDAO dao = new ArenaDAO(em);
+		Logger.getLogger(ArenaService.class).info("facing: " + domain.getFacing() );
+		em.merge(domain);
+		commitTransaction();
+		Logger.getLogger(ArenaService.class).info("uuid: " + domain.getArena_uuid());
+		return domain.getArena_uuid();
+	}
+	
 	public Arena find(UUID uuid) {
 		startTransaction();
 		ArenaDAO dao = new ArenaDAO(em);

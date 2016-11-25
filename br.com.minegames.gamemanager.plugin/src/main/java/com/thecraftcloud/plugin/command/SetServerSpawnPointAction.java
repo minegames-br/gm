@@ -8,13 +8,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.thecraftcloud.client.TheCraftCloudDelegate;
-import com.thecraftcloud.core.command.CommandAction;
 import com.thecraftcloud.core.domain.Local;
 import com.thecraftcloud.core.domain.ServerInstance;
 import com.thecraftcloud.core.json.JSONParser;
 import com.thecraftcloud.plugin.TheCraftCloudPlugin;
 
-public class SetServerSpawnPointAction extends CommandAction {
+public class SetServerSpawnPointAction extends TheCraftCloudCommandAction {
 
 	public SetServerSpawnPointAction(JavaPlugin plugin, CommandSender arg0, Command arg1, String arg2, String[] arguments) {
 		super(plugin, arg0, arg1, arg2, arguments);
@@ -44,11 +43,11 @@ public class SetServerSpawnPointAction extends CommandAction {
 		Location loc = player.getLocation();
 		Local l = new Local(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
 		String json = JSONParser.getInstance().toJSONString(l);
-		p.setProperty("thecraftcloud.server.spawnpoint", json);
+		this.configService.setProperty(plugin, "thecraftcloud.server.spawnpoint", json);
 		String world = player.getWorld().getName();
-		p.setProperty("thecraftcloud.server.lobby", world );
+		this.configService.setProperty(plugin, "thecraftcloud.server.lobby", world );
 		
-		ServerInstance server = delegate.findServerInstance(p.getServer_uuid());
+		ServerInstance server = this.config.getServerInstance();
 		server.setLobby(l);
 		server.setWorld(world);
 		delegate.updateServer(server);

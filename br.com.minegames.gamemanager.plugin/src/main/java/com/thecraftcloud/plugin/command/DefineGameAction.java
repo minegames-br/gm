@@ -11,7 +11,7 @@ import com.thecraftcloud.core.command.CommandAction;
 import com.thecraftcloud.core.domain.Game;
 import com.thecraftcloud.plugin.TheCraftCloudPlugin;
 
-public class DefineGameAction extends CommandAction {
+public class DefineGameAction extends TheCraftCloudCommandAction {
 
 	public DefineGameAction(JavaPlugin plugin, CommandSender arg0, Command arg1, String arg2, String[] arguments) {
 		super(plugin, arg0, arg1, arg2, arguments);
@@ -43,7 +43,7 @@ public class DefineGameAction extends CommandAction {
 		}
 		int index = Integer.parseInt(arguments[1]);
 		Game game = p.getGames().get(index);
-		p.setGame(game);
+		this.configService.setGame(this.plugin, game);
 		
 		player.sendMessage("You have chosen game: " + game.getName() );
 	}

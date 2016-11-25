@@ -12,7 +12,7 @@ import com.thecraftcloud.core.command.CommandAction;
 import com.thecraftcloud.core.npcs.NPC;
 import com.thecraftcloud.plugin.TheCraftCloudPlugin;
 
-public class SpawnNPCAction extends CommandAction {
+public class SpawnNPCAction extends TheCraftCloudCommandAction {
 
 	public SpawnNPCAction(JavaPlugin plugin, CommandSender arg0, Command arg1, String arg2, String[] arguments) {
 		super(plugin, arg0, arg1, arg2, arguments);
