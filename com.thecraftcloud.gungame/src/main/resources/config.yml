@@ -1,0 +1,66 @@
+#Amount of ticks how often the plugin will try to teleport back players to their spawn points
+tpBack: 5
+join:
+- TS:20 60 20
+- TITLE:§e§lJoin
+- SUBTITLE:§6§lJoined the game
+waiting:
+- ABM:§6§l<gg:need>§e more players needed for start.
+starting:
+- ABM:§eThe game starts in §6§l<gg:count>§e seconds.
+ingame:
+- ABM:§6§l<gg:count>§e seconds left
+- XPLEVEL:<gg:level>
+finish:
+- MSG:§aThe game has finished.
+- MSG:§e§l#1. §b<gg:top1> (§6<gg:topp1>§b)
+- MSG:§7§l#2. §b<gg:top2> (§6<gg:topp2>§b)
+- MSG:§6§l#3. §b<gg:top3> (§6<gg:topp3>§b)
+levelups:
+  0:
+  - MSG:§aCongratulations, you have reached level <gg:level>
+  3:
+  - MSG:§aCongratulations, you have reached the third level.
+rewards:
+  0:
+  - MSG:§aYou have got 25$ for the participation
+  - ECON:25
+  1:
+  - MSG:§aYou have got 250$ for winning the game
+  - ECON:250
+  2:
+  - MSG:§aYou have got 180$ for the second place
+  - ECON:180
+  3:
+  - MSG:§aYou have got 125$ for the third place
+  - ECON:125
+minPlayer: 2
+endTime: 10
+gameTime: 30
+startTime: 5
+signs:
+  create:
+  - [GunGame]
+  - <arena>
+  -
+  -
+  Waiting:
+  - §1[GunGame]
+  - <arena>
+  - §1Waiting
+  - §5<need>§4 players needed
+  Starting:
+  - §1[GunGame]
+  - <arena>
+  - §bStarting in
+  - §5<count>§b seconds
+  Ingame:
+  - §1[GunGame]
+  - <arena>
+  - §cIngame
+  - §5<count>s§c left
+  Finish:
+  - §1[MasterBuilder]
+  - <arena>
+  - §eThe winner is
+  - §4<winner>
