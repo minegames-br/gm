@@ -7,11 +7,12 @@ public class TheCraftCloudService {
 
 	protected TheCraftCloudDelegate delegate;
 	protected TheCraftCloudMiniGameAbstract miniGame;
-	protected ConfigService configService = ConfigService.getInstance();
+	protected ConfigService configService;
 	
 	public TheCraftCloudService(TheCraftCloudMiniGameAbstract miniGame) {
 		this.delegate = TheCraftCloudDelegate.getInstance();
 		this.miniGame = miniGame;
+		this.configService = miniGame.getConfigService();
 	}
 	
 }

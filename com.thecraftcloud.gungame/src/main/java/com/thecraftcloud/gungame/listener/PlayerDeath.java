@@ -4,6 +4,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -24,7 +25,7 @@ public class PlayerDeath implements Listener {
         this.entityService = new EntityService(controller);
     }
 
-    @EventHandler
+    @EventHandler(priority=EventPriority.HIGHEST)
     public void onDeath(EntityDeathEvent event) {
     	
         event.getDrops().clear();
@@ -34,6 +35,8 @@ public class PlayerDeath implements Listener {
 			PlayerDeathEvent playerDeathEvent = (PlayerDeathEvent)event;
 			Player dead = (Player)playerDeathEvent.getEntity();
 			this.playerService.killPlayer(dead);
+			dead.setHealth(20);
+			playerService.spawnDeadPlayer(dead);
 		} else {
 			Entity entity = event.getEntity();
 			if(entity instanceof Entity) {

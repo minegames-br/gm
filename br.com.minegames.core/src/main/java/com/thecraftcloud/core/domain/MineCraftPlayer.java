@@ -1,15 +1,16 @@
 package com.thecraftcloud.core.domain;
 
+import java.util.Calendar;
 import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
-import org.bukkit.Location;
-import org.bukkit.boss.BossBar;
-import org.bukkit.entity.Player;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
@@ -28,7 +29,13 @@ public class MineCraftPlayer extends TransferObject {
 	@Column(unique=true)
 	private String name;
 	private String nickName;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	private Calendar lastLogin;
 
+	@Enumerated
+	private PlayerStatus status;
+	
 	public String getPlayer_uuid() {
 		return player_uuid;
 	}
@@ -58,6 +65,18 @@ public class MineCraftPlayer extends TransferObject {
 	}
 	public void setMcp_uuid(UUID mcp_uuid) {
 		this.mcp_uuid = mcp_uuid;
+	}
+	public Calendar getLastLogin() {
+		return lastLogin;
+	}
+	public void setLastLogin(Calendar lastLogin) {
+		this.lastLogin = lastLogin;
+	}
+	public PlayerStatus getStatus() {
+		return status;
+	}
+	public void setStatus(PlayerStatus status) {
+		this.status = status;
 	}
 	
 	

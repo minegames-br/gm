@@ -104,15 +104,27 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 
 	protected LocationUtil locationUtil = new LocationUtil();
 	protected PlayerService playerService = new PlayerService(this);
-	protected ConfigService configService = ConfigService.getInstance();
+	protected ConfigService configService;
 
 	@Override
 	public void onEnable() {
 		this.mgplugin = (TheCraftCloudPlugin)Bukkit.getPluginManager().getPlugin(TheCraftCloudPlugin.THE_CRAFT_CLOUD_PLUGIN);
+		this.configService = ConfigService.getInstance();
+		try {
+			this.configService.loadTheCraftCloudData(mgplugin, false);
+		} catch (InvalidRegistrationException e1) {
+			e1.printStackTrace();
+			return;
+		}
 		
 		ServerInstance server = null;
 		try{
-			server = this.configService.getServerInstance();
+			server = this.getConfigService().getServerInstance();
+			Bukkit.getConsoleSender().sendMessage("[TheCraftCloud] getConfigService instanceof: " + this.getConfigService().getClass() );
+			if(server == null) {
+				Bukkit.getConsoleSender().sendMessage("[TheCraftCloud] Cannot load The Craft Cloud configuration. Please register server first.");
+				return;
+			}
 			Local l = server.getLobby();
 			String worldName = server.getWorld();
 			this.lobby = new Location(Bukkit.getWorld(worldName), l.getX(), l.getY(), l.getZ()); 
@@ -168,12 +180,6 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 		this.myCloudCraftGame = new MyCloudCraftGame();
 		
 		try {
-			mgplugin.loadTheCraftCloudData();
-		} catch (InvalidRegistrationException e) {
-			e.printStackTrace();
-		}
-
-		try {
 			Bukkit.getLogger().info("Loading offline config");
 			this.updateOfflineConfig(false);
 		} catch (InvalidRegistrationException e) {
@@ -188,7 +194,7 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 		this.startGameThreadID = scheduler.scheduleSyncRepeatingTask(this, this.startGameTask, 0L, 20L);
 		this.startCountDownThreadID = scheduler.scheduleSyncRepeatingTask(this, this.startCountDownTask, 0L, 25L);
 
-		this.setStartCountDown();
+		this.configService.setStartCountDown();
 	}
 
 	protected void loadLobby() {
@@ -296,8 +302,6 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 
 		// remover as bossbars
 		removeBossBars();
-		// mandar os jogadores de volta para o lobby
-		teleportPlayersBackToLobby();
 
 		// limpar inventario do jogador
 		clearPlayersInventory();
@@ -305,17 +309,6 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 		startArenaBuild(this.arena.getName());
 	}
 	
-	
-	protected void teleportPlayersBackToLobby() {
-		
-		for(GamePlayer gp: this.livePlayers) {
-			Player p = gp.getPlayer();
-			Local l = mapPlayerLocal.get(p);
-			Location loc = locationUtil.toLocation(Bukkit.getWorld(l.getName()), l);
-			p.teleport(loc);
-		}
-	}
-
 	public CopyOnWriteArraySet<GamePlayer> getLivePlayers() {
 		return this.livePlayers;
 	}
@@ -431,15 +424,17 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 	}
 
 	public void startCoundDown() {
+		this.countDown = (Integer)configService.getGameConfigInstance(TheCraftCloudConfig.START_COUNTDOWN);
 		this.myCloudCraftGame.startCountDown();
 	}
 
 	public void proceedCountdown() {
-		
+		Bukkit.getConsoleSender().sendMessage(Utils.color("&5[TheCraftCloudMiniGameAbstract] - proceedCountdown: " + this.countDown));
 		if (this.countDown != 0) {
 			this.countDown--;
 			Bukkit.broadcastMessage(Utils.color("&6O jogo vai começar em " + this.countDown + " ..."));
 		} else {
+			Bukkit.broadcastMessage(Utils.color("&6O Boa sorte! O Jogo Começou."));
 			this.startGameEngine();
 			Bukkit.getScheduler().cancelTask(startCountDownThreadID);
 		}
@@ -460,7 +455,7 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 			}
 		}
 
-		this.setStartCountDown();
+		this.configService.setStartCountDown();
 		
 	}
 
@@ -547,18 +542,6 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 	
 	public abstract GamePlayer createGamePlayer();
 
-	public abstract Integer getStartCountDown();
-
-	public abstract void setStartCountDown();
-
-	public abstract Local getLobby();
-
-	public abstract void setLobby();
-
-	public abstract Integer getMinPlayers();
-
-	public abstract Integer getMaxPlayers();
-
 	public boolean isGameReady() {
 		return this.arenaReady;
 	}
@@ -576,5 +559,8 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 		return this.livingEntities;
 	}
 
+	public ConfigService getConfigService() {
+		return this.configService;
+	}
 
 }

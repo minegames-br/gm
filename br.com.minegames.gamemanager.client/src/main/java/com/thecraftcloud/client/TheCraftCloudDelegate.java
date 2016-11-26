@@ -641,6 +641,18 @@ public class TheCraftCloudDelegate {
 		}
 		return item;
 	}
+
+	public GameConfig findGameConfigByName(String name) {
+		GameConfig gc = null;
+		String json = "{}";
+		json = get("/gameconfig/search/" + name);
+		System.out.println(json);
+		gc = (GameConfig)JSONParser.getInstance().toObject(json, GameConfig.class);
+		if( gc == null) {
+			System.err.println("Não encontrou GameConfig: " + name);
+		}
+		return gc;
+	}
 	
 }
 

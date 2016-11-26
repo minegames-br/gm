@@ -1,40 +1,101 @@
 package com.thecraftcloud.gungame.service;
 
+import java.util.List;
+
+import org.bukkit.Bukkit;
+import org.bukkit.block.Chest;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.thecraftcloud.client.TheCraftCloudDelegate;
 import com.thecraftcloud.client.exception.InvalidRegistrationException;
-import com.thecraftcloud.core.domain.Item;
+import com.thecraftcloud.core.domain.GameConfigInstance;
+import com.thecraftcloud.core.util.BlockManipulationUtil;
+import com.thecraftcloud.core.util.Utils;
 import com.thecraftcloud.gungame.GunGameConfig;
-import com.thecraftcloud.plugin.TheCraftCloudConfig;
+import com.thecraftcloud.gungame.domain.GunGamePlayer;
 import com.thecraftcloud.plugin.service.ConfigService;
 
-public class GunGameConfigService extends ConfigService {
+public class GunGameConfigService {
+	private GunGameConfig ggConfig = GunGameConfig.getInstance();
+	private List<Chest> chestList;
+	private ConfigService configService;
+	//private TheCraftCloudDelegate delegate;
+	private static GunGameConfigService me;
 	
-	protected GunGameConfigService() {
-		super();
-		this.delegate = TheCraftCloudDelegate.getInstance();
-		this.config = (TheCraftCloudConfig)createConfigDomain();
+	public static GunGameConfigService getInstance() {
+		if(me == null) {
+			me = new GunGameConfigService();
+		}
+		return me;
 	}
-		
 	
-	protected GunGameConfig createConfigDomain() {
-		return new GunGameConfig();
+	private GunGameConfigService() {
+		this.configService = ConfigService.getInstance();
+		//this.delegate = TheCraftCloudDelegate.getInstance();
 	}
 	
-	@Override
-	public void loadTheCraftCloudData(JavaPlugin plugin, boolean force) throws InvalidRegistrationException {
-		super.loadTheCraftCloudData(plugin, force);
-		
+	public void loadConfig() {
 		//Carregar configuracoes especificas do Gun Game
-		GunGameConfig ggConfig = (GunGameConfig)this.config;
-		Integer killPoints = (Integer)this.getGameConfigInstance( GunGameConfig.KILL_POINTS );
+		Bukkit.getConsoleSender().sendMessage( Utils.color("&6 [GunGame] - GunGameConfigService - configService: " + this.configService) );
+		Integer killPoints = (Integer)this.configService.getGameConfigInstance( GunGameConfig.KILL_POINTS );
+		
+		Bukkit.getConsoleSender().sendMessage( Utils.color("&6 [GunGame] - GunGameConfigService - loadConfig KILL-POINTS: " + killPoints) );
 		ggConfig.setKillPoints( killPoints );
 		
-		//Locais de spawn
-		
 		//Materiais para dar ao evoluir
+		List<GameConfigInstance> gciList = this.configService.getGameConfigInstanceGroup(GunGameConfig.GUNGAME_LEVEL_GROUP);
+		ggConfig.setGunGameLevelList(gciList);
 		
+		//varrer o mapa para encontrar Chests
+		List<Chest> chestList = new BlockManipulationUtil().getArenaChests(Bukkit.getWorld(this.configService.getArena().getName()), this.configService.getArena() );
+		this.setChestList(chestList);
+	}
+
+	public void setChestList(List<Chest> chestList) {
+		this.chestList = chestList;
+	}
+	
+	public List<Chest> getChestList() {
+		return this.chestList;
+	}
+
+
+	public GameConfigInstance getGunGameLevel(Integer level) {
+		String gunGameLevel = GunGameConfig.GUNGAME_LEVEL + level.toString();
+		for(GameConfigInstance _gci: this.ggConfig.getGunGameLevelList()) {
+			if(_gci.getGameConfig().getName().equalsIgnoreCase(gunGameLevel)) {
+				return _gci;
+			}
+		}
+		return null;
+	}
+	
+	public GameConfigInstance getNextGunGameLevel(GunGamePlayer ggPlayer) {
+		GameConfigInstance gci = null;
+		Integer level = ggPlayer.getLevel();
+		Integer nextLevel = level+1;
+		gci = getGunGameLevel(nextLevel);
+		return gci;
+	}
+
+	public GameConfigInstance setupGunGameFirstLevel(GunGamePlayer ggPlayer) {
+		GameConfigInstance gci = null;
+		Integer level = ggPlayer.getLevel();
+		gci = getGunGameLevel(level);
+		return gci;
+	}
+
+	public GameConfigInstance getPreviousGunGameLevel(GunGamePlayer ggPlayer) {
+		GameConfigInstance gci = null;
+		Integer level = ggPlayer.getLevel();
+		Integer previousLevel = level-1;
+		if(previousLevel < 1) previousLevel = 1;
+		gci = getGunGameLevel(previousLevel);
+		return gci;
+	}
+
+	public Integer getKillPoints() {
+		return this.ggConfig.getKillPoints();
 	}
 
 }

@@ -112,18 +112,8 @@ public class TheCraftCloudPlugin extends JavaPlugin {
 	    System.out.print("[TheCraftCloud] TheCraftCloud Plugin Enabled!");
 		
 		getCommand("tcc").setExecutor(new TheCraftCloudCommand(this));
-		try{
-		    loadTheCraftCloudData();
-		} catch(InvalidRegistrationException e) {
-			//e.printStackTrace();
-			Bukkit.getLogger().severe("The Craft Cloud is not correctly set up");
-		}
 		
 	    registerListeners();
-	}
-	
-	public void loadTheCraftCloudData() throws InvalidRegistrationException {
-		this.configService.loadTheCraftCloudData(this, false);
 	}
 	
 	private void registerListeners() {

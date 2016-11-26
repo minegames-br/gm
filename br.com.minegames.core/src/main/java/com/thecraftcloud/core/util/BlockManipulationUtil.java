@@ -16,6 +16,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
+import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
 import org.bukkit.material.Directional;
 import org.bukkit.material.Sandstone;
@@ -24,6 +25,7 @@ import org.bukkit.material.Wool;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.thecraftcloud.core.domain.Area3D;
+import com.thecraftcloud.core.domain.Arena;
 import com.thecraftcloud.core.domain.Local;
 import com.thecraftcloud.core.export.ExportBlock;
 
@@ -57,6 +59,14 @@ public class BlockManipulationUtil {
     	for(Block block: blocks) {
        		createNewWool(block.getWorld(), block.getX(), block.getY(), block.getZ(), color);
     	}
+    }
+    
+    public List<Block> blocksFromTwoPoints(World world, Local loc1, Local loc2) {
+    	LocationUtil locationUtil = new LocationUtil();
+    	Location pointA = locationUtil.toLocation(world, loc1);
+    	Location pointB = locationUtil.toLocation(world, loc2);
+    	
+    	return blocksFromTwoPoints(pointA, pointB);
     }
 
     public List<Block> blocksFromTwoPoints(Location loc1, Location loc2)
@@ -316,5 +326,27 @@ public class BlockManipulationUtil {
 			e.printStackTrace();
 		}
 		return blocks;
+	}
+	
+	public List<Block> getArenaBlocks(World world, Arena arena) {
+		Local pointA = arena.getArea().getPointA();
+		Local pointB = arena.getArea().getPointB();
+		
+		List<Block> list = blocksFromTwoPoints(world, pointA, pointB);
+		return list;
+	}
+
+	public List<Chest> getArenaChests(World world, Arena arena) {
+		List<Chest> chestList = new ArrayList<Chest>();
+		List<Block> blocks = getArenaBlocks(world, arena);
+		
+		for(Block block: blocks) {
+			if(block.getType().equals(Material.CHEST)) {
+				Chest chest = (Chest)block.getState();
+				chestList.add(chest);
+			}
+		}
+		
+		return chestList;
 	}
 }

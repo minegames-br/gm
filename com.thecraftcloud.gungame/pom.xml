@@ -27,13 +27,15 @@
            <scope>provided</scope>
 	    </dependency>
     
+        <!-- 
         <dependency>
             <groupId>gyurix</groupId>
             <artifactId>SpigotLib</artifactId>
             <version>1.0</version>
             <scope>system</scope>
-            <systemPath>D:/@desenv/workspaces/workspace-bluemix-wlp/com.thecraftcloud.gungame/SpigotLib.jar</systemPath>
+            <systemPath>C:/Users/JoaoEmilio/git/gm/com.thecraftcloud.gungame/SpigotLib.jar</systemPath>
         </dependency>
+        -->
 
   			<dependency>
   				<groupId>com.thecraftcloud.core</groupId>

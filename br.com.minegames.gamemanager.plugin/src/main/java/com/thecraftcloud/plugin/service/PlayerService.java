@@ -1,6 +1,7 @@
 package com.thecraftcloud.plugin.service;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.bukkit.Bukkit;
@@ -22,7 +23,6 @@ import com.thecraftcloud.core.util.LocationUtil;
 import com.thecraftcloud.core.util.Utils;
 import com.thecraftcloud.domain.GamePlayer;
 import com.thecraftcloud.plugin.TheCraftCloudMiniGameAbstract;
-import com.thecraftcloud.plugin.TheCraftCloudPlugin;
 
 public class PlayerService extends TheCraftCloudService {
 	
@@ -45,12 +45,17 @@ public class PlayerService extends TheCraftCloudService {
 
 		if (this.miniGame.getMyCloudCraftGame().isStarted()) {
 			this.miniGame.removeLivePlayer(dead);
-			dead.teleport( locationUtil.toLocation(this.miniGame.getWorld(), miniGame.getLobby() ) ); //TELEPORT DEAD PLAYER TO LOBBY
+			dead.teleport( locationUtil.toLocation(this.miniGame.getWorld(), this.configService.getLobby() ) ); //TELEPORT DEAD PLAYER TO LOBBY
 		}
 	}
 
 	public void givePoints(Player player, Integer pointsEarned) {
 		GamePlayer gamePlayer = (GamePlayer)this.findGamePlayerByPlayer(player);
+		gamePlayer.addPoints( pointsEarned );
+		updateScoreBoards();
+	}
+
+	public void givePoints(GamePlayer gamePlayer, Integer pointsEarned) {
 		gamePlayer.addPoints( pointsEarned );
 		updateScoreBoards();
 	}
@@ -69,18 +74,6 @@ public class PlayerService extends TheCraftCloudService {
 
 		inventory.clear();
 		inventory.setArmorContents(null);
-
-		ItemStack bow = new ItemStack(Material.BOW);
-		ItemStack arrow = new ItemStack(Material.ARROW);
-		ItemStack sword = new ItemStack(Material.DIAMOND_SWORD);
-
-		bow.addUnsafeEnchantment(Enchantment.ARROW_DAMAGE, 15);
-		bow.addEnchantment(Enchantment.ARROW_INFINITE, 1);
-		sword.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 15);
-
-		inventory.addItem(bow);
-		inventory.addItem(arrow);
-		inventory.addItem(sword);
 
 		Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
 		Objective objective = scoreboard.registerNewObjective(Utils.color("&6Placar"), "placar");
@@ -106,8 +99,11 @@ public class PlayerService extends TheCraftCloudService {
 	}
 
 	public GamePlayer findGamePlayerByPlayer(Player player) {
+		Bukkit.getConsoleSender().sendMessage(Utils.color("&3findGamePlayerByPlayer: " + player));
 		CopyOnWriteArraySet<GamePlayer> playerList = this.miniGame.getLivePlayers();
 		for (GamePlayer gp : playerList) {
+			Bukkit.getConsoleSender().sendMessage(Utils.color("&3findGamePlayerByPlayer: " + gp.getPlayer()));
+			Bukkit.getConsoleSender().sendMessage(Utils.color("&3findGamePlayerByPlayer gpname: " + gp.getPlayer().getName()));
 			if (gp.getPlayer().equals(player)) {
 				return gp;
 			}
@@ -115,5 +111,7 @@ public class PlayerService extends TheCraftCloudService {
 		return null;
 	}
 
-
+	public CopyOnWriteArraySet<GamePlayer> getLivePlayers() {
+		return this.miniGame.getLivePlayers();
+	}
 }

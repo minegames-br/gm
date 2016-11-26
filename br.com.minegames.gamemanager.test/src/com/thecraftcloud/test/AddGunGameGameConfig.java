@@ -46,6 +46,10 @@ public class AddGunGameGameConfig {
 		Game game = delegate.findGame("d10e8c62-6124-4952-a054-c7c668e7944f");
 		Arena arena = delegate.findArena("30d00221-b371-4828-a0e6-5d75de7bfaec");
 
+		gameConfig = delegate.findGameConfigByName(KILL_POINTS);
+		createGameConfigInstance( gameConfig, 100 );
+
+		/*
 		int i = 1;
 
 		gameConfig = createConfig("gungame.player1.spawn", "Select the location 1 to spawn a player", "Location where the player will spawn", "PLAYER-SPAWN", GameConfigType.LOCAL, GameConfigScope.ARENA, game);

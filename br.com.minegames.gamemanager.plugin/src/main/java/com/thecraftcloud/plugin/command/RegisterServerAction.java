@@ -40,13 +40,15 @@ public class RegisterServerAction extends TheCraftCloudCommandAction {
 		}
 		
 		if(arguments.length != 2) {
-			player.sendMessage("syntax: /mg register <servername>");
+			player.sendMessage("syntax: /tcc register <servername>");
 			return;
 		}
 
 		TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance();
 		ServerInstance server = delegate.registerServer(arguments[1]);
 		this.configService.registerServer(plugin, server);
+		value = server.getServer_uuid().toString();
+		
 		if(player!= null) {
 			player.sendMessage("Server registered successfully: "+ value );
 		}else{

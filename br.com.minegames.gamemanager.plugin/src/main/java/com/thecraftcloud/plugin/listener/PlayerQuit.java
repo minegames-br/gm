@@ -1,5 +1,7 @@
 package com.thecraftcloud.plugin.listener;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -23,6 +25,9 @@ public class PlayerQuit implements Listener {
         event.setQuitMessage(null);
         Player player = event.getPlayer();
         
+		Bukkit.broadcastMessage(ChatColor.GOLD + " " + player.getName() + " saiu do jogo." );
+
+        
         MyCloudCraftGame game = controller.getMyCloudCraftGame();
         
         if(game != null && !game.isOver() ) {
@@ -38,6 +43,7 @@ public class PlayerQuit implements Listener {
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
+		Bukkit.broadcastMessage(ChatColor.GOLD + " " + player.getName() + " saiu do jogo." );
 		PlayerManager.getInstance().removePlayer(player);
 	}
 

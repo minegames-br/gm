@@ -1,6 +1,9 @@
 package com.thecraftcloud.plugin;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import org.bukkit.Bukkit;
 
 import com.thecraftcloud.core.domain.Arena;
 import com.thecraftcloud.core.domain.Game;
@@ -17,19 +20,35 @@ public class TheCraftCloudConfig {
 	public static final String MAX_PLAYERS = "MAX-PLAYERS";
 	public static final String START_COUNTDOWN = "START-COUNTDOWN";
 	public static final String GAME_DURATION_IN_SECONDS = "GAME-DURATION-IN-SECONDS";
+	public static final String PLAYER_SPAWN = "PLAYER-SPAWN";
 	
 	protected Integer minPlayers;
 	protected Integer maxPlayers;
 	protected Integer startCountDown;
 	protected Local lobbyLocation;
 	protected Integer gameDurationInSeconds;
-	private String server_uuid;
-	private ServerInstance serverInstance;
-	private Arena arena;
-	private Game game;
-	private List<GameArenaConfig> gacList;
-	private List<GameConfigInstance> gciList;
+	protected String server_uuid;
+	protected ServerInstance serverInstance;
+	protected Arena arena;
+	protected Game game;
+	protected List<GameArenaConfig> gacList;
+	protected List<GameConfigInstance> gciList;
+	
+	protected List<GameArenaConfig> spawnPoints;
 
+	protected static TheCraftCloudConfig me;
+	
+	protected TheCraftCloudConfig() {
+		Bukkit.getConsoleSender().sendMessage("Criou TheCraftCloudConfig");
+	}
+	
+	public static TheCraftCloudConfig getInstance() {
+		if(me == null) {
+			me = new TheCraftCloudConfig();
+		}
+		return me;
+	}
+	
 	public String getServer_uuid() {
 		return this.server_uuid;
 	}
@@ -109,5 +128,25 @@ public class TheCraftCloudConfig {
 		return gciList;
 	}
 	
+	public List<String> getMandatoryConfigList() {
+		List<String> gcList = new ArrayList<String>();
+		
+		gcList.add(GAME_DURATION_IN_SECONDS);
+		gcList.add(MAX_PLAYERS);
+		gcList.add(MIN_PLAYERS);
+		gcList.add(LOBBY_LOCATION);
+		gcList.add(START_COUNTDOWN);
+		
+		return gcList;
+	}
+
+	public List<GameArenaConfig> getSpawnPoints() {
+		return spawnPoints;
+	}
+
+	public void setSpawnPoints(List<GameArenaConfig> spawnPoints) {
+		this.spawnPoints = spawnPoints;
+	}
+
 
 }

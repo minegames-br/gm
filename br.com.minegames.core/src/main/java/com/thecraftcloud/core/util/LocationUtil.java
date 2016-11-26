@@ -84,8 +84,8 @@ public class LocationUtil {
 		return l;
 	}
 
-	public Location toLocation(World world, Local lobbyLocal) {
-		Location l = new Location(world, lobbyLocal.getX(), lobbyLocal.getY(), lobbyLocal.getZ());
+	public Location toLocation(World world, Local local) {
+		Location l = new Location(world, local.getX(), local.getY(), local.getZ());
 		return l;
 	}
 
