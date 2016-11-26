@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
@@ -23,6 +24,11 @@ public class ServerInstance extends TransferObject {
 	private String description;
 	private String ip_address;
 	private String hostname;
+	private Integer port;
+	private Integer adminPort;
+	
+	@Enumerated
+	private ServerStatus status;
 	
 	@OneToOne
 	private Local lobby;
@@ -71,6 +77,17 @@ public class ServerInstance extends TransferObject {
 	public void setWorld(String world) {
 		this.world = world;
 	}
-	
-	
+	public Integer getPort() {
+		return port;
+	}
+	public void setPort(Integer port) {
+		this.port = port;
+	}
+	public Integer getAdminPort() {
+		return adminPort;
+	}
+	public void setAdminPort(Integer adminPort) {
+		this.adminPort = adminPort;
+	}
+		
 }

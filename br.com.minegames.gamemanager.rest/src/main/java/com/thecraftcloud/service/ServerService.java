@@ -7,6 +7,7 @@ import javax.persistence.Query;
 
 import org.jboss.logging.Logger;
 
+import com.thecraftcloud.core.domain.Item;
 import com.thecraftcloud.core.domain.ServerInstance;
 import com.thecraftcloud.dao.ServerDAO;
 
@@ -42,6 +43,20 @@ public class ServerService extends Service {
 		em.remove(server);
 		commitTransaction();
 		Logger.getLogger(ServerService.class).info("uuid: " + server.getServer_uuid() + " deletado");
+	}
+
+	public ServerInstance findByName(String name) {
+		startTransaction();
+		Query query = em.createQuery("SELECT s FROM ServerInstance s where s.name = :_name");
+		query.setParameter("_name", name);
+		ServerInstance server = null;
+		try{
+			server = (ServerInstance)query.getSingleResult();
+		}catch(Exception e) {
+			return null;
+		}
+		commitTransaction();
+		return server;
 	}
 	
 }

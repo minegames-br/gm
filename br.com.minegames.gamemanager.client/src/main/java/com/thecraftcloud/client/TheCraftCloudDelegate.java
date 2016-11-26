@@ -11,7 +11,6 @@ import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.commons.io.FileUtils;
-import org.bukkit.Bukkit;
 import org.jboss.resteasy.client.ClientRequest;
 import org.jboss.resteasy.client.ClientResponse;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataOutput;
@@ -26,6 +25,7 @@ import com.thecraftcloud.core.domain.Game;
 import com.thecraftcloud.core.domain.GameArenaConfig;
 import com.thecraftcloud.core.domain.GameConfig;
 import com.thecraftcloud.core.domain.GameConfigInstance;
+import com.thecraftcloud.core.domain.GameInstance;
 import com.thecraftcloud.core.domain.GameWorld;
 import com.thecraftcloud.core.domain.Item;
 import com.thecraftcloud.core.domain.Kit;
@@ -48,7 +48,7 @@ public class TheCraftCloudDelegate {
 	
 	public static TheCraftCloudDelegate getInstance() {
 		String gamemanagerUrl = TheCraftCloudClientPlugin.getMinegamesGameManagerUrl();
-		Bukkit.getLogger().info("URL: "+ gamemanagerUrl);
+		//MG.getLogger().info("URL: "+ gamemanagerUrl);
 		if(me == null) {
 			me = new TheCraftCloudDelegate();
 		}
@@ -91,6 +91,16 @@ public class TheCraftCloudDelegate {
 		String json = JSONParser.getInstance().toJSONString(server);
 		json = post("/server/" + server.getServer_uuid().toString(), json);
 		MGLogger.info("update server: " + json);
+		server = (ServerInstance)JSONParser.getInstance().toObject(json, ServerInstance.class);
+		MGLogger.info("Server: " + server.getServer_uuid());
+
+		return server;
+	}
+	
+	public ServerInstance createServer(ServerInstance server) {
+		String json = JSONParser.getInstance().toJSONString(server);
+		json = post("/server/", json);
+		MGLogger.info("create server: " + json);
 		server = (ServerInstance)JSONParser.getInstance().toObject(json, ServerInstance.class);
 		MGLogger.info("Server: " + server.getServer_uuid());
 
@@ -652,6 +662,70 @@ public class TheCraftCloudDelegate {
 			System.err.println("Não encontrou GameConfig: " + name);
 		}
 		return gc;
+	}
+
+	public ServerInstance findServerByName(String name) {
+		ServerInstance server = null;
+		String json = "{}";
+		json = get("/server/search/" + name);
+		System.out.println(json);
+		server = (ServerInstance)JSONParser.getInstance().toObject(json, ServerInstance.class);
+		if( server == null) {
+			System.err.println("Não encontrou Server: " + name);
+		}
+		return server;
+	}
+
+	public List<ServerInstance> findAllServerInstance() {
+        System.out.println("findAllServerInstance");
+        String json = get("/server/list");
+        System.out.println("findAllServerInstance response: " + json);
+        ObjectMapper mapper = new ObjectMapper();
+        List<ServerInstance> myObjects = null;
+		try {
+			myObjects = mapper.readValue(json, mapper.getTypeFactory().constructCollectionType(List.class, ServerInstance.class));
+		} catch (JsonParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return myObjects;
+	}
+
+	public GameInstance createGameConfigInstance(GameInstance gi) {
+		String json = JSONParser.getInstance().toJSONString(gi);
+		json = post("/gameinstance/", json);
+		MGLogger.info("create game instance: " + json);
+		gi = (GameInstance)JSONParser.getInstance().toObject(json, GameInstance.class);
+		MGLogger.info("GameInstance: " + gi.getGi_uuid() );
+
+		return gi;
+	}
+
+	public GameInstance findGameInstanceByUUID(String uuid) {
+		GameInstance domain = null;
+		
+		MGLogger.info("findGameInstanceByUUID request: " + uuid);
+		String json = get("/gameinstance", uuid);
+		MGLogger.info("findGameInstanceByUUID response: " + json);
+		domain = (GameInstance)JSONParser.getInstance().toObject(json, GameInstance.class);
+		
+		return domain;
+	}
+
+	public GameInstance updateServer(GameInstance gi) {
+		String json = JSONParser.getInstance().toJSONString(gi);
+		System.out.println(json);
+		json = post("/gameinstance/" + gi.getGi_uuid(), json);
+		MGLogger.info("update gameinstance: " + json);
+		gi = (GameInstance) JSONParser.getInstance().toObject(json, GameInstance.class);
+		MGLogger.info("GameInstance: " + gi.getGi_uuid().toString() );
+		return gi;
 	}
 	
 }

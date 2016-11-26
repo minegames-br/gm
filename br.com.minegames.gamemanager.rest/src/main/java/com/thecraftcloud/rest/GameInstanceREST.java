@@ -2,7 +2,6 @@ package com.thecraftcloud.rest;
 
 import java.util.Collection;
 import java.util.UUID;
-import java.util.logging.LogManager;
 
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -35,6 +34,25 @@ public class GameInstanceREST {
 		    return Response.ok(json, MediaType.APPLICATION_JSON).build();
 		} else {
 			return Response.status(Response.Status.CONFLICT).entity("Não é possivel criar o GameInstance com as informações fornecidas").build();
+		}
+	}
+	
+	@POST
+	@Path("/{uuid}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response update(@PathParam("uuid") String _uuid, String json) {
+		GameInstanceService service = new GameInstanceService();
+		System.out.println("json: " + json);
+		Logger.getLogger(this.getClass()).info("json: " + json);
+		GameInstance domain = service.find( UUID.fromString(_uuid) );
+		if( domain != null) {
+			domain = (GameInstance)JSONParser.getInstance().toObject(json, GameInstance.class);
+			service.merge(domain);
+			domain = service.find( UUID.fromString(_uuid) );
+			json = JSONParser.getInstance().toJSONString(domain);
+		    return Response.ok( json , MediaType.APPLICATION_JSON).build();
+		} else {
+			return Response.status(Response.Status.NOT_FOUND).entity("Arena não encontrado: " + _uuid).build();
 		}
 	}
 	
