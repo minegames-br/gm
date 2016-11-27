@@ -34,7 +34,7 @@ public class CreateGameInstanceTest {
 		
 		gi.setStatus(GameState.WAITING);
 
-		gi = delegate.createGameConfigInstance(gi);
+		gi = delegate.createGameInstance(gi);
 		
 	}
 

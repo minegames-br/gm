@@ -89,6 +89,16 @@ public class ServerREST {
 		return Response.ok(json, MediaType.APPLICATION_JSON).build();
 	}
 	
+	@GET
+	@Path("/list/online")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response findAllServerOnline() {
+		ServerService service = new ServerService();
+		Collection<ServerInstance> list = service.findAllOnline();
+		String json = JSONParser.getInstance().toJSONString(list);
+		return Response.ok(json, MediaType.APPLICATION_JSON).build();
+	}
+	
 	@DELETE
 	@Path("/{uuid}")
 	@Produces(MediaType.APPLICATION_JSON)

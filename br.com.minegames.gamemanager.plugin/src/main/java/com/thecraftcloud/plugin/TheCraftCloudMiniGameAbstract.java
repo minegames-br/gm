@@ -32,7 +32,7 @@ import com.thecraftcloud.core.domain.Arena;
 import com.thecraftcloud.core.domain.Game;
 import com.thecraftcloud.core.domain.GameArenaConfig;
 import com.thecraftcloud.core.domain.GameConfigInstance;
-import com.thecraftcloud.core.domain.GameConfigType;
+import com.thecraftcloud.core.domain.GameInstance;
 import com.thecraftcloud.core.domain.Local;
 import com.thecraftcloud.core.domain.ServerInstance;
 import com.thecraftcloud.core.export.ExportBlock;
@@ -50,6 +50,7 @@ import com.thecraftcloud.plugin.command.TriggerFireworkCommand;
 import com.thecraftcloud.plugin.listener.PlayerQuit;
 import com.thecraftcloud.plugin.listener.ServerListener;
 import com.thecraftcloud.plugin.service.ConfigService;
+import com.thecraftcloud.plugin.service.GameInstanceService;
 import com.thecraftcloud.plugin.service.PlayerService;
 import com.thecraftcloud.plugin.task.BuildArenaTask;
 import com.thecraftcloud.plugin.task.EndGameTask;
@@ -104,7 +105,10 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 
 	protected LocationUtil locationUtil = new LocationUtil();
 	protected PlayerService playerService = new PlayerService(this);
+	protected GameInstanceService giService = new GameInstanceService(this);
 	protected ConfigService configService;
+	
+	protected GameInstance gameInstance;
 
 	@Override
 	public void onEnable() {
@@ -166,11 +170,18 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 		}
 	}
 	
+	public void init(Local _lobby) {
+		World world = Bukkit.getWorld(this.arena.getName());
+		init(world, _lobby);
+	}
+	
 	public void init(World _world, Local _lobby) {
-		Arena arena = configService.getArena();
-		Game game = configService.getGame();
-		this.game = game;
-		this.arena = arena;
+		BukkitScheduler scheduler = getServer().getScheduler();
+
+		Arena _arena = configService.getArena();
+		Game _game = configService.getGame();
+		this.game = _game;
+		this.arena = _arena;
 		
 		this.world = _world;
 		this.lobby = Utils.toLocation(_world, _lobby);
@@ -178,6 +189,14 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 		this.endGameTask = new EndGameTask(this);
 		this.levelUpTask = new LevelUpTask(this);
 		this.myCloudCraftGame = new MyCloudCraftGame();
+
+		//Criar GameInstance com datas vazias e state WAITING
+		scheduler.runTaskAsynchronously(this, new Runnable() {
+			public void run() {
+				gameInstance = giService.startGameInstance(configService.getServerInstance(), game, arena);
+			}
+		});
+		
 		
 		try {
 			Bukkit.getLogger().info("Loading offline config");
@@ -190,7 +209,6 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 		this.startCountDownTask = new StartCoundDownTask(this);
 		this.startGameTask = new StartGameTask(this);
 
-		BukkitScheduler scheduler = getServer().getScheduler();
 		this.startGameThreadID = scheduler.scheduleSyncRepeatingTask(this, this.startGameTask, 0L, 20L);
 		this.startCountDownThreadID = scheduler.scheduleSyncRepeatingTask(this, this.startCountDownTask, 0L, 25L);
 
@@ -563,4 +581,13 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 		return this.configService;
 	}
 
+	public GameInstance getGameInstance() {
+		return gameInstance;
+	}
+
+	public void setGameInstance(GameInstance gameInstance) {
+		this.gameInstance = gameInstance;
+	}
+
+	
 }

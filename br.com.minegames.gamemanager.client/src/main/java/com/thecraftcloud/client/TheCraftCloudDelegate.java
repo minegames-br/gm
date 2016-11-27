@@ -697,7 +697,7 @@ public class TheCraftCloudDelegate {
 		return myObjects;
 	}
 
-	public GameInstance createGameConfigInstance(GameInstance gi) {
+	public GameInstance createGameInstance(GameInstance gi) {
 		String json = JSONParser.getInstance().toJSONString(gi);
 		json = post("/gameinstance/", json);
 		MGLogger.info("create game instance: " + json);
@@ -718,7 +718,7 @@ public class TheCraftCloudDelegate {
 		return domain;
 	}
 
-	public GameInstance updateServer(GameInstance gi) {
+	public GameInstance updateGameInstance(GameInstance gi) {
 		String json = JSONParser.getInstance().toJSONString(gi);
 		System.out.println(json);
 		json = post("/gameinstance/" + gi.getGi_uuid(), json);
@@ -726,6 +726,55 @@ public class TheCraftCloudDelegate {
 		gi = (GameInstance) JSONParser.getInstance().toObject(json, GameInstance.class);
 		MGLogger.info("GameInstance: " + gi.getGi_uuid().toString() );
 		return gi;
+	}
+
+	public List<GameInstance> findAllAvailableGameInstance() {
+        System.out.println("findAllAvailableGameInstance request");
+        String json = get("/gameinstance/list/open");
+        System.out.println("findAllAvailableGameInstance response: " + json);
+        ObjectMapper mapper = new ObjectMapper();
+        List<GameInstance> myObjects = null;
+		try {
+			myObjects = mapper.readValue(json, mapper.getTypeFactory().constructCollectionType(List.class, GameInstance.class));
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return myObjects;
+	}
+
+	public GameInstance cancelGameInstance(GameInstance gi) {
+		String json = JSONParser.getInstance().toJSONString(gi);
+		System.out.println(json);
+		json = post("/gameinstance/" + gi.getGi_uuid() + "/cancel", json);
+		MGLogger.info("cancel gameinstance: " + json);
+		gi = (GameInstance) JSONParser.getInstance().toObject(json, GameInstance.class);
+		MGLogger.info("GameInstance: " + gi.getGi_uuid().toString() );
+		return gi;
+	}
+
+	public List<ServerInstance> findAllServerInstanceOnline() {
+        System.out.println("findAllServerInstanceOnline");
+        String json = get("/server/list/online");
+        System.out.println("findAllServerInstanceOnline response: " + json);
+        ObjectMapper mapper = new ObjectMapper();
+        List<ServerInstance> myObjects = null;
+		try {
+			myObjects = mapper.readValue(json, mapper.getTypeFactory().constructCollectionType(List.class, ServerInstance.class));
+		} catch (JsonParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return myObjects;
 	}
 	
 }

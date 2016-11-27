@@ -35,6 +35,7 @@ import com.thecraftcloud.core.export.ExportBlock;
 import com.thecraftcloud.core.hologram.HologramUtil;
 import com.thecraftcloud.core.multiverse.MultiVerseWrapper;
 import com.thecraftcloud.core.util.LocationUtil;
+import com.thecraftcloud.core.util.Utils;
 import com.thecraftcloud.core.util.title.TitleUtil;
 import com.thecraftcloud.plugin.command.TheCraftCloudCommand;
 import com.thecraftcloud.plugin.listener.BlockBreakListener;
@@ -42,6 +43,7 @@ import com.thecraftcloud.plugin.listener.PlayerOnClick;
 import com.thecraftcloud.plugin.service.ConfigService;
 import com.thecraftcloud.plugin.task.ArenaSetupTask;
 import com.thecraftcloud.plugin.task.BuildArenaTask;
+import com.thecraftcloud.plugin.task.TheCraftCloudAdminTask;
 
 public class TheCraftCloudPlugin extends JavaPlugin {
 
@@ -89,6 +91,9 @@ public class TheCraftCloudPlugin extends JavaPlugin {
 
 	private ArenaSetupTask arenaSetupTask;
 	private int arenaSetupTaskThreadID;
+	private TheCraftCloudAdminTask tccAdminTask;
+	private int tccAdminTaskThreadID;
+
 	private LocationUtil locationUtil = new LocationUtil();
 	private boolean setup;
 	
@@ -114,6 +119,18 @@ public class TheCraftCloudPlugin extends JavaPlugin {
 		getCommand("tcc").setExecutor(new TheCraftCloudCommand(this));
 		
 	    registerListeners();
+
+	    BukkitScheduler scheduler = Bukkit.getScheduler();
+	    this.tccAdminTask = new TheCraftCloudAdminTask(this);
+		this.tccAdminTaskThreadID = scheduler.scheduleSyncRepeatingTask(this, this.tccAdminTask, 1L, 600L);
+	}
+	
+	@Override
+	public void onDisable() {
+	    BukkitScheduler scheduler = Bukkit.getScheduler();
+		scheduler.cancelTask( this.tccAdminTaskThreadID );
+		
+		Bukkit.getConsoleSender().sendMessage(Utils.color("&3TheCraftCloudPlugin disabled successfully"));
 	}
 	
 	private void registerListeners() {

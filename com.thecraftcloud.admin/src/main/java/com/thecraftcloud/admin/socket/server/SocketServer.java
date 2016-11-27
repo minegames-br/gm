@@ -6,7 +6,7 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import com.thecraftcloud.admin.action.GetGameAction;
+import com.thecraftcloud.admin.action.GetGameInstanceAction;
 import com.thecraftcloud.admin.action.GrantOperatorAction;
 import com.thecraftcloud.admin.action.PingServerAction;
 import com.thecraftcloud.core.admin.domain.ActionDTO;
@@ -82,7 +82,7 @@ public class SocketServer {
     		PingServerAction action = new PingServerAction();
     		responseDTO = action.execute(actionDTO);
     	} else if(actionDTO.getName().equals(ActionDTO.GET_GAME)) {
-    		GetGameAction action = new GetGameAction();
+    		GetGameInstanceAction action = new GetGameInstanceAction();
     		responseDTO = action.execute(actionDTO);
     	} else {
 			responseDTO = ResponseDTO.actionNotAllowed();

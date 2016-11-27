@@ -5,6 +5,7 @@ import org.bukkit.command.defaults.OpCommand;
 
 import com.thecraftcloud.core.admin.domain.ActionDTO;
 import com.thecraftcloud.core.admin.domain.ResponseDTO;
+import com.thecraftcloud.core.admin.domain.ResponseType;
 
 public class GrantOperatorAction extends Action {
 
@@ -19,6 +20,7 @@ public class GrantOperatorAction extends Action {
 		
 		ResponseDTO responseDTO = new ResponseDTO();
 		responseDTO.setMessage("Operator Granted to " + dto.getPlayer().getNickName() + " result " + result);
+		responseDTO.setType(ResponseType.TEXT);
 		responseDTO.setResult(true);
 		return responseDTO;
 	}

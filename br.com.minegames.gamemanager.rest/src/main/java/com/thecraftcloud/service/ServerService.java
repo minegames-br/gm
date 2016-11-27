@@ -38,6 +38,14 @@ public class ServerService extends Service {
 		return list;
 	}
 
+	public Collection<ServerInstance> findAllOnline() {
+		startTransaction();
+		Query query = em.createQuery("SELECT si FROM ServerInstance si ");
+		Collection<ServerInstance> list = (Collection<ServerInstance>) query.getResultList();
+		commitTransaction();
+		return list;
+	}
+
 	public void delete(ServerInstance server) {
 		startTransaction();
 		em.remove(server);

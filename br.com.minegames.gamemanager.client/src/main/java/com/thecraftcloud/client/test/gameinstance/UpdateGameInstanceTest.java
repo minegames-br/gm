@@ -23,7 +23,7 @@ public class UpdateGameInstanceTest {
 		gi.setStartTime(Calendar.getInstance());
 		gi.setEndTime(null);
 		gi.setStatus(GameState.RUNNING);
-		gi = delegate.updateServer(gi);
+		gi = delegate.updateGameInstance(gi);
 	}
 
 

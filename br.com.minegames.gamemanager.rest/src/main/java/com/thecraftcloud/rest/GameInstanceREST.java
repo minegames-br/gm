@@ -52,7 +52,61 @@ public class GameInstanceREST {
 			json = JSONParser.getInstance().toJSONString(domain);
 		    return Response.ok( json , MediaType.APPLICATION_JSON).build();
 		} else {
-			return Response.status(Response.Status.NOT_FOUND).entity("Arena não encontrado: " + _uuid).build();
+			return Response.status(Response.Status.NOT_FOUND).entity("GameInstance não encontrado: " + _uuid).build();
+		}
+	}
+	
+	@POST
+	@Path("/{uuid}/cancel")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response cancelGameInstance(@PathParam("uuid") String _uuid, String json) {
+		GameInstanceService service = new GameInstanceService();
+		System.out.println("json: " + json);
+		Logger.getLogger(this.getClass()).info("json: " + json);
+		GameInstance domain = service.find( UUID.fromString(_uuid) );
+		if( domain != null) {
+			domain = (GameInstance)JSONParser.getInstance().toObject(json, GameInstance.class);
+			domain = service.cancelGameInstance(domain);
+			json = JSONParser.getInstance().toJSONString(domain);
+		    return Response.ok( json , MediaType.APPLICATION_JSON).build();
+		} else {
+			return Response.status(Response.Status.NOT_FOUND).entity("GameInstance não encontrado: " + _uuid).build();
+		}
+	}
+	
+	@POST
+	@Path("/{uuid}/over")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response setGameOver(@PathParam("uuid") String _uuid, String json) {
+		GameInstanceService service = new GameInstanceService();
+		System.out.println("json: " + json);
+		Logger.getLogger(this.getClass()).info("json: " + json);
+		GameInstance domain = service.find( UUID.fromString(_uuid) );
+		if( domain != null) {
+			domain = (GameInstance)JSONParser.getInstance().toObject(json, GameInstance.class);
+			domain = service.setGameInstanceOver(domain);
+			json = JSONParser.getInstance().toJSONString(domain);
+		    return Response.ok( json , MediaType.APPLICATION_JSON).build();
+		} else {
+			return Response.status(Response.Status.NOT_FOUND).entity("GameInstance não encontrado: " + _uuid).build();
+		}
+	}
+	
+	@POST
+	@Path("/{uuid}/start")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response startGameInstance(@PathParam("uuid") String _uuid, String json) {
+		GameInstanceService service = new GameInstanceService();
+		System.out.println("json: " + json);
+		Logger.getLogger(this.getClass()).info("json: " + json);
+		GameInstance domain = service.find( UUID.fromString(_uuid) );
+		if( domain != null) {
+			domain = (GameInstance)JSONParser.getInstance().toObject(json, GameInstance.class);
+			domain = service.startGameInstance(domain);
+			json = JSONParser.getInstance().toJSONString(domain);
+		    return Response.ok( json , MediaType.APPLICATION_JSON).build();
+		} else {
+			return Response.status(Response.Status.NOT_FOUND).entity("GameInstance não encontrado: " + _uuid).build();
 		}
 	}
 	
@@ -77,6 +131,16 @@ public class GameInstanceREST {
 	public Response findAllGames() {
 		GameInstanceService service = new GameInstanceService();
 		Collection<GameInstance> list = service.findAll();
+		String json = JSONParser.getInstance().toJSONString(list);
+		return Response.ok(json, MediaType.APPLICATION_JSON).build();
+	}
+	
+	@GET
+	@Path("/list/open")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response findAllOpenGames() {
+		GameInstanceService service = new GameInstanceService();
+		Collection<GameInstance> list = service.findAllOpenGames();
 		String json = JSONParser.getInstance().toJSONString(list);
 		return Response.ok(json, MediaType.APPLICATION_JSON).build();
 	}

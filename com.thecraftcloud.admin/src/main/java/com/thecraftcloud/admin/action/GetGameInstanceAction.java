@@ -6,11 +6,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.thecraftcloud.core.admin.domain.ActionDTO;
 import com.thecraftcloud.core.admin.domain.ResponseDTO;
+import com.thecraftcloud.core.admin.domain.ResponseType;
 import com.thecraftcloud.core.domain.Game;
+import com.thecraftcloud.core.domain.GameInstance;
+import com.thecraftcloud.core.json.JSONParser;
 import com.thecraftcloud.domain.GameState;
 import com.thecraftcloud.plugin.TheCraftCloudMiniGameAbstract;
 
-public class GetGameAction extends Action {
+public class GetGameInstanceAction extends Action {
 
 	@Override
 	public ResponseDTO execute(ActionDTO dto) {
@@ -18,6 +21,8 @@ public class GetGameAction extends Action {
 		Plugin[] plugins = Bukkit.getPluginManager().getPlugins();
 		GameState state = null;
 		Game game = null;
+		GameInstance gi = null;
+		boolean success = false;
 		for(Plugin plugin: plugins) {
 			if(! (plugin instanceof JavaPlugin) ) {
 				continue;
@@ -27,16 +32,35 @@ public class GetGameAction extends Action {
 				TheCraftCloudMiniGameAbstract miniGame = (TheCraftCloudMiniGameAbstract)javaPlugin;
 				state = miniGame.getMyCloudCraftGame().getState();
 				game = miniGame.getConfigService().getGame();
+				gi = miniGame.getGameInstance();
+				success = true;
 			}
 		}
 		
 		ResponseDTO responseDTO = new ResponseDTO();
-		if(game != null) { 
-			responseDTO.setMessage( game.getName() + ":" + state.name() );
-			responseDTO.setResult(true);
-		} else {
-			responseDTO.setMessage( "TheCraftCloudGame not installed?" );
+		if(gi == null) {
+			responseDTO.setMessage( "GameInstance is null" );
+			responseDTO.setType(ResponseType.TEXT);
 			responseDTO.setResult(false);
+		} else {
+		
+			if(game != null) { 
+				String json = JSONParser.getInstance().toJSONString(gi);
+				responseDTO.setMessage("GameInstance: " + gi.getGi_uuid().toString() );
+				responseDTO.setJson( json );
+				responseDTO.setType(ResponseType.JSON);
+				responseDTO.setResult(true);
+			} else {
+				responseDTO.setMessage( "TheCraftCloudGame not installed?" );
+				responseDTO.setType(ResponseType.TEXT);
+				responseDTO.setResult(false);
+			}
+			
+		}
+		if(success) {
+			responseDTO.setCode(ResponseDTO.ADM_SUCCESS);
+		} else {
+			responseDTO.setCode(ResponseDTO.ADM_FAILURE);
 		}
 		return responseDTO;
 	}
