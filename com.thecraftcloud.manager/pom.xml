@@ -1,0 +1,82 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.thecraftcloud.manager</groupId>
+  <artifactId>com.thecraftcloud.manager</artifactId>
+  <version>1.0.0</version>
+  <name>com.thecraftcloud.manager</name>
+	<dependencies>
+
+		<!-- https://mvnrepository.com/artifact/org.quartz-scheduler/quartz -->
+		<dependency>
+		    <groupId>org.quartz-scheduler</groupId>
+		    <artifactId>quartz</artifactId>
+		    <version>2.2.3</version>
+		</dependency>
+
+  		<dependency>
+  			<groupId>com.thecraftcloud.core</groupId>
+  			<artifactId>com.thecraftcloud.core</artifactId>
+  			<version>1.0.0</version>
+  		</dependency>
+
+  		<dependency>
+  			<groupId>com.thecraftcloud.client</groupId>
+  			<artifactId>com.thecraftcloud.client</artifactId>
+  			<version>1.0.0</version>
+  		</dependency>
+
+  		<dependency>
+  			<groupId>com.thecraftcloud.admin.client</groupId>
+  			<artifactId>com.thecraftcloud.admin.client</artifactId>
+  			<version>1.0.0</version>
+  		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+		<dependency>
+		    <groupId>org.slf4j</groupId>
+		    <artifactId>slf4j-api</artifactId>
+		    <version>1.7.21</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-simple -->
+		<dependency>
+		    <groupId>org.slf4j</groupId>
+		    <artifactId>slf4j-simple</artifactId>
+		    <version>1.7.21</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>javax.ws.rs</groupId>
+		    <artifactId>javax.ws.rs-api</artifactId>
+		    <version>2.0.1</version>
+		</dependency>
+
+		<dependency>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-core</artifactId>
+		    <version>2.8.3</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-databind</artifactId>
+		    <version>2.8.3</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.fasterxml.jackson.jaxrs</groupId>
+		    <artifactId>jackson-jaxrs-json-provider</artifactId>
+		    <version>2.8.3</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.4</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-multipart-provider</artifactId>
+			<version>2.2.1.GA</version>
+		</dependency>
+	</dependencies>
+</project>
