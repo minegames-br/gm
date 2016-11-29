@@ -11,7 +11,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 
 import com.thecraftcloud.gungame.GameController;
 import com.thecraftcloud.gungame.service.GunGamePlayerService;
-import com.thecraftcloud.plugin.service.EntityService;
+import com.thecraftcloud.minigame.service.EntityService;
 
 public class PlayerDeath implements Listener {
 

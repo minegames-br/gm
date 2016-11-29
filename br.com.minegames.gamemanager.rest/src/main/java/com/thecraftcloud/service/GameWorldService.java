@@ -10,11 +10,14 @@ import javax.persistence.Query;
 
 import org.jboss.logging.Logger;
 
+import com.thecraftcloud.core.domain.GameConfig;
 import com.thecraftcloud.core.domain.GameWorld;
 import com.thecraftcloud.dao.GameWorldDAO;
 
 public class GameWorldService extends Service {
 
+	public static final String WORLD_PATH = "/opt/mg/worlds/";
+	
 	public UUID create(GameWorld domain) {
 		startTransaction();
 		GameWorldDAO dao = new GameWorldDAO(em);
@@ -45,6 +48,20 @@ public class GameWorldService extends Service {
 		em.remove(domain);
 		commitTransaction();
 		Logger.getLogger(GameWorldService.class).info("uuid: " + domain.getWorld_uuid() + " deletado");
+	}
+
+	public GameWorld findByName(String name) {
+		startTransaction();
+		Query query = em.createQuery("SELECT gw FROM GameWorld gw where gw.name = :_name");
+		query.setParameter("_name", name);
+		GameWorld gw = null;
+		try{
+			gw = (GameWorld)query.getSingleResult();
+		}catch(Exception e) {
+			return null;
+		}
+		commitTransaction();
+		return gw;
 	}
 	
 }

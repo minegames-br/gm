@@ -4,6 +4,7 @@ public class ResponseDTO {
 	
 	public static final String ADM_SUCCESS = "ADM-000-001";
 	public static final String ADM_FAILURE = "ADM-999-001";
+	public static final String ADM_UNABLE_TO_COMPLETE_ACTION = "ADM-999-002";
 
 	private Boolean result;
 	private String code;
@@ -56,6 +57,22 @@ public class ResponseDTO {
 	}
 	public void setCode(String code) {
 		this.code = code;
+	}
+	public static ResponseDTO incompleteRequest(String message ) {
+		ResponseDTO dto = new ResponseDTO();
+		dto.setMessage( message );
+		dto.setType(ResponseType.TEXT);
+		dto.setCode(ADM_SUCCESS);
+		dto.setResult(false);
+		return dto;
+	}
+	public static ResponseDTO unableToCompleteAction(String message) {
+		ResponseDTO dto = new ResponseDTO();
+		dto.setMessage( message );
+		dto.setType(ResponseType.TEXT);
+		dto.setCode(ADM_UNABLE_TO_COMPLETE_ACTION);
+		dto.setResult(false);
+		return dto;
 	}
 	
 }

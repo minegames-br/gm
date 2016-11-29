@@ -41,7 +41,7 @@ public class MineCraftPlayerService extends Service {
 	
 	public Collection<MineCraftPlayer> findAll() {
 		startTransaction();
-		Query query = em.createQuery("SELECT i FROM MineCraftPlayer i");
+		Query query = em.createQuery("SELECT p FROM MineCraftPlayer p");
 		Collection<MineCraftPlayer> list = (Collection<MineCraftPlayer>) query.getResultList();
 		commitTransaction();
 		return list;

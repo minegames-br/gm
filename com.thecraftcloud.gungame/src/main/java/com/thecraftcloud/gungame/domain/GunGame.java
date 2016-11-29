@@ -1,8 +1,8 @@
 package com.thecraftcloud.gungame.domain;
 
-import com.thecraftcloud.domain.GameState;
-import com.thecraftcloud.domain.Level;
-import com.thecraftcloud.domain.MyCloudCraftGame;
+import com.thecraftcloud.minigame.domain.GameState;
+import com.thecraftcloud.minigame.domain.Level;
+import com.thecraftcloud.minigame.domain.MyCloudCraftGame;
 
 public class GunGame extends MyCloudCraftGame {
 

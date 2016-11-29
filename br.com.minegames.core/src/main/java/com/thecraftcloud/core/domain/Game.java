@@ -22,6 +22,8 @@ public class Game extends TransferObject {
 	private String name;
 	private String description;
 	
+	private String pluginName;
+	
 	public UUID getGame_uuid() {
 		return game_uuid;
 	}
@@ -39,6 +41,12 @@ public class Game extends TransferObject {
 	}
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	public String getPluginName() {
+		return pluginName;
+	}
+	public void setPluginName(String pluginName) {
+		this.pluginName = pluginName;
 	}
 	
 }

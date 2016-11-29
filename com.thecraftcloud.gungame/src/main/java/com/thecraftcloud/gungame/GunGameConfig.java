@@ -5,7 +5,7 @@ import java.util.List;
 import org.bukkit.Bukkit;
 
 import com.thecraftcloud.core.domain.GameConfigInstance;
-import com.thecraftcloud.plugin.TheCraftCloudConfig;
+import com.thecraftcloud.minigame.TheCraftCloudConfig;
 
 public class GunGameConfig extends TheCraftCloudConfig {
 	

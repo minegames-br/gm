@@ -1,19 +1,17 @@
 package com.thecraftcloud.gungame.service;
 
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.bukkit.Bukkit;
 import org.bukkit.block.Chest;
-import org.bukkit.plugin.java.JavaPlugin;
 
-import com.thecraftcloud.client.TheCraftCloudDelegate;
-import com.thecraftcloud.client.exception.InvalidRegistrationException;
+import com.thecraftcloud.core.domain.GameArenaConfig;
 import com.thecraftcloud.core.domain.GameConfigInstance;
-import com.thecraftcloud.core.util.BlockManipulationUtil;
 import com.thecraftcloud.core.util.Utils;
 import com.thecraftcloud.gungame.GunGameConfig;
 import com.thecraftcloud.gungame.domain.GunGamePlayer;
-import com.thecraftcloud.plugin.service.ConfigService;
+import com.thecraftcloud.minigame.service.ConfigService;
 
 public class GunGameConfigService {
 	private GunGameConfig ggConfig = GunGameConfig.getInstance();
@@ -46,9 +44,10 @@ public class GunGameConfigService {
 		List<GameConfigInstance> gciList = this.configService.getGameConfigInstanceGroup(GunGameConfig.GUNGAME_LEVEL_GROUP);
 		ggConfig.setGunGameLevelList(gciList);
 		
-		//varrer o mapa para encontrar Chests
-		List<Chest> chestList = new BlockManipulationUtil().getArenaChests(Bukkit.getWorld(this.configService.getArena().getName()), this.configService.getArena() );
-		this.setChestList(chestList);
+		//setar spawn points
+		CopyOnWriteArraySet<GameArenaConfig> gacSpawnPoints = this.configService.getGameArenaConfigByGroup(GunGameConfig.PLAYER_SPAWN);
+		this.configService.getConfig().setSpawnPoints(gacSpawnPoints);
+		
 	}
 
 	public void setChestList(List<Chest> chestList) {

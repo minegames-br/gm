@@ -2,6 +2,7 @@ package com.thecraftcloud.gungame.service;
 
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -13,11 +14,11 @@ import com.thecraftcloud.core.domain.GameArenaConfig;
 import com.thecraftcloud.core.domain.GameConfigInstance;
 import com.thecraftcloud.core.domain.Item;
 import com.thecraftcloud.core.util.MaterialUtil;
-import com.thecraftcloud.domain.GamePlayer;
 import com.thecraftcloud.gungame.domain.GunGamePlayer;
-import com.thecraftcloud.plugin.TheCraftCloudMiniGameAbstract;
-import com.thecraftcloud.plugin.service.ConfigService;
-import com.thecraftcloud.plugin.service.PlayerService;
+import com.thecraftcloud.minigame.TheCraftCloudMiniGameAbstract;
+import com.thecraftcloud.minigame.domain.GamePlayer;
+import com.thecraftcloud.minigame.service.ConfigService;
+import com.thecraftcloud.minigame.service.PlayerService;
 
 public class GunGamePlayerService extends PlayerService {
 	
@@ -81,10 +82,12 @@ public class GunGamePlayerService extends PlayerService {
 
 	public void teleportPlayersToArena() {
 		int count = 0;
-		List<GameArenaConfig> gacList = ConfigService.getInstance().getSpawnPoints();
+		CopyOnWriteArraySet<GameArenaConfig> gacList = ConfigService.getInstance().getSpawnPoints();
+		GameArenaConfig[] gacArray = (GameArenaConfig[])gacList.toArray();
+		
 		for(GamePlayer gp: this.getLivePlayers() ) {
-			GameArenaConfig gac = gacList.get(count);
-			Location spawn = locationUtil.toLocation(this.miniGame.getWorld(), gac.getLocalValue() ); 
+			GameArenaConfig gac = gacArray[count];
+			Location spawn = locationUtil.toLocation(this.configService.getWorld(), gac.getLocalValue() ); 
 			gp.getPlayer().teleport(spawn);
 			count++;
 		}
@@ -106,11 +109,12 @@ public class GunGamePlayerService extends PlayerService {
 	}
 
 	public void spawnDeadPlayer(Player player) {
-		List<GameArenaConfig> gacList = ConfigService.getInstance().getSpawnPoints();
+		CopyOnWriteArraySet<GameArenaConfig> gacList = ConfigService.getInstance().getSpawnPoints();
+		GameArenaConfig[] gacArray = (GameArenaConfig[])gacList.toArray();
 		int random = gacList.size()-1;
 		random = new Random().nextInt(random);
-		GameArenaConfig gac = gacList.get(random);
-		Location spawn = locationUtil.toLocation(this.miniGame.getWorld(), gac.getLocalValue() ); 
+		GameArenaConfig gac = gacArray[random];
+		Location spawn = locationUtil.toLocation(this.configService.getWorld(), gac.getLocalValue() ); 
 		player.teleport(spawn);
 	}
 

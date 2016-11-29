@@ -1,6 +1,6 @@
 package com.thecraftcloud.gungame.domain;
 
-import com.thecraftcloud.domain.GamePlayer;
+import com.thecraftcloud.minigame.domain.GamePlayer;
 
 public class GunGamePlayer extends GamePlayer {
 

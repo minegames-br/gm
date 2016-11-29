@@ -6,9 +6,8 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import com.thecraftcloud.admin.action.GetGameInstanceAction;
-import com.thecraftcloud.admin.action.GrantOperatorAction;
-import com.thecraftcloud.admin.action.PingServerAction;
+import com.thecraftcloud.admin.action.Action;
+import com.thecraftcloud.admin.action.ActionFactory;
 import com.thecraftcloud.core.admin.domain.ActionDTO;
 import com.thecraftcloud.core.admin.domain.ResponseDTO;
 import com.thecraftcloud.core.json.JSONParser;
@@ -49,7 +48,12 @@ public class SocketServer {
             ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
             //write object to Socket
             
-            json = reply(json);
+            try{
+            	json = reply(json);
+            }catch(Exception e) {
+            	e.printStackTrace();
+            	json = createExceptionResponse(e);
+            }
             
             oos.writeObject(json);
             //close resources
@@ -59,7 +63,14 @@ public class SocketServer {
         }
     }
     
-    public String reply( String json ) {
+    private String createExceptionResponse(Exception e) {
+    	ResponseDTO responseDTO = ResponseDTO.unableToCompleteAction("The action generated an exception: " + e.getMessage() );
+    	String response = JSONParser.getInstance().toJSONString(responseDTO);
+
+		return response;
+	}
+
+	public String reply( String json ) {
     	String response;
     	
     	ActionDTO actionDTO = (ActionDTO)JSONParser.getInstance().toObject(json, ActionDTO.class);
@@ -69,8 +80,16 @@ public class SocketServer {
     		return response;
     	}
     	
-    	ResponseDTO responseDTO = new ResponseDTO();
+    	Action action = ActionFactory.getInstance().createAction(actionDTO.getName());
+
+    	ResponseDTO responseDTO;
+    	if( action != null) {
+    		responseDTO = action.execute(actionDTO);
+    	} else { 
+			responseDTO = ResponseDTO.actionNotAllowed();
+    	}
     	
+    	/*
     	if(actionDTO.getName().equals(ActionDTO.GRANT_OPERATOR_ACTION)) {
     		GrantOperatorAction action = new GrantOperatorAction();
     		if( actionDTO.getPlayer() == null || actionDTO.getPlayer().getNickName() == null || actionDTO.getPlayer().getNickName().equals("")) {
@@ -87,6 +106,7 @@ public class SocketServer {
     	} else {
 			responseDTO = ResponseDTO.actionNotAllowed();
     	}
+    	*/
     	
     	response = JSONParser.getInstance().toJSONString(responseDTO);
     	

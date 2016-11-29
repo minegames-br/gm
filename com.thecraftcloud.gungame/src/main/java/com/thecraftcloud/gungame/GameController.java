@@ -1,24 +1,27 @@
 package com.thecraftcloud.gungame;
 
+import java.util.List;
+
 import org.bukkit.Bukkit;
-import org.bukkit.World;
+import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scoreboard.DisplaySlot;
 
-import com.thecraftcloud.core.domain.Local;
 import com.thecraftcloud.core.logging.MGLogger;
+import com.thecraftcloud.core.util.BlockManipulationUtil;
 import com.thecraftcloud.core.util.Utils;
-import com.thecraftcloud.domain.GamePlayer;
 import com.thecraftcloud.gungame.domain.GunGame;
 import com.thecraftcloud.gungame.domain.GunGamePlayer;
 import com.thecraftcloud.gungame.listener.PlayerDeath;
 import com.thecraftcloud.gungame.service.GunGameConfigService;
 import com.thecraftcloud.gungame.service.GunGamePlayerService;
 import com.thecraftcloud.gungame.task.SpawnBonusItemTask;
-import com.thecraftcloud.plugin.TheCraftCloudConfig;
-import com.thecraftcloud.plugin.TheCraftCloudMiniGameAbstract;
+import com.thecraftcloud.minigame.TheCraftCloudConfig;
+import com.thecraftcloud.minigame.TheCraftCloudMiniGameAbstract;
+import com.thecraftcloud.minigame.domain.GamePlayer;
+import com.thecraftcloud.minigame.domain.MyCloudCraftGame;
 
 /**
  * Created by joaoemilio@gmail.com on Nov 26, 2016
@@ -28,18 +31,14 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 	private Integer spawnBonusItemThreadID;
 	private SpawnBonusItemTask spawnBonusItemTask;
 	private GunGamePlayerService gunGamePlayerService = new GunGamePlayerService(this);
+	private GunGameConfigService gunGameConfigService = GunGameConfigService.getInstance();
 
     @Override
     public void onEnable() {
-
 		super.onEnable();
 		
-    	//ao criar, o jogo fica imediatamente esperando jogadores
-		this.myCloudCraftGame = new GunGame();
 		spawnBonusItemTask = new SpawnBonusItemTask(this);
 		
-		//Carregar configuracoes especificas do Gun Game
-		GunGameConfigService.getInstance().loadConfig();
     }
 
 	@Override
@@ -54,24 +53,31 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 		// Iniciar threads do jogo
 		BukkitScheduler scheduler = getServer().getScheduler();
 		this.spawnBonusItemThreadID = scheduler.scheduleSyncRepeatingTask(this, this.spawnBonusItemTask, 200L, 200L);
+
+		//varrer o mapa para encontrar Chests
+		List<Chest> chestList = new BlockManipulationUtil().getArenaChests(Bukkit.getWorld(this.configService.getArena().getName()), this.configService.getArena() );
+		this.gunGameConfigService .setChestList(chestList);
 	}
 	
 	@Override
-	public void init(World _world, Local _lobby) {
-		super.init(_world, _lobby);
+	public void init() {
+		super.init();
+		
+		//Carregar configuracoes especificas do Gun Game
+		GunGameConfigService.getInstance().loadConfig();
 	}
 	
 	@Override
 	public boolean shouldEndGame() {
     	//Terminar o jogo caso não tenha mais jogadores
-    	if( this.getLivePlayers().size() == 0  && this.myCloudCraftGame.isStarted()) {
+    	if( this.getLivePlayers().size() == 0  && this.configService.getMyCloudCraftGame().isStarted()) {
             Bukkit.getConsoleSender().sendMessage(Utils.color("&6EndGameTask - No more players"));
             return true;
     	}
     	
     	//Terminar o jogo caso tenha alcançado o limite de tempo
     	long currentTime = System.currentTimeMillis();
-    	long duration = ( currentTime - this.getMyCloudCraftGame().getGameStartTime() ) / 1000;
+    	long duration = ( currentTime - this.configService.getMyCloudCraftGame().getGameStartTime() ) / 1000;
 		this.gameDuration = (Integer)this.configService.getGameConfigInstance(TheCraftCloudConfig.GAME_DURATION_IN_SECONDS);
 
     	if( duration >= this.gameDuration  ) {
@@ -88,8 +94,8 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 	@Override
 	public void endGame() {
 		super.endGame();
-		if (this.myCloudCraftGame.isStarted()) {
-			this.myCloudCraftGame.endGame();
+		if (this.configService.getMyCloudCraftGame().isStarted()) {
+			this.configService.getMyCloudCraftGame().endGame();
 		}
 		MGLogger.info("Game.endGame");
 
@@ -125,6 +131,11 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 		super.registerListeners();
 		PluginManager pm = Bukkit.getPluginManager();
 		pm.registerEvents(new PlayerDeath(this), this);
+	}
+
+	@Override
+	public MyCloudCraftGame createMyCloudCraftGame() {
+		return new GunGame();
 	}
 
 

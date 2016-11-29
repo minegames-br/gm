@@ -35,10 +35,22 @@
   		</dependency>
 
   		<dependency>
-  			<groupId>com.thecraftcloud.plugin</groupId>
-  			<artifactId>com.thecraftcloud.plugin</artifactId>
+  			<groupId>com.thecraftcloud.minigame</groupId>
+  			<artifactId>com.thecraftcloud.minigame</artifactId>
   			<version>1.0.0</version>
   		</dependency>
 
+  		<dependency>
+  			<groupId>com.thecraftcloud.client</groupId>
+  			<artifactId>com.thecraftcloud.client</artifactId>
+  			<version>1.0.0</version>
+  		</dependency>
+
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-multipart-provider</artifactId>
+			<version>2.2.1.GA</version>
+		</dependency>
+		
     </dependencies>
 </project>

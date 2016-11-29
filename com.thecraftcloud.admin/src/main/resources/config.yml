@@ -1,3 +1,13 @@
 thecraftcloud:
     admin:
-       port: 65000
+        port: 65000
+        actions:
+        - get-game:com.thecraftcloud.admin.action.GetGameInstanceAction
+        - download-world:com.thecraftcloud.admin.action.DownloadWorldAction
+        - execute-command:com.thecraftcloud.admin.action.ExecuteCommandAction
+        - grant-operator:com.thecraftcloud.admin.action.GrantOperatorAction
+        - ping-server:com.thecraftcloud.admin.action.PingServerAction                
+        - prepare-game:com.thecraftcloud.admin.action.PrepareGameAction
+        - deploy-game:com.thecraftcloud.admin.action.DeployGameAction        
+        - deploy-arena:com.thecraftcloud.admin.action.DeployArenaAction
+        - join-game:com.thecraftcloud.admin.action.JoinGameAction

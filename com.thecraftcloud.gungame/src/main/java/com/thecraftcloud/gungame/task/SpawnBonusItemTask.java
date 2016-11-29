@@ -9,10 +9,10 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import com.thecraftcloud.core.util.Utils;
-import com.thecraftcloud.domain.MyCloudCraftGame;
 import com.thecraftcloud.gungame.service.GunGameConfigService;
-import com.thecraftcloud.plugin.TheCraftCloudMiniGameAbstract;
-import com.thecraftcloud.plugin.service.ConfigService;
+import com.thecraftcloud.minigame.TheCraftCloudMiniGameAbstract;
+import com.thecraftcloud.minigame.domain.MyCloudCraftGame;
+import com.thecraftcloud.minigame.service.ConfigService;
 
 public class SpawnBonusItemTask implements Runnable {
 	
@@ -26,7 +26,7 @@ public class SpawnBonusItemTask implements Runnable {
     @Override
     public void run() {
     	
-    	MyCloudCraftGame game = controller.getMyCloudCraftGame();
+    	MyCloudCraftGame game = this.controller.getConfigService().getMyCloudCraftGame();
     	Integer numberOfChests = this.configService.getChestList().size();
     	Integer randomChestNumber = new Random().nextInt(numberOfChests);
     	

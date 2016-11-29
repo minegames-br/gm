@@ -30,6 +30,7 @@ import com.thecraftcloud.core.domain.GameWorld;
 import com.thecraftcloud.core.domain.Item;
 import com.thecraftcloud.core.domain.Kit;
 import com.thecraftcloud.core.domain.Local;
+import com.thecraftcloud.core.domain.MineCraftPlayer;
 import com.thecraftcloud.core.domain.Schematic;
 import com.thecraftcloud.core.domain.ServerInstance;
 import com.thecraftcloud.core.dto.SearchGameWorldDTO;
@@ -300,7 +301,7 @@ public class TheCraftCloudDelegate {
 		return game;
 	}
 
-	public Game findGame(String uuid) throws InvalidRegistrationException {
+	public Game findGame(String uuid)  {
 		Game domain = null;
 		
 		MGLogger.info("findGame: " + uuid);
@@ -336,6 +337,29 @@ public class TheCraftCloudDelegate {
 	public void uploadSchematic(Schematic schematic, File file) {
 		ClientRequest request = new ClientRequest(this.gameManagerUrl + "/schematic/upload/" + schematic.getSchematic_uuid().toString() );
 		System.out.println(this.gameManagerUrl + "/schematic/upload");
+		request.accept("application/json");
+		
+		MultipartFormDataOutput upload = new MultipartFormDataOutput();
+		try {
+			upload.addFormData("file", FileUtils.readFileToByteArray(file), MediaType.APPLICATION_OCTET_STREAM_TYPE);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		request.body(MediaType.MULTIPART_FORM_DATA_TYPE, upload);
+		try {
+			ClientResponse<?> response = request.post();
+			System.out.println(response.getEntity(String.class));
+			System.out.println(response.getResponseStatus().getStatusCode());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public void uploadWorld(GameWorld gw, File file) {
+		ClientRequest request = new ClientRequest(this.gameManagerUrl + "/world/" + gw.getWorld_uuid().toString() + "/upload");
+		System.out.println(this.gameManagerUrl + "/world/" + gw.getWorld_uuid().toString() + "/upload");
 		request.accept("application/json");
 		
 		MultipartFormDataOutput upload = new MultipartFormDataOutput();
@@ -585,6 +609,25 @@ public class TheCraftCloudDelegate {
         return file;
 	}
 
+	public File downloadWorld(GameWorld gw, File dir) {
+		File file = null;
+	    String URL=this.gameManagerUrl + "/world/" + gw.getWorld_uuid().toString() + "/download";
+	    ClientRequest client = new ClientRequest(URL);
+	    try {
+	        URL website = new URL(URL);
+	        if(!dir.exists() ) {
+	        	dir.mkdirs();
+	        }
+	        
+	        file = new File( dir + "/", gw.getName() + ".zip");
+	        System.out.println("Download to: " + file.getAbsolutePath() );
+	        FileUtils.copyURLToFile(website, file);
+	    } catch ( Exception ex) {
+	    	ex.printStackTrace();
+	    }  
+        return file;
+	}
+
 	public List<GameArenaConfig> findAllGameConfigArenaByGameArena(String gameUuid, String arenaUuid) {
         System.out.println("findAllGameConfigArenaByGameArena request: " + gameUuid);
         String json = get("/game/" + gameUuid + "/gamearenaconfig/" + arenaUuid);
@@ -775,6 +818,48 @@ public class TheCraftCloudDelegate {
 			e.printStackTrace();
 		}
 		return myObjects;
+	}
+
+	public GameWorld addGameWorld(GameWorld gw) {
+		String json = JSONParser.getInstance().toJSONString(gw);
+		json = post("/world", json);
+		MGLogger.info("addgameworld: " + json);
+		gw = (GameWorld) JSONParser.getInstance().toObject(json, GameWorld.class);
+		MGLogger.info("GameWorld: " + gw.getWorld_uuid().toString() );
+		return gw;
+	}
+
+	public GameWorld findGameWorldByName(String name) {
+		GameWorld gw = null;
+		String json = "{}";
+		json = get("/world/search/" + name);
+		System.out.println(json);
+		gw = (GameWorld)JSONParser.getInstance().toObject(json, GameWorld.class);
+		if( gw == null) {
+			System.err.println("Não encontrou GameWorld: " + name);
+		}
+		return gw;
+	}
+
+	public MineCraftPlayer findPlayerByName(String name) {
+		MineCraftPlayer mcp = null;
+		String json = "{}";
+		json = get("/player/search/" + name);
+		System.out.println(json);
+		mcp = (MineCraftPlayer)JSONParser.getInstance().toObject(json, MineCraftPlayer.class);
+		if( mcp == null) {
+			System.err.println("Não encontrou MineCraftPlayer: " + name);
+		}
+		return mcp;
+	}
+
+	public MineCraftPlayer createPlayer(MineCraftPlayer player) {
+		String json = JSONParser.getInstance().toJSONString(player);
+		json = post("/player", json);
+		MGLogger.info("createPlayer: " + json);
+		player = (MineCraftPlayer) JSONParser.getInstance().toObject(json, MineCraftPlayer.class);
+		MGLogger.info("MineCraftPlayer: " + player.getMcp_uuid().toString() );
+		return player;
 	}
 	
 }

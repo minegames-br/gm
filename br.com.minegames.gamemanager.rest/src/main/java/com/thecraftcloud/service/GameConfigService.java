@@ -58,14 +58,14 @@ public class GameConfigService extends Service {
 		startTransaction();
 		Query query = em.createQuery("SELECT gc FROM GameConfig gc where gc.name = :_name");
 		query.setParameter("_name", name);
-		GameConfig GameConfig = null;
+		GameConfig gc = null;
 		try{
-			GameConfig = (GameConfig)query.getSingleResult();
+			gc = (GameConfig)query.getSingleResult();
 		}catch(Exception e) {
 			return null;
 		}
 		commitTransaction();
-		return GameConfig;
+		return gc;
 	}
 	
 }
