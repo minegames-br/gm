@@ -1,0 +1,6 @@
+name: TheCraftCloud-MiniGame
+author: joaoemilio
+version: 1.0.0
+main: com.thecraftcloud.minigame.TheCraftCloudMiniGamePlugin
+depend: [TheCraftCloud-Client,TheCraftCloud-Core]
+commands:
