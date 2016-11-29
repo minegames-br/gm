@@ -5,11 +5,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.thecraftcloud.admin.listener.EndGameListener;
+import com.thecraftcloud.admin.listener.StartGameListener;
 import com.thecraftcloud.admin.socket.server.SocketServer;
 import com.thecraftcloud.core.util.Utils;
-import com.thecraftcloud.minigame.TheCraftCloudConfig;
 
 public class TheCraftCloudAdmin extends JavaPlugin {
 
@@ -47,6 +49,9 @@ public class TheCraftCloudAdmin extends JavaPlugin {
 			}
 		});
 		
+		Bukkit.getPluginManager().registerEvents(new StartGameListener(), this);
+		Bukkit.getPluginManager().registerEvents(new EndGameListener(), this);
+		
 	}
 	
 	public void loadConfiguration(){
@@ -56,6 +61,10 @@ public class TheCraftCloudAdmin extends JavaPlugin {
 
 	public HashMap<String, String> getActions() {
 		return this.actions;
+	}
+
+	public void joinGame(Player player, String gameName) {
+		
 	}
 
 }

@@ -10,10 +10,12 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 
+import com.thecraftcloud.lobby.service.GameService;
+
 public class InteractSignListener implements Listener, PluginMessageListener {
 
 	private JavaPlugin plugin;
-	private com.thecraftcloud.core.bungee.BungeeUtils bUtils;
+	private GameService gameService = GameService.getInstance(); 
 
 	public InteractSignListener(JavaPlugin plugin) {
 		super();
@@ -27,18 +29,13 @@ public class InteractSignListener implements Listener, PluginMessageListener {
 		Block block = event.getClickedBlock();
 		if (block.getType() == Material.WALL_SIGN || block.getType() == Material.SIGN_POST) {
 			Sign sign = (Sign) block.getState();
-			String server = sign.getLine(1);
-			bUtils.sendToServer(player, server);
-			
-		
-			
+			String gameName = sign.getLine(1);
+			gameService.playGame(player, gameName);
 		}
 	}
 
 	@Override
 	public void onPluginMessageReceived(String arg0, Player arg1, byte[] arg2) {
-		// TODO Auto-generated method stub
-
 	}
 
 }

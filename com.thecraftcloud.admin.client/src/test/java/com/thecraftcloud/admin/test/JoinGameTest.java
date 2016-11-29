@@ -6,8 +6,6 @@ import com.thecraftcloud.admin.socket.client.AdminClient;
 import com.thecraftcloud.client.TheCraftCloudDelegate;
 import com.thecraftcloud.core.admin.domain.ActionDTO;
 import com.thecraftcloud.core.admin.domain.ResponseDTO;
-import com.thecraftcloud.core.domain.Arena;
-import com.thecraftcloud.core.domain.Game;
 import com.thecraftcloud.core.domain.MineCraftPlayer;
 import com.thecraftcloud.core.domain.ServerInstance;
 

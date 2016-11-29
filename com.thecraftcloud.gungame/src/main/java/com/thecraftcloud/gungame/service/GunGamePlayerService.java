@@ -58,6 +58,8 @@ public class GunGamePlayerService extends PlayerService {
 		
 		//dar o proximo item por passar de nivel
 		GameConfigInstance gci = this.gunGameConfigService.getNextGunGameLevel(ggPlayer);
+		ggPlayer.setLevel(ggPlayer.getLevel()+1);
+		Bukkit.getConsoleSender().sendMessage(ChatColor.GOLD + "Next level (" + ggPlayer.getLevel() +  ")item: " + gci.getItem() );
 		
 		ItemStack itemStack = MaterialUtil.getInstance().toItemStack(gci.getItem());
 		shooter.getInventory().addItem(itemStack);

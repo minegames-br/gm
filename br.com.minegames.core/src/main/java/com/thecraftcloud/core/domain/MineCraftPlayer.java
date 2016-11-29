@@ -6,8 +6,10 @@ import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -35,6 +37,9 @@ public class MineCraftPlayer extends TransferObject {
 
 	@Enumerated
 	private PlayerStatus status;
+	
+	@OneToOne(fetch = FetchType.EAGER)
+	private ServerInstance server;
 	
 	public String getPlayer_uuid() {
 		return player_uuid;
@@ -77,6 +82,12 @@ public class MineCraftPlayer extends TransferObject {
 	}
 	public void setStatus(PlayerStatus status) {
 		this.status = status;
+	}
+	public ServerInstance getServer() {
+		return server;
+	}
+	public void setServer(ServerInstance server) {
+		this.server = server;
 	}
 	
 	

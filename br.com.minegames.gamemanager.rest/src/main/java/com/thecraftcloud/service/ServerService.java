@@ -66,5 +66,19 @@ public class ServerService extends Service {
 		commitTransaction();
 		return server;
 	}
+
+	public ServerInstance findByHostname(String hostname) {
+		startTransaction();
+		Query query = em.createQuery("SELECT s FROM ServerInstance s where s.hostname = :_hostname");
+		query.setParameter("_hostname", hostname);
+		ServerInstance server = null;
+		try{
+			server = (ServerInstance)query.getSingleResult();
+		}catch(Exception e) {
+			return null;
+		}
+		commitTransaction();
+		return server;
+	}
 	
 }

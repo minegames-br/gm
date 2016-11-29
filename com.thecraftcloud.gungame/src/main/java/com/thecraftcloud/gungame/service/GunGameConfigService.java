@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.block.Chest;
 
 import com.thecraftcloud.core.domain.GameArenaConfig;
@@ -61,6 +62,7 @@ public class GunGameConfigService {
 
 	public GameConfigInstance getGunGameLevel(Integer level) {
 		String gunGameLevel = GunGameConfig.GUNGAME_LEVEL + level.toString();
+		Bukkit.getConsoleSender().sendMessage(ChatColor.GOLD + " " + gunGameLevel );
 		for(GameConfigInstance _gci: this.ggConfig.getGunGameLevelList()) {
 			if(_gci.getGameConfig().getName().equalsIgnoreCase(gunGameLevel)) {
 				return _gci;

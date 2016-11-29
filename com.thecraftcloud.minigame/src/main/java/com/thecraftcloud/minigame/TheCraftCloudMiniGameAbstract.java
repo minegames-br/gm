@@ -32,6 +32,10 @@ import com.thecraftcloud.minigame.command.LeaveGameCommand;
 import com.thecraftcloud.minigame.domain.EntityPlayer;
 import com.thecraftcloud.minigame.domain.GamePlayer;
 import com.thecraftcloud.minigame.domain.MyCloudCraftGame;
+import com.thecraftcloud.minigame.event.EndGameEvent;
+import com.thecraftcloud.minigame.event.InitiateGameEvent;
+import com.thecraftcloud.minigame.event.StartGameEvent;
+import com.thecraftcloud.minigame.event.TheCraftCloudMiniGameEnableEvent;
 import com.thecraftcloud.minigame.listener.PlayerQuit;
 import com.thecraftcloud.minigame.service.ConfigService;
 import com.thecraftcloud.minigame.service.PlayerService;
@@ -90,6 +94,7 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 			world.setGameRuleValue("doDaylightCycle", "false");
 		}
 
+		this.getServer().getPluginManager().callEvent(new TheCraftCloudMiniGameEnableEvent(this));
 	}
 	
 	public void init() {
@@ -106,6 +111,8 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 		this.startCountDownThreadID = scheduler.scheduleSyncRepeatingTask(this, this.startCountDownTask, 0L, 25L);
 
 		this.configService.setStartCountDown();
+		
+		this.getServer().getPluginManager().callEvent(new InitiateGameEvent(this));
 	}
 
 	public void startGameEngine() {
@@ -126,6 +133,8 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 		if( time != null) {
 			this.configService.getWorld().setTime(time);
 		}
+		
+		this.getServer().getPluginManager().callEvent(new StartGameEvent(this));
 	}
 
 	public void endGame() {
@@ -138,6 +147,7 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 		// limpar inventario do jogador
 		clearPlayersInventory();
 
+		this.getServer().getPluginManager().callEvent(new EndGameEvent(this));
 	}
 	
 	public CopyOnWriteArraySet<GamePlayer> getLivePlayers() {

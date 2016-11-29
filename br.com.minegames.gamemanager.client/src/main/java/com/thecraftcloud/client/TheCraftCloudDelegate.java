@@ -26,6 +26,7 @@ import com.thecraftcloud.core.domain.GameArenaConfig;
 import com.thecraftcloud.core.domain.GameConfig;
 import com.thecraftcloud.core.domain.GameConfigInstance;
 import com.thecraftcloud.core.domain.GameInstance;
+import com.thecraftcloud.core.domain.GameQueue;
 import com.thecraftcloud.core.domain.GameWorld;
 import com.thecraftcloud.core.domain.Item;
 import com.thecraftcloud.core.domain.Kit;
@@ -860,6 +861,52 @@ public class TheCraftCloudDelegate {
 		player = (MineCraftPlayer) JSONParser.getInstance().toObject(json, MineCraftPlayer.class);
 		MGLogger.info("MineCraftPlayer: " + player.getMcp_uuid().toString() );
 		return player;
+	}
+
+	public ServerInstance findServerByHostName(String hostname) {
+		ServerInstance server = null;
+		String json = "{}";
+		json = get("/server/search/" + hostname);
+		System.out.println(json);
+		server = (ServerInstance)JSONParser.getInstance().toObject(json, ServerInstance.class);
+		if( server == null) {
+			System.err.println("Não encontrou ServerInstance: " + hostname);
+		}
+		return server;
+	}
+
+	public MineCraftPlayer updatePlayer(MineCraftPlayer player) {
+		String json = JSONParser.getInstance().toJSONString(player);
+		json = post("/player/" + player.getMcp_uuid().toString(), json);
+		MGLogger.info("updatePlayer: " + json);
+		player = (MineCraftPlayer) JSONParser.getInstance().toObject(json, MineCraftPlayer.class);
+		MGLogger.info("MineCraftPlayer: " + player.getMcp_uuid().toString() );
+		return player;
+	}
+
+	public Game findGameByName(String gameName) {
+		Game game = null;
+		String json = "{}";
+		json = get("/game/search/" + gameName);
+		System.out.println(json);
+		game = (Game)JSONParser.getInstance().toObject(json, Game.class);
+		if( game == null) {
+			System.err.println("Não encontrou Game: " + gameName);
+		}
+		return game;
+	}
+
+	public GameQueue joinGameQueue(MineCraftPlayer mcp, Game game) {
+		GameQueue gq = new GameQueue();
+		gq.setGame(game);
+		gq.setPlayer(mcp);
+		
+		String json = JSONParser.getInstance().toJSONString(gq);
+		json = post("/gamequeue/", json);
+		MGLogger.info("joinGameQueue: " + json);
+		gq = (GameQueue) JSONParser.getInstance().toObject(json, GameQueue.class);
+		MGLogger.info("GameQueue: " + gq.getGame_queue_uuid().toString() );
+		return gq;
 	}
 	
 }

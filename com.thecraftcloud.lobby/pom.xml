@@ -4,6 +4,7 @@
   <artifactId>com.thecraftcloud.lobby</artifactId>
   <version>1.0.0</version>
   <name>com.thecraftcloud.lobby</name>
+  
   <build>
     <plugins>
       <plugin>
@@ -22,6 +23,12 @@
    		<dependency>
   			<groupId>com.thecraftcloud.core</groupId>
   			<artifactId>com.thecraftcloud.core</artifactId>
+  			<version>1.0.0</version>
+  		</dependency>
+
+   		<dependency>
+  			<groupId>com.thecraftcloud.admin</groupId>
+  			<artifactId>com.thecraftcloud.admin</artifactId>
   			<version>1.0.0</version>
   		</dependency>
 

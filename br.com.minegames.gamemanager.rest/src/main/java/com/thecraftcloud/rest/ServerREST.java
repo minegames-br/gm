@@ -118,9 +118,24 @@ public class ServerREST {
 	@Path("/search/{name}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response findItemByName(@PathParam("name") String name) {
-		Logger.getLogger(ItemREST.class).info("name: " + name);
+		Logger.getLogger(ServerREST.class).info("name: " + name);
 		ServerService service = new ServerService();
 		ServerInstance domain = service.findByName( name );
+		if( domain != null) {
+			String json = JSONParser.getInstance().toJSONString(domain);
+		    return Response.ok( json , MediaType.APPLICATION_JSON).build();
+		} else {
+			return Response.status(Response.Status.NOT_FOUND).entity("Server encontrado: " + name).build();
+		}
+	}
+	
+	@GET
+	@Path("/search/byhost/{name}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response findItemByHostname(@PathParam("name") String name) {
+		Logger.getLogger(ServerREST.class).info("name: " + name);
+		ServerService service = new ServerService();
+		ServerInstance domain = service.findByHostname( name );
 		if( domain != null) {
 			String json = JSONParser.getInstance().toJSONString(domain);
 		    return Response.ok( json , MediaType.APPLICATION_JSON).build();
