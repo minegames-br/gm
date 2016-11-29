@@ -1,6 +1,6 @@
 package com.thecraftcloud.gungame.service;
 
-import java.util.List;
+import java.util.Iterator;
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -26,6 +26,7 @@ public class GunGamePlayerService extends PlayerService {
 	
 	public GunGamePlayerService(TheCraftCloudMiniGameAbstract controller) {
 		super(controller);
+		this.configService = ConfigService.getInstance();
 	}
 
 	@Override
@@ -83,11 +84,14 @@ public class GunGamePlayerService extends PlayerService {
 	public void teleportPlayersToArena() {
 		int count = 0;
 		CopyOnWriteArraySet<GameArenaConfig> gacList = ConfigService.getInstance().getSpawnPoints();
-		GameArenaConfig[] gacArray = (GameArenaConfig[])gacList.toArray();
-		
+		Iterator it = gacList.iterator();
+		Bukkit.getConsoleSender().sendMessage("&8gacList.size: " + gacList.size() );
 		for(GamePlayer gp: this.getLivePlayers() ) {
-			GameArenaConfig gac = gacArray[count];
-			Location spawn = locationUtil.toLocation(this.configService.getWorld(), gac.getLocalValue() ); 
+			GameArenaConfig gac = (GameArenaConfig)it.next();
+			Bukkit.getConsoleSender().sendMessage("&7world: " + this.configService );
+			Bukkit.getConsoleSender().sendMessage("&7world: " + this.configService.getArenaWorld() );
+			Bukkit.getConsoleSender().sendMessage("&6gac: " + gac  );
+			Location spawn = locationUtil.toLocation(this.configService.getArenaWorld(), gac.getLocalValue() ); 
 			gp.getPlayer().teleport(spawn);
 			count++;
 		}
@@ -110,10 +114,10 @@ public class GunGamePlayerService extends PlayerService {
 
 	public void spawnDeadPlayer(Player player) {
 		CopyOnWriteArraySet<GameArenaConfig> gacList = ConfigService.getInstance().getSpawnPoints();
-		GameArenaConfig[] gacArray = (GameArenaConfig[])gacList.toArray();
+		
 		int random = gacList.size()-1;
 		random = new Random().nextInt(random);
-		GameArenaConfig gac = gacArray[random];
+		GameArenaConfig gac = (GameArenaConfig)gacList.toArray()[random];
 		Location spawn = locationUtil.toLocation(this.configService.getWorld(), gac.getLocalValue() ); 
 		player.teleport(spawn);
 	}

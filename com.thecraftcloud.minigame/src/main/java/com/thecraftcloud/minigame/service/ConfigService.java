@@ -254,5 +254,9 @@ public class ConfigService {
 
 	public void setConfig(TheCraftCloudConfig instance) {
 		this.config = instance;
+	}
+
+	public World getArenaWorld() {
+		return Bukkit.getWorld(this.config.getArena().getName());
 	}	
 }
