@@ -75,6 +75,7 @@ public class ServerService extends Service {
 		try{
 			server = (ServerInstance)query.getSingleResult();
 		}catch(Exception e) {
+			e.printStackTrace();
 			return null;
 		}
 		commitTransaction();

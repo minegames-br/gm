@@ -11,6 +11,7 @@ import com.thecraftcloud.client.TheCraftCloudDelegate;
 import com.thecraftcloud.core.admin.domain.ActionDTO;
 import com.thecraftcloud.core.admin.domain.ResponseDTO;
 import com.thecraftcloud.core.domain.ServerInstance;
+import com.thecraftcloud.core.domain.ServerStatus;
 
 public class PingServerJob implements Job {
 
@@ -41,6 +42,10 @@ public class PingServerJob implements Job {
 				ResponseDTO responseDTO = client.execute(server, dto); 
 				System.out.println( server.getName() + " - " + responseDTO.getMessage() + " " + responseDTO.getResult() );
 			}catch(Exception e) {
+				
+				server.setStatus(ServerStatus.OFFLINE);
+				delegate.updateServer(server);
+				
 				e.printStackTrace();
 			}
 		}

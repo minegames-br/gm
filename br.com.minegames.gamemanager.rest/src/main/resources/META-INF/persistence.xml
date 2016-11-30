@@ -23,6 +23,7 @@
 		<class>com.thecraftcloud.core.domain.Kit</class>
 		<class>com.thecraftcloud.core.domain.KitItem</class>
 		<class>com.thecraftcloud.core.domain.Item</class>
+		<class>com.thecraftcloud.core.domain.GameQueue</class>
 		<properties>
 			<!-- 
 			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />

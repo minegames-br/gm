@@ -74,5 +74,17 @@ public class GameQueueService extends Service {
 		commitTransaction();
 		return list;
 	}
+
+	public Collection<GameQueue> findAllGameQueueByStatus(String statusName) {
+		startTransaction();
+		
+		GameService gService = new GameService(this.em);
+		GameQueueStatus status = GameQueueStatus.valueOf(statusName);
+		Query query = em.createQuery("SELECT gq FROM GameQueue gq where gq.status = :status");
+		query.setParameter("status",  status );
+		Collection<GameQueue> list = (Collection<GameQueue>) query.getResultList();
+		commitTransaction();
+		return list;
+	}
 	
 }

@@ -72,6 +72,16 @@ public class GameQueueREST {
 		return Response.ok(json, MediaType.APPLICATION_JSON).build();
 	}
 	
+	@GET
+	@Path("/list/status/{status}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response findGameQueueByStatus(@PathParam("status") String status) {
+		GameQueueService service = new GameQueueService();
+		Collection<GameQueue> list = service.findAllGameQueueByStatus(status);
+		String json = JSONParser.getInstance().toJSONString(list);
+		return Response.ok(json, MediaType.APPLICATION_JSON).build();
+	}
+	
 	@DELETE
 	@Path("/{uuid}")
 	@Produces(MediaType.APPLICATION_JSON)

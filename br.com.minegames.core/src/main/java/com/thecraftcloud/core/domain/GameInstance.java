@@ -47,7 +47,7 @@ public class GameInstance extends TransferObject {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Calendar endTime;
 	
-	@Enumerated(EnumType.STRING)
+	@Enumerated
 	private GameState status;
 	
 	@LazyCollection(LazyCollectionOption.FALSE)

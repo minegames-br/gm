@@ -10,6 +10,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 
+import com.thecraftcloud.core.bungee.BungeeUtils;
 import com.thecraftcloud.lobby.service.GameService;
 
 public class InteractSignListener implements Listener, PluginMessageListener {
@@ -31,6 +32,10 @@ public class InteractSignListener implements Listener, PluginMessageListener {
 			Sign sign = (Sign) block.getState();
 			String gameName = sign.getLine(1);
 			gameService.playGame(player, gameName);
+			BungeeUtils bungeeUtils = new BungeeUtils();
+			bungeeUtils.setup(plugin);
+			bungeeUtils.sendToServer(player, "gungame");
+
 		}
 	}
 

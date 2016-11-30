@@ -1,6 +1,7 @@
 package com.thecraftcloud.admin.action;
 
 import java.io.File;
+import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -8,13 +9,17 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 
 import com.thecraftcloud.admin.TheCraftCloudAdmin;
+import com.thecraftcloud.admin.service.GameInstanceService;
 import com.thecraftcloud.admin.service.PluginService;
+import com.thecraftcloud.admin.service.ServerService;
 import com.thecraftcloud.client.TheCraftCloudDelegate;
 import com.thecraftcloud.core.admin.domain.ActionDTO;
 import com.thecraftcloud.core.admin.domain.ResponseDTO;
 import com.thecraftcloud.core.admin.domain.ResponseType;
 import com.thecraftcloud.core.domain.GameArenaConfig;
 import com.thecraftcloud.core.domain.GameConfigInstance;
+import com.thecraftcloud.core.domain.GameInstance;
+import com.thecraftcloud.core.domain.ServerInstance;
 import com.thecraftcloud.minigame.TheCraftCloudConfig;
 import com.thecraftcloud.minigame.TheCraftCloudMiniGameAbstract;
 import com.thecraftcloud.minigame.service.ConfigService;
@@ -67,6 +72,20 @@ public class PrepareGameAction extends Action {
 		configService.setGacList(new CopyOnWriteArraySet<>(gacList) );
 		configService.setGciList(new CopyOnWriteArraySet<>(gciList));
 		configService.setWorld(world);
+		
+		TheCraftCloudAdmin pluginAdmin = (TheCraftCloudAdmin)Bukkit.getPluginManager().getPlugin( "TheCraftCloud-Admin" );
+
+		
+		ServerService sService = new ServerService();
+		ServerInstance server = sService.getServerInstance(pluginAdmin.getServerName());
+		
+		GameInstanceService giService = new GameInstanceService();
+		GameInstance gi = new GameInstance();
+		gi.setArena(dto.getArena());
+		gi.setGame(dto.getGame());
+		gi.setStartTime(Calendar.getInstance());
+		gi.setServer(server);
+		giService.createGameInstance(gi);
 		
 		//habilitar o plugin do jogo a ser preparado
 		Bukkit.getPluginManager().enablePlugin(plugin);

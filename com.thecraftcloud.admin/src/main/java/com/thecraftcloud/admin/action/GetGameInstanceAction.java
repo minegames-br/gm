@@ -26,7 +26,7 @@ public class GetGameInstanceAction extends Action {
 		MyCloudCraftGame myCraftCloudGame = null;
 		
 		if( configService.getConfig() == null ) {
-			return ResponseDTO.unableToCompleteAction("TheCraftCloudMiniGame is not prepared on this server.");
+			return ResponseDTO.unableToCompleteAction("TheCraftCloudMiniGame is not configured on this server.");
 		}
 		
 		boolean success = false;
@@ -45,7 +45,7 @@ public class GetGameInstanceAction extends Action {
 		ResponseDTO responseDTO = new ResponseDTO();
 		if(myCraftCloudGame != null) { 
 			String json = JSONParser.getInstance().toJSONString(myCraftCloudGame);
-			responseDTO.setMessage("Game: " + game.getName() );
+			responseDTO.setMessage("Game: " + configService.getGame() );
 			responseDTO.setJson( json );
 			responseDTO.setType(ResponseType.JSON);
 			responseDTO.setResult(true);

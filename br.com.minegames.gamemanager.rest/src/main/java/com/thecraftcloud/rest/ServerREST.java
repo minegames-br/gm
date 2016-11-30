@@ -140,7 +140,7 @@ public class ServerREST {
 			String json = JSONParser.getInstance().toJSONString(domain);
 		    return Response.ok( json , MediaType.APPLICATION_JSON).build();
 		} else {
-			return Response.status(Response.Status.NOT_FOUND).entity("Server encontrado: " + name).build();
+			return Response.status(Response.Status.NOT_FOUND).entity("Server não encontrado: " + name).build();
 		}
 	}
 	

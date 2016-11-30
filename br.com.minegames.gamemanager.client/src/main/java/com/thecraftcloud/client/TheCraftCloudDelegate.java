@@ -27,6 +27,7 @@ import com.thecraftcloud.core.domain.GameConfig;
 import com.thecraftcloud.core.domain.GameConfigInstance;
 import com.thecraftcloud.core.domain.GameInstance;
 import com.thecraftcloud.core.domain.GameQueue;
+import com.thecraftcloud.core.domain.GameQueueStatus;
 import com.thecraftcloud.core.domain.GameWorld;
 import com.thecraftcloud.core.domain.Item;
 import com.thecraftcloud.core.domain.Kit;
@@ -165,6 +166,9 @@ public class TheCraftCloudDelegate {
 		System.out.println(this.gameManagerUrl + path);
 		try {
 			response = client.get(String.class);
+			if(response.getStatus() != 200) {
+				return null;
+			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -729,13 +733,10 @@ public class TheCraftCloudDelegate {
 		try {
 			myObjects = mapper.readValue(json, mapper.getTypeFactory().constructCollectionType(List.class, ServerInstance.class));
 		} catch (JsonParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return myObjects;
@@ -866,7 +867,7 @@ public class TheCraftCloudDelegate {
 	public ServerInstance findServerByHostName(String hostname) {
 		ServerInstance server = null;
 		String json = "{}";
-		json = get("/server/search/" + hostname);
+		json = get("/server/search/byhost/" + hostname);
 		System.out.println(json);
 		server = (ServerInstance)JSONParser.getInstance().toObject(json, ServerInstance.class);
 		if( server == null) {
@@ -907,6 +908,63 @@ public class TheCraftCloudDelegate {
 		gq = (GameQueue) JSONParser.getInstance().toObject(json, GameQueue.class);
 		MGLogger.info("GameQueue: " + gq.getGame_queue_uuid().toString() );
 		return gq;
+	}
+
+	public List<GameQueue> findAllGameQueueByStatus(GameQueueStatus status) {
+        System.out.println("findAllGameQueueByStatus");
+        String json = get("/gamequeue/list/status/" + status.name() );
+        System.out.println("findAllGameQueueByStatus response: " + json);
+        ObjectMapper mapper = new ObjectMapper();
+        List<GameQueue> myObjects = null;
+		try {
+			myObjects = mapper.readValue(json, mapper.getTypeFactory().constructCollectionType(List.class, GameQueue.class));
+		} catch (JsonParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return myObjects;
+	}
+
+	public List<GameInstance> findGameInstanceAvailable(Game game) {
+       System.out.println("findGameInstanceAvailable");
+        String json = get("/gameinstance/search/" + game.getName() );
+        System.out.println("findGameInstanceAvailable response: " + json);
+        ObjectMapper mapper = new ObjectMapper();
+        List<GameInstance> myObjects = null;
+		try {
+			myObjects = mapper.readValue(json, mapper.getTypeFactory().constructCollectionType(List.class, GameInstance.class));
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return myObjects;
+	}
+
+	public List<Arena> findAllArenas() {
+        System.out.println("findAllArenas");
+        String json = get("/arena/list");
+        System.out.println("findAllArenas response: " + json);
+        ObjectMapper mapper = new ObjectMapper();
+        List<Arena> myObjects = null;
+		try {
+			myObjects = mapper.readValue(json, mapper.getTypeFactory().constructCollectionType(List.class, Arena.class));
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return myObjects;
 	}
 	
 }

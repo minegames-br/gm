@@ -15,8 +15,10 @@ import javax.ws.rs.core.Response;
 import org.jboss.logging.Logger;
 
 import com.thecraftcloud.core.domain.GameInstance;
+import com.thecraftcloud.core.domain.Item;
 import com.thecraftcloud.core.json.JSONParser;
 import com.thecraftcloud.service.GameInstanceService;
+import com.thecraftcloud.service.ItemService;
 
 @Path("/gameinstance")
 public class GameInstanceREST {
@@ -157,6 +159,23 @@ public class GameInstanceREST {
 		    return Response.ok( "GameInstance removido com sucesso" , MediaType.APPLICATION_JSON).build();
 		} else {
 			return Response.status(Response.Status.NOT_FOUND).entity("GameInstance não encontrado: " + _uuid).build();
+		}
+	}
+	
+	@GET
+	@Path("/search/{name}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response findGameInstanceAvailableByName(@PathParam("name") String name) {
+		Logger.getLogger(ItemREST.class).info("game recebido: " + name);
+		
+		GameInstanceService giService = new GameInstanceService();
+		Collection<GameInstance> list = giService.findGameInstanceAvailableByGame( name ); 
+		
+		if( list != null) {
+			String json = JSONParser.getInstance().toJSONString(list);
+		    return Response.ok( json , MediaType.APPLICATION_JSON).build();
+		} else {
+			return Response.status(Response.Status.NOT_FOUND).entity("Nenhum GameInstance disponivel encontrado: " + name).build();
 		}
 	}
 	

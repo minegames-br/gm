@@ -1,10 +1,7 @@
 package com.thecraftcloud.manager;
 
-import static org.quartz.CronScheduleBuilder.cronSchedule;
 import static org.quartz.JobBuilder.newJob;
-import static org.quartz.TriggerBuilder.newTrigger;
 
-import org.quartz.CronTrigger;
 import org.quartz.JobDetail;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
@@ -20,10 +17,8 @@ public class MonitorAgent {
 		
 		Scheduler scheduler = schedFact.getScheduler();
 		scheduler.start();
-		JobDetail job = newJob(StartGameJob.class).withIdentity("start-game-job", "group-1-min").build();;
-		CronTrigger trigger = newTrigger().withIdentity("trigger-start-game-job", "thecraftcloud-admin").withSchedule(cronSchedule("1 * * * * ?")).build();
-		scheduler.scheduleJob( job, trigger );
-		
+		JobDetail job = null;
+			
 		job = newJob(PingServerJob.class).withIdentity("ping-server-job", "group-1-min").build();
 		Trigger t2 = TriggerBuilder
 				.newTrigger()
@@ -40,9 +35,29 @@ public class MonitorAgent {
 				.withIdentity("every-60-seconds", "group2")
 				.withSchedule(
 				    SimpleScheduleBuilder.simpleSchedule()
-					.withIntervalInSeconds(60).repeatForever())
+					.withIntervalInSeconds(120).repeatForever())
 				.build();		
 		scheduler.scheduleJob( job, t3 );
+
+		job = newJob(GameQueueJob.class).withIdentity("game-queue-job", "group-5-secs").build();
+		Trigger t4 = TriggerBuilder
+				.newTrigger()
+				.withIdentity("every-5-seconds", "group3")
+				.withSchedule(
+				    SimpleScheduleBuilder.simpleSchedule()
+					.withIntervalInSeconds(120).repeatForever())
+				.build();		
+		scheduler.scheduleJob( job, t4 );
+
+		job = newJob(PrepareGamesJob.class).withIdentity("prepare-games-job", "group-30-secs").build();
+		Trigger t5 = TriggerBuilder
+				.newTrigger()
+				.withIdentity("every-30-seconds", "group3")
+				.withSchedule(
+				    SimpleScheduleBuilder.simpleSchedule()
+					.withIntervalInSeconds(120).repeatForever())
+				.build();		
+		scheduler.scheduleJob( job, t5 );
 	}
 	
 }

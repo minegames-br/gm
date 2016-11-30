@@ -21,7 +21,8 @@ public class ServerInstance extends TransferObject {
 	@GeneratedValue(generator = "uuid2")
 	@GenericGenerator(name = "uuid2", strategy = "uuid2")
 	@Column(columnDefinition = "BINARY(16)")
-	private UUID server_uuid;	
+	private UUID server_uuid;
+	
 	@Column(unique=true)
 	private String name;
 	private String description;

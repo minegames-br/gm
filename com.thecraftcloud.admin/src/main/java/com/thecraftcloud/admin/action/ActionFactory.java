@@ -22,7 +22,7 @@ public class ActionFactory {
 	}
 	
 	public Action createAction(String actionName) {
-		TheCraftCloudAdmin plugin = (TheCraftCloudAdmin)Bukkit.getPluginManager().getPlugin("TheCraftCloudAdmin");
+		TheCraftCloudAdmin plugin = (TheCraftCloudAdmin)Bukkit.getPluginManager().getPlugin("TheCraftCloud-Admin");
 		HashMap<String, String> actions = plugin.getActions();
 		
 		Action action = null;

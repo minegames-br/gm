@@ -6,11 +6,14 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import org.bukkit.Bukkit;
+
 import com.thecraftcloud.admin.action.Action;
 import com.thecraftcloud.admin.action.ActionFactory;
 import com.thecraftcloud.core.admin.domain.ActionDTO;
 import com.thecraftcloud.core.admin.domain.ResponseDTO;
 import com.thecraftcloud.core.json.JSONParser;
+import com.thecraftcloud.core.util.Utils;
 
 /**
  * Socket Server for The Craft Cloud Admin
@@ -21,12 +24,13 @@ import com.thecraftcloud.core.json.JSONParser;
 public class SocketServer {
     
     //static ServerSocket variable
-    private static ServerSocket server;
+    private ServerSocket server;
     //socket server port on which it will listen
-    private static int port = 65000;
+    private int port = 65000;
     
     public SocketServer(Integer socketServerPort) {
-    	if(socketServerPort != null && socketServerPort < 1000 ) {
+    	Bukkit.getConsoleSender().sendMessage(Utils.color("&8adminPort: " + socketServerPort));
+    	if(socketServerPort != null && socketServerPort > 1000 ) {
     		this.port = socketServerPort;
     	}
 	}
