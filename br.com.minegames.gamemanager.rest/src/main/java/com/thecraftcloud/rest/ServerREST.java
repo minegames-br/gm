@@ -14,9 +14,11 @@ import javax.ws.rs.core.Response;
 
 import org.jboss.logging.Logger;
 
+import com.thecraftcloud.core.domain.Item;
 import com.thecraftcloud.core.domain.Local;
 import com.thecraftcloud.core.domain.ServerInstance;
 import com.thecraftcloud.core.json.JSONParser;
+import com.thecraftcloud.service.ItemService;
 import com.thecraftcloud.service.LocalService;
 import com.thecraftcloud.service.ServerService;
 
@@ -63,7 +65,7 @@ public class ServerREST {
 		ServerInstance domain = service.find( UUID.fromString(_uuid) );
 		if( domain != null) {
 			domain = (ServerInstance)JSONParser.getInstance().toObject(json, ServerInstance.class);
-			if(domain.getLobby().getLocal_uuid() == null) {
+			if(domain.getLobby() != null && domain.getLobby().getLocal_uuid() == null) {
 				LocalService lService = new LocalService();
 				UUID uuid = lService.create(domain.getLobby());
 				domain.getLobby().setLocal_uuid(uuid);
@@ -87,6 +89,16 @@ public class ServerREST {
 		return Response.ok(json, MediaType.APPLICATION_JSON).build();
 	}
 	
+	@GET
+	@Path("/list/online")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response findAllServerOnline() {
+		ServerService service = new ServerService();
+		Collection<ServerInstance> list = service.findAllOnline();
+		String json = JSONParser.getInstance().toJSONString(list);
+		return Response.ok(json, MediaType.APPLICATION_JSON).build();
+	}
+	
 	@DELETE
 	@Path("/{uuid}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -99,6 +111,36 @@ public class ServerREST {
 		    return Response.ok( "Servidor removido com sucesso" , MediaType.APPLICATION_JSON).build();
 		} else {
 			return Response.status(Response.Status.NOT_FOUND).entity("Servidor não encontrado: " + _uuid).build();
+		}
+	}
+	
+	@GET
+	@Path("/search/{name}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response findItemByName(@PathParam("name") String name) {
+		Logger.getLogger(ServerREST.class).info("name: " + name);
+		ServerService service = new ServerService();
+		ServerInstance domain = service.findByName( name );
+		if( domain != null) {
+			String json = JSONParser.getInstance().toJSONString(domain);
+		    return Response.ok( json , MediaType.APPLICATION_JSON).build();
+		} else {
+			return Response.status(Response.Status.NOT_FOUND).entity("Server encontrado: " + name).build();
+		}
+	}
+	
+	@GET
+	@Path("/search/byhost/{name}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response findItemByHostname(@PathParam("name") String name) {
+		Logger.getLogger(ServerREST.class).info("name: " + name);
+		ServerService service = new ServerService();
+		ServerInstance domain = service.findByHostname( name );
+		if( domain != null) {
+			String json = JSONParser.getInstance().toJSONString(domain);
+		    return Response.ok( json , MediaType.APPLICATION_JSON).build();
+		} else {
+			return Response.status(Response.Status.NOT_FOUND).entity("Server não encontrado: " + name).build();
 		}
 	}
 	

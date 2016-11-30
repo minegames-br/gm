@@ -1,6 +1,7 @@
 package com.thecraftcloud.test;
 
 import com.thecraftcloud.client.TheCraftCloudDelegate;
+import com.thecraftcloud.client.exception.InvalidRegistrationException;
 import com.thecraftcloud.core.domain.Area3D;
 import com.thecraftcloud.core.domain.Arena;
 import com.thecraftcloud.core.domain.Game;
@@ -32,7 +33,7 @@ public class AddGameConfigRESTPostTest {
 	public static final String GAME_DURATION = "ARQUEIRO-GAME-DURATION";
 	public static final String GAME_LEVELS = "ARQUEIRO-GAME-NUMBER-OF-LEVELS";
 
-	public static void main2(String args[]) {
+	public static void main2(String args[]) throws InvalidRegistrationException {
 		TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance(URL_SERVICES);
 		Game game = delegate.findGame("c6905743-6514-49ba-9257-420743f65b65");
 		Arena arena = delegate.findArena("c5253674-8c19-4620-b500-51645a620f64");
@@ -40,7 +41,7 @@ public class AddGameConfigRESTPostTest {
 		delegate.updateGame(game);
 	}
 	
-	public static void main(String args[]) {
+	public static void main(String args[]) throws InvalidRegistrationException {
 		
 		TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance(URL_SERVICES);
 
@@ -48,7 +49,7 @@ public class AddGameConfigRESTPostTest {
         
 	}
 	
-	public static void createGameConfig() {
+	public static void createGameConfig() throws InvalidRegistrationException {
 		GameConfig gameConfig = null;
 		Local pointA = null;
 		Local pointB = null;
@@ -78,7 +79,7 @@ public class AddGameConfigRESTPostTest {
 		gameConfig = createConfig("arqueiro.player4.area", "Select the area for player 4", "3D (flat) area that the player will have to protect", "PLAYER-AREA", GameConfigType.AREA3D, GameConfigScope.ARENA, game);
 	}
 	
-	public static void createArenaconfig() {
+	public static void createArenaconfig() throws InvalidRegistrationException {
         
 		System.err.println("creating schematic");
         Schematic schematic = new Schematic();

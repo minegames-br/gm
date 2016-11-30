@@ -7,6 +7,7 @@ import javax.persistence.Query;
 
 import org.jboss.logging.Logger;
 
+import com.thecraftcloud.core.domain.Item;
 import com.thecraftcloud.core.domain.ServerInstance;
 import com.thecraftcloud.dao.ServerDAO;
 
@@ -37,11 +38,48 @@ public class ServerService extends Service {
 		return list;
 	}
 
+	public Collection<ServerInstance> findAllOnline() {
+		startTransaction();
+		Query query = em.createQuery("SELECT si FROM ServerInstance si ");
+		Collection<ServerInstance> list = (Collection<ServerInstance>) query.getResultList();
+		commitTransaction();
+		return list;
+	}
+
 	public void delete(ServerInstance server) {
 		startTransaction();
 		em.remove(server);
 		commitTransaction();
 		Logger.getLogger(ServerService.class).info("uuid: " + server.getServer_uuid() + " deletado");
+	}
+
+	public ServerInstance findByName(String name) {
+		startTransaction();
+		Query query = em.createQuery("SELECT s FROM ServerInstance s where s.name = :_name");
+		query.setParameter("_name", name);
+		ServerInstance server = null;
+		try{
+			server = (ServerInstance)query.getSingleResult();
+		}catch(Exception e) {
+			return null;
+		}
+		commitTransaction();
+		return server;
+	}
+
+	public ServerInstance findByHostname(String hostname) {
+		startTransaction();
+		Query query = em.createQuery("SELECT s FROM ServerInstance s where s.hostname = :_hostname");
+		query.setParameter("_hostname", hostname);
+		ServerInstance server = null;
+		try{
+			server = (ServerInstance)query.getSingleResult();
+		}catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		commitTransaction();
+		return server;
 	}
 	
 }

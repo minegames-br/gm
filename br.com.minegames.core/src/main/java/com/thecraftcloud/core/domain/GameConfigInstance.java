@@ -33,6 +33,12 @@ public class GameConfigInstance extends TransferObject {
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@OneToMany
 	private List<Area3D> areaList;
+	
+	@OneToOne(fetch = FetchType.EAGER)
+	private Kit kit;
+
+	@OneToOne(fetch = FetchType.EAGER)
+	private Item item;
 
 	public GameConfig getGameConfig() {
 		return gameConfig;
@@ -80,6 +86,22 @@ public class GameConfigInstance extends TransferObject {
 
 	public void setAreaList(List<Area3D> areaList) {
 		this.areaList = areaList;
+	}
+
+	public Kit getKit() {
+		return kit;
+	}
+
+	public void setKit(Kit kit) {
+		this.kit = kit;
+	}
+
+	public Item getItem() {
+		return item;
+	}
+
+	public void setItem(Item item) {
+		this.item = item;
 	}
 
 	@Override

@@ -1,18 +1,13 @@
 package com.thecraftcloud.core.domain;
 
-import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 
 @Entity
 public class Game extends TransferObject {
@@ -26,6 +21,8 @@ public class Game extends TransferObject {
 	@Column(unique=true)
 	private String name;
 	private String description;
+	
+	private String pluginName;
 	
 	public UUID getGame_uuid() {
 		return game_uuid;
@@ -44,6 +41,12 @@ public class Game extends TransferObject {
 	}
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	public String getPluginName() {
+		return pluginName;
+	}
+	public void setPluginName(String pluginName) {
+		this.pluginName = pluginName;
 	}
 	
 }

@@ -6,6 +6,7 @@ import java.io.IOException;
 import org.apache.commons.io.FileUtils;
 
 import com.thecraftcloud.client.TheCraftCloudDelegate;
+import com.thecraftcloud.client.exception.InvalidRegistrationException;
 import com.thecraftcloud.core.domain.Arena;
 import com.thecraftcloud.core.domain.Game;
 
@@ -15,7 +16,7 @@ public class DownloadSchematicTest {
 	//String restURL = "";
     private static TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance(URL_SERVICES);
 	
-	public static void main(String args[]) throws IOException {
+	public static void main(String args[]) throws IOException, InvalidRegistrationException {
 		TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance(URL_SERVICES);
 		Game game = delegate.findGame("c6905743-6514-49ba-9257-420743f65b65");
 		Arena arena = delegate.findArena("c5253674-8c19-4620-b500-51645a620f64");

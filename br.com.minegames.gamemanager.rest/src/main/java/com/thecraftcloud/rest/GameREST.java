@@ -26,6 +26,21 @@ import com.thecraftcloud.service.GameService;
 @Path("/game")
 public class GameREST {
 	
+	@GET
+	@Path("/search/{name}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response findItemByName(@PathParam("name") String name) {
+		Logger.getLogger(GameREST.class).info("game name: " + name);
+		GameService service = new GameService();
+		Game domain = service.findGameByName( name );
+		if( domain != null) {
+			String json = JSONParser.getInstance().toJSONString(domain);
+		    return Response.ok( json , MediaType.APPLICATION_JSON).build();
+		} else {
+			return Response.status(Response.Status.NOT_FOUND).entity("Game não encontrado: " + name).build();
+		}
+	}
+	
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response create(String json) {
@@ -94,6 +109,10 @@ public class GameREST {
 		Logger.getLogger(GameREST.class).info("json recebido: " + json );
 		GameService service = new GameService();
 		GameConfigInstance domain = (GameConfigInstance)JSONParser.getInstance().toObject(json, GameConfigInstance.class);
+		
+		System.out.println("gcInstance: " + domain );
+		System.out.println("gameConfig: " + domain.getGameConfig() );
+		
 		System.out.println("uuid no rest: " + domain.getGameConfig().getGame_config_uuid());
 		service.create(domain);
 	    return Response.ok(json, MediaType.APPLICATION_JSON).build();

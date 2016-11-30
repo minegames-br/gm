@@ -1,0 +1,56 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.thecraftcloud.admin</groupId>
+	<artifactId>com.thecraftcloud.admin</artifactId>
+	<version>1.0.0</version>
+	<name>com.thecraftcloud.admin</name>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.3</version>
+        <configuration>
+          <source>1.7</source>
+          <target>1.7</target>
+        </configuration>
+      </plugin>
+
+      </plugins>
+  </build>
+  
+	<dependencies>
+    	<!--Spigot API-->
+    	<dependency>
+           <groupId>org.spigotmc</groupId>
+           <artifactId>spigot-api</artifactId>
+           <version>1.10.2-R0.1-SNAPSHOT</version>
+           <scope>provided</scope>
+	    </dependency>
+	    
+  		<dependency>
+  			<groupId>com.thecraftcloud.core</groupId>
+  			<artifactId>com.thecraftcloud.core</artifactId>
+  			<version>1.0.0</version>
+  		</dependency>
+
+  		<dependency>
+  			<groupId>com.thecraftcloud.minigame</groupId>
+  			<artifactId>com.thecraftcloud.minigame</artifactId>
+  			<version>1.0.0</version>
+  		</dependency>
+
+  		<dependency>
+  			<groupId>com.thecraftcloud.client</groupId>
+  			<artifactId>com.thecraftcloud.client</artifactId>
+  			<version>1.0.0</version>
+  		</dependency>
+
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-multipart-provider</artifactId>
+			<version>2.2.1.GA</version>
+		</dependency>
+		
+    </dependencies>
+</project>

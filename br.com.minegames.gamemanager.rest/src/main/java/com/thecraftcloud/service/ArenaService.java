@@ -13,16 +13,21 @@ import org.jboss.logging.Logger;
 import com.thecraftcloud.core.domain.Area3D;
 import com.thecraftcloud.core.domain.Arena;
 import com.thecraftcloud.core.domain.Schematic;
+import com.thecraftcloud.core.domain.TransferObject;
 import com.thecraftcloud.dao.ArenaDAO;
+import com.thecraftcloud.dao.EntityManagerHelper;
 
 public class ArenaService extends Service {
+
+	protected boolean slave = false; 
 
 	public ArenaService() {
 		super();
 	}
 
 	public ArenaService(EntityManager em) {
-		super(em);
+		this.em = em;
+		this.slave = true;
 	}
 
 	public UUID save(Arena domain) {
@@ -68,6 +73,16 @@ public class ArenaService extends Service {
 		return domain.getArena_uuid();
 	}
 	
+	public UUID update(Arena domain) {
+		startTransaction();
+		ArenaDAO dao = new ArenaDAO(em);
+		Logger.getLogger(ArenaService.class).info("facing: " + domain.getFacing() );
+		em.merge(domain);
+		commitTransaction();
+		Logger.getLogger(ArenaService.class).info("uuid: " + domain.getArena_uuid());
+		return domain.getArena_uuid();
+	}
+	
 	public Arena find(UUID uuid) {
 		startTransaction();
 		ArenaDAO dao = new ArenaDAO(em);
@@ -96,13 +111,6 @@ public class ArenaService extends Service {
 		}
 		commitTransaction();
 		return arena;
-	}
+	}	
 
-	public void delete(Arena domain) {
-		startTransaction();
-		em.remove(domain);
-		commitTransaction();
-		Logger.getLogger(ArenaService.class).info("uuid: " + domain.getArena_uuid() + " deletado");
-	}
-	
 }

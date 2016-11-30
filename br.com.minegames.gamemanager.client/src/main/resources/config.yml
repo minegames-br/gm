@@ -1,5 +1,5 @@
 thecraftcloud:
    gamemanager:
-      url: http://localhost:8080/gamemanager/webresources
-      url-prod: http://services.minegames.com.br:8080/gamemanager/webresources
+      url-dev: http://localhost:8080/gamemanager/webresources
+      url: http://services.thecraftcloud.com:8080/gamemanager/webresources
    

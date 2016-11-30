@@ -1,18 +1,14 @@
 package com.thecraftcloud.core.domain;
 
-import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 
 @Entity
 public class GameWorld  extends TransferObject {
@@ -25,6 +21,12 @@ public class GameWorld  extends TransferObject {
 	
 	private String name;
 	private String description;
+	
+	@OneToOne
+	private Local spawn;
+	
+	private String path;
+	
 	public UUID getWorld_uuid() {
 		return world_uuid;
 	}
@@ -42,6 +44,18 @@ public class GameWorld  extends TransferObject {
 	}
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	public Local getSpawn() {
+		return spawn;
+	}
+	public void setSpawn(Local spawn) {
+		this.spawn = spawn;
+	}
+	public String getPath() {
+		return path;
+	}
+	public void setPath(String path) {
+		this.path = path;
 	}
 	
 	

@@ -1,0 +1,6 @@
+name: GunGame
+version: 1.0
+author: gyuriX
+main: com.thecraftcloud.gungame.GameController
+depend: [TheCraftCloud-MiniGame,TheCraftCloud-Core]
+commands:
