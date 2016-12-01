@@ -16,7 +16,7 @@ import com.thecraftcloud.lobby.service.GameService;
 public class InteractSignListener implements Listener, PluginMessageListener {
 
 	private JavaPlugin plugin;
-	private GameService gameService = GameService.getInstance(); 
+	private GameService gameService = GameService.getInstance();
 
 	public InteractSignListener(JavaPlugin plugin) {
 		super();
@@ -25,7 +25,7 @@ public class InteractSignListener implements Listener, PluginMessageListener {
 
 	@EventHandler
 	public void onInteractSign(PlayerInteractEvent event) {
-		
+
 		Player player = event.getPlayer();
 		Block block = event.getClickedBlock();
 		if (block.getType() == Material.WALL_SIGN || block.getType() == Material.SIGN_POST) {

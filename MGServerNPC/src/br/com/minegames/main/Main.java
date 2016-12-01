@@ -10,6 +10,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.messaging.PluginMessageListener;
@@ -25,6 +26,7 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 
 
+
 import br.com.minegames.commands.cmdCreateNpc;
 import br.com.minegames.npcs.JoinListener;
 import br.com.minegames.npcs.NPC;
@@ -35,6 +37,7 @@ public class Main extends JavaPlugin implements Listener, PluginMessageListener 
 	private cmdCreateNpc cmd;
 	public CopyOnWriteArraySet<NPC> npcList = new CopyOnWriteArraySet<NPC>();
 	private NPC npc;
+	//private WrapperPlayClientUseEntity wrapper;
 
 	@Override
 	public void onEnable() {
@@ -42,45 +45,15 @@ public class Main extends JavaPlugin implements Listener, PluginMessageListener 
 		System.out.print("[MGServerNPC] MGServerNPC plugin Enabled!");
 		registerListeners();
 		final JavaPlugin plugin = this;
+		
 		ProtocolManager protocolManager;
 		protocolManager = ProtocolLibrary.getProtocolManager();
 		
 		if(npcList.size() != 0) {
 			
-			protocolManager.addPacketListener(new  PacketAdapter(this, ListenerPriority.NORMAL, PacketType.Play.Client.USE_ENTITY) {
-				public void onPacketReceiving(PacketEvent event) {
-					
-					System.out.println(event.getPlayer());
-					System.out.println(event.getPacketType());
-					System.out.println(event.getPacket());
-					System.out.println("BLOCK DATA"+ event.getPacket().getBlockData());
-					System.out.println(event.getSource());
-					
-					if (event.getPacketType() == PacketType.Play.Client.USE_ENTITY) {
-						
-						
-						PacketContainer packet = event.getPacket();
-						Player player = event.getPlayer();
-						
-						//System.out.println(event.getPlayer().getWorld().getNearbyEntities(player.getLocation(), 2,2,2));
-						//Collection<Entity> et = player.getWorld().getEntitiesByClasses(CraftPlayer.class);
-						
-						Collection<Entity> et = player.getWorld().getNearbyEntities(player.getLocation(), 2,2,2);
-						if (!(et instanceof Player)) {
-							System.out.print("name" + et);
-							//Entity e = (Entity) et;
-						}
-							
-						
-				
-					}
-					
-				}
-
+	
 			
-			});
-			
-		/*	// Censor
+		 // Censor
 			protocolManager
 					.addPacketListener(new PacketAdapter(this, ListenerPriority.NORMAL, PacketType.Play.Client.USE_ENTITY) {
 						@Override
@@ -97,21 +70,21 @@ public class Main extends JavaPlugin implements Listener, PluginMessageListener 
 						
 								
 								String server = (String) getConfig().get("1.npc.server"); 
-								//ByteArrayDataOutput out = ByteStreams.newDataOutput();
-								//out.writeUTF("Connect");
-								//out.writeUTF("gungame");
-								//player.sendPluginMessage(plugin, "BungeeCord",
-								//out.toByteArray());
+								ByteArrayDataOutput out = ByteStreams.newDataOutput();
+								out.writeUTF("Connect");
+								out.writeUTF("gungame");
+								player.sendPluginMessage(plugin, "BungeeCord",
+								out.toByteArray());
 								player.sendMessage("Bem-vindo ao servidor " + server);
 							}
 						}
-					}); */
+					}); 
 		}
 		
 		// commands
 		getCommand("mgnpc").setExecutor(new cmdCreateNpc(this));
 
-	}
+	} 
 	
 	private void registerListeners() {
 		PluginManager pm = Bukkit.getPluginManager();
@@ -161,5 +134,9 @@ public class Main extends JavaPlugin implements Listener, PluginMessageListener 
 				this.saveConfig();
 			}
 		}
+	}
+	
+	public void onInteractEntity(PlayerInteractEntityEvent event) {
+		System.out.println("i'm here");
 	}
 }

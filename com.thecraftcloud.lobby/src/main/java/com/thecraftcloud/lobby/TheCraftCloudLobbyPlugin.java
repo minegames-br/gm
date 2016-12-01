@@ -6,6 +6,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.thecraftcloud.core.util.Utils;
+import com.thecraftcloud.lobby.listener.InteractNpcListener;
 import com.thecraftcloud.lobby.listener.InteractSignListener;
 import com.thecraftcloud.lobby.listener.PlayerFlightEventListener;
 import com.thecraftcloud.lobby.listener.ServerListener;
@@ -24,6 +25,7 @@ public class TheCraftCloudLobbyPlugin extends JavaPlugin {
 	protected void registerListeners() {
 		PluginManager pm = Bukkit.getPluginManager();
 		pm.registerEvents(new InteractSignListener(this), this );
+		pm.registerEvents(new InteractNpcListener(this), this);
 		pm.registerEvents(new PlayerFlightEventListener(this), this );
 		pm.registerEvents(new ServerListener(this), this );
 	}
