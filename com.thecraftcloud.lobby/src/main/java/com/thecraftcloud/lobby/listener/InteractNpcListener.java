@@ -29,6 +29,7 @@ public class InteractNpcListener implements Listener, PluginMessageListener {
 		String gameName = event.getRightClicked().getName().toLowerCase();
 		
 		//Falta mandar o player para algum lugar
+		
 		/*
 		gameService.playGame(player, gameName);
 		BungeeUtils bungeeUtils = new BungeeUtils();
