@@ -989,6 +989,35 @@ public class TheCraftCloudDelegate {
 	public void removePlayerFromGameQueue(MineCraftPlayer player) {
 		delete("/gamequeue/player/" + player.getPlayer_uuid().toString() );
 	}
+
+	public List<Arena> findArenasByGame(Game game) {
+		ClientRequest client = new ClientRequest(this.gameManagerUrl + "/game/" + game.getGame_uuid().toString() + "/arenas");
+		ClientResponse response = null;
+		try {
+			response = client.get(String.class);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        ObjectMapper mapper = new ObjectMapper();
+        String json = (String)response.getEntity(String.class);
+        List<Arena> myObjects = null;
+		try {
+			myObjects = mapper.readValue(json, mapper.getTypeFactory().constructCollectionType(List.class, Arena.class));
+		} catch (JsonParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+        
+        return myObjects;
+	}
 	
 }
 

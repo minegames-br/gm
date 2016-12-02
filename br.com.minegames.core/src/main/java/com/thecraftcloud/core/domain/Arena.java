@@ -16,7 +16,7 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 @Entity
-public class Arena extends TransferObject {
+public class Arena extends TransferObject implements Comparable {
 
 	@Id
 	@GeneratedValue(generator = "uuid2")
@@ -90,5 +90,12 @@ public class Arena extends TransferObject {
 	public void setFacing(FacingDirection facing) {
 		this.facing = facing;
 	}
+	
+	@Override
+	public int compareTo(Object o) {
+		Arena arena = (Arena)o;
+		return arena.getArena_uuid().compareTo(this.getArena_uuid());
+	}
+	
 	
 }

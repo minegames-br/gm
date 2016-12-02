@@ -14,6 +14,7 @@ import javax.ws.rs.core.Response;
 
 import org.jboss.logging.Logger;
 
+import com.thecraftcloud.core.domain.Arena;
 import com.thecraftcloud.core.domain.Game;
 import com.thecraftcloud.core.domain.GameArenaConfig;
 import com.thecraftcloud.core.domain.GameConfig;
@@ -196,6 +197,16 @@ public class GameREST  extends REST {
 	public Response findAllGames() {
 		GameService service = new GameService();
 		Collection<Game> list = service.findAll();
+		String json = JSONParser.getInstance().toJSONString(list);
+		return Response.ok(json, MediaType.APPLICATION_JSON).build();
+	}
+	
+	@GET
+	@Path("/{uuid}/arenas")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response findAllArenasByGames(@PathParam("uuid") String _uuid) {
+		GameService service = new GameService();
+		Collection<Arena> list = service.findArenas(_uuid);
 		String json = JSONParser.getInstance().toJSONString(list);
 		return Response.ok(json, MediaType.APPLICATION_JSON).build();
 	}

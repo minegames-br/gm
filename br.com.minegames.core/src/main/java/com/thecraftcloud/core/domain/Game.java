@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
-public class Game extends TransferObject {
+public class Game extends TransferObject implements Comparable {
 
 	@Id
 	@GeneratedValue(generator = "uuid2")
@@ -47,6 +47,12 @@ public class Game extends TransferObject {
 	}
 	public void setPluginName(String pluginName) {
 		this.pluginName = pluginName;
+	}
+	
+	@Override
+	public int compareTo(Object o) {
+		Game game = (Game)o;
+		return game.getGame_uuid().compareTo(this.getGame_uuid());
 	}
 	
 }

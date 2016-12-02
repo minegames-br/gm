@@ -37,25 +37,7 @@ public class PrepareGamesJob implements Job {
 			//o status online significa que nao esta em modo jogo, ou seja, disponivel.
 			//preparando jogo para o servidor que como tem um filtro acima eh um server
 			//do tipo GAME
-			prepareGunGame(server);
-			
-			/*
-			ActionDTO dto = new ActionDTO();
-			dto.setName(ActionDTO.GET_GAME);
-			try{
-				AdminClient client = AdminClient.getInstance();
-				ResponseDTO responseDTO = client.execute(server, dto);
-				
-				if(responseDTO.getResult()) {
-					String resp[] = responseDTO.getMessage().split(":");
-					System.out.println( server.getName() + " - " + responseDTO.getMessage() + " " + responseDTO.getResult() );
-				} else {
-					prepareGunGame( server );
-				}
-			}catch(Exception e) {
-				e.printStackTrace();
-			}
-					*/
+			//prepareGunGame(server);
 		}
 
 			

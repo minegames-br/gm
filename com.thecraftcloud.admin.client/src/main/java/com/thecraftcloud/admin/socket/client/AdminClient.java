@@ -8,6 +8,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 import com.thecraftcloud.admin.action.GetPlayerInfoAction;
+import com.thecraftcloud.admin.action.NotifyPlayerAction;
 import com.thecraftcloud.admin.action.SendPlayerToServerAction;
 import com.thecraftcloud.core.admin.domain.ActionDTO;
 import com.thecraftcloud.core.admin.domain.ResponseDTO;
@@ -160,6 +161,22 @@ public class AdminClient {
 		
 		if(responseDTO == null) {
 			throw new Exception("Não foi possível recuperar informações do player" );
+		}
+		return responseDTO;
+	}
+
+	public ResponseDTO notifyPlayer(MineCraftPlayer player, String message) throws Exception {
+		ActionDTO dto = new ActionDTO();
+		dto.setName(NotifyPlayerAction.ACTION_NAME);
+		dto.setPlayer(player);
+		dto.setMessage(message);
+		
+		ServerInstance server = player.getServer();
+
+		ResponseDTO responseDTO = this.execute(server, dto);
+		
+		if(responseDTO == null) {
+			throw new Exception("Não foi possível notificar o player" );
 		}
 		return responseDTO;
 	}

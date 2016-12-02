@@ -293,4 +293,18 @@ public class GameService extends Service {
 		return domain.getGac_uuid();
 	}
 
+	public Collection<Arena> findArenas(String _uuid) {
+		List<Arena> list = null;
+		startTransaction();
+		Query query = em.createQuery("SELECT DISTINCT gac.arena FROM GameArenaConfig gac where gac.gameConfig.game.game_uuid = :_uuid");
+		query.setParameter("_uuid", UUID.fromString(_uuid) );
+		try{
+			list = query.getResultList();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		commitTransaction();
+		return list;
+	}
+
 }

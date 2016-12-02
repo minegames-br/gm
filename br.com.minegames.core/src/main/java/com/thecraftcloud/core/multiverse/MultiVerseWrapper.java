@@ -1,11 +1,17 @@
 package com.thecraftcloud.core.multiverse;
 
+import java.io.File;
+
+import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.World.Environment;
 import org.bukkit.WorldType;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.onarandombox.MultiverseCore.MultiverseCore;
+import com.thecraftcloud.core.domain.Arena;
+import com.thecraftcloud.core.util.zip.ExtractZipContents;
 
 public class MultiVerseWrapper {
 	
@@ -23,6 +29,42 @@ public class MultiVerseWrapper {
 		mvc.getMVWorldManager().addWorld(worldName, World.Environment.NORMAL, worldName,  WorldType.NORMAL, false, "VoidWorld");
 		mvc.getMVWorldManager().loadWorld( worldName );
 		return Bukkit.getWorld( worldName );
+	}
+
+	public World addWorld(JavaPlugin plugin, Arena arena) {
+		File dir = Bukkit.getWorldContainer();
+		
+		//File schematicFile = delegate.downloadArenaSchematic(arena.getArena_uuid(), dir.getAbsolutePath());
+		File arenaWorldFile = new File(dir, arena.getName() );
+		
+		MultiverseCore mvplugin = (MultiverseCore)Bukkit.getPluginManager().getPlugin("Multiverse-Core");
+		String worldPath = dir.getAbsolutePath() + "/" + arena.getName();
+				
+		if(!arenaWorldFile.exists()) {
+			File zipFile = new File( dir, arena.getName() + ".zip");
+			ExtractZipContents.unzip(zipFile);
+			Bukkit.getLogger().info("world path: " + worldPath);
+			mvplugin.getCore().getMVWorldManager().addWorld(arena.getName(), Environment.NORMAL, new Integer( arena.getName().hashCode() ).toString(), WorldType.NORMAL, new Boolean(false), null, false);
+		} else {
+			//Remover o mundo do multi verse para recarregar
+			mvplugin.getMVWorldManager().unloadWorld(arena.getName());
+			
+			//Apagar o diretório
+			try {
+				FileUtils.deleteDirectory(arenaWorldFile);
+			} catch (java.io.IOException e) {
+				e.printStackTrace();
+			}
+			
+			//Descompactar arena
+			File zipFile = new File( dir, arena.getName() + ".zip");
+			ExtractZipContents.unzip(zipFile);
+			
+			//Carregar o mundo no multiverse
+			Bukkit.getLogger().info("world path: " + worldPath);
+			mvplugin.getCore().getMVWorldManager().addWorld(arena.getName(), Environment.NORMAL, new Integer( arena.getName().hashCode() ).toString(), WorldType.NORMAL, new Boolean(false), null, false);
+		}
+		return Bukkit.getWorld(arena.getName());
 	}
 
 }

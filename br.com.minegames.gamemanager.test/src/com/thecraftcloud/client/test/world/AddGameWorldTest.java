@@ -15,12 +15,20 @@ public class AddGameWorldTest {
 	@Test
 	public void test() {
 
+		/*
 		GameWorld gw = new GameWorld();
 		gw.setName("gungame-space-station");
 		gw.setDescription("arena de batalha do gungame que simula uma estacao espacial");
 		
 		delegate.addGameWorld( gw );
+*/
 		
+		GameWorld gw = new GameWorld();
+		gw.setName("arqueiro-pokemon-go");
+		gw.setDescription("arena estilo pokemon-go para o TheLastArcher");
+		
+		delegate.addGameWorld( gw );
+
 	}
 
 

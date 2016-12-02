@@ -7,6 +7,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import com.thecraftcloud.admin.TheCraftCloudAdmin;
 import com.thecraftcloud.admin.service.GameInstanceService;
@@ -16,11 +17,14 @@ import com.thecraftcloud.client.TheCraftCloudDelegate;
 import com.thecraftcloud.core.admin.domain.ActionDTO;
 import com.thecraftcloud.core.admin.domain.ResponseDTO;
 import com.thecraftcloud.core.admin.domain.ResponseType;
+import com.thecraftcloud.core.domain.Arena;
 import com.thecraftcloud.core.domain.GameArenaConfig;
 import com.thecraftcloud.core.domain.GameConfigInstance;
 import com.thecraftcloud.core.domain.GameInstance;
+import com.thecraftcloud.core.domain.GameWorld;
 import com.thecraftcloud.core.domain.ServerInstance;
 import com.thecraftcloud.core.domain.ServerStatus;
+import com.thecraftcloud.core.multiverse.MultiVerseWrapper;
 import com.thecraftcloud.minigame.TheCraftCloudConfig;
 import com.thecraftcloud.minigame.TheCraftCloudMiniGameAbstract;
 import com.thecraftcloud.minigame.service.ConfigService;
@@ -28,12 +32,12 @@ import com.thecraftcloud.minigame.service.ConfigService;
 public class PrepareGameAction extends Action {
 
 	private ConfigService configService = ConfigService.getInstance();
+	TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance();
 
 	@Override
 	public ResponseDTO execute(ActionDTO dto) {
 
 		PluginService pService = new PluginService();
-		File dir = Bukkit.getWorldContainer();
 		
 		//Testar se o game veio preenchido
 		if(dto.getGame() == null) {
@@ -48,7 +52,8 @@ public class PrepareGameAction extends Action {
 		//verificar se a arena está disponível
 		World world = Bukkit.getWorld( dto.getArena().getName() );
 		if(world == null) {
-			return ResponseDTO.incompleteRequest("Arena: " + dto.getArena().getName() + " is not available on this server.");
+			world = this.setupGameWorld( dto.getArena() );
+			//return ResponseDTO.incompleteRequest("Arena: " + dto.getArena().getName() + " is not available on this server.");
 		}
 		
 		//recuperar o plugin do jogo associado
@@ -62,7 +67,6 @@ public class PrepareGameAction extends Action {
 		pService.disableTheCraftCloudMiniGames();
 		
 		//recuperar as configuracoes do jogo
-		TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance();
 		List<GameArenaConfig> gacList = delegate.findAllGameConfigArenaByGameUUID( dto.getGame().getGame_uuid().toString() );
 		List<GameConfigInstance> gciList = delegate.findAllGameConfigInstanceByGameUUID( dto.getGame().getGame_uuid().toString() );
 
@@ -74,7 +78,7 @@ public class PrepareGameAction extends Action {
 		configService.setGciList(new CopyOnWriteArraySet<>(gciList));
 		configService.setWorld(world);
 		
-		TheCraftCloudAdmin pluginAdmin = (TheCraftCloudAdmin)Bukkit.getPluginManager().getPlugin( "TheCraftCloud-Admin" );
+		TheCraftCloudAdmin pluginAdmin = (TheCraftCloudAdmin)Bukkit.getPluginManager().getPlugin( TheCraftCloudAdmin.PLUGIN_NAME );
 
 		ServerService sService = new ServerService();
 		ServerInstance server = sService.getServerInstance(pluginAdmin.getServerName());
@@ -106,6 +110,21 @@ public class PrepareGameAction extends Action {
 		responseDTO.setCode(ResponseDTO.ADM_SUCCESS);
 		
 		return responseDTO;
+	}
+	
+	private World setupGameWorld( Arena arena ) {
+		File worldContainerDir = Bukkit.getWorldContainer();
+
+		//recuperar o plugin TheCraftCloudAdmin
+		TheCraftCloudAdmin plugin = (TheCraftCloudAdmin)Bukkit.getPluginManager().getPlugin( TheCraftCloudAdmin.PLUGIN_NAME );
+		
+		//Abrir uma thread para fazer download do mundo
+		GameWorld gw = delegate.findGameWorldByName(arena.getName());
+		delegate.downloadWorld( gw , worldContainerDir);
+		
+		MultiVerseWrapper wrapper = new MultiVerseWrapper();
+		return wrapper.addWorld( plugin, arena );
+		
 	}
 
 }

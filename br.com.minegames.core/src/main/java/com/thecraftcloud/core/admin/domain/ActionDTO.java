@@ -25,6 +25,7 @@ public class ActionDTO extends TransferObject {
 	private Game game;
 	private Arena arena;
 	private ServerInstance server;
+	private String message;
 	
 	public String getName() {
 		return name;
@@ -72,6 +73,14 @@ public class ActionDTO extends TransferObject {
 	
 	public ServerInstance getServer() {
 		return this.server;
+	}
+
+	public String getMessage() {
+		return this.message;
+	}
+	
+	public void setMessage(String message) {
+		this.message = message;
 	}
 	
 }
