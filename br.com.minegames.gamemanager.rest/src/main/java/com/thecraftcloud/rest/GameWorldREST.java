@@ -17,19 +17,14 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 
-import org.jboss.logging.Logger;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
-import com.thecraftcloud.core.domain.Arena;
-import com.thecraftcloud.core.domain.GameConfig;
 import com.thecraftcloud.core.domain.GameWorld;
 import com.thecraftcloud.core.json.JSONParser;
-import com.thecraftcloud.service.GameConfigService;
 import com.thecraftcloud.service.GameWorldService;
-import com.thecraftcloud.service.SchematicService;
 
 @Path("/world")
-public class GameWorldREST {
+public class GameWorldREST  extends REST {
 	
 	@Path("/{uuid}/upload")
 	@POST
@@ -54,7 +49,7 @@ public class GameWorldREST {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response create(String json) {
-		Logger.getLogger(GameWorldREST.class).info("json recebido: " + json );
+		log("json recebido: " + json );
 		GameWorldService service = new GameWorldService();
 		GameWorld domain = (GameWorld)JSONParser.getInstance().toObject(json, GameWorld.class);
 		if(domain != null) {
@@ -71,7 +66,7 @@ public class GameWorldREST {
 	@Path("/{uuid}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response get(@PathParam("uuid") String _uuid) {
-		Logger.getLogger(GameWorldREST.class).info("uuid recebido: ");
+		log("uuid recebido: ");
 		GameWorldService service = new GameWorldService();
 		GameWorld domain = service.find( UUID.fromString(_uuid) );
 		if( domain != null) {
@@ -96,7 +91,7 @@ public class GameWorldREST {
 	@Path("/{uuid}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response delete(@PathParam("uuid") String _uuid) {
-		Logger.getLogger(GameWorldREST.class).info("uuid recebido: ");
+		log("uuid recebido: ");
 		GameWorldService service = new GameWorldService();
 		GameWorld domain = service.find( UUID.fromString(_uuid) );
 		if( domain != null) {
@@ -111,7 +106,7 @@ public class GameWorldREST {
     @Path("/{uuid}/download")
     @Produces("text/plain")
     public Response downloadWorld(@PathParam("uuid") String uuid) {
-        System.out.println("Download world ZIPed directory: " + uuid);
+        log("Download world ZIPed directory: " + uuid);
 
         GameWorldService service = new GameWorldService();
         GameWorld domain = service.find( UUID.fromString(uuid) );
@@ -129,7 +124,7 @@ public class GameWorldREST {
 	@Path("/search/{name}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response findGameWorldByName(@PathParam("name") String name) {
-		System.out.println("name: " + name);
+		log("name: " + name);
 		GameWorldService service = new GameWorldService();
 		GameWorld domain = service.findByName( name );
 		if( domain != null) {

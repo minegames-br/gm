@@ -7,19 +7,17 @@ import org.bukkit.event.Listener;
 
 import com.thecraftcloud.admin.service.AdminService;
 import com.thecraftcloud.core.util.Utils;
-import com.thecraftcloud.minigame.event.StartGameEvent;
-import com.thecraftcloud.minigame.service.ConfigService;
+import com.thecraftcloud.minigame.event.PlayerLeftGameEvent;
 
-public class StartGameListener implements Listener {
+public class PlayerLeftGameListener implements Listener {
 	
     @EventHandler(priority=EventPriority.HIGHEST)
-    public void onStartGame(final StartGameEvent event) {
-    	Bukkit.getConsoleSender().sendMessage(Utils.color("&2Game: " + event.getGame().getName() + " has started."));
+    public void onPlayerJoinGame(final PlayerLeftGameEvent event) {
+    	Bukkit.getConsoleSender().sendMessage(Utils.color("&2Player: " + event.getGamePlayer().getName() + " has left " + event.getGame().getName() + "."));
     	final AdminService service = new AdminService();
-    	final ConfigService cService = ConfigService.getInstance();
     	Bukkit.getScheduler().runTaskAsynchronously(event.getGame(), new Runnable() {
     		public void run() {
-    	    	service.notifyGameStart( event.getGame() );
+    	    	service.notifyPlayerLeft( event.getGamePlayer(), event.getGame() );
     		}
     	});
     }

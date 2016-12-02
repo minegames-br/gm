@@ -16,6 +16,7 @@ import com.thecraftcloud.core.domain.Game;
 import com.thecraftcloud.core.domain.GameArenaConfig;
 import com.thecraftcloud.core.domain.GameConfigInstance;
 import com.thecraftcloud.core.domain.GameConfigType;
+import com.thecraftcloud.core.domain.GameInstance;
 import com.thecraftcloud.core.domain.Local;
 import com.thecraftcloud.core.domain.ServerInstance;
 import com.thecraftcloud.core.json.JSONParser;
@@ -28,6 +29,7 @@ public class ConfigService {
 	protected static ConfigService me;
 	protected TheCraftCloudConfig config;
 	private MyCloudCraftGame myCloudCraftGame;
+	private GameInstance gameInstance;
 		
 	protected ConfigService() {
 	}
@@ -258,5 +260,13 @@ public class ConfigService {
 
 	public World getArenaWorld() {
 		return Bukkit.getWorld(this.config.getArena().getName());
+	}
+
+	public GameInstance getGameInstance() {
+		return this.gameInstance;
 	}	
+	
+	public void setGameInstance(GameInstance gi) {
+		this.gameInstance = gi;
+	}
 }

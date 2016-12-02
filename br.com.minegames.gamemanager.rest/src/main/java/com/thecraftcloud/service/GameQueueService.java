@@ -6,6 +6,8 @@ import java.util.UUID;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.jboss.logging.Logger;
 
@@ -17,7 +19,7 @@ import com.thecraftcloud.dao.GameQueueDAO;
 public class GameQueueService extends Service {
 
 	public GameQueueService() {
-		
+		this.slave = false;
 	}
 	
 	public GameQueueService(EntityManager em) {
@@ -38,10 +40,14 @@ public class GameQueueService extends Service {
 	}
 	
 	public GameQueue find(UUID uuid) {
-		startTransaction();
+		boolean close = false;
+		if(em == null) { 
+			startTransaction();
+			close = true;
+		}
 		GameQueueDAO dao = new GameQueueDAO(em);
 		GameQueue domain = dao.find(uuid);
-		commitTransaction();
+		if(close) commitTransaction();
 		return domain;
 	}
 	
@@ -54,10 +60,28 @@ public class GameQueueService extends Service {
 	}
 
 	public void delete(GameQueue domain) {
+		log("startTransaction");
 		startTransaction();
+		log("em.remove");
 		em.remove(domain);
 		commitTransaction();
 		Logger.getLogger(GameQueueService.class).info("uuid: " + domain.getGame_queue_uuid() + " deletado");
+	}
+
+	public void delete(String uuid) throws Exception {
+		log("GameQueueService.delete: " + uuid);
+		startTransaction();
+		GameQueue domain = this.find( UUID.fromString(uuid) );
+		if( domain != null) {
+			log("GameQueueService.delete em.remove: " + domain);
+			em.remove(domain);
+		} else {
+			log("GameQueue: " + uuid + " not found");
+			throw new Exception("Could not remove record");
+		}
+		log("GameQueueService.delete commitTransaction: " + domain);
+		commitTransaction();
+		log("uuid: " + domain.getGame_queue_uuid() + " deletado");
 	}
 
 	public Collection<GameQueue> findAllGameQueueByGame(String gameName) {

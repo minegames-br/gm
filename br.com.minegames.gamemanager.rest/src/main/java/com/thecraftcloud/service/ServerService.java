@@ -7,8 +7,8 @@ import javax.persistence.Query;
 
 import org.jboss.logging.Logger;
 
-import com.thecraftcloud.core.domain.Item;
 import com.thecraftcloud.core.domain.ServerInstance;
+import com.thecraftcloud.core.domain.ServerStatus;
 import com.thecraftcloud.dao.ServerDAO;
 
 public class ServerService extends Service {
@@ -40,7 +40,8 @@ public class ServerService extends Service {
 
 	public Collection<ServerInstance> findAllOnline() {
 		startTransaction();
-		Query query = em.createQuery("SELECT si FROM ServerInstance si ");
+		Query query = em.createQuery("SELECT si FROM ServerInstance si where status = :_status");
+		query.setParameter("_status", ServerStatus.ONLINE);
 		Collection<ServerInstance> list = (Collection<ServerInstance>) query.getResultList();
 		commitTransaction();
 		return list;

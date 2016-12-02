@@ -60,5 +60,17 @@ public class ServerService {
 			e.printStackTrace();
 		}
 	}
+
+	public void notifyServerStart(ServerInstance server) {
+		server.setStatus(ServerStatus.ONLINE);
+		server.setLastUpdate(Calendar.getInstance());
+		delegate.updateServer(server);
+	}
+	
+	public void notifyServerStop(ServerInstance server) {
+		server.setStatus(ServerStatus.OFFLINE);
+		server.setLastUpdate(Calendar.getInstance());
+		delegate.updateServer(server);
+	}
 	
 }

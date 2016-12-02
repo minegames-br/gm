@@ -12,19 +12,17 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.jboss.logging.Logger;
-
 import com.thecraftcloud.core.domain.Item;
 import com.thecraftcloud.core.json.JSONParser;
 import com.thecraftcloud.service.ItemService;
 
 @Path("/item")
-public class ItemREST {
+public class ItemREST extends REST {
 	
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response create(String json) {
-		Logger.getLogger(ItemREST.class).info("json recebido: " + json );
+		log("json recebido: " + json );
 		ItemService service = new ItemService();
 		Item domain = (Item)JSONParser.getInstance().toObject(json, Item.class);
 		if(domain != null) {
@@ -41,7 +39,7 @@ public class ItemREST {
 	@Path("/{uuid}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response get(@PathParam("uuid") String _uuid) {
-		Logger.getLogger(ItemREST.class).info("uuid recebido: ");
+		log("uuid recebido: ");
 		ItemService service = new ItemService();
 		Item domain = service.find( UUID.fromString(_uuid) );
 		if( domain != null) {
@@ -56,7 +54,7 @@ public class ItemREST {
 	@Path("/search/{name}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response findItemByName(@PathParam("name") String name) {
-		Logger.getLogger(ItemREST.class).info("uuid recebido: ");
+		log("uuid recebido: ");
 		ItemService service = new ItemService();
 		Item domain = service.findByName( name );
 		if( domain != null) {
@@ -81,7 +79,7 @@ public class ItemREST {
 	@Path("/{uuid}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response delete(@PathParam("uuid") String _uuid) {
-		Logger.getLogger(ItemREST.class).info("uuid recebido: ");
+		log("uuid recebido: ");
 		ItemService service = new ItemService();
 		Item domain = service.find( UUID.fromString(_uuid) );
 		if( domain != null) {

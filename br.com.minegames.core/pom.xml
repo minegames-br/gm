@@ -5,6 +5,25 @@
   <version>1.0.0</version>
   <name>com.thecraftcloud.core</name>
 
+	<properties>
+           	<lib.dir>C:\Users\JoaoEmilio\git\gm\br.com.minegames.core\</lib.dir>
+	</properties>
+
+	<profiles>
+        <profile>
+            <id>RENATO</id>
+            <properties>
+            	<lib.dir></lib.dir>
+            </properties>
+        </profile>
+        <profile>
+            <id>JOAO</id>
+            <properties>
+            	<lib.dir>C:\Users\JoaoEmilio\git\gm\br.com.minegames.core\</lib.dir>
+            </properties>
+        </profile>
+    </profiles>
+
 	<build>
     	<plugins>
       		<plugin>
@@ -31,7 +50,7 @@
 		    <artifactId>bukkit</artifactId>
 		    <version>1.10.2-R1</version>
 		    <scope>system</scope>
-		    <systemPath>C:/Users/renat/git/gm/br.com.minegames.core/craftbukkit-1.10.2.jar</systemPath>
+		    <systemPath>${lib.dir}/craftbukkit-1.10.2.jar</systemPath>
 		</dependency>
 		
 		<dependency>
@@ -39,7 +58,7 @@
 		    <artifactId>Core</artifactId>
 		    <version>2.5-b717</version>
 		    <scope>system</scope>
-		    <systemPath>C:/Users/renat/git/gm/br.com.minegames.core/Multiverse-Core-2.5-b717.jar</systemPath>
+		    <systemPath>${lib.dir}/Multiverse-Core-2.5-b717.jar</systemPath>
 		</dependency>
 		
 		<dependency>

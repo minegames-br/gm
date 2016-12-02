@@ -23,12 +23,18 @@ public class CreatePlayerTest {
 		player.setNickName("_WolfGamer");
 		player.setStatus(PlayerStatus.ONLINE);
 		player.setLastLogin(Calendar.getInstance());
-		*/
 
 		MineCraftPlayer player = new MineCraftPlayer();
 		player.setEmail("joao.emilio@gmail.com");
 		player.setName("_KingCraft");
 		player.setNickName("_KingCraft");
+		player.setStatus(PlayerStatus.ONLINE);
+		player.setLastLogin(Calendar.getInstance());
+		*/
+		MineCraftPlayer player = new MineCraftPlayer();
+		player.setEmail("joaoemilio@gmail.com");
+		player.setName("FoxGamer129");
+		player.setNickName("FoxGamer129");
 		player.setStatus(PlayerStatus.ONLINE);
 		player.setLastLogin(Calendar.getInstance());
 

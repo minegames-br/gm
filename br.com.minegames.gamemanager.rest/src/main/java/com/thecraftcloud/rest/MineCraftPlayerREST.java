@@ -12,19 +12,19 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.jboss.logging.Logger;
-
+import com.thecraftcloud.core.domain.Game;
 import com.thecraftcloud.core.domain.MineCraftPlayer;
 import com.thecraftcloud.core.json.JSONParser;
+import com.thecraftcloud.service.GameService;
 import com.thecraftcloud.service.MineCraftPlayerService;
 
 @Path("/player")
-public class MineCraftPlayerREST {
+public class MineCraftPlayerREST extends REST {
 	
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response create(String json) {
-		Logger.getLogger(MineCraftPlayerREST.class).info("json recebido: " + json );
+		log("json recebido: " + json );
 		MineCraftPlayerService service = new MineCraftPlayerService();
 		MineCraftPlayer domain = (MineCraftPlayer)JSONParser.getInstance().toObject(json, MineCraftPlayer.class);
 		if(domain != null) {
@@ -41,7 +41,7 @@ public class MineCraftPlayerREST {
 	@Path("/{uuid}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response get(@PathParam("uuid") String _uuid) {
-		Logger.getLogger(MineCraftPlayerREST.class).info("uuid recebido: ");
+		log("uuid recebido: ");
 		MineCraftPlayerService service = new MineCraftPlayerService();
 		MineCraftPlayer domain = service.find( UUID.fromString(_uuid) );
 		if( domain != null) {
@@ -56,7 +56,7 @@ public class MineCraftPlayerREST {
 	@Path("/search/{name}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response findMineCraftPlayerByName(@PathParam("name") String name) {
-		Logger.getLogger(MineCraftPlayerREST.class).info("uuid recebido: ");
+		log("uuid recebido: ");
 		MineCraftPlayerService service = new MineCraftPlayerService();
 		MineCraftPlayer domain = service.findByName( name );
 		if( domain != null) {
@@ -71,7 +71,7 @@ public class MineCraftPlayerREST {
 	@Path("/mojanguuid/{uuid}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response findMineCraftPlayerByMojangUUID(@PathParam("uuid") String uuid) {
-		Logger.getLogger(MineCraftPlayerREST.class).info("uuid recebido: " + uuid);
+		log("uuid recebido: " + uuid);
 		MineCraftPlayerService service = new MineCraftPlayerService();
 		MineCraftPlayer domain = service.findByMojangUuid( uuid );
 		if( domain != null) {
@@ -96,12 +96,31 @@ public class MineCraftPlayerREST {
 	@Path("/{uuid}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response delete(@PathParam("uuid") String _uuid) {
-		Logger.getLogger(MineCraftPlayerREST.class).info("uuid recebido: ");
+		log("uuid recebido: ");
 		MineCraftPlayerService service = new MineCraftPlayerService();
 		MineCraftPlayer domain = service.find( UUID.fromString(_uuid) );
 		if( domain != null) {
 			service.delete(domain);
 		    return Response.ok( "MineCraftPlayer removido com sucesso" , MediaType.APPLICATION_JSON).build();
+		} else {
+			return Response.status(Response.Status.NOT_FOUND).entity("MineCraftPlayer não encontrado: " + _uuid).build();
+		}
+	}
+	
+	@POST
+	@Path("/{uuid}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response updatePlayer(@PathParam("uuid") String _uuid, String json ) {
+		log("uuid recebido: " + _uuid );
+		MineCraftPlayerService service = new MineCraftPlayerService();
+		MineCraftPlayer _player = service.find( UUID.fromString(_uuid) );
+		if( _player != null) {
+			
+			MineCraftPlayer player = (MineCraftPlayer)JSONParser.getInstance().toObject(json, MineCraftPlayer.class);
+			service.merge(player);
+			
+			json = JSONParser.getInstance().toJSONString(player);
+		    return Response.ok( json , MediaType.APPLICATION_JSON).build();
 		} else {
 			return Response.status(Response.Status.NOT_FOUND).entity("MineCraftPlayer não encontrado: " + _uuid).build();
 		}

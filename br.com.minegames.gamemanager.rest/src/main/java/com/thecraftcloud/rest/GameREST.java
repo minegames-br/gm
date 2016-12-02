@@ -24,7 +24,7 @@ import com.thecraftcloud.core.json.JSONParser;
 import com.thecraftcloud.service.GameService;
 
 @Path("/game")
-public class GameREST {
+public class GameREST  extends REST {
 	
 	@GET
 	@Path("/search/{name}")
@@ -110,10 +110,10 @@ public class GameREST {
 		GameService service = new GameService();
 		GameConfigInstance domain = (GameConfigInstance)JSONParser.getInstance().toObject(json, GameConfigInstance.class);
 		
-		System.out.println("gcInstance: " + domain );
-		System.out.println("gameConfig: " + domain.getGameConfig() );
+		log("gcInstance: " + domain );
+		log("gameConfig: " + domain.getGameConfig() );
 		
-		System.out.println("uuid no rest: " + domain.getGameConfig().getGame_config_uuid());
+		log("uuid no rest: " + domain.getGameConfig().getGame_config_uuid());
 		service.create(domain);
 	    return Response.ok(json, MediaType.APPLICATION_JSON).build();
 	}

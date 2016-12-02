@@ -12,19 +12,17 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.jboss.logging.Logger;
-
 import com.thecraftcloud.core.domain.Kit;
 import com.thecraftcloud.core.json.JSONParser;
 import com.thecraftcloud.service.KitService;
 
 @Path("/kit")
-public class KitREST {
+public class KitREST extends REST {
 	
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response create(String json) {
-		Logger.getLogger(KitREST.class).info("json recebido: " + json );
+		log("json recebido: " + json );
 		KitService service = new KitService();
 		Kit domain = (Kit)JSONParser.getInstance().toObject(json, Kit.class);
 		if(domain != null) {
@@ -41,7 +39,7 @@ public class KitREST {
 	@Path("/{uuid}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response get(@PathParam("uuid") String _uuid) {
-		Logger.getLogger(KitREST.class).info("uuid recebido: ");
+		log("uuid recebido: ");
 		KitService service = new KitService();
 		Kit domain = service.find( UUID.fromString(_uuid) );
 		if( domain != null) {
@@ -66,7 +64,7 @@ public class KitREST {
 	@Path("/{uuid}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response delete(@PathParam("uuid") String _uuid) {
-		Logger.getLogger(KitREST.class).info("uuid recebido: ");
+		log("uuid recebido: ");
 		KitService service = new KitService();
 		Kit domain = service.find( UUID.fromString(_uuid) );
 		if( domain != null) {

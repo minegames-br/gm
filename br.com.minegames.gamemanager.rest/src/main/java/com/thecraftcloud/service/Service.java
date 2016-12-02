@@ -6,10 +6,17 @@ import javax.persistence.EntityManager;
 
 import com.thecraftcloud.core.domain.TransferObject;
 import com.thecraftcloud.dao.EntityManagerHelper;
+import org.jboss.logging.Logger; 
 
 public class Service {
 	protected EntityManager em;
 	protected boolean slave = false; 
+	
+	protected Logger logger = Logger.getLogger(getClass());	
+
+	protected void log(String message) {
+		logger.info(message);
+	}
 	
 	public Service() {
 		this.em = EntityManagerHelper.getInstance().createEntityManager();

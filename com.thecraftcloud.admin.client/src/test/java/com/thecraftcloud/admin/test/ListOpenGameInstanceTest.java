@@ -38,7 +38,7 @@ public class ListOpenGameInstanceTest {
 			dto.setName(ActionDTO.GET_GAME);
 		
 			try{
-				AdminClient client = new AdminClient();
+				AdminClient client = AdminClient.getInstance();
 				ResponseDTO responseDTO = client.execute(server, dto);
 				if(responseDTO.getResult()) {
 					if(responseDTO.getType().equals(ResponseType.JSON)) {

@@ -2,7 +2,7 @@ package com.thecraftcloud.rest;
 
 import javax.ws.rs.FormParam;
 
-public class MyEntity {
+public class MyEntity extends REST {
 
     @FormParam("file")
     private byte[] file;

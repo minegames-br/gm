@@ -9,12 +9,11 @@ import org.quartz.JobExecutionException;
 
 import com.thecraftcloud.admin.socket.client.AdminClient;
 import com.thecraftcloud.client.TheCraftCloudDelegate;
-import com.thecraftcloud.core.admin.domain.ActionDTO;
 import com.thecraftcloud.core.admin.domain.ResponseDTO;
-import com.thecraftcloud.core.domain.Game;
 import com.thecraftcloud.core.domain.GameInstance;
 import com.thecraftcloud.core.domain.GameQueue;
 import com.thecraftcloud.core.domain.GameQueueStatus;
+import com.thecraftcloud.core.domain.MineCraftPlayer;
 import com.thecraftcloud.core.domain.ServerInstance;
 
 public class GameQueueJob implements Job {
@@ -29,42 +28,50 @@ public class GameQueueJob implements Job {
 		List<GameQueue> list = delegate.findAllGameQueueByStatus(GameQueueStatus.WAITING); 
 
 		for(GameQueue gq: list) {
-			//descobrir qual servidor esta esperando jogadores para o jogo em questao
-			Game game = gq.getGame();
-			
-			List<GameInstance> listGi = delegate.findGameInstanceAvailable(game);
-			if(listGi == null) {
-				continue;
-			}
-			GameInstance gi = listGi.get(0);
-			ServerInstance server = gi.getServer();
-			
-			ActionDTO dto = new ActionDTO();
-			dto.setName(ActionDTO.JOIN_GAME);
-			dto.setPlayer(gq.getPlayer());
-
-			try{
-				AdminClient client = new AdminClient();
-				ResponseDTO responseDTO = client.execute(server, dto);
-				
-				if(responseDTO == null) {
-					System.err.print("Não foi possível adicionar o jogador: " + gq.getPlayer().getName() + " ao jogo: " + game.getName() );
-					continue;
+			try {
+				//descobrir em qual servidor o jogador está para mandá-lo para o jogo
+				MineCraftPlayer mcp = delegate.findPlayerByName(gq.getPlayer().getName());
+				ServerInstance server = mcp.getServer();
+				if(server == null) {
+					//this.cancelGameSubscription(gq);
+					throw new Exception("Player info is not synchronized with the server");
 				}
 				
-			}catch(Exception e) {
+				//descobrir para qual servidor o jogador vai ser teletransportado para jogar
+				List<GameInstance> listGi = delegate.findGameInstanceAvailable(gq.getGame());
+				ServerInstance gameServer = null;
+				if(listGi != null && listGi.size() > 0) {
+					gameServer = listGi.get(0).getServer();
+				} else {
+					throw new Exception("Nenum GameInstance disponível. Não foi possível adicionar o jogador: " + gq.getPlayer().getName() + " ao jogo: " + gq.getGame().getName() );
+				}
+				
+				AdminClient client = AdminClient.getInstance();
+				ResponseDTO rdto = null;
+			
+				rdto = client.getPlayerInfo( server, gq.getPlayer() );
+				if(!rdto.getResult()) {
+					this.cancelGameSubscription(gq);
+					throw new Exception(rdto.getCode() + " - " + rdto.getMessage());
+				}
+				
+				rdto = client.teleportPlayer(server, gq.getPlayer(), gameServer);
+				if(rdto.getResult() ) {
+					rdto = client.joinGame( gameServer, gq.getPlayer() );
+				} else {
+					throw new Exception(rdto.getCode() + " " + rdto.getMessage() );
+				}
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			
+			
 		}
 		System.err.println("Ending UpdateGameInstance Job.");
 	}
+
+	private void cancelGameSubscription(GameQueue gq) {
+		delegate.removePlayerFromGameQueue(gq);
+	}
 	
-	private void updateGameInstance(GameInstance _gi) {
-		delegate.updateGameInstance(_gi);
-	}
-
-	private void cancelGameInstance(GameInstance gi) {
-		delegate.cancelGameInstance(gi);
-	}
-
 }

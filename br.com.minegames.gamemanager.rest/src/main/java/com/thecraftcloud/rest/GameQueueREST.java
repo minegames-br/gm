@@ -12,19 +12,17 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.jboss.logging.Logger;
-
 import com.thecraftcloud.core.domain.GameQueue;
 import com.thecraftcloud.core.json.JSONParser;
 import com.thecraftcloud.service.GameQueueService;
 
 @Path("/gamequeue")
-public class GameQueueREST {
+public class GameQueueREST  extends REST {
 	
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response create(String json) {
-		Logger.getLogger(GameQueueREST.class).info("json recebido: " + json );
+		log("json recebido: " + json );
 		GameQueueService service = new GameQueueService();
 		GameQueue domain = (GameQueue)JSONParser.getInstance().toObject(json, GameQueue.class);
 		if(domain != null) {
@@ -41,7 +39,8 @@ public class GameQueueREST {
 	@Path("/{uuid}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response get(@PathParam("uuid") String _uuid) {
-		Logger.getLogger(GameQueueREST.class).info("uuid recebido: ");
+		log("get");
+		log("uuid recebido: ");
 		GameQueueService service = new GameQueueService();
 		GameQueue domain = service.find( UUID.fromString(_uuid) );
 		if( domain != null) {
@@ -86,14 +85,17 @@ public class GameQueueREST {
 	@Path("/{uuid}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response delete(@PathParam("uuid") String _uuid) {
-		Logger.getLogger(GameQueueREST.class).info("uuid recebido: ");
+		log("GameQueueREST http delete - uuid recebido: " + _uuid);
 		GameQueueService service = new GameQueueService();
-		GameQueue domain = service.find( UUID.fromString(_uuid) );
-		if( domain != null) {
-			service.delete(domain);
-		    return Response.ok( "GameQueue removido com sucesso" , MediaType.APPLICATION_JSON).build();
-		} else {
-			return Response.status(Response.Status.NOT_FOUND).entity("GameQueue não encontrado: " + _uuid).build();
+		try {
+			log("GameQueueREST http delete - service.delete " + _uuid );
+			service.delete(_uuid);
+			log("GameQueueREST http delete - build response ok" );
+			return Response.ok().build();
+		} catch (Exception e) {
+			log("GameQueueREST http delete - build response error: " + e.getMessage() );
+			e.printStackTrace();
+			return Response.status(Response.Status.CONFLICT).entity("GameQueue nao pode ser apagado " + e.getMessage()).build();
 		}
 	}
 	

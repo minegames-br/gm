@@ -26,7 +26,7 @@ public class Area3DService extends Service {
 	public UUID create(Area3D domain) {
 		startTransaction();
 		/*
-		System.out.println("Save first pointA and B");
+		log("Save first pointA and B");
 		LocalDAO ldao = new LocalDAO(em);
 		ldao.save(domain.getPointA());
 		Local l = ldao.find(domain.getPointA().getLocal_uuid());
@@ -42,7 +42,7 @@ public class Area3DService extends Service {
 		domain.setPointB(pointB);
 */		
 		
-		System.out.println("Now save Area3D");
+		log("Now save Area3D");
 		Area3DDAO dao = new Area3DDAO(em);
 		domain = (Area3D)em.merge(domain);
 		
@@ -76,7 +76,7 @@ public class Area3DService extends Service {
 
 	public UUID save(Area3D domain) {
 		startTransaction();
-		System.out.println("Save first pointA and B");
+		log("Save first pointA and B");
 		LocalDAO ldao = new LocalDAO(em);
 
 		Local pointA = domain.getPointA();
@@ -86,7 +86,7 @@ public class Area3DService extends Service {
 		domain.setPointA(pointA);
 		domain.setPointB(pointB);
 		
-		System.out.println("Now save Area3D");
+		log("Now save Area3D");
 		Area3DDAO dao = new Area3DDAO(em);
 		dao.save(domain);
 		

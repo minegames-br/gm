@@ -22,20 +22,20 @@ public class MonitorAgent {
 		job = newJob(PingServerJob.class).withIdentity("ping-server-job", "group-1-min").build();
 		Trigger t2 = TriggerBuilder
 				.newTrigger()
-				.withIdentity("every-30-seconds", "group1")
+				.withIdentity("every-5-seconds", "group1")
 				.withSchedule(
 				    SimpleScheduleBuilder.simpleSchedule()
-					.withIntervalInSeconds(30).repeatForever())
+					.withIntervalInSeconds(5).repeatForever())
 				.build();		
 		scheduler.scheduleJob( job, t2 );
 
 		job = newJob(UpdateGameInstanceJob.class).withIdentity("update-game-instance-job", "group-1-min").build();
 		Trigger t3 = TriggerBuilder
 				.newTrigger()
-				.withIdentity("every-60-seconds", "group2")
+				.withIdentity("every-10-seconds", "group2")
 				.withSchedule(
 				    SimpleScheduleBuilder.simpleSchedule()
-					.withIntervalInSeconds(120).repeatForever())
+					.withIntervalInSeconds(10).repeatForever())
 				.build();		
 		scheduler.scheduleJob( job, t3 );
 
@@ -45,17 +45,17 @@ public class MonitorAgent {
 				.withIdentity("every-5-seconds", "group3")
 				.withSchedule(
 				    SimpleScheduleBuilder.simpleSchedule()
-					.withIntervalInSeconds(120).repeatForever())
+					.withIntervalInSeconds(5).repeatForever())
 				.build();		
 		scheduler.scheduleJob( job, t4 );
 
 		job = newJob(PrepareGamesJob.class).withIdentity("prepare-games-job", "group-30-secs").build();
 		Trigger t5 = TriggerBuilder
 				.newTrigger()
-				.withIdentity("every-30-seconds", "group3")
+				.withIdentity("every-10-seconds", "group3")
 				.withSchedule(
 				    SimpleScheduleBuilder.simpleSchedule()
-					.withIntervalInSeconds(120).repeatForever())
+					.withIntervalInSeconds(10).repeatForever())
 				.build();		
 		scheduler.scheduleJob( job, t5 );
 	}

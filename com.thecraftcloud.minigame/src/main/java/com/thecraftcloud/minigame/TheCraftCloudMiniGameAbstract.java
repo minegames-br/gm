@@ -1,11 +1,8 @@
 package com.thecraftcloud.minigame;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -17,23 +14,15 @@ import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Scoreboard;
 
-import com.thecraftcloud.core.domain.Arena;
-import com.thecraftcloud.core.domain.Game;
-import com.thecraftcloud.core.domain.GameArenaConfig;
-import com.thecraftcloud.core.domain.GameConfigInstance;
-import com.thecraftcloud.core.domain.GameInstance;
-import com.thecraftcloud.core.domain.Local;
-import com.thecraftcloud.core.domain.ServerInstance;
-import com.thecraftcloud.core.export.ExportBlock;
 import com.thecraftcloud.core.util.LocationUtil;
 import com.thecraftcloud.core.util.Utils;
-import com.thecraftcloud.minigame.command.JoinGameCommand;
-import com.thecraftcloud.minigame.command.LeaveGameCommand;
 import com.thecraftcloud.minigame.domain.EntityPlayer;
 import com.thecraftcloud.minigame.domain.GamePlayer;
 import com.thecraftcloud.minigame.domain.MyCloudCraftGame;
 import com.thecraftcloud.minigame.event.EndGameEvent;
 import com.thecraftcloud.minigame.event.InitiateGameEvent;
+import com.thecraftcloud.minigame.event.PlayerJoinGameEvent;
+import com.thecraftcloud.minigame.event.PlayerLeftGameEvent;
 import com.thecraftcloud.minigame.event.StartGameEvent;
 import com.thecraftcloud.minigame.event.TheCraftCloudMiniGameEnableEvent;
 import com.thecraftcloud.minigame.listener.PlayerQuit;
@@ -141,11 +130,10 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 		Bukkit.getScheduler().cancelTask(this.endGameThreadID);
 		Bukkit.getScheduler().cancelTask(this.levelUpThreadID);
 
-		// remover as bossbars
-		removeBossBars();
-
-		// limpar inventario do jogador
-		clearPlayersInventory();
+		//remover jogadores 
+		for(GamePlayer gp: this.getLivePlayers()) {
+			this.removeLivePlayer(gp.getPlayer());
+		}
 
 		this.getServer().getPluginManager().callEvent(new EndGameEvent(this));
 	}
@@ -205,8 +193,14 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 				player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
 				player.getInventory().clear();
 			}
+			// limpar inventario do jogador
+			clearPlayerInventory(gp.getPlayer());
+
+			//remover a boss bar do jogador
 			removeBossBar(gp);
+			
 			livePlayers.remove(gp);
+			this.getServer().getPluginManager().callEvent(new PlayerLeftGameEvent(this, gp));
 		}
 
 		if (livePlayers.size() == 0) {
@@ -263,6 +257,7 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 			livePlayers.add(gp);
 			//player.sendMessage(Utils.color("&aBem vindo, Arqueiro!"));
 			playerNames.add(player.getName());
+			this.getServer().getPluginManager().callEvent(new PlayerJoinGameEvent(this, gp));
 		} else {
 		}
 	}

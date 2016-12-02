@@ -12,19 +12,17 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.jboss.logging.Logger;
-
 import com.thecraftcloud.core.domain.Local;
 import com.thecraftcloud.core.json.JSONParser;
 import com.thecraftcloud.service.LocalService;
 
 @Path("/local")
-public class LocalREST {
+public class LocalREST extends REST {
 	
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response create(String json) {
-		Logger.getLogger(LocalREST.class).info("json recebido: " + json );
+		log("json recebido: " + json );
 		LocalService service = new LocalService();
 		Local domain = (Local)JSONParser.getInstance().toObject(json, Local.class);
 		if(domain != null) {
@@ -41,7 +39,7 @@ public class LocalREST {
 	@Path("/{uuid}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response get(@PathParam("uuid") String _uuid) {
-		Logger.getLogger(LocalREST.class).info("uuid recebido: ");
+		log("uuid recebido: ");
 		LocalService service = new LocalService();
 		Local domain = service.find( UUID.fromString(_uuid) );
 		if( domain != null) {
@@ -66,7 +64,7 @@ public class LocalREST {
 	@Path("/{uuid}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response delete(@PathParam("uuid") String _uuid) {
-		Logger.getLogger(LocalREST.class).info("uuid recebido: ");
+		log("uuid recebido: ");
 		LocalService service = new LocalService();
 		Local domain = service.find( UUID.fromString(_uuid) );
 		if( domain != null) {

@@ -19,18 +19,18 @@ public class PingServerJob implements Job {
 		System.err.println("Running PingServerJob Job.");
 		TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance("http://services.thecraftcloud.com:8080/gamemanager/webresources");
 		
-		System.err.println("Delegate criado.");
+		//System.err.println("Delegate criado.");
 		
 		List<ServerInstance> serverList = delegate.findAllServerInstanceOnline();
 		
-		System.err.println("Chamou metodo findAllServerInstance.");
+		//System.err.println("Chamou metodo findAllServerInstance.");
 		
 		System.err.println( "serverList " + serverList );
 		for( ServerInstance server: serverList ) {
 			
-			System.err.println("server: " + server.getName() + " " + server.getIp_address() + ":" + server.getAdminPort() );
+			//System.err.println("server: " + server.getName() + " " + server.getIp_address() + ":" + server.getAdminPort() );
 			if(server.getAdminPort() == null || server.getIp_address() == null) {
-				System.out.println("server: " + server.getName() + " " + server.getIp_address() + " is not being managed.");
+				//System.out.println("server: " + server.getName() + " " + server.getIp_address() + " is not being managed.");
 				continue;
 			}
 			
@@ -38,7 +38,7 @@ public class PingServerJob implements Job {
 			dto.setName(ActionDTO.PING_SERVER);
 		
 			try{
-				AdminClient client = new AdminClient();
+				AdminClient client = AdminClient.getInstance();
 				ResponseDTO responseDTO = client.execute(server, dto); 
 				System.out.println( server.getName() + " - " + responseDTO.getMessage() + " " + responseDTO.getResult() );
 			}catch(Exception e) {

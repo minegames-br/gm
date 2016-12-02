@@ -1,5 +1,7 @@
 package com.thecraftcloud.manager;
 
+import java.util.List;
+
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -11,6 +13,7 @@ import com.thecraftcloud.core.admin.domain.ResponseDTO;
 import com.thecraftcloud.core.domain.Arena;
 import com.thecraftcloud.core.domain.Game;
 import com.thecraftcloud.core.domain.ServerInstance;
+import com.thecraftcloud.core.domain.ServerType;
 
 public class PrepareGamesJob implements Job {
 	
@@ -19,33 +22,43 @@ public class PrepareGamesJob implements Job {
 	public void execute(JobExecutionContext context) throws JobExecutionException {
 		System.err.println("Running PrepareGamesJob Job.");
 
-		//por enquanto somente gungame se o servidor mg001 estiver disponivel
-		ServerInstance server = delegate.findServerByName("mg001");
-		ActionDTO dto = new ActionDTO();
-		dto.setName(ActionDTO.GET_GAME);
-		try{
-			AdminClient client = new AdminClient();
-			ResponseDTO responseDTO = client.execute(server, dto);
+		List<ServerInstance> listServers = delegate.findAllServerInstanceOnline();
+		
+		for(ServerInstance server: listServers) {
 			
-			if(responseDTO.getResult()) {
-				String resp[] = responseDTO.getMessage().split(":");
-				System.out.println( server.getName() + " - " + responseDTO.getMessage() + " " + responseDTO.getResult() );
-			} else {
-				prepareGunGame( server );
+			if(server.getType() == null ) {
+				continue;
 			}
-		}catch(Exception e) {
-			e.printStackTrace();
+			
+			if(!server.getType().equals(ServerType.GAME) ) {
+				continue;
+			}
+
+			//o status online significa que nao esta em modo jogo, ou seja, disponivel.
+			//preparando jogo para o servidor que como tem um filtro acima eh um server
+			//do tipo GAME
+			prepareGunGame(server);
+			
+			/*
+			ActionDTO dto = new ActionDTO();
+			dto.setName(ActionDTO.GET_GAME);
+			try{
+				AdminClient client = AdminClient.getInstance();
+				ResponseDTO responseDTO = client.execute(server, dto);
+				
+				if(responseDTO.getResult()) {
+					String resp[] = responseDTO.getMessage().split(":");
+					System.out.println( server.getName() + " - " + responseDTO.getMessage() + " " + responseDTO.getResult() );
+				} else {
+					prepareGunGame( server );
+				}
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+					*/
 		}
 
-		
-		/*
-		List<Game> list = delegate.findGames();
-		
-		for(Game game: list) {
 			
-		}
-		*/
-		
 		System.err.println("Ending PrepareGamesJob Job.");
 	}
 
@@ -60,7 +73,7 @@ public class PrepareGamesJob implements Job {
 		dto.setArena(arena);
 		
 		try{
-			AdminClient client = new AdminClient();
+			AdminClient client = AdminClient.getInstance();
 			ResponseDTO responseDTO = client.execute(server, dto); 
 			System.out.println( server.getName() + " - " + responseDTO.getMessage() + " " + responseDTO.getResult() );
 		}catch(Exception e) {

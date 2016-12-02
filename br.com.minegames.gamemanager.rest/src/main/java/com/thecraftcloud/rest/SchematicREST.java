@@ -15,7 +15,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.jboss.logging.Logger;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
 import com.thecraftcloud.core.domain.Schematic;
@@ -23,7 +22,7 @@ import com.thecraftcloud.core.json.JSONParser;
 import com.thecraftcloud.service.SchematicService;
 
 @Path("/schematic")
-public class SchematicREST {
+public class SchematicREST extends REST {
 
 	@Path("/upload/{uuid}")
 	@POST
@@ -41,7 +40,7 @@ public class SchematicREST {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response create(String json) {
-		Logger.getLogger(PlayerREST.class).info("json recebido: " + json );
+		log("json recebido: " + json );
 		SchematicService service = new SchematicService();
 		Schematic domain = (Schematic)JSONParser.getInstance().toObject(json, Schematic.class);
 		if(domain != null) {
@@ -58,7 +57,7 @@ public class SchematicREST {
 	@Path("/{uuid}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response get(@PathParam("uuid") String _uuid) {
-		Logger.getLogger(PlayerREST.class).info("uuid recebido: ");
+		log("uuid recebido: ");
 		SchematicService service = new SchematicService();
 		Schematic domain = service.find( UUID.fromString(_uuid) );
 		if( domain != null) {
@@ -83,7 +82,7 @@ public class SchematicREST {
 	@Path("/{uuid}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response delete(@PathParam("uuid") String _uuid) {
-		Logger.getLogger(PlayerREST.class).info("uuid recebido: ");
+		log("uuid recebido: ");
 		SchematicService service = new SchematicService();
 		Schematic domain = service.find( UUID.fromString(_uuid) );
 		if( domain != null) {

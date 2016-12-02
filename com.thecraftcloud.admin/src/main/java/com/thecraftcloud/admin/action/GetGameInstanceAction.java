@@ -23,29 +23,30 @@ public class GetGameInstanceAction extends Action {
 		Plugin[] plugins = Bukkit.getPluginManager().getPlugins();
 		GameState state = null;
 		Game game = null;
-		MyCloudCraftGame myCraftCloudGame = null;
+		GameInstance gi = null;
 		
 		if( configService.getConfig() == null ) {
 			return ResponseDTO.unableToCompleteAction("TheCraftCloudMiniGame is not configured on this server.");
 		}
 		
 		boolean success = false;
+		TheCraftCloudMiniGameAbstract miniGame = null;
 		for(Plugin plugin: plugins) {
 			if(! (plugin instanceof JavaPlugin) ) {
 				continue;
 			}
 			JavaPlugin javaPlugin = (JavaPlugin)plugin;
 			if(javaPlugin instanceof TheCraftCloudMiniGameAbstract) {
-				TheCraftCloudMiniGameAbstract miniGame = (TheCraftCloudMiniGameAbstract)javaPlugin;
-				myCraftCloudGame = configService.getMyCloudCraftGame();
+				miniGame = (TheCraftCloudMiniGameAbstract)javaPlugin;
+				gi = configService.getGameInstance();
 				success = true;
 			}
 		}
 		
 		ResponseDTO responseDTO = new ResponseDTO();
-		if(myCraftCloudGame != null) { 
-			String json = JSONParser.getInstance().toJSONString(myCraftCloudGame);
-			responseDTO.setMessage("Game: " + configService.getGame() );
+		if(gi != null && miniGame != null && configService.getMyCloudCraftGame() != null && configService.getMyCloudCraftGame().isWaitingPlayers() ) { 
+			String json = JSONParser.getInstance().toJSONString(gi);
+			responseDTO.setMessage("Game: " + configService.getGame().getName() + " is waiting players." );
 			responseDTO.setJson( json );
 			responseDTO.setType(ResponseType.JSON);
 			responseDTO.setResult(true);

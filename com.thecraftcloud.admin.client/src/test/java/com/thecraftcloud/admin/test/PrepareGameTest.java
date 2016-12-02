@@ -32,7 +32,7 @@ public class PrepareGameTest {
 			ServerInstance server = new ServerInstance();
 			server.setIp_address("localhost");
 			server.setAdminPort(65000);
-			AdminClient client = new AdminClient();
+			AdminClient client = AdminClient.getInstance();
 			ResponseDTO responseDTO = client.execute(server, dto); 
 			System.out.println( server.getName() + " - " + responseDTO.getMessage() + " " + responseDTO.getResult() );
 		}catch(Exception e) {

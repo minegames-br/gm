@@ -147,6 +147,21 @@ public class TheCraftCloudDelegate {
 		
 	}
 	
+	private String delete(String path) {
+		ClientRequest request = new ClientRequest(this.gameManagerUrl + path);
+		System.out.println("delete: " + this.gameManagerUrl + path);
+		ClientResponse response = null;
+		try {
+			response = request.delete(String.class);
+			System.out.println(response.getResponseStatus().getStatusCode());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		String result = (String)response.getEntity(String.class);
+        return result;
+		
+	}
+	
 	private String get(String path, String uuid) {
 		ClientRequest client = new ClientRequest(this.gameManagerUrl + path + "/" + uuid);
 		ClientResponse response = null;
@@ -965,6 +980,14 @@ public class TheCraftCloudDelegate {
 			e.printStackTrace();
 		}
 		return myObjects;
+	}
+
+	public void removePlayerFromGameQueue(GameQueue gq) {
+		delete("/gamequeue/" + gq.getGame_queue_uuid().toString());
+	}
+	
+	public void removePlayerFromGameQueue(MineCraftPlayer player) {
+		delete("/gamequeue/player/" + player.getPlayer_uuid().toString() );
 	}
 	
 }

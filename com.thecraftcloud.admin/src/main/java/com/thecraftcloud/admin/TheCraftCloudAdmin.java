@@ -13,11 +13,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.thecraftcloud.admin.listener.EndGameListener;
+import com.thecraftcloud.admin.listener.PlayerJoinGameListener;
+import com.thecraftcloud.admin.listener.PlayerJoinListener;
+import com.thecraftcloud.admin.listener.PlayerLeftGameListener;
+import com.thecraftcloud.admin.listener.PlayerQuitListener;
 import com.thecraftcloud.admin.listener.StartGameListener;
 import com.thecraftcloud.admin.service.ServerService;
 import com.thecraftcloud.admin.socket.server.SocketServer;
 import com.thecraftcloud.client.TheCraftCloudDelegate;
 import com.thecraftcloud.core.domain.ServerInstance;
+import com.thecraftcloud.core.domain.ServerStatus;
 import com.thecraftcloud.core.util.Utils;
 
 public class TheCraftCloudAdmin extends JavaPlugin {
@@ -25,11 +30,14 @@ public class TheCraftCloudAdmin extends JavaPlugin {
 	private static final String SOCKET_SERVER_PORT = "thecraftcloud.admin.port";
 	private static final String SERVER_NAME = "thecraftcloud.admin.name";
 	private static final String THECRAFTCLOUD_ADMIN_ACTIONS = "thecraftcloud.admin.actions";
+	public static final String PLUGIN_NAME = "TheCraftCloud-Admin";
 	private TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance();
 	
 	private Integer socketServerPort;
 	private String serverName;
 	private HashMap<String, String> actions = new HashMap<String, String>();
+	private SocketServer socketServer;
+	private ServerInstance serverInstance;
 
 	@Override
 	public void onEnable() {
@@ -37,7 +45,11 @@ public class TheCraftCloudAdmin extends JavaPlugin {
 		this.socketServerPort = this.getConfig().getInt(TheCraftCloudAdmin.SOCKET_SERVER_PORT);
 		this.serverName = this.getConfig().getString(TheCraftCloudAdmin.SERVER_NAME);
 		//verificar se o servidor esta cadastrado. Se nao, cadastrar.
-		registerServer(this.serverName);
+		this.serverInstance = registerServer(this.serverName);
+		
+		ServerService sService = new ServerService();
+		ServerInstance server = this.getServerInstance();
+		sService.notifyServerStart(server);
 		
 		ArrayList<String> list = (ArrayList<String>)this.getConfig().getList( THECRAFTCLOUD_ADMIN_ACTIONS );
 		for(String action: list) {
@@ -51,8 +63,9 @@ public class TheCraftCloudAdmin extends JavaPlugin {
 		//iniciar o administrador remoto - socket server json
 		Bukkit.getScheduler().runTaskAsynchronously(this, new Runnable(){
 			public void run() {
-				SocketServer socketServer = new SocketServer(socketServerPort);
+				socketServer = new SocketServer(socketServerPort);
 				try {
+					Bukkit.getConsoleSender().sendMessage(Utils.color("&9Starting socket server" ) );
 					socketServer.start();
 				} catch (ClassNotFoundException e) {
 					e.printStackTrace();
@@ -64,10 +77,35 @@ public class TheCraftCloudAdmin extends JavaPlugin {
 		
 		Bukkit.getPluginManager().registerEvents(new StartGameListener(), this);
 		Bukkit.getPluginManager().registerEvents(new EndGameListener(), this);
+		Bukkit.getPluginManager().registerEvents(new PlayerJoinGameListener(), this);
+		Bukkit.getPluginManager().registerEvents(new PlayerLeftGameListener(), this);
+		Bukkit.getPluginManager().registerEvents(new PlayerJoinListener(this), this);
+		Bukkit.getPluginManager().registerEvents(new PlayerQuitListener(this), this);
 		
 	}
 	
-	private void registerServer(String name) {
+	@Override
+	public void onDisable() {
+		try{
+			Bukkit.getConsoleSender().sendMessage(Utils.color("&9Stoping socket server" ) );
+			this.socketServer.stop();
+
+		}catch(Exception e) {
+			Bukkit.getConsoleSender().sendMessage(Utils.color("&9Error trying to stop the socket server" ) );
+			e.printStackTrace();
+		}
+		
+		ServerService sService = new ServerService();
+		ServerInstance server = this.getServerInstance();
+		sService.notifyServerStop(server); 
+
+	}
+	
+	public ServerInstance getServerInstance() {
+		return this.serverInstance;
+	}
+
+	private ServerInstance registerServer(String name) {
 		ServerService sService = new ServerService();
 		ServerInstance server = sService.getServerInstance(name);
 		Properties props = this.readServerProperties();
@@ -75,8 +113,12 @@ public class TheCraftCloudAdmin extends JavaPlugin {
 		if(server == null) {
 			sService.registerServer(name, this.socketServerPort, new Integer(port) );
 		} else {
-			sService.updateServer(server, name, socketServerPort, new Integer(port) ); 
+			if(!( server.getPort().equals(socketServerPort) || server.getAdminPort().equals(socketServerPort) ) ) {
+				server.setStatus(ServerStatus.ONLINE);
+				sService.updateServer(server, name, socketServerPort, new Integer(port) ); 
+			}
 		}
+		return server;
 		
 	}
 

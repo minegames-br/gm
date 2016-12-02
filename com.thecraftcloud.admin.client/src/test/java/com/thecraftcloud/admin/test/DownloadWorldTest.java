@@ -28,7 +28,7 @@ public class DownloadWorldTest {
 		actionDTO.setGameWorld(gw);
 		actionDTO.setName(ActionDTO.DOWNLOAD_WORLD);
 		
-		AdminClient client = new AdminClient();
+		AdminClient client = AdminClient.getInstance();
 		
 		client.execute(server, actionDTO);
 		

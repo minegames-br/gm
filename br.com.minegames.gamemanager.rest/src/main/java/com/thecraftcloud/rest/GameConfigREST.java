@@ -12,19 +12,17 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.jboss.logging.Logger;
-
 import com.thecraftcloud.core.domain.GameConfig;
 import com.thecraftcloud.core.json.JSONParser;
 import com.thecraftcloud.service.GameConfigService;
 
 @Path("/gameconfig")
-public class GameConfigREST {
+public class GameConfigREST  extends REST {
 	
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response create(String json) {
-		Logger.getLogger(GameConfigREST.class).info("json recebido: " + json );
+		log("json recebido: " + json );
 		GameConfigService service = new GameConfigService();
 		GameConfig domain = (GameConfig)JSONParser.getInstance().toObject(json, GameConfig.class);
 		if(domain != null) {
@@ -41,7 +39,7 @@ public class GameConfigREST {
 	@Path("/{uuid}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response get(@PathParam("uuid") String _uuid) {
-		Logger.getLogger(GameConfigREST.class).info("uuid recebido: ");
+		log("uuid recebido: ");
 		GameConfigService service = new GameConfigService();
 		GameConfig domain = service.find( UUID.fromString(_uuid) );
 		if( domain != null) {
@@ -56,7 +54,7 @@ public class GameConfigREST {
 	@Path("/search/{name}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response findGameConfigByName(@PathParam("name") String name) {
-		System.out.println("name: " + name);
+		log("name: " + name);
 		GameConfigService service = new GameConfigService();
 		GameConfig domain = service.findByName( name );
 		if( domain != null) {
@@ -81,7 +79,7 @@ public class GameConfigREST {
 	@Path("/{uuid}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response delete(@PathParam("uuid") String _uuid) {
-		Logger.getLogger(GameConfigREST.class).info("uuid recebido: ");
+		log("uuid recebido: ");
 		GameConfigService service = new GameConfigService();
 		GameConfig domain = service.find( UUID.fromString(_uuid) );
 		if( domain != null) {

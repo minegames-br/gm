@@ -10,7 +10,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 
-import com.thecraftcloud.core.bungee.BungeeUtils;
 import com.thecraftcloud.lobby.service.GameService;
 
 public class InteractSignListener implements Listener, PluginMessageListener {
@@ -28,14 +27,14 @@ public class InteractSignListener implements Listener, PluginMessageListener {
 
 		Player player = event.getPlayer();
 		Block block = event.getClickedBlock();
+		if(block == null) {
+			event.setCancelled(true);
+			return;
+		}
 		if (block.getType() == Material.WALL_SIGN || block.getType() == Material.SIGN_POST) {
 			Sign sign = (Sign) block.getState();
 			String gameName = sign.getLine(1);
 			gameService.playGame(player, gameName);
-			BungeeUtils bungeeUtils = new BungeeUtils();
-			bungeeUtils.setup(plugin);
-			bungeeUtils.sendToServer(player, "gungame");
-
 		}
 	}
 

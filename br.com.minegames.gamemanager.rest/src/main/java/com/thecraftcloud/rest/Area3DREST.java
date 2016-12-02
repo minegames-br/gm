@@ -2,7 +2,6 @@ package com.thecraftcloud.rest;
 
 import java.util.Collection;
 import java.util.UUID;
-import java.util.logging.LogManager;
 
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -18,7 +17,7 @@ import com.thecraftcloud.core.json.JSONParser;
 import com.thecraftcloud.service.Area3DService;
 
 @Path("/area")
-public class Area3DREST {
+public class Area3DREST extends REST {
 	
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
@@ -29,7 +28,7 @@ public class Area3DREST {
 			UUID uuid = service.create(domain);
 			domain.setArea_uuid(uuid);
 			json = JSONParser.getInstance().toJSONString(domain);
-			System.out.println("json create area: " + json);
+			log("json create area: " + json);
 		    return Response.ok(json, MediaType.APPLICATION_JSON).build();
 		} else {
 			return Response.status(Response.Status.CONFLICT).entity("Não é possivel criar o Area3D com as informações fornecidas").build();

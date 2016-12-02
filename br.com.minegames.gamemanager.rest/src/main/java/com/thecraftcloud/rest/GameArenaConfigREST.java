@@ -11,19 +11,17 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.jboss.logging.Logger;
-
 import com.thecraftcloud.core.domain.GameArenaConfig;
 import com.thecraftcloud.core.json.JSONParser;
 import com.thecraftcloud.service.GameService;
 
 @Path("/gamearenaconfig")
-public class GameArenaConfigREST {
+public class GameArenaConfigREST  extends REST {
 	
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response create(String json) {
-		Logger.getLogger(GameArenaConfigREST.class).info("json recebido: " + json );
+		log("json recebido: " + json );
 		GameService service = new GameService();
 		GameArenaConfig domain = (GameArenaConfig)JSONParser.getInstance().toObject(json, GameArenaConfig.class);
 		if(domain != null) {
@@ -40,7 +38,7 @@ public class GameArenaConfigREST {
 	@Path("/{uuid}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response update(@PathParam("uuid") String _uuid, String json) {
-		Logger.getLogger(GameArenaConfigREST.class).info("json recebido: " + json );
+		log("json recebido: " + json );
 		GameService service = new GameService();
 		
 		GameArenaConfig _domain = (GameArenaConfig)service.findByUUID( GameArenaConfig.class, UUID.fromString(_uuid));
@@ -62,7 +60,7 @@ public class GameArenaConfigREST {
 	@Path("/{uuid}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response get(@PathParam("uuid") String _uuid) {
-		Logger.getLogger(GameArenaConfigREST.class).info("uuid recebido: ");
+		log("uuid recebido: ");
 		GameService service = new GameService();
 		GameArenaConfig game = service.findGameArenaConfig( UUID.fromString(_uuid) );
 		if( game != null) {
@@ -77,7 +75,7 @@ public class GameArenaConfigREST {
 	@Path("/{uuid}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response delete(@PathParam("uuid") String _uuid) {
-		Logger.getLogger(GameArenaConfigREST.class).info("uuid recebido: ");
+		log("uuid recebido: " + _uuid);
 		GameService service = new GameService();
 		GameArenaConfig domain = service.findGameArenaConfig( UUID.fromString(_uuid) );
 		if( domain != null) {

@@ -6,8 +6,8 @@ import com.thecraftcloud.core.domain.GameInstance;
 public class GameInstanceService {
 	private TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance();
 
-	public void createGameInstance(GameInstance gi) {
-		delegate.createGameInstance(gi);
+	public GameInstance createGameInstance(GameInstance gi) {
+		return delegate.createGameInstance(gi);
 	}
 
 }

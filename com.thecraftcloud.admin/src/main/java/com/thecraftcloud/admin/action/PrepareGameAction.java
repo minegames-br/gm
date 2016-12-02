@@ -20,6 +20,7 @@ import com.thecraftcloud.core.domain.GameArenaConfig;
 import com.thecraftcloud.core.domain.GameConfigInstance;
 import com.thecraftcloud.core.domain.GameInstance;
 import com.thecraftcloud.core.domain.ServerInstance;
+import com.thecraftcloud.core.domain.ServerStatus;
 import com.thecraftcloud.minigame.TheCraftCloudConfig;
 import com.thecraftcloud.minigame.TheCraftCloudMiniGameAbstract;
 import com.thecraftcloud.minigame.service.ConfigService;
@@ -75,7 +76,6 @@ public class PrepareGameAction extends Action {
 		
 		TheCraftCloudAdmin pluginAdmin = (TheCraftCloudAdmin)Bukkit.getPluginManager().getPlugin( "TheCraftCloud-Admin" );
 
-		
 		ServerService sService = new ServerService();
 		ServerInstance server = sService.getServerInstance(pluginAdmin.getServerName());
 		
@@ -85,7 +85,13 @@ public class PrepareGameAction extends Action {
 		gi.setGame(dto.getGame());
 		gi.setStartTime(Calendar.getInstance());
 		gi.setServer(server);
-		giService.createGameInstance(gi);
+		gi = giService.createGameInstance(gi);
+		
+		//atualizar o server para ele estar no modo esperando pelo jogo
+		server.setStatus(ServerStatus.INGAME);
+		delegate.updateServer(server);
+		
+		configService.setGameInstance(gi);
 		
 		//habilitar o plugin do jogo a ser preparado
 		Bukkit.getPluginManager().enablePlugin(plugin);

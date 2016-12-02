@@ -12,8 +12,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.jboss.logging.Logger;
-
 import com.thecraftcloud.core.domain.GameInstance;
 import com.thecraftcloud.core.domain.Item;
 import com.thecraftcloud.core.json.JSONParser;
@@ -21,12 +19,12 @@ import com.thecraftcloud.service.GameInstanceService;
 import com.thecraftcloud.service.ItemService;
 
 @Path("/gameinstance")
-public class GameInstanceREST {
+public class GameInstanceREST  extends REST {
 	
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response create(String json) {
-		Logger.getLogger(GameInstanceREST.class).info("json recebido: " + json );
+		log("json recebido: " + json );
 		GameInstanceService service = new GameInstanceService();
 		GameInstance domain = (GameInstance)JSONParser.getInstance().toObject(json, GameInstance.class);
 		if(domain != null) {
@@ -44,8 +42,8 @@ public class GameInstanceREST {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response update(@PathParam("uuid") String _uuid, String json) {
 		GameInstanceService service = new GameInstanceService();
-		System.out.println("json: " + json);
-		Logger.getLogger(this.getClass()).info("json: " + json);
+		log("json: " + json);
+		log("json: " + json);
 		GameInstance domain = service.find( UUID.fromString(_uuid) );
 		if( domain != null) {
 			domain = (GameInstance)JSONParser.getInstance().toObject(json, GameInstance.class);
@@ -63,8 +61,8 @@ public class GameInstanceREST {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response cancelGameInstance(@PathParam("uuid") String _uuid, String json) {
 		GameInstanceService service = new GameInstanceService();
-		System.out.println("json: " + json);
-		Logger.getLogger(this.getClass()).info("json: " + json);
+		log("json: " + json);
+		log("json: " + json);
 		GameInstance domain = service.find( UUID.fromString(_uuid) );
 		if( domain != null) {
 			domain = (GameInstance)JSONParser.getInstance().toObject(json, GameInstance.class);
@@ -81,8 +79,8 @@ public class GameInstanceREST {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response setGameOver(@PathParam("uuid") String _uuid, String json) {
 		GameInstanceService service = new GameInstanceService();
-		System.out.println("json: " + json);
-		Logger.getLogger(this.getClass()).info("json: " + json);
+		log("json: " + json);
+		log("json: " + json);
 		GameInstance domain = service.find( UUID.fromString(_uuid) );
 		if( domain != null) {
 			domain = (GameInstance)JSONParser.getInstance().toObject(json, GameInstance.class);
@@ -99,8 +97,8 @@ public class GameInstanceREST {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response startGameInstance(@PathParam("uuid") String _uuid, String json) {
 		GameInstanceService service = new GameInstanceService();
-		System.out.println("json: " + json);
-		Logger.getLogger(this.getClass()).info("json: " + json);
+		log("json: " + json);
+		log("json: " + json);
 		GameInstance domain = service.find( UUID.fromString(_uuid) );
 		if( domain != null) {
 			domain = (GameInstance)JSONParser.getInstance().toObject(json, GameInstance.class);
@@ -116,7 +114,7 @@ public class GameInstanceREST {
 	@Path("/{uuid}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response get(@PathParam("uuid") String _uuid) {
-		Logger.getLogger(GameInstanceREST.class).info("uuid recebido: ");
+		log("uuid recebido: ");
 		GameInstanceService service = new GameInstanceService();
 		GameInstance domain = service.find( UUID.fromString(_uuid) );
 		if( domain != null) {
@@ -151,7 +149,7 @@ public class GameInstanceREST {
 	@Path("/{uuid}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response delete(@PathParam("uuid") String _uuid) {
-		Logger.getLogger(GameInstanceREST.class).info("uuid recebido: ");
+		log("uuid recebido: ");
 		GameInstanceService service = new GameInstanceService();
 		GameInstance domain = service.find( UUID.fromString(_uuid) );
 		if( domain != null) {
@@ -166,7 +164,7 @@ public class GameInstanceREST {
 	@Path("/search/{name}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response findGameInstanceAvailableByName(@PathParam("name") String name) {
-		Logger.getLogger(ItemREST.class).info("game recebido: " + name);
+		log("game recebido: " + name);
 		
 		GameInstanceService giService = new GameInstanceService();
 		Collection<GameInstance> list = giService.findGameInstanceAvailableByGame( name ); 

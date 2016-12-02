@@ -28,7 +28,7 @@ public class JoinGameTest {
 		server.setAdminPort(65000);
 		
 		try{
-			AdminClient client = new AdminClient();
+			AdminClient client = AdminClient.getInstance();
 			ResponseDTO responseDTO = client.execute(server, dto); 
 			System.out.println( server.getName() + " - " + responseDTO.getMessage() + " " + responseDTO.getResult() );
 		}catch(Exception e) {
@@ -38,7 +38,7 @@ public class JoinGameTest {
 		player = delegate.findPlayerByName("_WolfGamer");
 		dto.setPlayer(player);
 		try{
-			AdminClient client = new AdminClient();
+			AdminClient client = AdminClient.getInstance();
 			ResponseDTO responseDTO = client.execute(server, dto); 
 			System.out.println( server.getName() + " - " + responseDTO.getMessage() + " " + responseDTO.getResult() );
 		}catch(Exception e) {

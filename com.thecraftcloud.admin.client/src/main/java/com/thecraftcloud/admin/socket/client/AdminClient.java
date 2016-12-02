@@ -7,8 +7,11 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import com.thecraftcloud.admin.action.GetPlayerInfoAction;
+import com.thecraftcloud.admin.action.SendPlayerToServerAction;
 import com.thecraftcloud.core.admin.domain.ActionDTO;
 import com.thecraftcloud.core.admin.domain.ResponseDTO;
+import com.thecraftcloud.core.domain.MineCraftPlayer;
 import com.thecraftcloud.core.domain.ServerInstance;
 import com.thecraftcloud.core.json.JSONParser;
 
@@ -19,6 +22,19 @@ import com.thecraftcloud.core.json.JSONParser;
  */
 public class AdminClient {
 
+	private static AdminClient me;
+	
+	private AdminClient() {
+		
+	}
+	
+	public static AdminClient getInstance() {
+		if(me == null) {
+			me = new AdminClient();
+		}
+		return me;
+	}
+	
     public ResponseDTO execute(ServerInstance server, ActionDTO actionDTO)  {
 	    Socket socket = null;
 
@@ -104,4 +120,48 @@ public class AdminClient {
             Thread.sleep(100);
         }
     }
+
+	public ResponseDTO joinGame(ServerInstance server, MineCraftPlayer player) throws Exception {
+		ActionDTO dto = new ActionDTO();
+		dto.setName(ActionDTO.JOIN_GAME);
+		dto.setPlayer(player);
+
+		AdminClient client = new AdminClient();
+		ResponseDTO responseDTO = client.execute(server, dto);
+		
+		if(responseDTO == null) {
+			throw new Exception("Não foi possível adicionar o jogador: " + player.getName() + " ao jogo." );
+		}
+		return responseDTO;
+	}
+
+	public ResponseDTO teleportPlayer(ServerInstance server, MineCraftPlayer player, ServerInstance gameServer) throws Exception {
+		ActionDTO dto = new ActionDTO();
+		dto.setName(SendPlayerToServerAction.ACTION_NAME);
+		dto.setPlayer(player);
+		dto.setServer(gameServer);
+
+		AdminClient client = new AdminClient();
+		ResponseDTO responseDTO = client.execute(server, dto);
+		
+		if(responseDTO == null) {
+			throw new Exception("Não foi possível teletransportar o jogador: " + player.getName() + " ao server: " + gameServer.getName() );
+		}
+		return responseDTO;
+	}
+
+	public ResponseDTO getPlayerInfo(ServerInstance server, MineCraftPlayer player) throws Exception {
+		ActionDTO dto = new ActionDTO();
+		dto.setName(GetPlayerInfoAction.ACTION_NAME);
+		dto.setPlayer(player);
+
+		AdminClient client = AdminClient.getInstance();
+		ResponseDTO responseDTO = client.execute(server, dto);
+		
+		if(responseDTO == null) {
+			throw new Exception("Não foi possível recuperar informações do player" );
+		}
+		return responseDTO;
+	}
+
 }

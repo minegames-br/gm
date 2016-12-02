@@ -34,6 +34,9 @@ public class ServerInstance extends TransferObject {
 	@Enumerated
 	private ServerStatus status;
 	
+	@Enumerated
+	private ServerType type;
+	
 	@OneToOne
 	private Local lobby;
 	
@@ -107,6 +110,12 @@ public class ServerInstance extends TransferObject {
 	}
 	public void setLastUpdate(Calendar lastUpdate) {
 		this.lastUpdate = lastUpdate;
+	}
+	public ServerType getType() {
+		return type;
+	}
+	public void setType(ServerType type) {
+		this.type = type;
 	}
 		
 }

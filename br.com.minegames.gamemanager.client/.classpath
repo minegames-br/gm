@@ -12,6 +12,5 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="D:/Documentos/M I N E G A M E S/minecraft-1.10-minegames-20160921T211503Z/minecraft-1.10-minegames/spigot-1.10.2.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

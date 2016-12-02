@@ -12,19 +12,17 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.jboss.logging.Logger;
-
 import com.thecraftcloud.core.domain.MineCraftPlayer;
 import com.thecraftcloud.core.json.JSONParser;
 import com.thecraftcloud.service.PlayerService;
 
 @Path("/player")
-public class PlayerREST {
+public class PlayerREST extends REST {
 	
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response create(String json) {
-		Logger.getLogger(PlayerREST.class).info("json recebido: " + json );
+		log("json recebido: " + json );
 		PlayerService service = new PlayerService();
 		MineCraftPlayer domain = (MineCraftPlayer)JSONParser.getInstance().toObject(json, MineCraftPlayer.class);
 		if(domain != null) {
@@ -41,7 +39,7 @@ public class PlayerREST {
 	@Path("/{uuid}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response get(@PathParam("uuid") String _uuid) {
-		Logger.getLogger(PlayerREST.class).info("uuid recebido: ");
+		log("uuid recebido: ");
 		PlayerService service = new PlayerService();
 		MineCraftPlayer domain = service.find( UUID.fromString(_uuid) );
 		if( domain != null) {
@@ -66,7 +64,7 @@ public class PlayerREST {
 	@Path("/{uuid}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response delete(@PathParam("uuid") String _uuid) {
-		Logger.getLogger(PlayerREST.class).info("uuid recebido: ");
+		log("uuid recebido: ");
 		PlayerService service = new PlayerService();
 		MineCraftPlayer domain = service.find( UUID.fromString(_uuid) );
 		if( domain != null) {

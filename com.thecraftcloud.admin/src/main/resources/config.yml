@@ -11,3 +11,5 @@ thecraftcloud:
         - deploy-game:com.thecraftcloud.admin.action.DeployGameAction        
         - deploy-arena:com.thecraftcloud.admin.action.DeployArenaAction
         - join-game:com.thecraftcloud.admin.action.JoinGameAction
+        - teleport-player:com.thecraftcloud.admin.action.SendPlayerToServerAction
+        - get-player-info:com.thecraftcloud.admin.action.GetPlayerInfoAction

@@ -13,9 +13,7 @@ import org.jboss.logging.Logger;
 import com.thecraftcloud.core.domain.Area3D;
 import com.thecraftcloud.core.domain.Arena;
 import com.thecraftcloud.core.domain.Schematic;
-import com.thecraftcloud.core.domain.TransferObject;
 import com.thecraftcloud.dao.ArenaDAO;
-import com.thecraftcloud.dao.EntityManagerHelper;
 
 public class ArenaService extends Service {
 
@@ -37,12 +35,12 @@ public class ArenaService extends Service {
 		List<Area3D> areas = new ArrayList<Area3D>();
 		
 		if(domain == null) {
-			System.out.println("arena is null");
+			log("arena is null");
 			return null;
 		}
 		
 		if(domain.getAreas() == null) {
-			System.out.println("areas list is null");
+			log("areas list is null");
 		} else {
 			for(Area3D area: domain.getAreas()) {
 				UUID uuid = aservice.save( area );

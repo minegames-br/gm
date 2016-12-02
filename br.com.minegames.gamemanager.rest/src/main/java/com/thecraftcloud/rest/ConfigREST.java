@@ -17,7 +17,7 @@ import com.thecraftcloud.core.json.JSONParser;
 import com.thecraftcloud.service.ConfigService;
 
 @Path("/config")
-public class ConfigREST {
+public class ConfigREST  extends REST {
 	
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)

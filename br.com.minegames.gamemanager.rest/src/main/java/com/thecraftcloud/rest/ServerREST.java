@@ -12,8 +12,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.jboss.logging.Logger;
-
 import com.thecraftcloud.core.domain.Item;
 import com.thecraftcloud.core.domain.Local;
 import com.thecraftcloud.core.domain.ServerInstance;
@@ -23,12 +21,12 @@ import com.thecraftcloud.service.LocalService;
 import com.thecraftcloud.service.ServerService;
 
 @Path("/server")
-public class ServerREST {
+public class ServerREST extends REST {
 	
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response create(String json) {
-		Logger.getLogger(ServerREST.class).info("json recebido: " + json );
+		log("json recebido: " + json );
 		ServerService service = new ServerService();
 		ServerInstance domain = (ServerInstance)JSONParser.getInstance().toObject(json, ServerInstance.class);
 		if(domain != null) {
@@ -45,7 +43,7 @@ public class ServerREST {
 	@Path("/{uuid}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response get(@PathParam("uuid") String _uuid) {
-		Logger.getLogger(ServerREST.class).info("uuid recebido: ");
+		log("uuid recebido: ");
 		ServerService service = new ServerService();
 		ServerInstance domain = service.find( UUID.fromString(_uuid) );
 		if( domain != null) {
@@ -60,7 +58,7 @@ public class ServerREST {
 	@Path("/{uuid}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response update(@PathParam("uuid") String _uuid, String json) {
-		Logger.getLogger(ServerREST.class).info("uuid recebido: ");
+		log("uuid recebido: ");
 		ServerService service = new ServerService();
 		ServerInstance domain = service.find( UUID.fromString(_uuid) );
 		if( domain != null) {
@@ -103,7 +101,7 @@ public class ServerREST {
 	@Path("/{uuid}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response delete(@PathParam("uuid") String _uuid) {
-		Logger.getLogger(ServerREST.class).info("uuid recebido: ");
+		log("uuid recebido: ");
 		ServerService service = new ServerService();
 		ServerInstance domain = service.find( UUID.fromString(_uuid) );
 		if( domain != null) {
@@ -118,7 +116,7 @@ public class ServerREST {
 	@Path("/search/{name}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response findItemByName(@PathParam("name") String name) {
-		Logger.getLogger(ServerREST.class).info("name: " + name);
+		log("name: " + name);
 		ServerService service = new ServerService();
 		ServerInstance domain = service.findByName( name );
 		if( domain != null) {
@@ -133,7 +131,7 @@ public class ServerREST {
 	@Path("/search/byhost/{name}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response findItemByHostname(@PathParam("name") String name) {
-		Logger.getLogger(ServerREST.class).info("name: " + name);
+		log("name: " + name);
 		ServerService service = new ServerService();
 		ServerInstance domain = service.findByHostname( name );
 		if( domain != null) {

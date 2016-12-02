@@ -4,6 +4,7 @@ import com.thecraftcloud.core.domain.Arena;
 import com.thecraftcloud.core.domain.Game;
 import com.thecraftcloud.core.domain.GameWorld;
 import com.thecraftcloud.core.domain.MineCraftPlayer;
+import com.thecraftcloud.core.domain.ServerInstance;
 import com.thecraftcloud.core.domain.TransferObject;
 
 public class ActionDTO extends TransferObject {
@@ -23,6 +24,7 @@ public class ActionDTO extends TransferObject {
 	private GameWorld gameWorld;
 	private Game game;
 	private Arena arena;
+	private ServerInstance server;
 	
 	public String getName() {
 		return name;
@@ -62,6 +64,14 @@ public class ActionDTO extends TransferObject {
 
 	public void setGame(Game game) {
 		this.game = game;
+	}
+
+	public void setServer(ServerInstance gameServer) {
+		this.server = gameServer;
+	}
+	
+	public ServerInstance getServer() {
+		return this.server;
 	}
 	
 }
