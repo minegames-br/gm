@@ -991,7 +991,9 @@ public class TheCraftCloudDelegate {
 	}
 
 	public List<Arena> findArenasByGame(Game game) {
-		ClientRequest client = new ClientRequest(this.gameManagerUrl + "/game/" + game.getGame_uuid().toString() + "/arenas");
+		String url = this.gameManagerUrl + "/game/" + game.getGame_uuid().toString() + "/arenas";
+		ClientRequest client = new ClientRequest(url);
+		System.out.println( url );
 		ClientResponse response = null;
 		try {
 			response = client.get(String.class);

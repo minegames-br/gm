@@ -43,100 +43,100 @@ public class AddGunGameGameConfig {
 		String material = "";
 		
 		//gun game
-		Game game = delegate.findGame("d10e8c62-6124-4952-a054-c7c668e7944f");
-		//Arena arena = delegate.findArena("30d00221-b371-4828-a0e6-5d75de7bfaec");
+		Game game = delegate.findGameByName("gungame");
+		Arena arena = delegate.findArena("30d00221-b371-4828-a0e6-5d75de7bfaec");
 
+		gameConfig = createConfig("gungame.player1.spawn", "Select the location 1 to spawn a player", "Location where the player will spawn", "PLAYER-SPAWN", GameConfigType.LOCAL, GameConfigScope.ARENA, game);
+		pointA = createLocal( -191, 53, -211 );
+		createGameArenaConfig( gameConfig, game, arena, pointA );
+
+		gameConfig = createConfig("gungame.player2.spawn", "Select the location 2 to spawn a player", "Location where the player will spawn", "PLAYER-SPAWN",  GameConfigType.LOCAL, GameConfigScope.ARENA, game);
+		pointA = createLocal( -193, 53, -182 );
+		createGameArenaConfig( gameConfig, game, arena, pointA );
+
+		gameConfig = createConfig("gungame.player3.spawn", "Select the location 3 to spawn a player", "Location where the player will spawn", "PLAYER-SPAWN",  GameConfigType.LOCAL, GameConfigScope.ARENA, game);
+		pointA = createLocal( -163, 65, -177 );
+		createGameArenaConfig( gameConfig, game, arena, pointA );
+
+		gameConfig = createConfig("gungame.player4.spawn", "Select the location 4 to spawn a player", "Location where the player will spawn", "PLAYER-SPAWN",  GameConfigType.LOCAL, GameConfigScope.ARENA, game);
+		pointA = createLocal( -198, 54, -197 );
+		createGameArenaConfig( gameConfig, game, arena, pointA );
+		
+		/*
 		System.out.println("creating configs");
 		gameConfig = createConfig(MIN_PLAYERS, "Min # of Players", "Min number of players", "", GameConfigType.INT, GameConfigScope.GLOBAL , game);
-		createGameConfigInstance( gameConfig, 1 );
+		createGameConfigInstance( gameConfig, game, 1 );
 
 		gameConfig = createConfig(MAX_PLAYERS, "Max # of players", "Max # of players", "", GameConfigType.INT, GameConfigScope.GLOBAL , game);
-		createGameConfigInstance( gameConfig, 4 );
+		createGameConfigInstance( gameConfig, game,4 );
 
 		gameConfig = createConfig(START_COUNTDOWN, "Countdown", "Countdown to start the game in seconds", "", GameConfigType.INT, GameConfigScope.GLOBAL , game);
-		createGameConfigInstance( gameConfig, 30 );
+		createGameConfigInstance( gameConfig,game, 30 );
 
 		gameConfig = createConfig(GAME_DURATION, "Duration in seconds", "Duration in seconds", "", GameConfigType.INT, GameConfigScope.GLOBAL , game);
-		createGameConfigInstance( gameConfig, 3 );
+		createGameConfigInstance( gameConfig,game, 3 );
 		
 		gameConfig = createConfig(KILL_POINTS, "Points per kill", "Points per kill", "", GameConfigType.INT, GameConfigScope.GLOBAL , game);
-		createGameConfigInstance( gameConfig, 100 );
+		createGameConfigInstance( gameConfig,game, 100 );
 
 		int i =0;
 		item = delegate.findItemByName( "IRON_AXE" ); i = 1;
 		gameConfig = createConfig("GUNGAME." + i, "Item earned at level " + i, "Item earned at level " + i, "GUNGAME.LEVEL", GameConfigType.ITEM, GameConfigScope.GLOBAL , game);
-		createGameConfigInstance( gameConfig, item );
+		createGameConfigInstance( gameConfig, game,item );
 		
 		material = "DIAMOND_AXE"; item = delegate.findItemByName( material ); i = 2;
 		if(item == null) System.err.println("não encontrou: " + material );
 		gameConfig = createConfig("GUNGAME." + i, "Item earned at level " + i, "Item earned at level " + i, "GUNGAME.LEVEL", GameConfigType.ITEM, GameConfigScope.GLOBAL , game);
-		createGameConfigInstance( gameConfig, item );
+		createGameConfigInstance( gameConfig, game,item );
 
 		material = "IRON_SWORD"; item = delegate.findItemByName( material ); i = 3;
 		if(item == null) System.err.println("não encontrou: " + material );
 		gameConfig = createConfig("GUNGAME." + i, "Item earned at level " + i, "Item earned at level " + i, "GUNGAME.LEVEL", GameConfigType.ITEM, GameConfigScope.GLOBAL , game);
-		createGameConfigInstance( gameConfig, item );
+		createGameConfigInstance( gameConfig, game,item );
 
 		item = delegate.findItemByName( "IRON_BOOTS" ); i = 4;
 		if(item == null) System.err.println("não encontrou: " + material );
 		gameConfig = createConfig("GUNGAME." + i, "Item earned at level " + i, "Item earned at level " + i, "GUNGAME.LEVEL", GameConfigType.ITEM, GameConfigScope.GLOBAL , game);
-		createGameConfigInstance( gameConfig, item );
+		createGameConfigInstance( gameConfig, game,item );
 
 		item = delegate.findItemByName( "IRON_CHESTPLATE" ); i = 5;
 		gameConfig = createConfig("GUNGAME." + i, "Item earned at level " + i, "Item earned at level " + i, "GUNGAME.LEVEL", GameConfigType.ITEM, GameConfigScope.GLOBAL , game);
-		createGameConfigInstance( gameConfig, item );
+		createGameConfigInstance( gameConfig, game,item );
 
 		item = delegate.findItemByName( "IRON_LEGGINGS" ); i = 6;
 		gameConfig = createConfig("GUNGAME." + i, "Item earned at level " + i, "Item earned at level " + i, "GUNGAME.LEVEL", GameConfigType.ITEM, GameConfigScope.GLOBAL , game);
-		createGameConfigInstance( gameConfig, item );
+		createGameConfigInstance( gameConfig, game,item );
 
 		item = delegate.findItemByName( "IRON_HELMET" ); i = 7;
 		gameConfig = createConfig("GUNGAME." + i, "Item earned at level " + i, "Item earned at level " + i, "GUNGAME.LEVEL", GameConfigType.ITEM, GameConfigScope.GLOBAL , game);
-		createGameConfigInstance( gameConfig, item );
+		createGameConfigInstance( gameConfig, game,item );
 
 		item = delegate.findItemByName( "DIAMOND_SWORD" ); i++;
 		gameConfig = createConfig("GUNGAME." + i, "Item earned at level " + i, "Item earned at level " + i, "GUNGAME.LEVEL", GameConfigType.ITEM, GameConfigScope.GLOBAL , game);
-		createGameConfigInstance( gameConfig, item );
+		createGameConfigInstance( gameConfig, game,item );
 
 		item = delegate.findItemByName( "DIAMOND_BOOTS" ); i++;
 		gameConfig = createConfig("GUNGAME." + i, "Item earned at level " + i, "Item earned at level " + i, "GUNGAME.LEVEL", GameConfigType.ITEM, GameConfigScope.GLOBAL , game);
-		createGameConfigInstance( gameConfig, item );
+		createGameConfigInstance( gameConfig, game,item );
 
 		item = delegate.findItemByName( "DIAMOND_CHESTPLATE" ); i++;
 		gameConfig = createConfig("GUNGAME." + i, "Item earned at level " + i, "Item earned at level " + i, "GUNGAME.LEVEL", GameConfigType.ITEM, GameConfigScope.GLOBAL , game);
-		createGameConfigInstance( gameConfig, item );
+		createGameConfigInstance( gameConfig, game,item );
 
 		item = delegate.findItemByName( "DIAMOND_LEGGINGS" ); i++;
 		gameConfig = createConfig("GUNGAME." + i, "Item earned at level " + i, "Item earned at level " + i, "GUNGAME.LEVEL", GameConfigType.ITEM, GameConfigScope.GLOBAL , game);
-		createGameConfigInstance( gameConfig, item );
+		createGameConfigInstance( gameConfig, game,item );
 
 		item = delegate.findItemByName( "DIAMOND_HELMET" ); i++;
 		gameConfig = createConfig("GUNGAME." + i, "Item earned at level " + i, "Item earned at level " + i, "GUNGAME.LEVEL", GameConfigType.ITEM, GameConfigScope.GLOBAL , game);
-		createGameConfigInstance( gameConfig, item );
+		createGameConfigInstance( gameConfig, game,item );
 
 		item = delegate.findItemByName( "BOW" ); i++;
 		gameConfig = createConfig("GUNGAME." + i, "Item earned at level " + i, "Item earned at level " + i, "GUNGAME.LEVEL", GameConfigType.ITEM, GameConfigScope.GLOBAL , game);
-		createGameConfigInstance( gameConfig, item );
+		createGameConfigInstance( gameConfig, game,item );
 	
 		/*
-		int i = 1;
-
-		gameConfig = createConfig("gungame.player1.spawn", "Select the location 1 to spawn a player", "Location where the player will spawn", "PLAYER-SPAWN", GameConfigType.LOCAL, GameConfigScope.ARENA, game);
-		pointA = createLocal( -191, 53, -211 );
-		createGameArenaConfig( gameConfig, arena, pointA );
-
-		gameConfig = createConfig("gungame.player2.spawn", "Select the location 2 to spawn a player", "Location where the player will spawn", "PLAYER-SPAWN",  GameConfigType.LOCAL, GameConfigScope.ARENA, game);
-		pointA = createLocal( -193, 53, -182 );
-		createGameArenaConfig( gameConfig, arena, pointA );
-
-		gameConfig = createConfig("gungame.player3.spawn", "Select the location 3 to spawn a player", "Location where the player will spawn", "PLAYER-SPAWN",  GameConfigType.LOCAL, GameConfigScope.ARENA, game);
-		pointA = createLocal( -163, 65, -177 );
-		createGameArenaConfig( gameConfig, arena, pointA );
-
-		gameConfig = createConfig("gungame.player4.spawn", "Select the location 4 to spawn a player", "Location where the player will spawn", "PLAYER-SPAWN",  GameConfigType.LOCAL, GameConfigScope.ARENA, game);
-		pointA = createLocal( -198, 54, -197 );
-		createGameArenaConfig( gameConfig, arena, pointA );
-		
+		int i = 1;		
 
 		/*
 		System.out.println("creating configs");
@@ -154,10 +154,11 @@ public class AddGunGameGameConfig {
 	}
 	
 	
-	private static void createGameArenaConfig(GameConfig gameConfig, Arena arena, Object object) {
+	private static void createGameArenaConfig(GameConfig gameConfig, Game game, Arena arena, Object object) {
 		GameArenaConfig gac = new GameArenaConfig();
 		gac.setArena(arena);
 		gac.setGameConfig(gameConfig);
+		gac.setGame(game);
 		
 		if(object instanceof Integer) {
 			gac.setIntValue( (Integer)object );
@@ -193,18 +194,18 @@ public class AddGunGameGameConfig {
         domain.setName(name);
         domain.setDescription(description);
         domain.setDisplayName(displayName);
-        domain.setGame(game);
         domain.setGroup(group);
 
         GameConfig gameConfig = delegate.addGameConfig(domain);
         return gameConfig;
 	}
 	
-	public static void createGameConfigInstance(GameConfig gameConfig, Object object ) {
+	public static void createGameConfigInstance(GameConfig gameConfig, Game game, Object object ) {
 		String restURL = URL_SERVICES;
         GameConfigInstance domain = new GameConfigInstance();
         System.out.println("game_config_uuid: " + gameConfig.getGame_config_uuid());
         domain.setGameConfig(gameConfig);
+        domain.setGame(game);
 
         if(object instanceof Integer) {
         	Integer intValue = (Integer)object;

@@ -162,4 +162,8 @@ public class TheCraftCloudAdmin extends JavaPlugin {
 		return this.serverName;
 	}
 
+	public static TheCraftCloudAdmin getBukkitPlugin() {
+		return (TheCraftCloudAdmin)Bukkit.getPluginManager().getPlugin( TheCraftCloudAdmin.PLUGIN_NAME );
+	}
+
 }

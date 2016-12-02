@@ -214,7 +214,7 @@ public class GameService extends Service {
 	public Collection<GameConfigInstance> findAllGameConfigInstanceByGame(UUID uuid) {
 		List<GameConfigInstance> list = null;
 		startTransaction();
-		Query query = em.createQuery("SELECT gci FROM GameConfigInstance gci where gci.gameConfig.game.game_uuid = :_uuid order by gci.gameConfig.groupName, gci.gameConfig.name");
+		Query query = em.createQuery("SELECT gci FROM GameConfigInstance gci where gci.game.game_uuid = :_uuid order by gci.gameConfig.groupName, gci.gameConfig.name");
 		query.setParameter("_uuid", uuid );
 		try{
 			list = query.getResultList();
@@ -296,7 +296,7 @@ public class GameService extends Service {
 	public Collection<Arena> findArenas(String _uuid) {
 		List<Arena> list = null;
 		startTransaction();
-		Query query = em.createQuery("SELECT DISTINCT gac.arena FROM GameArenaConfig gac where gac.gameConfig.game.game_uuid = :_uuid");
+		Query query = em.createQuery("SELECT DISTINCT gac.arena FROM GameArenaConfig gac where gac.game.game_uuid = :_uuid");
 		query.setParameter("_uuid", UUID.fromString(_uuid) );
 		try{
 			list = query.getResultList();

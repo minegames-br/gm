@@ -44,14 +44,16 @@ public class JoinGameAction extends Action {
 		}
 		
 		//recuperar o plugin do jogo associado
-		TheCraftCloudMiniGameAbstract plugin = (TheCraftCloudMiniGameAbstract)Bukkit.getPluginManager().getPlugin( configService.getGame().getPluginName() );
+		String gamePluginName = configService.getGame().getPluginName();
+		Bukkit.getConsoleSender().sendMessage("&3Game Plugin: " + gamePluginName);
+		TheCraftCloudMiniGameAbstract plugin = (TheCraftCloudMiniGameAbstract)Bukkit.getPluginManager().getPlugin( gamePluginName );
 		
 		if( plugin == null ) {
 			return ResponseDTO.unableToCompleteAction("Plugin: " + dto.getGame().getPluginName() + " is not installed.");
 		}
 
 		//recuperar o plugin do admin
-		TheCraftCloudAdmin admin = (TheCraftCloudAdmin)Bukkit.getPluginManager().getPlugin( "TheCraftCloud-Admin" );
+		TheCraftCloudAdmin admin = TheCraftCloudAdmin.getBukkitPlugin();
 
 		ServerInstance sourceServer = dto.getPlayer().getServer();
 		ServerInstance destinationServer = new ServerService().getServerInstance(admin.getServerName());

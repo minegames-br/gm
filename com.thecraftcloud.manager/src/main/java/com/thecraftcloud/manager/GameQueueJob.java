@@ -70,7 +70,8 @@ public class GameQueueJob implements Job {
 				ServerInstance server = mcp.getServer();
 				if(server == null) {
 					this.cancelGameSubscription(gq);
-					throw new Exception("Player info is not synchronized with the server");
+					System.err.println("Player info is not synchronized with the server");
+					continue;
 				}
 				
 				//descobrir para qual servidor o jogador vai ser teletransportado para jogar
@@ -79,7 +80,8 @@ public class GameQueueJob implements Job {
 				if(listGi != null && listGi.size() > 0) {
 					gameServer = listGi.get(0).getServer();
 				} else {
-					throw new Exception("Nenum GameInstance disponível. Não foi possível adicionar o jogador: " + gq.getPlayer().getName() + " ao jogo: " + gq.getGame().getName() );
+					System.err.println("Nenum GameInstance disponível. Não foi possível adicionar o jogador: " + gq.getPlayer().getName() + " ao jogo: " + gq.getGame().getName() );
+					continue;
 				}
 				
 				AdminClient client = AdminClient.getInstance();
@@ -94,8 +96,16 @@ public class GameQueueJob implements Job {
 				
 				rdto = client.teleportPlayer(server, gq.getPlayer(), gameServer);
 				if(rdto.getResult() ) {
+					String s = ( (char)27 + "[32m" + "teleport player worked. executing joinGame..."  + (char)27 + "[0m"); 
+					System.out.println(s);
 					rdto = client.joinGame( gameServer, gq.getPlayer() );
+					
+					s = ( (char)27 + "[32m" + "joinGame..." + rdto.getResult() + " " + rdto.getMessage()  + (char)27 + "[0m"); 
+					System.out.println(s);
+
 				} else {
+					String s = ( (char)27 + "[36m" + "teleport player failed. " + rdto.getMessage()  + (char)27 + "[0m"); 
+					System.out.println(s);
 					throw new Exception(rdto.getCode() + " " + rdto.getMessage() );
 				}
 			} catch (Exception e) {

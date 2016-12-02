@@ -20,9 +20,6 @@ public class GameConfig extends TransferObject {
 	@Column(columnDefinition = "BINARY(16)")
 	private UUID game_config_uuid;
 	
-	@ManyToOne
-	private Game game;
-	
 	@Column(unique=true)
 	private String name;
 	
@@ -44,14 +41,6 @@ public class GameConfig extends TransferObject {
 
 	public void setGame_config_uuid(UUID game_config_uuid) {
 		this.game_config_uuid = game_config_uuid;
-	}
-
-	public Game getGame() {
-		return game;
-	}
-
-	public void setGame(Game game) {
-		this.game = game;
 	}
 
 	public String getName() {

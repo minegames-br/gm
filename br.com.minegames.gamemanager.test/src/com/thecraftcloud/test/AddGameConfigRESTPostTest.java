@@ -54,19 +54,19 @@ public class AddGameConfigRESTPostTest {
 		Local pointA = null;
 		Local pointB = null;
 
-		Game game = delegate.findGame("00000000-0000-0000-0000-000000000000");
+		Game game = delegate.findGameByName("TheArcher");
 		
 		System.out.println("creating configs");
-		gameConfig = delegate.findGameConfigByName(MIN_PLAYERS);
+		gameConfig = createConfig(MIN_PLAYERS, "Min # of Players", "Min # of Players", "", GameConfigType.INT, GameConfigScope.GLOBAL , game);
 		createGameConfigInstance( game, gameConfig, 1 );
 
-		gameConfig = delegate.findGameConfigByName(MAX_PLAYERS);
+		gameConfig = createConfig(MAX_PLAYERS, "Max # of Players", "Max # of Players", "", GameConfigType.INT, GameConfigScope.GLOBAL , game);
 		createGameConfigInstance( game, gameConfig, 4 );
 
-		gameConfig = delegate.findGameConfigByName(START_COUNTDOWN);
-		createGameConfigInstance( game, gameConfig, 30 );
+		gameConfig = createConfig(START_COUNTDOWN, "Countdown", "Countdown", "", GameConfigType.INT, GameConfigScope.GLOBAL , game);
+		createGameConfigInstance( game, gameConfig, 20 );
 
-		gameConfig = delegate.findGameConfigByName(GAME_DURATION);  //createConfig(GAME_DURATION, "Duration in seconds", "Duration in seconds", "", GameConfigType.INT, GameConfigScope.GLOBAL , game);
+		gameConfig = createConfig(GAME_DURATION, "Duration in Seconds", "Duration in Seconds", "", GameConfigType.INT, GameConfigScope.GLOBAL , game);
 		createGameConfigInstance( game, gameConfig, 120 );
 		//gameConfig = createConfig(GAME_LEVELS, "# of Rounds", "Not in use", "", GameConfigType.INT, GameConfigScope.GLOBAL , game);
 		//gameConfig = createConfig(FLOATING_AREA, "Select the are to spawn floating targets", "3D area where the floating targets will spawn", "", GameConfigType.AREA3D, GameConfigScope.ARENA, game );
@@ -223,7 +223,6 @@ public class AddGameConfigRESTPostTest {
         domain.setName(name);
         domain.setDescription(description);
         domain.setDisplayName(displayName);
-        domain.setGame(game);
         domain.setGroup(group);
 
         GameConfig gameConfig = delegate.addGameConfig(domain);

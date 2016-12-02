@@ -27,6 +27,9 @@ public class GameArenaConfig extends TransferObject {
 	private GameConfig gameConfig;
 	
 	@OneToOne(fetch = FetchType.EAGER)
+	private Game game;
+	
+	@OneToOne(fetch = FetchType.EAGER)
 	private Arena arena;
 	
 	private Integer intValue;
@@ -95,6 +98,14 @@ public class GameArenaConfig extends TransferObject {
 
 	public void setItemValue(Item itemValue) {
 		this.itemValue = itemValue;
+	}
+
+	public Game getGame() {
+		return game;
+	}
+
+	public void setGame(Game game) {
+		this.game = game;
 	}
 	
 	

@@ -100,13 +100,22 @@ public class PrepareGameAction extends Action {
 		//habilitar o plugin do jogo a ser preparado
 		Bukkit.getPluginManager().enablePlugin(plugin);
 		
+		String s = ( (char)27 + "[32m" + "[PrepareGameAction]"  + (char)27 + "[0m") + " - plugin.init()"; 
+		System.out.println(s);
+		
 		//inicializar plugin para receber jogadores
 		plugin.init();
+		
+		s = ( (char)27 + "[32m" + "[PrepareGameAction]"  + (char)27 + "[0m") + " - responseDTO"; 
+		System.out.println(s);
+		
+		s = ( (char)27 + "[32m" + "[PrepareGameAction]"  + (char)27 + "[0m") + " - responseDTO - " + "Game: " + dto.getGame().getName() + " has been prepared to run on Arena: " + dto.getArena().getName() ; 
+		System.out.println(s);
 		
 		ResponseDTO responseDTO = new ResponseDTO();
 		responseDTO.setMessage( "Game: " + dto.getGame().getName() + " has been prepared to run on Arena: " + dto.getArena().getName() );
 		responseDTO.setType(ResponseType.TEXT);
-		responseDTO.setResult(false);
+		responseDTO.setResult(true);
 		responseDTO.setCode(ResponseDTO.ADM_SUCCESS);
 		
 		return responseDTO;

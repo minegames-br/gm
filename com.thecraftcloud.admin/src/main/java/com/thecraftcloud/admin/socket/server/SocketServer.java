@@ -93,25 +93,6 @@ public class SocketServer {
 			responseDTO = ResponseDTO.actionNotAllowed();
     	}
     	
-    	/*
-    	if(actionDTO.getName().equals(ActionDTO.GRANT_OPERATOR_ACTION)) {
-    		GrantOperatorAction action = new GrantOperatorAction();
-    		if( actionDTO.getPlayer() == null || actionDTO.getPlayer().getNickName() == null || actionDTO.getPlayer().getNickName().equals("")) {
-    			responseDTO.setMessage("MineCraftPlayer object is missing or NickName is empty/null.");
-    			responseDTO.setResult(false);
-    		}
-    		responseDTO = action.execute(actionDTO);
-    	} else if(actionDTO.getName().equals(ActionDTO.PING_SERVER)) {
-    		PingServerAction action = new PingServerAction();
-    		responseDTO = action.execute(actionDTO);
-    	} else if(actionDTO.getName().equals(ActionDTO.GET_GAME)) {
-    		GetGameInstanceAction action = new GetGameInstanceAction();
-    		responseDTO = action.execute(actionDTO);
-    	} else {
-			responseDTO = ResponseDTO.actionNotAllowed();
-    	}
-    	*/
-    	
     	response = JSONParser.getInstance().toJSONString(responseDTO);
     	
     	return response;
