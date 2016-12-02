@@ -44,32 +44,25 @@ public class AddGunGameGameConfig {
 		
 		//gun game
 		Game game = delegate.findGame("d10e8c62-6124-4952-a054-c7c668e7944f");
-		Arena arena = delegate.findArena("30d00221-b371-4828-a0e6-5d75de7bfaec");
+		//Arena arena = delegate.findArena("30d00221-b371-4828-a0e6-5d75de7bfaec");
 
-		gameConfig = delegate.findGameConfigByName(KILL_POINTS);
+		System.out.println("creating configs");
+		gameConfig = createConfig(MIN_PLAYERS, "Min # of Players", "Min number of players", "", GameConfigType.INT, GameConfigScope.GLOBAL , game);
+		createGameConfigInstance( gameConfig, 1 );
+
+		gameConfig = createConfig(MAX_PLAYERS, "Max # of players", "Max # of players", "", GameConfigType.INT, GameConfigScope.GLOBAL , game);
+		createGameConfigInstance( gameConfig, 4 );
+
+		gameConfig = createConfig(START_COUNTDOWN, "Countdown", "Countdown to start the game in seconds", "", GameConfigType.INT, GameConfigScope.GLOBAL , game);
+		createGameConfigInstance( gameConfig, 30 );
+
+		gameConfig = createConfig(GAME_DURATION, "Duration in seconds", "Duration in seconds", "", GameConfigType.INT, GameConfigScope.GLOBAL , game);
+		createGameConfigInstance( gameConfig, 3 );
+		
+		gameConfig = createConfig(KILL_POINTS, "Points per kill", "Points per kill", "", GameConfigType.INT, GameConfigScope.GLOBAL , game);
 		createGameConfigInstance( gameConfig, 100 );
 
-		/*
-		int i = 1;
-
-		gameConfig = createConfig("gungame.player1.spawn", "Select the location 1 to spawn a player", "Location where the player will spawn", "PLAYER-SPAWN", GameConfigType.LOCAL, GameConfigScope.ARENA, game);
-		pointA = createLocal( -191, 53, -211 );
-		createGameArenaConfig( gameConfig, arena, pointA );
-
-		gameConfig = createConfig("gungame.player2.spawn", "Select the location 2 to spawn a player", "Location where the player will spawn", "PLAYER-SPAWN",  GameConfigType.LOCAL, GameConfigScope.ARENA, game);
-		pointA = createLocal( -193, 53, -182 );
-		createGameArenaConfig( gameConfig, arena, pointA );
-
-		gameConfig = createConfig("gungame.player3.spawn", "Select the location 3 to spawn a player", "Location where the player will spawn", "PLAYER-SPAWN",  GameConfigType.LOCAL, GameConfigScope.ARENA, game);
-		pointA = createLocal( -163, 65, -177 );
-		createGameArenaConfig( gameConfig, arena, pointA );
-
-		gameConfig = createConfig("gungame.player4.spawn", "Select the location 4 to spawn a player", "Location where the player will spawn", "PLAYER-SPAWN",  GameConfigType.LOCAL, GameConfigScope.ARENA, game);
-		pointA = createLocal( -198, 54, -197 );
-		createGameArenaConfig( gameConfig, arena, pointA );
-		
-
-		/*
+		int i =0;
 		item = delegate.findItemByName( "IRON_AXE" ); i = 1;
 		gameConfig = createConfig("GUNGAME." + i, "Item earned at level " + i, "Item earned at level " + i, "GUNGAME.LEVEL", GameConfigType.ITEM, GameConfigScope.GLOBAL , game);
 		createGameConfigInstance( gameConfig, item );
@@ -125,11 +118,27 @@ public class AddGunGameGameConfig {
 		gameConfig = createConfig("GUNGAME." + i, "Item earned at level " + i, "Item earned at level " + i, "GUNGAME.LEVEL", GameConfigType.ITEM, GameConfigScope.GLOBAL , game);
 		createGameConfigInstance( gameConfig, item );
 	
-		gameConfig = createConfig(KILL_POINTS, "Points per kill", "Points per kill", "", GameConfigType.INT, GameConfigScope.GLOBAL , game);
-		createGameConfigInstance( gameConfig, 100 );
+		/*
+		int i = 1;
 
-		gameConfig = createConfig(GAME_DURATION, "Duration in seconds", "Duration in seconds", "", GameConfigType.INT, GameConfigScope.GLOBAL , game);
-		createGameConfigInstance( gameConfig, 3 );
+		gameConfig = createConfig("gungame.player1.spawn", "Select the location 1 to spawn a player", "Location where the player will spawn", "PLAYER-SPAWN", GameConfigType.LOCAL, GameConfigScope.ARENA, game);
+		pointA = createLocal( -191, 53, -211 );
+		createGameArenaConfig( gameConfig, arena, pointA );
+
+		gameConfig = createConfig("gungame.player2.spawn", "Select the location 2 to spawn a player", "Location where the player will spawn", "PLAYER-SPAWN",  GameConfigType.LOCAL, GameConfigScope.ARENA, game);
+		pointA = createLocal( -193, 53, -182 );
+		createGameArenaConfig( gameConfig, arena, pointA );
+
+		gameConfig = createConfig("gungame.player3.spawn", "Select the location 3 to spawn a player", "Location where the player will spawn", "PLAYER-SPAWN",  GameConfigType.LOCAL, GameConfigScope.ARENA, game);
+		pointA = createLocal( -163, 65, -177 );
+		createGameArenaConfig( gameConfig, arena, pointA );
+
+		gameConfig = createConfig("gungame.player4.spawn", "Select the location 4 to spawn a player", "Location where the player will spawn", "PLAYER-SPAWN",  GameConfigType.LOCAL, GameConfigScope.ARENA, game);
+		pointA = createLocal( -198, 54, -197 );
+		createGameArenaConfig( gameConfig, arena, pointA );
+		
+
+		/*
 		System.out.println("creating configs");
 		gameConfig = createConfig(MIN_PLAYERS, "Min # of Players", "Min number of players", "", GameConfigType.INT, GameConfigScope.GLOBAL , game);
 		gameConfig = createConfig(MAX_PLAYERS, "Max # of players", "Max # of players", "", GameConfigType.INT, GameConfigScope.GLOBAL , game);
@@ -138,16 +147,6 @@ public class AddGunGameGameConfig {
 		
 		Arena arena = delegate.findArena("30d00221-b371-4828-a0e6-5d75de7bfaec");
 		
-		System.out.println("creating configs");
-		gameConfig = createConfig(MIN_PLAYERS, "Min # of Players", "Min number of players", "", GameConfigType.INT, GameConfigScope.GLOBAL , game);
-		createGameConfigInstance( gameConfig, 1 );
-
-		gameConfig = createConfig(MAX_PLAYERS, "Max # of players", "Max # of players", "", GameConfigType.INT, GameConfigScope.GLOBAL , game);
-		createGameConfigInstance( gameConfig, 4 );
-
-		gameConfig = createConfig(START_COUNTDOWN, "Countdown", "Countdown to start the game in seconds", "", GameConfigType.INT, GameConfigScope.GLOBAL , game);
-		createGameConfigInstance( gameConfig, 30 );
-
 		gameConfig = createConfig(LOBBY_LOCATION, "Select the location to teleport players after the game", "Location to where players will be teleported after leaving the game", "", GameConfigType.LOCAL, GameConfigScope.ARENA, game );
 		pointA = createLocal( -198, 53, -195 );
 		createGameArenaConfig( gameConfig, arena, pointA );

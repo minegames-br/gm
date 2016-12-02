@@ -1,13 +1,18 @@
 package com.thecraftcloud.core.domain;
 
 import java.util.List;
+import java.util.UUID;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -15,8 +20,16 @@ import org.hibernate.annotations.LazyCollectionOption;
 public class GameConfigInstance extends TransferObject {
 
 	@Id
+	@GeneratedValue(generator = "uuid2")
+	@GenericGenerator(name = "uuid2", strategy = "uuid2")
+	@Column(columnDefinition = "BINARY(16)")
+	private UUID gci_uuid;
+	
 	@OneToOne(fetch = FetchType.EAGER)
 	private GameConfig gameConfig;
+
+	@OneToOne(fetch = FetchType.EAGER)
+	private Game game;
 	
 	@OneToOne(fetch = FetchType.EAGER)
 	private Local local;
@@ -102,6 +115,22 @@ public class GameConfigInstance extends TransferObject {
 
 	public void setItem(Item item) {
 		this.item = item;
+	}	
+	
+	public Game getGame() {
+		return game;
+	}
+
+	public void setGame(Game game) {
+		this.game = game;
+	}
+
+	public UUID getGci_uuid() {
+		return gci_uuid;
+	}
+
+	public void setGci_uuid(UUID gci_uuid) {
+		this.gci_uuid = gci_uuid;
 	}
 
 	@Override

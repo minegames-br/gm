@@ -15,7 +15,7 @@ import com.thecraftcloud.core.domain.Schematic;
 
 public class AddGameConfigRESTPostTest {
 
-	public static final String URL_SERVICES = "http://services.minegames.com.br:8080/gamemanager/webresources";
+	public static final String URL_SERVICES = "http://services.thecraftcloud.com:8080/gamemanager/webresources";
 	//public static final String URL_SERVICES = "http://localhost:8080/gamemanager/webresources";
 	//String restURL = "";
     private static TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance(URL_SERVICES);
@@ -26,11 +26,11 @@ public class AddGameConfigRESTPostTest {
 	public static final String MAX_ZOMBIE_SPAWNED_PER_PLAYER = "ARQUEIRO-MAX-ZOMBIE-SPAWNED-PER-PLAYER";
 	public static final String MAX_TARGET = "ARQUEIRO-MAX-TARGET";
 	public static final String MAX_MOVING_TARGET = "ARQUEIRO-MAX-MOVING-TARGET";
-	public static final String MIN_PLAYERS = "ARQUEIRO-MIN-PLAYERS";
-	public static final String MAX_PLAYERS = "ARQUEIRO-MAX-PLAYERS";
+	public static final String MIN_PLAYERS = "MIN-PLAYERS";
+	public static final String MAX_PLAYERS = "MAX-PLAYERS";
 	public static final String ARENA = "ARQUEIRO-ARENA";
-	public static final String START_COUNTDOWN = "ARQUEIRO-START-COUNTDOWN";
-	public static final String GAME_DURATION = "ARQUEIRO-GAME-DURATION";
+	public static final String START_COUNTDOWN = "START-COUNTDOWN";
+	public static final String GAME_DURATION = "GAME-DURATION-IN-SECONDS";
 	public static final String GAME_LEVELS = "ARQUEIRO-GAME-NUMBER-OF-LEVELS";
 
 	public static void main2(String args[]) throws InvalidRegistrationException {
@@ -57,26 +57,32 @@ public class AddGameConfigRESTPostTest {
 		Game game = delegate.findGame("00000000-0000-0000-0000-000000000000");
 		
 		System.out.println("creating configs");
-		gameConfig = createConfig("thelastarcher.global.startcountdown", "Countdown", "", "", GameConfigType.INT, GameConfigScope.GLOBAL, game );
-		gameConfig = createConfig(MIN_PLAYERS, "Min # of Players", "Min number of players", "", GameConfigType.INT, GameConfigScope.GLOBAL , game);
-		gameConfig = createConfig(MAX_PLAYERS, "Max # of players", "Max # of players", "", GameConfigType.INT, GameConfigScope.GLOBAL , game);
-		gameConfig = createConfig(START_COUNTDOWN, "Countdown", "Countdown to start the game in seconds", "", GameConfigType.INT, GameConfigScope.GLOBAL , game);
-		gameConfig = createConfig(GAME_DURATION, "Duration in minutes", "Duration in minutes", "", GameConfigType.INT, GameConfigScope.GLOBAL , game);
-		gameConfig = createConfig(GAME_LEVELS, "# of Rounds", "Not in use", "", GameConfigType.INT, GameConfigScope.GLOBAL , game);
-		gameConfig = createConfig(FLOATING_AREA, "Select the are to spawn floating targets", "3D area where the floating targets will spawn", "", GameConfigType.AREA3D, GameConfigScope.ARENA, game );
-		gameConfig = createConfig(MONSTERS_SPAWN_AREA, "Select the area to spawn mobs", "3D (flat) area for spawning mobs", "", GameConfigType.AREA3D, GameConfigScope.ARENA, game );
-		gameConfig = createConfig(LOBBY_LOCATION, "Select the location to teleport players after the game", "Location to where players will be teleported after leaving the game", "", GameConfigType.LOCAL, GameConfigScope.ARENA, game );
-		gameConfig = createConfig(MAX_ZOMBIE_SPAWNED_PER_PLAYER, "Max # of zombies per player", "Max # of zombies to spawn per player in game at the same time", "", GameConfigType.INT, GameConfigScope.ARENA , game);
-		gameConfig = createConfig(MAX_TARGET, "Max # of targets", "Max # of targets in the arena at the same time", "", GameConfigType.INT, GameConfigScope.ARENA , game);
-		gameConfig = createConfig(MAX_MOVING_TARGET, "Max # of bonus targets", "Max # of bonus targets", "", GameConfigType.INT, GameConfigScope.ARENA, game );
-		gameConfig = createConfig("arqueiro.player1.spawn", "Select the location 1 to spawn a player", "Location where the player will spawn", "PLAYER-SPAWN", GameConfigType.LOCAL, GameConfigScope.ARENA, game);
-		gameConfig = createConfig("arqueiro.player2.spawn", "Select the location 2 to spawn a player", "Location where the player will spawn", "PLAYER-SPAWN",  GameConfigType.LOCAL, GameConfigScope.ARENA, game);
-		gameConfig = createConfig("arqueiro.player3.spawn", "Select the location 3 to spawn a player", "Location where the player will spawn", "PLAYER-SPAWN",  GameConfigType.LOCAL, GameConfigScope.ARENA, game);
-		gameConfig = createConfig("arqueiro.player4.spawn", "Select the location 4 to spawn a player", "Location where the player will spawn", "PLAYER-SPAWN",  GameConfigType.LOCAL, GameConfigScope.ARENA, game);
-		gameConfig = createConfig("arqueiro.player1.area", "Select the area for player 1", "3D (flat) area that the player will have to protect","PLAYER-AREA", GameConfigType.AREA3D, GameConfigScope.ARENA, game);
-		gameConfig = createConfig("arqueiro.player2.area", "Select the area for player 2", "3D (flat) area that the player will have to protect", "PLAYER-AREA", GameConfigType.AREA3D, GameConfigScope.ARENA, game);
-		gameConfig = createConfig("arqueiro.player3.area", "Select the area for player 3", "3D (flat) area that the player will have to protect", "PLAYER-AREA", GameConfigType.AREA3D, GameConfigScope.ARENA, game);
-		gameConfig = createConfig("arqueiro.player4.area", "Select the area for player 4", "3D (flat) area that the player will have to protect", "PLAYER-AREA", GameConfigType.AREA3D, GameConfigScope.ARENA, game);
+		gameConfig = delegate.findGameConfigByName(MIN_PLAYERS);
+		createGameConfigInstance( game, gameConfig, 1 );
+
+		gameConfig = delegate.findGameConfigByName(MAX_PLAYERS);
+		createGameConfigInstance( game, gameConfig, 4 );
+
+		gameConfig = delegate.findGameConfigByName(START_COUNTDOWN);
+		createGameConfigInstance( game, gameConfig, 30 );
+
+		gameConfig = delegate.findGameConfigByName(GAME_DURATION);  //createConfig(GAME_DURATION, "Duration in seconds", "Duration in seconds", "", GameConfigType.INT, GameConfigScope.GLOBAL , game);
+		createGameConfigInstance( game, gameConfig, 120 );
+		//gameConfig = createConfig(GAME_LEVELS, "# of Rounds", "Not in use", "", GameConfigType.INT, GameConfigScope.GLOBAL , game);
+		//gameConfig = createConfig(FLOATING_AREA, "Select the are to spawn floating targets", "3D area where the floating targets will spawn", "", GameConfigType.AREA3D, GameConfigScope.ARENA, game );
+		//gameConfig = createConfig(MONSTERS_SPAWN_AREA, "Select the area to spawn mobs", "3D (flat) area for spawning mobs", "", GameConfigType.AREA3D, GameConfigScope.ARENA, game );
+		//gameConfig = createConfig(LOBBY_LOCATION, "Select the location to teleport players after the game", "Location to where players will be teleported after leaving the game", "", GameConfigType.LOCAL, GameConfigScope.ARENA, game );
+		//gameConfig = createConfig(MAX_ZOMBIE_SPAWNED_PER_PLAYER, "Max # of zombies per player", "Max # of zombies to spawn per player in game at the same time", "", GameConfigType.INT, GameConfigScope.ARENA , game);
+		//gameConfig = createConfig(MAX_TARGET, "Max # of targets", "Max # of targets in the arena at the same time", "", GameConfigType.INT, GameConfigScope.ARENA , game);
+		//gameConfig = createConfig(MAX_MOVING_TARGET, "Max # of bonus targets", "Max # of bonus targets", "", GameConfigType.INT, GameConfigScope.ARENA, game );
+		//gameConfig = createConfig("arqueiro.player1.spawn", "Select the location 1 to spawn a player", "Location where the player will spawn", "PLAYER-SPAWN", GameConfigType.LOCAL, GameConfigScope.ARENA, game);
+		//gameConfig = createConfig("arqueiro.player2.spawn", "Select the location 2 to spawn a player", "Location where the player will spawn", "PLAYER-SPAWN",  GameConfigType.LOCAL, GameConfigScope.ARENA, game);
+		//gameConfig = createConfig("arqueiro.player3.spawn", "Select the location 3 to spawn a player", "Location where the player will spawn", "PLAYER-SPAWN",  GameConfigType.LOCAL, GameConfigScope.ARENA, game);
+		//gameConfig = createConfig("arqueiro.player4.spawn", "Select the location 4 to spawn a player", "Location where the player will spawn", "PLAYER-SPAWN",  GameConfigType.LOCAL, GameConfigScope.ARENA, game);
+	//	gameConfig = createConfig("arqueiro.player1.area", "Select the area for player 1", "3D (flat) area that the player will have to protect","PLAYER-AREA", GameConfigType.AREA3D, GameConfigScope.ARENA, game);
+	//	gameConfig = createConfig("arqueiro.player2.area", "Select the area for player 2", "3D (flat) area that the player will have to protect", "PLAYER-AREA", GameConfigType.AREA3D, GameConfigScope.ARENA, game);
+	//	gameConfig = createConfig("arqueiro.player3.area", "Select the area for player 3", "3D (flat) area that the player will have to protect", "PLAYER-AREA", GameConfigType.AREA3D, GameConfigScope.ARENA, game);
+	//	gameConfig = createConfig("arqueiro.player4.area", "Select the area for player 4", "3D (flat) area that the player will have to protect", "PLAYER-AREA", GameConfigType.AREA3D, GameConfigScope.ARENA, game);
 	}
 	
 	public static void createArenaconfig() throws InvalidRegistrationException {
@@ -105,24 +111,9 @@ public class AddGameConfigRESTPostTest {
 		Local pointA = null;
 		Local pointB = null;
 		
-		System.out.println("creating configs");
-		gameConfig = createConfig("thelastarcher.global.startcountdown", "Countdown", "", "", GameConfigType.INT, GameConfigScope.GLOBAL, game );
-		createGameConfigInstance( gameConfig, 28 );
-
-		gameConfig = createConfig(MIN_PLAYERS, "Min # of Players", "Min number of players", "", GameConfigType.INT, GameConfigScope.GLOBAL , game);
-		createGameConfigInstance( gameConfig, 1 );
-
-		gameConfig = createConfig(MAX_PLAYERS, "Max # of players", "Max # of players", "", GameConfigType.INT, GameConfigScope.GLOBAL , game);
-		createGameConfigInstance( gameConfig, 4 );
-
-		gameConfig = createConfig(START_COUNTDOWN, "Countdown", "Countdown to start the game in seconds", "", GameConfigType.INT, GameConfigScope.GLOBAL , game);
-		createGameConfigInstance( gameConfig, 30 );
-
-		gameConfig = createConfig(GAME_DURATION, "Duration in minutes", "Duration in minutes", "", GameConfigType.INT, GameConfigScope.GLOBAL , game);
-		createGameConfigInstance( gameConfig, 3 );
 		
 		gameConfig = createConfig(GAME_LEVELS, "# of Rounds", "Not in use", "", GameConfigType.INT, GameConfigScope.GLOBAL , game);
-		createGameConfigInstance( gameConfig, 10 );
+		createGameConfigInstance( game, gameConfig, 10 );
 
 		gameConfig = createConfig(FLOATING_AREA, "Select the are to spawn floating targets", "3D area where the floating targets will spawn", "", GameConfigType.AREA3D, GameConfigScope.ARENA, game );
 		//gameConfig = delegate.findGameConfig(game.getGame_uuid().toString(), "6167c500-a8e8-43b0-9774-11f25d7a49f8");
@@ -239,11 +230,12 @@ public class AddGameConfigRESTPostTest {
         return gameConfig;
 	}
 	
-	public static void createGameConfigInstance(GameConfig gameConfig, Object object ) {
+	public static void createGameConfigInstance(Game game, GameConfig gameConfig, Object object ) {
 		String restURL = URL_SERVICES;
         GameConfigInstance domain = new GameConfigInstance();
         System.out.println("game_config_uuid: " + gameConfig.getGame_config_uuid());
         domain.setGameConfig(gameConfig);
+        domain.setGame(game);
 
         if(object instanceof Integer) {
         	Integer intValue = (Integer)object;
