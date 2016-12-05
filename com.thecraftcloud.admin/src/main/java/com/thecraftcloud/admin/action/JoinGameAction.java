@@ -19,6 +19,7 @@ import com.thecraftcloud.core.domain.Game;
 import com.thecraftcloud.core.domain.GameInstance;
 import com.thecraftcloud.core.domain.MineCraftPlayer;
 import com.thecraftcloud.core.domain.ServerInstance;
+import com.thecraftcloud.core.util.Utils;
 import com.thecraftcloud.minigame.TheCraftCloudMiniGameAbstract;
 import com.thecraftcloud.minigame.service.ConfigService;
 
@@ -56,19 +57,22 @@ public class JoinGameAction extends Action {
 		TheCraftCloudAdmin admin = TheCraftCloudAdmin.getBukkitPlugin();
 
 		ServerInstance sourceServer = dto.getPlayer().getServer();
-		ServerInstance destinationServer = new ServerService().getServerInstance(admin.getServerName());
+		String destinationServerName = admin.getServerName();
+		Bukkit.getConsoleSender().sendMessage(Utils.color("&8destination server: " + destinationServerName ));
 		Player player = Bukkit.getPlayer( dto.getPlayer().getName() );
 		
+		/*
 		BungeeUtils bu = new BungeeUtils();
 		bu.setup(admin);
-		bu.sendToServer(player, destinationServer.getName());
+		bu.sendToServer(player, destinationServerName);
+		*/
 		
 		MineCraftPlayer mcp = delegate.findPlayerByName(player.getName());
 		
 		//give it 3 seconds before it confirms the player is teleported
 		for(int i = 0; i < 3; i++) {
 			mcp = delegate.findPlayerByName(player.getName());
-			if(mcp.getServer() != null && mcp.getServer().getName().equals(destinationServer.getName()) ) {
+			if(mcp.getServer() != null && mcp.getServer().getName().equals(destinationServerName) ) {
 				break;
 			} else {
 				try {
@@ -86,6 +90,11 @@ public class JoinGameAction extends Action {
 
 		//descobrir qual servidor esta esperando jogadores para o jogo em questao
 		Game game = dto.getGame();
+		
+		if(game == null) {
+			Bukkit.getConsoleSender().sendMessage("&6Game is null" );
+			return ResponseDTO.unableToCompleteAction("Game object is null");
+		}
 		
 		List<GameInstance> listGi = delegate.findGameInstanceAvailable(game);
 		if(listGi == null) {

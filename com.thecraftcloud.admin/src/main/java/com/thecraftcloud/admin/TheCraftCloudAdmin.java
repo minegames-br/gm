@@ -44,6 +44,14 @@ public class TheCraftCloudAdmin extends JavaPlugin {
 		this.loadConfiguration();
 		this.socketServerPort = this.getConfig().getInt(TheCraftCloudAdmin.SOCKET_SERVER_PORT);
 		this.serverName = this.getConfig().getString(TheCraftCloudAdmin.SERVER_NAME);
+		
+		Bukkit.getConsoleSender().sendMessage(Utils.color("&6serverName: " + this.serverName));
+		
+		if(this.serverName == null) {
+			Bukkit.getConsoleSender().sendMessage(Utils.color("&CServer Name on config.yml is null"));
+			throw new NullPointerException("server name is null");
+		}
+		
 		//verificar se o servidor esta cadastrado. Se nao, cadastrar.
 		this.serverInstance = registerServer(this.serverName);
 		

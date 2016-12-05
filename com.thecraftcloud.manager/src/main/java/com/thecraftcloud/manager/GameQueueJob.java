@@ -3,7 +3,6 @@ package com.thecraftcloud.manager;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 import java.util.TreeSet;
 
 import org.quartz.Job;
@@ -28,11 +27,8 @@ public class GameQueueJob implements Job {
 
 	public void execute(JobExecutionContext context) throws JobExecutionException {
 		System.err.println("Running GameQueueJob Job.");
-		
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-		
 		List<GameQueue> list = delegate.findAllGameQueueByStatus(GameQueueStatus.WAITING);
-
 		TreeSet<Game> invalidGames = new TreeSet<Game>();
 		
 		//verificar quais jogos os jogadores querem jogar
@@ -95,10 +91,26 @@ public class GameQueueJob implements Job {
 				}
 				
 				rdto = client.teleportPlayer(server, gq.getPlayer(), gameServer);
+				boolean success = false;
 				if(rdto.getResult() ) {
 					String s = ( (char)27 + "[32m" + "teleport player worked. executing joinGame..."  + (char)27 + "[0m"); 
 					System.out.println(s);
-					rdto = client.joinGame( gameServer, gq.getPlayer() );
+					//Fazer o player entrar no jogo (addPlayer - livePlayers)
+					for(int i = 0; i < 3; i++ ) {
+						rdto = client.joinGame( gameServer, gq.getPlayer(), gq.getGame() );
+						if( rdto.getResult() ) {
+							success = true;
+							break;
+						} else {
+							Thread.sleep(2000);
+						}
+					}
+					
+					if(!success) {
+						s = ( (char)27 + "[36m" + "join game failed. " + rdto.getMessage()  + (char)27 + "[0m"); 
+						System.out.println(s);
+						throw new Exception(rdto.getCode() + " " + rdto.getMessage() );
+					}
 					
 					s = ( (char)27 + "[32m" + "joinGame..." + rdto.getResult() + " " + rdto.getMessage()  + (char)27 + "[0m"); 
 					System.out.println(s);

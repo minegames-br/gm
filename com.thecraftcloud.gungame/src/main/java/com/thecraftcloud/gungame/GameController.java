@@ -52,7 +52,7 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 		
 		// Iniciar threads do jogo
 		BukkitScheduler scheduler = getServer().getScheduler();
-		this.spawnBonusItemThreadID = scheduler.scheduleSyncRepeatingTask(this, this.spawnBonusItemTask, 200L, 200L);
+		this.spawnBonusItemThreadID = scheduler.scheduleSyncRepeatingTask(this, this.spawnBonusItemTask, 200L, 250L);
 
 		//varrer o mapa para encontrar Chests
 		List<Chest> chestList = new BlockManipulationUtil().getArenaChests(Bukkit.getWorld(this.configService.getArena().getName()), this.configService.getArena() );

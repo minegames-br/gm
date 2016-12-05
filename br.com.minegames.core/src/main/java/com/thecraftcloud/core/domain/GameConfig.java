@@ -19,20 +19,14 @@ public class GameConfig extends TransferObject {
 	@GenericGenerator(name = "uuid2", strategy = "uuid2")
 	@Column(columnDefinition = "BINARY(16)")
 	private UUID game_config_uuid;
-	
 	@Column(unique=true)
 	private String name;
-	
 	private String groupName;
-	
 	private String displayName;
-	
 	@Enumerated
 	private GameConfigType configType;
-	
 	@Enumerated
 	private GameConfigScope configScope;
-
 	private String description;
 
 	public UUID getGame_config_uuid() {

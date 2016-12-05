@@ -12,6 +12,7 @@ import com.thecraftcloud.admin.action.NotifyPlayerAction;
 import com.thecraftcloud.admin.action.SendPlayerToServerAction;
 import com.thecraftcloud.core.admin.domain.ActionDTO;
 import com.thecraftcloud.core.admin.domain.ResponseDTO;
+import com.thecraftcloud.core.domain.Game;
 import com.thecraftcloud.core.domain.MineCraftPlayer;
 import com.thecraftcloud.core.domain.ServerInstance;
 import com.thecraftcloud.core.json.JSONParser;
@@ -122,7 +123,7 @@ public class AdminClient {
         }
     }
 
-	public ResponseDTO joinGame(ServerInstance server, MineCraftPlayer player) throws Exception {
+	public ResponseDTO joinGame(ServerInstance server, MineCraftPlayer player, Game game) throws Exception {
 		ActionDTO dto = new ActionDTO();
 		dto.setName(ActionDTO.JOIN_GAME);
 		dto.setPlayer(player);
