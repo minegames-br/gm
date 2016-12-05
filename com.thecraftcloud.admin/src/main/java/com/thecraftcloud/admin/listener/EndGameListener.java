@@ -6,6 +6,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
 import com.thecraftcloud.admin.service.AdminService;
+import com.thecraftcloud.client.TheCraftCloudDelegate;
 import com.thecraftcloud.core.util.Utils;
 import com.thecraftcloud.minigame.event.EndGameEvent;
 import com.thecraftcloud.minigame.service.ConfigService;
@@ -20,6 +21,8 @@ public class EndGameListener implements Listener {
     	Bukkit.getScheduler().runTaskAsynchronously(event.getGame(), new Runnable() {
     		public void run() {
     	    	service.notifyGameOver( event.getGame() );
+    	    	AdminService adminService = new AdminService();
+    	    	adminService.sendPlayersToLobby( event.getGame() );
     		}
     	});
     }

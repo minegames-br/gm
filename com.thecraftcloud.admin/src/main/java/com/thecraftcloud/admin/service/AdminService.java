@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 
 import com.thecraftcloud.admin.TheCraftCloudAdmin;
 import com.thecraftcloud.client.TheCraftCloudDelegate;
+import com.thecraftcloud.core.bungee.BungeeUtils;
 import com.thecraftcloud.core.domain.GameInstance;
 import com.thecraftcloud.core.domain.GameState;
 import com.thecraftcloud.core.domain.MineCraftPlayer;
@@ -47,15 +48,34 @@ public class AdminService {
 	}
 
 	public void notifyPlayerJoin(final GamePlayer gamePlayer, TheCraftCloudMiniGameAbstract miniGame) {
-		MineCraftPlayer mcp = delegate.findPlayerByName(gamePlayer.getName());
+		MineCraftPlayer mcp = delegate.findPlayerByName(gamePlayer.getPlayer().getName());
 		mcp.setStatus(PlayerStatus.INGAME);
 		delegate.updatePlayer(mcp);
 	}
 	
 	public void notifyPlayerLeft(final GamePlayer gamePlayer, TheCraftCloudMiniGameAbstract miniGame) {
-		MineCraftPlayer mcp = delegate.findPlayerByName(gamePlayer.getName());
+		MineCraftPlayer mcp = delegate.findPlayerByName(gamePlayer.getPlayer().getName());
 		mcp.setStatus(PlayerStatus.ONLINE);
 		delegate.updatePlayer(mcp);
+	}
+
+	public void sendPlayersToLobby(TheCraftCloudMiniGameAbstract game) {
+		//ESSE CODIGO ESTA HARD CODED RETORNANDO MGLOBBY
+		ServerInstance server = delegate.findLobbyAvailable();
+		
+		BungeeUtils bu = new BungeeUtils();
+		bu.setup(game);
+		for( GamePlayer gp: game.getLivePlayers() ) {
+			bu.sendToServer(gp.getPlayer(), server.getName());
+		}
+		
+	}
+
+	public void sendPlayerToLobby(TheCraftCloudMiniGameAbstract game, GamePlayer gamePlayer) {
+		ServerInstance server = delegate.findLobbyAvailable();
+		BungeeUtils bu = new BungeeUtils();
+		bu.setup(game);
+		bu.sendToServer(gamePlayer.getPlayer(), server.getName());
 	}
 	
 

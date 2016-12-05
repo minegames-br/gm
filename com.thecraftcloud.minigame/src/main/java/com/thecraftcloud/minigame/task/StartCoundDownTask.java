@@ -1,12 +1,10 @@
 package com.thecraftcloud.minigame.task;
 
-import org.bukkit.scheduler.BukkitRunnable;
-
 import com.thecraftcloud.minigame.TheCraftCloudMiniGameAbstract;
 import com.thecraftcloud.minigame.domain.MyCloudCraftGame;
 import com.thecraftcloud.minigame.service.ConfigService;
 
-public class StartCoundDownTask extends BukkitRunnable {
+public class StartCoundDownTask implements Runnable {
 	
 	private TheCraftCloudMiniGameAbstract controller;
 	private ConfigService configService = ConfigService.getInstance();

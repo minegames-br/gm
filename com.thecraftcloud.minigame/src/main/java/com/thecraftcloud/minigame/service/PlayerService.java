@@ -74,6 +74,7 @@ public class PlayerService extends TheCraftCloudService {
 		Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
 		Objective objective = scoreboard.registerNewObjective(Utils.color("&6Placar"), "placar");
 		objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+		scoreboard.getObjective(DisplaySlot.SIDEBAR).getScore("time").setScore( configService.getConfig().getGameDurationInSeconds() );
 		player.setScoreboard(scoreboard);
 	}
 
@@ -81,9 +82,12 @@ public class PlayerService extends TheCraftCloudService {
 		for (GamePlayer gp : this.miniGame.getLivePlayers()) {
 			Player player = gp.getPlayer();
 			Scoreboard scoreboard = player.getScoreboard();
+			if(scoreboard == null || scoreboard.getObjective(DisplaySlot.SIDEBAR) == null ) continue; 
 			for (GamePlayer gp1 : this.miniGame.getLivePlayers()) {
 				String name = gp1.getPlayer().getName();
+				if( scoreboard.getObjective(DisplaySlot.SIDEBAR).getScore(name) == null ) continue;
 				scoreboard.getObjective(DisplaySlot.SIDEBAR).getScore(name).setScore(gp1.getPoint());
+				scoreboard.getObjective(DisplaySlot.SIDEBAR).getScore("time").setScore( this.miniGame.getGameDuration() );
 			}
 		}
 	}

@@ -1020,6 +1020,12 @@ public class TheCraftCloudDelegate {
         
         return myObjects;
 	}
+
+	public ServerInstance findLobbyAvailable() {
+		ServerInstance server = this.findServerByName("mglobby");
+		
+		return server;
+	}
 	
 }
 

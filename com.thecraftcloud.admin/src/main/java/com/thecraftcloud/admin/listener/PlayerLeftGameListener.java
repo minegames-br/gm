@@ -18,6 +18,8 @@ public class PlayerLeftGameListener implements Listener {
     	Bukkit.getScheduler().runTaskAsynchronously(event.getGame(), new Runnable() {
     		public void run() {
     	    	service.notifyPlayerLeft( event.getGamePlayer(), event.getGame() );
+    	    	AdminService adminService = new AdminService();
+    	    	adminService.sendPlayerToLobby( event.getGame(), event.getGamePlayer() );
     		}
     	});
     }

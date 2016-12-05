@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Scoreboard;
@@ -32,6 +33,7 @@ import com.thecraftcloud.minigame.task.EndGameTask;
 import com.thecraftcloud.minigame.task.LevelUpTask;
 import com.thecraftcloud.minigame.task.StartCoundDownTask;
 import com.thecraftcloud.minigame.task.StartGameTask;
+import com.thecraftcloud.minigame.task.UpdateScoreBoardTask;
 
 
 public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
@@ -57,7 +59,7 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 	private int startCountDownThreadID;
 	private Runnable startCountDownTask;
 
-	private long gameStartTime;
+	protected long gameStartTime;
 	
 	private int levelUpThreadID;
 	private Runnable levelUpTask;
@@ -65,6 +67,8 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 	protected LocationUtil locationUtil = new LocationUtil();
 	protected PlayerService playerService = new PlayerService(this);
 	protected ConfigService configService;
+	private Runnable updateScoreBoardTask;
+	private int updateScoreBoardThreadID;
 	
 	@Override
 	public void onEnable() {
@@ -91,6 +95,7 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 
 		this.endGameTask = new EndGameTask(this);
 		this.levelUpTask = new LevelUpTask(this);
+		this.updateScoreBoardTask = new UpdateScoreBoardTask(this);
 
 		// Agendar as threads que vão detectar se o jogo pode comecar
 		this.startCountDownTask = new StartCoundDownTask(this);
@@ -112,6 +117,7 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 		scheduler.cancelTask(startCountDownThreadID);
 		scheduler.cancelTask(startGameThreadID);
 
+		this.updateScoreBoardThreadID = scheduler.scheduleSyncRepeatingTask(this, this.updateScoreBoardTask, 0L, 20L);
 		this.endGameThreadID = scheduler.scheduleSyncRepeatingTask(this, this.endGameTask, 0L, 50L);
 		this.levelUpThreadID = scheduler.scheduleSyncRepeatingTask(this, this.levelUpTask, 0L, 50L);
 		this.start();
@@ -124,6 +130,7 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 		}
 		
 		this.getServer().getPluginManager().callEvent(new StartGameEvent(this));
+		this.gameStartTime = System.currentTimeMillis();
 	}
 
 	public void endGame() {
@@ -277,4 +284,9 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 	}
 
 	public abstract MyCloudCraftGame createMyCloudCraftGame();
+
+	public Integer getGameDuration() {
+		Integer duration = new Integer(new Long( (System.currentTimeMillis() - this.gameStartTime)/1000 ).toString()); 
+		return duration;
+	}
 }

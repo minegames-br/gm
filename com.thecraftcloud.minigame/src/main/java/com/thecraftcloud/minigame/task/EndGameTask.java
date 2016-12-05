@@ -1,10 +1,8 @@
 package com.thecraftcloud.minigame.task;
 
-import org.bukkit.scheduler.BukkitRunnable;
-
 import com.thecraftcloud.minigame.TheCraftCloudMiniGameAbstract;
 
-public class EndGameTask extends BukkitRunnable {
+public class EndGameTask implements Runnable {
 	
 	private TheCraftCloudMiniGameAbstract controller;
 	
