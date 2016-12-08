@@ -17,6 +17,7 @@ import com.thecraftcloud.core.domain.GameArenaConfig;
 import com.thecraftcloud.core.domain.GameConfig;
 import com.thecraftcloud.core.domain.GameConfigInstance;
 import com.thecraftcloud.core.domain.GameConfigType;
+import com.thecraftcloud.core.domain.GameGameConfig;
 import com.thecraftcloud.core.domain.GameInstance;
 import com.thecraftcloud.core.domain.GameState;
 import com.thecraftcloud.core.domain.Local;
@@ -115,9 +116,43 @@ public class GameService extends Service {
 		commitTransaction();
 	}
 	
-	public GameConfig addGameConfig(GameConfig gc) {
+	public GameGameConfig addGameConfig(Game game, GameConfig gc) {
 		startTransaction();
-		gc = (GameConfig)em.merge(gc);
+		
+		GameGameConfig ggc = new GameGameConfig();
+		ggc.setGame(game);
+		ggc.setGameConfig(gc);
+		
+		em.persist(ggc);
+		commitTransaction();
+		return ggc;
+	}
+
+	public void addGameConfig(String uuid, String configUuid) {
+		startTransaction();
+		GameService gservice = new GameService(this.em);
+		Game game = gservice.find(UUID.fromString(uuid));
+		GameConfig gc = gservice.findGameConfigByUUID( configUuid);
+
+		GameGameConfig ggc = new GameGameConfig();
+		ggc.setGame(game);
+		ggc.setGameConfig(gc);
+		
+		em.persist(ggc);
+
+		commitTransaction();
+	}
+
+	public GameConfig findGameConfigByUUID(String uuid) {
+		startTransaction();
+		Query query = em.createQuery("SELECT gc FROM GameConfig gc where gc.game_config_uuid = :_uuid");
+		query.setParameter("_uuid", UUID.fromString(uuid) );
+		GameConfig gc = null;
+		try{
+			gc = (GameConfig)query.getSingleResult();
+		}catch(Exception e) {
+			return null;
+		}
 		commitTransaction();
 		return gc;
 	}

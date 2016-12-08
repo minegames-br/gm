@@ -57,6 +57,7 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 		//varrer o mapa para encontrar Chests
 		List<Chest> chestList = new BlockManipulationUtil().getArenaChests(Bukkit.getWorld(this.configService.getArena().getName()), this.configService.getArena() );
 		this.gunGameConfigService .setChestList(chestList);
+		
 	}
 	
 	@Override

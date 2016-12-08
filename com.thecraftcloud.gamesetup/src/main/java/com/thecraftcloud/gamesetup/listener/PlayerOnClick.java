@@ -67,11 +67,12 @@ public class PlayerOnClick implements Listener {
 		}
 		
 		Integer configValue = Integer.parseInt(this.controller.getConfigValue().toString());
-		if(block.getLocation().getBlockZ() == 400) {
+		// adicionar 1 int a configuracao atual
+		if(block.equals(controller.getBlockUp()) ) {
 			configValue++;
 			this.controller.setConfigValue(configValue);
 			this.controller.updateConfigHologram(player);
-		} else if (block.getLocation().getBlockZ() == 403) {
+		} else if (block.equals(controller.getBlockDown())) {
 			if(configValue > 0) {
 				configValue --;
 			}
@@ -80,21 +81,24 @@ public class PlayerOnClick implements Listener {
 		}
 		
 		//mudar de configuração
-		if(block.getLocation().getBlockZ() == 399) {
+		if(block.equals(controller.getBlockNextConfig() ) ) {
 			this.controller.nextConfig(player);
-		} else if (block.getLocation().getBlockZ() == 404) {
+		} else if (block.equals(controller.getBlockPreviousConfig() ) ) {
 			this.controller.previousConfig(player);
 		}
 		
-		if(block.getLocation().getBlockZ() == 397 && block.getLocation().getBlockX() == -765) {
+		// iniciar configuracao da arena
+		if(block.equals(controller.getBlockStartArenaSetup() ) ) {
 			this.controller.startArenaSetupTask();
 		}
 
-		if(block.getLocation().getBlockZ() == 397 && block.getLocation().getBlockX() == -764) {
+		// cancelar configuracao da arena
+		if(block.equals(controller.getBlockCancelSetup() )) {
 			this.controller.cancelArenaSetupTask();
 		}
 
-		if(block.getLocation().getBlockZ() == 397 && block.getLocation().getBlockX() == -766) {
+		//mudar horario da arena
+		if(block.equals(controller.getBlockChangeTime() ) ) {
 			this.controller.switchArenaTime();
 		}
 

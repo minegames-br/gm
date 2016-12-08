@@ -44,7 +44,7 @@ import com.thecraftcloud.gamesetup.task.BuildArenaTask;
 
 public class TheCraftCloudGameSetupPlugin extends JavaPlugin {
 
-	public static String THE_CRAFT_CLOUD_PLUGIN = "TheCraftCloud-Plugin";
+	public static String THE_CRAFT_CLOUD_PLUGIN = "TheCraftCloud-Setup";
 	public static Integer TIME_SET_SUNRISE = 24000;
 	public static Integer TIME_SET_SUNRISE2 = 500;
 	public static Integer TIME_SET_DAY = 1000;
@@ -98,6 +98,7 @@ public class TheCraftCloudGameSetupPlugin extends JavaPlugin {
 	private Game game;
 	private ServerInstance server;
 	private String server_uuid;
+	private Location hologramLocation;
 	
 	public List<Arena> getArenas() {
 		return arenas;
@@ -114,9 +115,11 @@ public class TheCraftCloudGameSetupPlugin extends JavaPlugin {
 	@Override
 	public void onEnable() {
 	    loadConfiguration();
-	    System.out.print("[TheCraftCloud] TheCraftCloud Plugin Enabled!");
+	    System.out.print("[TheCraftCloudGameSetup] TheCraftCloud Setup Enabled!");
 		
 		getCommand("tcc").setExecutor(new TheCraftCloudCommand(this));
+		
+		init();
 		
 	    registerListeners();
 
@@ -137,6 +140,12 @@ public class TheCraftCloudGameSetupPlugin extends JavaPlugin {
 		PluginManager pm = Bukkit.getPluginManager();
 		pm.registerEvents(new PlayerOnClick(this), this);
 		pm.registerEvents(new BlockBreakListener(this), this);
+	}
+	
+	private void init() {
+		this.world = Bukkit.getWorld("cockpit");
+		this.setupLocation = new Location( this.world , -75, 113, 72);
+		this.hologramLocation = new Location( this.world , -70, 116, 80);
 	}
 
 	public Area3D getSelection() {
@@ -240,7 +249,6 @@ public class TheCraftCloudGameSetupPlugin extends JavaPlugin {
 	}
 
 	public void setupGameArenaConfig(Player player) {
-		this.setupLocation = new Location(player.getWorld(), -764, 5, 402);
 		this.player = player;
 		player.teleport(this.setupLocation);
 		player.setAllowFlight(true);
@@ -574,7 +582,7 @@ public class TheCraftCloudGameSetupPlugin extends JavaPlugin {
 		BukkitScheduler scheduler = Bukkit.getScheduler();
 		scheduler.cancelTask( this.arenaSetupTaskThreadID );
 		this.setupArena = false;
-		this.setupLocation = new Location(player.getWorld(), -764, 5, 402);
+		
 		player.teleport(this.setupLocation);
 
 		player.getInventory().setItemInMainHand(null);
@@ -588,7 +596,6 @@ public class TheCraftCloudGameSetupPlugin extends JavaPlugin {
 		Bukkit.getLogger().info("completeArenaSetupTask");
 		BukkitScheduler scheduler = Bukkit.getScheduler();
 		scheduler.cancelTask( this.arenaSetupTaskThreadID );
-		this.setupLocation = new Location(player.getWorld(), -764, 5, 402);
 		player.teleport(this.setupLocation);
 		saveGameConfig();
 		this.setupArena = false;
@@ -806,7 +813,7 @@ public class TheCraftCloudGameSetupPlugin extends JavaPlugin {
 		this.player.getWorld().setTime(arena.getTime());
 		//this.world.setTime(arena.getTime());
 		player.sendMessage("Time Set: " + arena.getTime() );
-		HologramUtil.showPlayer( player, new String[]{ "Time Set", arena.getTime().toString()}, new Location(player.getWorld(), -766, 4, 397) );
+		HologramUtil.showPlayer( player, new String[]{ "Time Set", arena.getTime().toString()}, this.hologramLocation );
 		Bukkit.getScheduler().runTaskAsynchronously(this, new Runnable(){
 			public void run() {
 				delegate.updateArena(arena);
@@ -847,5 +854,44 @@ public class TheCraftCloudGameSetupPlugin extends JavaPlugin {
 		this.saveConfig();
 	}
 
+	public Location getBlockNextGame() {
+		return new Location( this.world, -77, 114, 69);
+	}
+
+	public Location getBlockNextArena() {
+		return new Location( this.world, -75, 114, 69);
+	}
+
+	public Location getBlockStartArenaSetup() {
+		return new Location( this.world, -80, 114, 71);
+	}
+
+	public Location getBlockChangeTime() {
+		return new Location( this.world, -80, 114, 72);
+	}
+
+	public Location getBlockCancelSetup() {
+		return new Location( this.world, -80, 114, 75);
+	}
+
+	public Location getBlockSaveSetup() {
+		return new Location( this.world, -80, 114, 74);
+	}
+
+	public Location getBlockNextConfig() {
+		return new Location( this.world, -72, 114, 71);
+	}
+
+	public Location getBlockPreviousConfig() {
+		return new Location( this.world, -72, 114, 75);
+	}
+
+	public Location getBlockUp() {
+		return new Location( this.world, -72, 114, 72);
+	}
+
+	public Location getBlockDown() {
+		return new Location( this.world, -72, 114, 74);
+	}
 
 }

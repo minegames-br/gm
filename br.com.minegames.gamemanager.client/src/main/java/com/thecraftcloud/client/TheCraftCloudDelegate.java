@@ -147,6 +147,21 @@ public class TheCraftCloudDelegate {
 		
 	}
 	
+	private boolean post(String path) {
+		ClientRequest request = new ClientRequest(this.gameManagerUrl + path);
+		System.out.println("post: " + this.gameManagerUrl + path );
+		ClientResponse response = null;
+		try {
+			request.body("application/json", "");
+			response = request.post(String.class);
+			System.out.println(response.getResponseStatus().getStatusCode());
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
 	private String delete(String path) {
 		ClientRequest request = new ClientRequest(this.gameManagerUrl + path);
 		System.out.println("delete: " + this.gameManagerUrl + path);
@@ -1025,6 +1040,13 @@ public class TheCraftCloudDelegate {
 		ServerInstance server = this.findServerByName("mglobby");
 		
 		return server;
+	}
+
+	public void addGameConfigToGame(Game game, GameConfig gc) {
+		String guuid = game.getGame_uuid().toString();
+		String gcuuid = gc.getGame_config_uuid().toString();
+		
+		post("/game/" + guuid + "/config/add/" + gcuuid );
 	}
 	
 }

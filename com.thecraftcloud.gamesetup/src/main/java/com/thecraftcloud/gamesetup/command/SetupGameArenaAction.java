@@ -38,21 +38,21 @@ public class SetupGameArenaAction extends TheCraftCloudCommandAction {
 		
 		if(p.isServerRegistered()) {
 			if(player != null) {
-				player.sendMessage("Please, register server first. /mg register <name>");
+				player.sendMessage("Please, register server first. /tcc register <name>");
 			}
 			return;
 		}
 		
 		if(p.getArena() == null ) {
 			if(player != null) {
-				player.sendMessage("Choose one of the existing arenas: /mg listarenas [name] or create one /mg createarena <name>");
+				player.sendMessage("Choose one of the existing arenas: /tcc listarenas [name] or create one /tcc createarena <name>");
 			}
 			return;
 		}
 		
 		if(p.getGame() == null) {
 			if(player != null) {
-				player.sendMessage("Please, select the game first: /mg listgames and /mg setgame <game>");
+				player.sendMessage("Please, select the game first: /tcc listgames and /tcc setgame <game>");
 			}
 			return;
 		}

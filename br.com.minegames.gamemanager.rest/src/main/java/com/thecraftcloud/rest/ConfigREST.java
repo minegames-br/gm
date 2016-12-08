@@ -18,7 +18,7 @@ import com.thecraftcloud.service.ConfigService;
 
 @Path("/config")
 public class ConfigREST  extends REST {
-	
+/*	
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response create(String json) {
@@ -71,6 +71,6 @@ public class ConfigREST  extends REST {
 			return Response.status(Response.Status.NOT_FOUND).entity("Config não encontrado: " + _uuid).build();
 		}
 	}
-	
+	*/
 	
 }

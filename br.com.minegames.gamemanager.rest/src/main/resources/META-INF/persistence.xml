@@ -15,7 +15,6 @@
 		<class>com.thecraftcloud.core.domain.Arena</class>
 		<class>com.thecraftcloud.core.domain.Area3D</class>
 		<class>com.thecraftcloud.core.domain.Local</class>
-		<class>com.thecraftcloud.core.domain.Config</class>
 		<class>com.thecraftcloud.core.domain.GameConfig</class>
 		<class>com.thecraftcloud.core.domain.GameConfigInstance</class>
 		<class>com.thecraftcloud.core.domain.GameArenaConfig</class>
@@ -24,6 +23,7 @@
 		<class>com.thecraftcloud.core.domain.KitItem</class>
 		<class>com.thecraftcloud.core.domain.Item</class>
 		<class>com.thecraftcloud.core.domain.GameQueue</class>
+		<class>com.thecraftcloud.core.domain.GameGameConfig</class>
 		<properties>
 			<!-- 
 			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />

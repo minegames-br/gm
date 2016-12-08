@@ -1,20 +1,7 @@
 package com.thecraftcloud.service;
 
-import java.util.Collection;
-import java.util.UUID;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.Query;
-
-import org.jboss.logging.Logger;
-
-import com.thecraftcloud.core.domain.Config;
-import com.thecraftcloud.dao.ConfigDAO;
-
 public class ConfigService extends Service {
-
+/*
 	public UUID create(Config domain) {
 		startTransaction();
 		ConfigDAO dao = new ConfigDAO(em);
@@ -46,5 +33,5 @@ public class ConfigService extends Service {
 		commitTransaction();
 		Logger.getLogger(ConfigService.class).info("uuid: " + domain.getConfig_uuid() + " deletado");
 	}
-	
+*/	
 }

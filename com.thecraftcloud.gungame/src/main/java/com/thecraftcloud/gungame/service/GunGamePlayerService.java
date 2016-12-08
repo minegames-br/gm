@@ -122,6 +122,7 @@ public class GunGamePlayerService extends PlayerService {
 		GameArenaConfig gac = (GameArenaConfig)gacList.toArray()[random];
 		Location spawn = locationUtil.toLocation(this.configService.getWorld(), gac.getLocalValue() ); 
 		player.teleport(spawn);
+		
 	}
 
 }

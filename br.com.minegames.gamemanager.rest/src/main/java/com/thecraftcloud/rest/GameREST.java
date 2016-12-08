@@ -80,27 +80,15 @@ public class GameREST  extends REST {
 		}
 	}
 	
-	@Path("/config/add")
+	@Path("/{uuid}/config/add/{configUuid}")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response addGameConfig(String json) {
-		Logger.getLogger(GameREST.class).info("json recebido: " + json );
+	public Response addGameConfig( @PathParam("uuid") String uuid, @PathParam("configUuid") String configUuid) {
+
 		GameService service = new GameService();
-		GameConfig domain = (GameConfig)JSONParser.getInstance().toObject(json, GameConfig.class);
-		if(domain != null) {
-			GameConfig domain2 = service.findGameConfigByName(domain.getName());
-			if(domain2 == null) {
-				domain = service.addGameConfig(domain);
-			} else {
-				domain.setGame_config_uuid(domain2.getGame_config_uuid());
-				service.merge(domain);
-				domain = (GameConfig)service.findByUUID( GameConfig.class, domain.getGame_config_uuid());
-			}
-			json = JSONParser.getInstance().toJSONString(domain);
-		    return Response.ok(json, MediaType.APPLICATION_JSON).build();
-		} else {
-			return Response.status(Response.Status.CONFLICT).entity("Não é possivel criar o config com as informações fornecidas").build();
-		}
+
+		service.addGameConfig(uuid, configUuid);
+	    return Response.ok().build();
 	}
 	
 	@Path("/config/instance/add")

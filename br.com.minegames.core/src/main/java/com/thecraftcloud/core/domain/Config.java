@@ -11,7 +11,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 public class Config extends TransferObject {
-
+/*
 	@Id
 	@GeneratedValue(generator = "uuid2")
 	@GenericGenerator(name = "uuid2", strategy = "uuid2")
@@ -47,6 +47,6 @@ public class Config extends TransferObject {
 		this.value = value;
 	}
 
-
+*/
 	
 }
