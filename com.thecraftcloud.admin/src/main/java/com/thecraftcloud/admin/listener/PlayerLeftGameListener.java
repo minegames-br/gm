@@ -19,6 +19,7 @@ public class PlayerLeftGameListener implements Listener {
     		public void run() {
     	    	service.notifyPlayerLeft( event.getGamePlayer(), event.getGame() );
     	    	AdminService adminService = new AdminService();
+    			Bukkit.getConsoleSender().sendMessage(Utils.color("&6 adminService.sendPlayerToLobby" ));
     	    	adminService.sendPlayerToLobby( event.getGame(), event.getGamePlayer() );
     		}
     	});

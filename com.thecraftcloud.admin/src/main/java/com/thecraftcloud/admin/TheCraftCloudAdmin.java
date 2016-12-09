@@ -24,6 +24,7 @@ import com.thecraftcloud.client.TheCraftCloudDelegate;
 import com.thecraftcloud.core.domain.ServerInstance;
 import com.thecraftcloud.core.domain.ServerStatus;
 import com.thecraftcloud.core.util.Utils;
+import com.thecraftcloud.minigame.service.ConfigService;
 
 public class TheCraftCloudAdmin extends JavaPlugin {
 
@@ -83,8 +84,8 @@ public class TheCraftCloudAdmin extends JavaPlugin {
 			}
 		});
 		
-		Bukkit.getPluginManager().registerEvents(new StartGameListener(), this);
-		Bukkit.getPluginManager().registerEvents(new EndGameListener(), this);
+		Bukkit.getPluginManager().registerEvents(new StartGameListener(this), this);
+		Bukkit.getPluginManager().registerEvents(new EndGameListener(this), this);
 		Bukkit.getPluginManager().registerEvents(new PlayerJoinGameListener(), this);
 		Bukkit.getPluginManager().registerEvents(new PlayerLeftGameListener(), this);
 		Bukkit.getPluginManager().registerEvents(new PlayerJoinListener(this), this);
@@ -169,7 +170,7 @@ public class TheCraftCloudAdmin extends JavaPlugin {
 	public String getServerName() {
 		return this.serverName;
 	}
-
+	
 	public static TheCraftCloudAdmin getBukkitPlugin() {
 		return (TheCraftCloudAdmin)Bukkit.getPluginManager().getPlugin( TheCraftCloudAdmin.PLUGIN_NAME );
 	}

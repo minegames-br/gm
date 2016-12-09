@@ -72,5 +72,7 @@ public class ServerService {
 		server.setLastUpdate(Calendar.getInstance());
 		delegate.updateServer(server);
 	}
+
+	
 	
 }

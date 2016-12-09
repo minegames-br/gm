@@ -3,6 +3,8 @@ package com.thecraftcloud.minigame.service;
 import java.util.Arrays;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+import javax.swing.colorchooser.ColorSelectionModel;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.boss.BarColor;
@@ -40,6 +42,7 @@ public class PlayerService extends TheCraftCloudService {
 		dead.getInventory().clear();
 
 		if (this.configService.getMyCloudCraftGame().isStarted()) {
+			Bukkit.getConsoleSender().sendMessage(Utils.color("&6vai removeLivePlayer"));
 			this.miniGame.removeLivePlayer(dead);
 			dead.teleport(locationUtil.toLocation(this.configService.getWorld(), this.configService.getLobby())); // TELEPORT
 																													// DEAD
