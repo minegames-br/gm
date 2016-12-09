@@ -21,13 +21,13 @@ import com.thecraftcloud.minigame.TheCraftCloudMiniGameAbstract;
 import com.thecraftcloud.minigame.domain.GamePlayer;
 
 public class PlayerService extends TheCraftCloudService {
-	
+
 	protected LocationUtil locationUtil = new LocationUtil();
-	
+
 	public PlayerService(TheCraftCloudMiniGameAbstract miniGame) {
 		super(miniGame);
 	}
-	
+
 	public void giveBonus(Player shooter) {
 
 	}
@@ -41,18 +41,22 @@ public class PlayerService extends TheCraftCloudService {
 
 		if (this.configService.getMyCloudCraftGame().isStarted()) {
 			this.miniGame.removeLivePlayer(dead);
-			dead.teleport( locationUtil.toLocation(this.configService.getWorld(), this.configService.getLobby() ) ); //TELEPORT DEAD PLAYER TO LOBBY
+			dead.teleport(locationUtil.toLocation(this.configService.getWorld(), this.configService.getLobby())); // TELEPORT
+																													// DEAD
+																													// PLAYER
+																													// TO
+																													// LOBBY
 		}
 	}
 
 	public void givePoints(Player player, Integer pointsEarned) {
-		GamePlayer gamePlayer = (GamePlayer)this.findGamePlayerByPlayer(player);
-		gamePlayer.addPoints( pointsEarned );
+		GamePlayer gamePlayer = (GamePlayer) this.findGamePlayerByPlayer(player);
+		gamePlayer.addPoints(pointsEarned);
 		updateScoreBoards();
 	}
 
 	public void givePoints(GamePlayer gamePlayer, Integer pointsEarned) {
-		gamePlayer.addPoints( pointsEarned );
+		gamePlayer.addPoints(pointsEarned);
 		updateScoreBoards();
 	}
 
@@ -66,15 +70,20 @@ public class PlayerService extends TheCraftCloudService {
 	 * Nesse método poderemos decidir o que dar a cada jogador
 	 */
 	public void setupPlayerToStartGame(Player player) {
+
 		PlayerInventory inventory = player.getInventory();
 
 		inventory.clear();
 		inventory.setArmorContents(null);
 
+		// recupera vida, fome e retira efeitos de poção
+		regainAttributesToPlayer(player);
+
 		Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
 		Objective objective = scoreboard.registerNewObjective(Utils.color("&6Placar"), "placar");
 		objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-		scoreboard.getObjective(DisplaySlot.SIDEBAR).getScore("time").setScore( configService.getConfig().getGameDurationInSeconds() );
+		// scoreboard.getObjective(DisplaySlot.SIDEBAR).getScore("time").setScore(
+		// configService.getConfig().getGameDurationInSeconds() );
 		player.setScoreboard(scoreboard);
 	}
 
@@ -82,14 +91,24 @@ public class PlayerService extends TheCraftCloudService {
 		for (GamePlayer gp : this.miniGame.getLivePlayers()) {
 			Player player = gp.getPlayer();
 			Scoreboard scoreboard = player.getScoreboard();
-			if(scoreboard == null || scoreboard.getObjective(DisplaySlot.SIDEBAR) == null ) continue; 
+			if (scoreboard == null || scoreboard.getObjective(DisplaySlot.SIDEBAR) == null)
+				continue;
 			for (GamePlayer gp1 : this.miniGame.getLivePlayers()) {
 				String name = gp1.getPlayer().getName();
-				if( scoreboard.getObjective(DisplaySlot.SIDEBAR).getScore(name) == null ) continue;
+				if (scoreboard.getObjective(DisplaySlot.SIDEBAR).getScore(name) == null)
+					continue;
 				scoreboard.getObjective(DisplaySlot.SIDEBAR).getScore(name).setScore(gp1.getPoint());
-				scoreboard.getObjective(DisplaySlot.SIDEBAR).getScore("time").setScore( this.miniGame.getGameDuration() );
+				// scoreboard.getObjective(DisplaySlot.SIDEBAR).getScore("time").setScore(
+				// this.miniGame.getGameDuration() );
 			}
 		}
+	}
+
+	public void regainAttributesToPlayer(Player player) {
+		player.setHealth(player.getMaxHealth());
+		player.setFoodLevel(20);
+		;
+		player.getActivePotionEffects().clear();
 	}
 
 	public BossBar createBossBar() {
@@ -103,7 +122,8 @@ public class PlayerService extends TheCraftCloudService {
 		CopyOnWriteArraySet<GamePlayer> playerList = this.miniGame.getLivePlayers();
 		for (GamePlayer gp : playerList) {
 			Bukkit.getConsoleSender().sendMessage(Utils.color("&3findGamePlayerByPlayer: " + gp.getPlayer()));
-			Bukkit.getConsoleSender().sendMessage(Utils.color("&3findGamePlayerByPlayer gpname: " + gp.getPlayer().getName()));
+			Bukkit.getConsoleSender()
+					.sendMessage(Utils.color("&3findGamePlayerByPlayer gpname: " + gp.getPlayer().getName()));
 			if (gp.getPlayer().equals(player)) {
 				return gp;
 			}

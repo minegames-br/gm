@@ -262,7 +262,6 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 			gp.setPlayer(player);
 			playerList.add(gp);
 			livePlayers.add(gp);
-			//player.sendMessage(Utils.color("&aBem vindo, Arqueiro!"));
 			playerNames.add(player.getName());
 			this.getServer().getPluginManager().callEvent(new PlayerJoinGameEvent(this, gp));
 		} else {
