@@ -14,4 +14,8 @@ public class GunGamePlayer extends GamePlayer {
 		this.level = level;
 	}
 	
+	public Integer decreaseLevel() {
+		return this.level--;
+	}
+	
 }

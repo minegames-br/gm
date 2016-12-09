@@ -25,6 +25,7 @@ public class GunGamePlayerService extends PlayerService {
 
 	private GunGameConfigService gunGameConfigService = GunGameConfigService.getInstance();
 	private PlayerUtil playerUtil = PlayerUtil.getInstance();
+	private MaterialUtil materialUtil = MaterialUtil.getInstance();
 
 	public GunGamePlayerService(TheCraftCloudMiniGameAbstract controller) {
 		super(controller);
@@ -68,25 +69,29 @@ public class GunGamePlayerService extends PlayerService {
 
 		ItemStack itemStack = MaterialUtil.getInstance().toItemStack(gci.getItem());
 		playerUtil.setItemInPlayer(shooter, itemStack);
+		shooter.sendMessage(ChatColor.GOLD  + "Você subiu para o Nível " + ggPlayer.getLevel());
 	}
 
 	public void removeBonus(Player dead) {
 		GamePlayer gp = this.findGamePlayerByPlayer(dead);
 		GunGamePlayer ggPlayer = (GunGamePlayer) gp;
-
+		
 		Integer level = ggPlayer.getLevel();
 
 		if (level.equals(1)) {
 			return;
 		}
-
+		
 		// remover o item ganho no level atual
 		GameConfigInstance gciA = this.gunGameConfigService.getGunGameLevel(ggPlayer.getLevel());
 		ItemStack itemStackA = MaterialUtil.getInstance().toItemStack(gciA.getItem());
-		dead.getInventory().remove(itemStackA);
+		playerUtil.removeItem(dead, itemStackA);
+		
+		ggPlayer.decreaseLevel();
+		dead.sendMessage(ChatColor.RED  + "Você caiu para o Nível " + ggPlayer.getLevel());
 
-		// recuperar o item do nivel anterior
-		GameConfigInstance gciB = this.gunGameConfigService.getPreviousGunGameLevel(ggPlayer);
+		// dar o item do nivel anterior
+		GameConfigInstance gciB = this.gunGameConfigService.getGunGameLevel(ggPlayer.getLevel());
 		ItemStack itemStackB = MaterialUtil.getInstance().toItemStack(gciB.getItem());
 		playerUtil.setItemInPlayer(dead, itemStackB);
 
