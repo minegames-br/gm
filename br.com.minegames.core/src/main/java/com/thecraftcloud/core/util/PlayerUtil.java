@@ -4,6 +4,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import net.minecraft.server.v1_10_R1.Material;
+
 public class PlayerUtil {
 
 	private static PlayerUtil me;
@@ -22,7 +24,6 @@ public class PlayerUtil {
 
 	public void setItemInPlayer(Player player, ItemStack item) {
 		if (this.materialUtil.isWeapon(item) || this.materialUtil.isTool(item)) {
-			player.getInventory().setHeldItemSlot(1);
 			player.getInventory().setItemInMainHand(item);
 		} else if (this.materialUtil.isArmor(item)) {
 			if (this.materialUtil.isHelmet(item)) {
@@ -36,6 +37,22 @@ public class PlayerUtil {
 			}
 		}
 
+	}
+	
+	public void removeItem(Player player, ItemStack item) {
+		if (this.materialUtil.isWeapon(item) || this.materialUtil.isTool(item)) {
+			player.getInventory().remove(item);
+		} else if (this.materialUtil.isArmor(item)) {
+			if (this.materialUtil.isHelmet(item)) {
+				player.getInventory().setHelmet(null);
+			} else if (this.materialUtil.isChestplate(item)) {
+				player.getInventory().setChestplate(null);
+			} else if (this.materialUtil.isLeggings(item)) {
+				player.getInventory().setLeggings(null);
+			} else if (this.materialUtil.isBoots(item)) {
+				player.getInventory().setBoots(null);
+			}
+		}
 	}
 
 }

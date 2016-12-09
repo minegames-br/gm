@@ -13,7 +13,7 @@
         <profile>
             <id>RENATO</id>
             <properties>
-            	<lib.dir></lib.dir>
+            	<lib.dir>C:\Users\renat\git\gm\br.com.minegames.core</lib.dir>
             </properties>
         </profile>
         <profile>
