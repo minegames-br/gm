@@ -2,6 +2,8 @@ package com.thecraftcloud.gamesetup.listener;
 
 import java.lang.reflect.Field;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -15,6 +17,7 @@ import org.bukkit.material.MaterialData;
 import org.bukkit.material.Stairs;
 
 import com.thecraftcloud.core.domain.Local;
+import com.thecraftcloud.core.util.Utils;
 import com.thecraftcloud.gamesetup.TheCraftCloudGameSetupPlugin;
 
 public class PlayerOnClick implements Listener {
@@ -30,10 +33,15 @@ public class PlayerOnClick implements Listener {
     @EventHandler
     public void onClick(PlayerInteractEvent event) {
 
+    	Bukkit.getConsoleSender().sendMessage("&6onClick");
+    	
     	if(controller.getSetupArena()) {
+        	Bukkit.getConsoleSender().sendMessage("&6onClick - getSetupArena()");
     		controller.onPlayerClickSetupArena(event);
     		return;
     	} 
+    	
+    	Bukkit.getConsoleSender().sendMessage("&6onClick - ifs");
     	
     	if(event.getAction() == Action.LEFT_CLICK_BLOCK ) {
     		Block block = event.getClickedBlock();
@@ -62,17 +70,22 @@ public class PlayerOnClick implements Listener {
     }
     
     private void updateHologram(Block block, Lever lever, Player player) {
+    	
+    	Bukkit.getConsoleSender().sendMessage("&6updateHologram");
+    	
 		if(this.controller.getConfigValue() == null) {
 			this.controller.setConfigValue(new Integer(0) );
 		}
-		
+
+    	Bukkit.getConsoleSender().sendMessage( Utils.color("&6updateHologram - getConfigValue: " + this.controller.getConfigValue() ) );
+
 		Integer configValue = Integer.parseInt(this.controller.getConfigValue().toString());
 		// adicionar 1 int a configuracao atual
-		if(block.equals(controller.getBlockUp()) ) {
+		if(this.sameLocation( block.getLocation(), controller.getBlockUp() ) ) {
 			configValue++;
 			this.controller.setConfigValue(configValue);
 			this.controller.updateConfigHologram(player);
-		} else if (block.equals(controller.getBlockDown())) {
+		} else if (this.sameLocation( block.getLocation(), controller.getBlockDown())) {
 			if(configValue > 0) {
 				configValue --;
 			}
@@ -81,24 +94,24 @@ public class PlayerOnClick implements Listener {
 		}
 		
 		//mudar de configuração
-		if(block.equals(controller.getBlockNextConfig() ) ) {
+		if( this.sameLocation( block.getLocation(), controller.getBlockNextConfig() ) ) {
 			this.controller.nextConfig(player);
-		} else if (block.equals(controller.getBlockPreviousConfig() ) ) {
+		} else if ( this.sameLocation( block.getLocation(), controller.getBlockPreviousConfig() ) ) {
 			this.controller.previousConfig(player);
 		}
 		
 		// iniciar configuracao da arena
-		if(block.equals(controller.getBlockStartArenaSetup() ) ) {
+		if( this.sameLocation( block.getLocation(), controller.getBlockStartArenaSetup() ) ) {
 			this.controller.startArenaSetupTask();
 		}
 
 		// cancelar configuracao da arena
-		if(block.equals(controller.getBlockCancelSetup() )) {
+		if( this.sameLocation( block.getLocation(), controller.getBlockCancelSetup() )) {
 			this.controller.cancelArenaSetupTask();
 		}
 
 		//mudar horario da arena
-		if(block.equals(controller.getBlockChangeTime() ) ) {
+		if( this.sameLocation( block.getLocation(), controller.getBlockChangeTime() ) ) {
 			this.controller.switchArenaTime();
 		}
 
@@ -147,5 +160,12 @@ public class PlayerOnClick implements Listener {
 		
     	
     }
+	
+	private boolean sameLocation( Location l1, Location l2 ) {
+		if(l1.getBlockX() != l2.getBlockX()) return false;
+		if(l1.getBlockY() != l2.getBlockY()) return false;
+		if(l1.getBlockZ() != l2.getBlockZ()) return false;
+		return true;
+	}
 
 }

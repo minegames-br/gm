@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -145,7 +146,7 @@ public class TheCraftCloudGameSetupPlugin extends JavaPlugin {
 	private void init() {
 		this.world = Bukkit.getWorld("cockpit");
 		this.setupLocation = new Location( this.world , -75, 113, 72);
-		this.hologramLocation = new Location( this.world , -70, 116, 80);
+		this.hologramLocation = new Location( this.world , -75, 113, 80);
 	}
 
 	public Area3D getSelection() {
@@ -228,7 +229,8 @@ public class TheCraftCloudGameSetupPlugin extends JavaPlugin {
 	}
 	
 	public void updateConfigHologram(Player player) {
-		HologramUtil.showPlayer( player, new String[]{this.getGameConfig().getDisplayName(), configValue.toString()}, new Location(player.getWorld(), -761, 4, 402) );
+    	Bukkit.getConsoleSender().sendMessage(Utils.color("&6updateConfigHologram: " + configValue ) );
+		HologramUtil.showPlayer( player, new String[]{this.getGameConfig().getDisplayName(), (ChatColor.YELLOW + configValue.toString() ) }, this.hologramLocation );
 	}
 
 	public void setConfigList(List<GameConfig> list) {
@@ -477,7 +479,7 @@ public class TheCraftCloudGameSetupPlugin extends JavaPlugin {
 
 			Bukkit.getLogger().info("GameConfig: " + this.gameConfig.getName() + " Scope:" + this.gameConfig.getConfigScope() + " type: " + gameConfig.getConfigType() );
        		if(gameConfig.getConfigScope() == GameConfigScope.GLOBAL) {
-       			if(gci.getGameConfig().getGame_config_uuid() == null) {
+       			if(gci.getGci_uuid() == null) {
        				delegate.createGameConfigInstance(gci);
        			} else {
        				delegate.updateGameConfigInstance(gci);

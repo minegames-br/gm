@@ -107,20 +107,32 @@ public class GameREST  extends REST {
 	    return Response.ok(json, MediaType.APPLICATION_JSON).build();
 	}
 	
+	@Path("/config/instance/update")
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response updateGameConfigInstance(String json) {
+		Logger.getLogger(GameREST.class).info("json recebido: " + json );
+		GameService service = new GameService();
+		GameConfigInstance domain = (GameConfigInstance)JSONParser.getInstance().toObject(json, GameConfigInstance.class);
+		
+		log("gcInstance: " + domain );
+		log("gameConfig: " + domain.getGameConfig() );
+		
+		log("uuid no rest: " + domain.getGameConfig().getGame_config_uuid());
+		service.merge(domain);
+	    return Response.ok(json, MediaType.APPLICATION_JSON).build();
+	}
+	
 	@Path("/config/instance/{uuid}")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response addGameConfigInstance(@PathParam("uuid") String _uuid, String json) {
+	public Response updateGameConfigInstance(@PathParam("uuid") String _uuid, String json) {
 		Logger.getLogger(GameREST.class).info("json recebido: " + json );
 		GameService service = new GameService();
 		
-		GameConfigInstance _domain = service.findGameConfigInstanceByGameConfigUUID(UUID.fromString(_uuid));
 		GameConfigInstance domain = (GameConfigInstance)JSONParser.getInstance().toObject(json, GameConfigInstance.class);
-		if(_domain == null) {
-			service.create(domain);
-		} else {
-			service.merge(domain);
-		}
+		service.merge(domain);
+
 	    return Response.ok(json, MediaType.APPLICATION_JSON).build();
 	}
 	

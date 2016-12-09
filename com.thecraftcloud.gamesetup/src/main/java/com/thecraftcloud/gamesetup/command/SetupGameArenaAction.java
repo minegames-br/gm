@@ -9,6 +9,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.thecraftcloud.client.TheCraftCloudDelegate;
+import com.thecraftcloud.core.domain.Arena;
+import com.thecraftcloud.core.domain.Game;
 import com.thecraftcloud.core.domain.GameArenaConfig;
 import com.thecraftcloud.core.domain.GameConfig;
 import com.thecraftcloud.core.domain.GameConfigInstance;
@@ -36,6 +38,11 @@ public class SetupGameArenaAction extends TheCraftCloudCommandAction {
 
 		TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance();
 		
+		Arena arena = delegate.findArena("30d00221-b371-4828-a0e6-5d75de7bfaec");
+		Game game = delegate.findGameByName("gungame");
+		p.setGame(game);
+		p.setArena(arena);
+
 		if(p.isServerRegistered()) {
 			if(player != null) {
 				player.sendMessage("Please, register server first. /tcc register <name>");

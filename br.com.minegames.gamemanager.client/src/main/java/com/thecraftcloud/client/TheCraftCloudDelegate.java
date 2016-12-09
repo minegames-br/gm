@@ -519,7 +519,8 @@ public class TheCraftCloudDelegate {
 	public GameConfigInstance updateGameConfigInstance(GameConfigInstance domain) {
 		String json = JSONParser.getInstance().toJSONString(domain);
 		System.out.println(json);
-		json = post("/game/config/instance/" + domain.getGameConfig().getGame_config_uuid().toString(), json);
+		json = post("/game/config/instance/" + domain.getGci_uuid().toString(), json);
+
 		MGLogger.info("update game config instance: " + json);
 		domain = (GameConfigInstance) JSONParser.getInstance().toObject(json, GameConfigInstance.class);
 		MGLogger.info("Game Config Instance: " + domain.getGameConfig().getGame_config_uuid().toString() );
