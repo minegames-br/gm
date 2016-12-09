@@ -33,8 +33,8 @@ public class LevelUpTask implements Runnable {
     	//Aumentar de nível depois de 15 segundos
     	//Caso seja o último nível, terminar o jogo
     	
-    	Integer duration = (Integer)this.configService.getGameConfigInstance("GAME-DURATION");
-    	duration = duration * 60; // segundos
+    	Integer duration = (Integer)this.configService.getGameConfigInstance("GAME-DURATION-IN-SECONDS");
+    	//duration = duration * 60; // segundos
     	duration = duration * 1000; //milissegundos
     	Integer levelDuration = (duration/10);
     	

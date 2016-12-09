@@ -54,6 +54,9 @@ public class PrepareGameAction extends Action {
 		if(world == null) {
 			world = this.setupGameWorld( dto.getArena() );
 			//return ResponseDTO.incompleteRequest("Arena: " + dto.getArena().getName() + " is not available on this server.");
+		} else {
+			MultiVerseWrapper mvw = new MultiVerseWrapper();
+			mvw.unloadWorld(world);
 		}
 		
 		//recuperar o plugin do jogo associado

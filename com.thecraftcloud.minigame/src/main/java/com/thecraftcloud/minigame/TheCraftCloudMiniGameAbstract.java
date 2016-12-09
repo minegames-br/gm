@@ -15,6 +15,7 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Scoreboard;
 
 import com.thecraftcloud.core.domain.ServerInstance;
+import com.thecraftcloud.core.multiverse.MultiVerseWrapper;
 import com.thecraftcloud.core.util.LocationUtil;
 import com.thecraftcloud.core.util.Utils;
 import com.thecraftcloud.minigame.command.LeaveGameCommand;
@@ -76,17 +77,24 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 	public void onEnable() {
 		this.configService = ConfigService.getInstance();
 
-		if( this.getName().equals( TheCraftCloudMiniGameAbstract.PLUGIN_NAME ) ) {
-			getCommand("sair").setExecutor(new LeaveGameCommand(this));
-		}
-		
 		registerListeners();
 		
 		// inicializar em que mundo o jogador está. Só deve ter um.
 		// não deixar mudar dia/noite
 		// não deixar fazer spawn de mobs automatico
 		// deixar o horário de dia
-		for(World world: Bukkit.getWorlds() ) {
+		for(final World world: Bukkit.getWorlds() ) {
+			
+			if(!world.getName().contains("world")) {
+				Bukkit.getScheduler().runTaskAsynchronously(this, new Runnable() {
+					public void run() {
+						MultiVerseWrapper mvw = new MultiVerseWrapper();
+						mvw.unloadWorld(world);
+					}
+				});
+				continue;
+			}
+			
 			world.setTime(1000);
 			world.setSpawnFlags(false, false);
 			world.setGameRuleValue("doMobSpawning", "false");
@@ -142,6 +150,20 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 	public void endGame() {
 		Bukkit.getScheduler().cancelTask(this.endGameThreadID);
 		Bukkit.getScheduler().cancelTask(this.levelUpThreadID);
+
+		
+		// Remover qualquer entidade que tenha ficado no mapa
+		for(World world: Bukkit.getWorlds() ) {
+			world.setTime(1000);
+			world.setSpawnFlags(false, false);
+			world.setGameRuleValue("doMobSpawning", "false");
+			world.setGameRuleValue("doDaylightCycle", "false");
+			for (Entity entity : world.getEntities()) {
+				if (!(entity instanceof Player) && entity instanceof LivingEntity) {
+					entity.remove();
+				}
+			}
+		}
 
 		//remover jogadores 
 		for(GamePlayer gp: this.getLivePlayers()) {

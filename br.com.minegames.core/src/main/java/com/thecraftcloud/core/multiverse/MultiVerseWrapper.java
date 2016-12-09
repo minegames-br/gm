@@ -67,4 +67,17 @@ public class MultiVerseWrapper {
 		return Bukkit.getWorld(arena.getName());
 	}
 
+	public void unloadWorld(World world) {
+		MultiverseCore mvplugin = (MultiverseCore)Bukkit.getPluginManager().getPlugin("Multiverse-Core");
+		mvplugin.getCore().getMVWorldManager().unloadWorld(world.getName());
+		
+		//Apagar o diretório
+		try {
+			FileUtils.deleteDirectory(world.getWorldFolder());
+		} catch (java.io.IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
+
 }
