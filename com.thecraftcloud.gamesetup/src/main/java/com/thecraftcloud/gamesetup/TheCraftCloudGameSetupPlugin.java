@@ -39,6 +39,7 @@ import com.thecraftcloud.core.util.Utils;
 import com.thecraftcloud.core.util.title.TitleUtil;
 import com.thecraftcloud.gamesetup.command.TheCraftCloudCommand;
 import com.thecraftcloud.gamesetup.listener.BlockBreakListener;
+import com.thecraftcloud.gamesetup.listener.PlayerJoin;
 import com.thecraftcloud.gamesetup.listener.PlayerOnClick;
 import com.thecraftcloud.gamesetup.task.ArenaSetupTask;
 import com.thecraftcloud.gamesetup.task.BuildArenaTask;
@@ -100,6 +101,7 @@ public class TheCraftCloudGameSetupPlugin extends JavaPlugin {
 	private ServerInstance server;
 	private String server_uuid;
 	private Location hologramLocation;
+	private Location cockpitLocation;
 	
 	public List<Arena> getArenas() {
 		return arenas;
@@ -141,10 +143,12 @@ public class TheCraftCloudGameSetupPlugin extends JavaPlugin {
 		PluginManager pm = Bukkit.getPluginManager();
 		pm.registerEvents(new PlayerOnClick(this), this);
 		pm.registerEvents(new BlockBreakListener(this), this);
+		pm.registerEvents(new PlayerJoin(this), this);
 	}
 	
 	private void init() {
 		this.world = Bukkit.getWorld("cockpit");
+		this.cockpitLocation = new Location( this.world, -75, 113, 72);
 		this.setupLocation = new Location( this.world , -75, 113, 72);
 		this.hologramLocation = new Location( this.world , -75, 113, 80);
 	}
@@ -248,6 +252,22 @@ public class TheCraftCloudGameSetupPlugin extends JavaPlugin {
 		BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
 		final TheCraftCloudGameSetupPlugin plugin = this;
 
+		for(final GameArenaConfig gac: this.gameConfigArenaMap.values() ) {
+        	if(gac.getGac_uuid() == null) {
+        		Bukkit.getScheduler().runTaskAsynchronously(this, new Runnable(){
+        			public void run() {
+                    	delegate.createGameArenaConfig(gac);
+        			}
+        		});
+        	} else {
+        		Bukkit.getScheduler().runTaskAsynchronously(this, new Runnable(){
+        			public void run() {
+        				delegate.updateGameArenaConfig(gac);
+        			}
+        		});
+        	}		
+        }
+		
 	}
 
 	public void setupGameArenaConfig(Player player) {
@@ -432,7 +452,7 @@ public class TheCraftCloudGameSetupPlugin extends JavaPlugin {
 					this.configArenaValue = this.gac.getAreaValue();
 				}
 			}
-		} else {
+		} /*else {
 			this.gci = getGameConfigInstanceByName(this.gameConfig.getName());
 			if(this.gci == null) {
 				this.gci = new GameConfigInstance();
@@ -446,7 +466,7 @@ public class TheCraftCloudGameSetupPlugin extends JavaPlugin {
 					this.configArenaValue = this.gci.getArea();
 				}
 			}
-		}
+		}*/
 		this.selection = new Area3D();
 		this.configArenaValue = null;
 		TitleUtil.sendTitle(player, 20, 40, 20, "Setup " + this.gameConfig.getConfigType(), "Config: " + this.gameConfig.getDisplayName() );
@@ -563,11 +583,21 @@ public class TheCraftCloudGameSetupPlugin extends JavaPlugin {
 		this.arenaSetupTask = new ArenaSetupTask(this);
 		this.arenaSetupTaskThreadID = scheduler.scheduleSyncRepeatingTask(this, this.arenaSetupTask, 1L, 20L);
 		player.getInventory().setItemInMainHand(new ItemStack(Material.IRON_AXE));
-		Location loc = locationUtil .getMiddle(player.getWorld(), this.getArena().getArea());
+		Location loc = null;
+		if(arena.getSpawn() != null) {
+			Local l = arena.getSpawn();
+			loc = new Location( Bukkit.getWorld(this.arena.getName()), l.getX(), l.getY(), l.getZ() );
+		} else {
+			loc = locationUtil .getMiddle( Bukkit.getWorld(this.arena.getName()) , this.getArena().getArea());
+		}
 		player.teleport(loc);
+		player.setGameMode(GameMode.CREATIVE);
 		this.setupArena = true;
 		this.selection = new Area3D();
 		this.configArenaValue = null;
+		
+		this.configList = delegate.findGameConfigByGame( this.getGame() );
+		
 		for(int i = 0; i < configList.size(); i++) {
 			this.gameConfig = configList.get(i);
 			if(this.gameConfig.getConfigType() == GameConfigType.LOCAL || 
@@ -894,6 +924,10 @@ public class TheCraftCloudGameSetupPlugin extends JavaPlugin {
 
 	public Location getBlockDown() {
 		return new Location( this.world, -72, 114, 74);
+	}
+
+	public Location getCockpitLocation() {
+		return this.cockpitLocation;
 	}
 
 }

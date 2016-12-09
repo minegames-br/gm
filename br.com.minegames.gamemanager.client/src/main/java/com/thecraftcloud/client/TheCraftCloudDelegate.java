@@ -1049,6 +1049,37 @@ public class TheCraftCloudDelegate {
 		
 		post("/game/" + guuid + "/config/add/" + gcuuid );
 	}
+
+	public List<GameConfig> findGameConfigByGame(Game game) {
+		String url = this.gameManagerUrl + "/game/" + game.getGame_uuid().toString() + "/config/list";
+		ClientRequest client = new ClientRequest(url);
+		System.out.println( url );
+		ClientResponse response = null;
+		try {
+			response = client.get(String.class);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        ObjectMapper mapper = new ObjectMapper();
+        String json = (String)response.getEntity(String.class);
+        List<GameConfig> myObjects = null;
+		try {
+			myObjects = mapper.readValue(json, mapper.getTypeFactory().constructCollectionType(List.class, GameConfig.class));
+		} catch (JsonParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+        
+        return myObjects;
+	}
 	
 }
 

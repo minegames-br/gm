@@ -42,6 +42,9 @@ public class Arena extends TransferObject implements Comparable {
 	@Enumerated
 	private FacingDirection facing;
 	
+	@OneToOne
+	private Local spawn;
+	
 	public UUID getArena_uuid() {
 		return arena_uuid;
 	}
@@ -91,6 +94,12 @@ public class Arena extends TransferObject implements Comparable {
 		this.facing = facing;
 	}
 	
+	public Local getSpawn() {
+		return spawn;
+	}
+	public void setSpawn(Local spawn) {
+		this.spawn = spawn;
+	}
 	@Override
 	public int compareTo(Object o) {
 		Arena arena = (Arena)o;

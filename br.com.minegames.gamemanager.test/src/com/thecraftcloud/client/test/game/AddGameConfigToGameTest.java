@@ -14,13 +14,52 @@ public class AddGameConfigToGameTest {
 	
 	@Test
 	public void test() {
+		
+		configurarArqueiro();
+		
+	}
+	
+	private void configurarGunGame() {
 		Game game = delegate.findGame("d10e8c62-6124-4952-a054-c7c668e7944f");
 		for(int i = 4; i < 14; i++) {
 			GameConfig gc = delegate.findGameConfigByName("GUNGAME." + i);
 			delegate.addGameConfigToGame( game, gc);
 		}
+	}
+	
+	private void configurarArqueiro() {
+		Game game = delegate.findGameByName("TheArcher");
 		
+		addGameConfigToGame("ARQUEIRO-FLOATING-AREA", game);
+		addGameConfigToGame("ARQUEIRO-GAME-DURATION", game);
+		addGameConfigToGame("ARQUEIRO-GAME-NUMBER-OF-LEVELS", game);
+		addGameConfigToGame("ARQUEIRO-LOBBY-LOCATION", game);
+		addGameConfigToGame("ARQUEIRO-MAX-MOVING-TARGET", game);
+		addGameConfigToGame("ARQUEIRO-MAX-PLAYERS", game);
+		addGameConfigToGame("ARQUEIRO-MAX-TARGET", game);
+		addGameConfigToGame("ARQUEIRO-MAX-ZOMBIE-SPAWNED-PER-PLAYER", game);
+		addGameConfigToGame("ARQUEIRO-MIN-PLAYERS", game);
+		addGameConfigToGame("ARQUEIRO-MONSTERS-SPAWN-AREA", game);
+		addGameConfigToGame("ARQUEIRO-START-COUNTDOWN", game);
+		addGameConfigToGame("arqueiro.player1.area", game);
+		addGameConfigToGame("arqueiro.player1.spawn", game);
+		addGameConfigToGame("arqueiro.player2.area", game);
+		addGameConfigToGame("arqueiro.player2.spawn", game);
+		addGameConfigToGame("arqueiro.player3.area", game);
+		addGameConfigToGame("arqueiro.player3.spawn", game);
+		addGameConfigToGame("arqueiro.player4.area", game);
+		addGameConfigToGame("arqueiro.player4.spawn", game);
+		addGameConfigToGame("GAME-DURATION-IN-SECONDS", game);
+		addGameConfigToGame("MAX-PLAYERS", game);
+		addGameConfigToGame("MIN-PLAYERS", game);
+		addGameConfigToGame("START-COUNTDOWN", game);
 		
+	}
+	
+	private void addGameConfigToGame( String name, Game game ) {
+		GameConfig gc = null;
+		gc = delegate.findGameConfigByName(name);
+		delegate.addGameConfigToGame( game, gc);
 	}
 
 }

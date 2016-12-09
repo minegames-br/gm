@@ -37,11 +37,13 @@ public class SetupGameArenaAction extends TheCraftCloudCommandAction {
 		TheCraftCloudGameSetupPlugin p = (TheCraftCloudGameSetupPlugin)this.plugin;
 
 		TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance();
-		
+
+		/* GUNGAME - SPACESTATION 
 		Arena arena = delegate.findArena("30d00221-b371-4828-a0e6-5d75de7bfaec");
 		Game game = delegate.findGameByName("gungame");
 		p.setGame(game);
 		p.setArena(arena);
+		*/
 
 		if(p.isServerRegistered()) {
 			if(player != null) {
@@ -79,6 +81,7 @@ public class SetupGameArenaAction extends TheCraftCloudCommandAction {
 		List<GameConfig> list = delegate.listGameConfig(p.getGame());
 		Bukkit.getLogger().info("game config list: " + list.size());
 		
+		p.setPlayer(player);
 		p.setSetup(true);
 		p.setConfigList(list);
 		p.setPlayer(player);

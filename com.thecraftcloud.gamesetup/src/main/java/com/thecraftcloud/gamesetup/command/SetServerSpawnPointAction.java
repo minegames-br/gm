@@ -8,8 +8,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.thecraftcloud.client.TheCraftCloudDelegate;
+import com.thecraftcloud.core.domain.Arena;
 import com.thecraftcloud.core.domain.Local;
-import com.thecraftcloud.core.domain.ServerInstance;
 import com.thecraftcloud.core.json.JSONParser;
 import com.thecraftcloud.gamesetup.TheCraftCloudGameSetupPlugin;
 
@@ -47,11 +47,14 @@ public class SetServerSpawnPointAction extends TheCraftCloudCommandAction {
 		String world = player.getWorld().getName();
 		p.setProperty("thecraftcloud.server.lobby", world );
 		
-		ServerInstance server = p.getServerInstance();
-		server.setLobby(l);
-		server.setWorld(world);
-		delegate.updateServer(server);
+		l = delegate.addLocal(l);
+
+		Arena arena = p.getArena();
+		arena.setSpawn(l);
 		
-		player.sendMessage("Server spawn point defined" );
+		
+		delegate.updateArena(arena);
+		
+		player.sendMessage("Arena spawn point defined" );
 	}
 }

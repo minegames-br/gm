@@ -35,6 +35,8 @@ public class PlayerOnClick implements Listener {
 
     	Bukkit.getConsoleSender().sendMessage("&6onClick");
     	
+    	this.controller.setPlayer(event.getPlayer());
+    	
     	if(controller.getSetupArena()) {
         	Bukkit.getConsoleSender().sendMessage("&6onClick - getSetupArena()");
     		controller.onPlayerClickSetupArena(event);
@@ -113,6 +115,11 @@ public class PlayerOnClick implements Listener {
 		//mudar horario da arena
 		if( this.sameLocation( block.getLocation(), controller.getBlockChangeTime() ) ) {
 			this.controller.switchArenaTime();
+		}
+
+		//mudar horario da arena
+		if( this.sameLocation( block.getLocation(), controller.getBlockSaveSetup() ) ) {
+			this.controller.updateArenaConfigValue();
 		}
 
 	}
