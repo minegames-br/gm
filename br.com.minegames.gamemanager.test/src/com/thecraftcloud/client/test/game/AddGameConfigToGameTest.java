@@ -15,9 +15,11 @@ public class AddGameConfigToGameTest {
 	@Test
 	public void test() {
 		Game game = delegate.findGame("d10e8c62-6124-4952-a054-c7c668e7944f");
-		GameConfig gc = delegate.findGameConfigByName("START-COUNTDOWN");
+		for(int i = 4; i < 14; i++) {
+			GameConfig gc = delegate.findGameConfigByName("GUNGAME." + i);
+			delegate.addGameConfigToGame( game, gc);
+		}
 		
-		delegate.addGameConfigToGame( game, gc);
 		
 	}
 
