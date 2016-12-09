@@ -44,6 +44,8 @@ import com.thecraftcloud.gamesetup.listener.PlayerOnClick;
 import com.thecraftcloud.gamesetup.task.ArenaSetupTask;
 import com.thecraftcloud.gamesetup.task.BuildArenaTask;
 
+//OI RENATO
+
 public class TheCraftCloudGameSetupPlugin extends JavaPlugin {
 
 	public static String THE_CRAFT_CLOUD_PLUGIN = "TheCraftCloud-Setup";
