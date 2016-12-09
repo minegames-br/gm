@@ -247,6 +247,7 @@ public class TheCraftCloudGameSetupPlugin extends JavaPlugin {
 
 	public void saveGameConfig() {
 		if(!this.setupArena) {
+			System.out.print("oi");
 			return;
 		}
 		BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
