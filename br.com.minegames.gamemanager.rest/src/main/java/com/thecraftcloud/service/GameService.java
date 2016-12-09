@@ -211,9 +211,16 @@ public class GameService extends Service {
 
 	public Collection<GameConfig> findGameConfigList(String _uuid) {
 		startTransaction();
-		Query query = em.createQuery("SELECT gc FROM GameConfig gc where gc.game.game_uuid = :_uuid order by gc.groupName, gc.name");
+		log("<findGameConfigList> " + _uuid );
+		Query query = em.createQuery(""
+				+ " SELECT gc FROM GameConfig gc, GameGameConfig ggc "
+				+ " WHERE gc.game_config_uuid = ggc.gameConfig.game_config_uuid "
+				+ " AND ggc.game.game_uuid = :_uuid "
+				+ " ORDER BY gc.groupName, gc.name"
+				+ " ");
 		query.setParameter("_uuid", UUID.fromString(_uuid) );
 		Collection<GameConfig> list = (Collection<GameConfig>) query.getResultList();
+		log("<findGameConfigList> " + list + " size: " + ( list == null?"null":list.size() ));
 		commitTransaction();
 		return list;
 	}
