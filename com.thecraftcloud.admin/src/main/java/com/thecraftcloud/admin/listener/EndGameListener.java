@@ -5,6 +5,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
+import com.thecraftcloud.admin.TheCraftCloudAdmin;
 import com.thecraftcloud.admin.service.AdminService;
 import com.thecraftcloud.client.TheCraftCloudDelegate;
 import com.thecraftcloud.core.util.Utils;
@@ -13,7 +14,13 @@ import com.thecraftcloud.minigame.service.ConfigService;
 
 public class EndGameListener implements Listener {
 	
-    @EventHandler(priority=EventPriority.HIGHEST)
+	private TheCraftCloudAdmin plugin;
+	
+    public EndGameListener(TheCraftCloudAdmin plugin) {
+		this.plugin = plugin;
+	}
+
+	@EventHandler(priority=EventPriority.HIGHEST)
     public void onEndGame(final EndGameEvent event) {
     	Bukkit.getConsoleSender().sendMessage(Utils.color("&3Game: " + event.getGame().getName() + " has ended."));
     	final AdminService service = new AdminService();

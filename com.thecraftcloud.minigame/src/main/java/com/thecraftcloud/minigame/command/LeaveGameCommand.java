@@ -1,11 +1,14 @@
 package com.thecraftcloud.minigame.command;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.thecraftcloud.core.bungee.BungeeUtils;
 import com.thecraftcloud.core.logging.MGLogger;
+import com.thecraftcloud.core.util.Utils;
 import com.thecraftcloud.minigame.TheCraftCloudMiniGameAbstract;
 
 public class LeaveGameCommand implements CommandExecutor {
@@ -24,7 +27,10 @@ public class LeaveGameCommand implements CommandExecutor {
             return false;
         }
 
+        Bukkit.getConsoleSender().sendMessage(Utils.color("&6comando sair sendo executado"));
+        
         Player player = (Player) commandSender;
+        Bukkit.getConsoleSender().sendMessage(Utils.color("&6remove live player: " + player.getName() ));
         controller.removeLivePlayer(player);
         
         return true;

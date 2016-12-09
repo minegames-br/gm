@@ -13,6 +13,7 @@ import com.thecraftcloud.core.domain.MineCraftPlayer;
 import com.thecraftcloud.core.domain.PlayerStatus;
 import com.thecraftcloud.core.domain.ServerInstance;
 import com.thecraftcloud.core.domain.ServerStatus;
+import com.thecraftcloud.core.util.Utils;
 import com.thecraftcloud.minigame.TheCraftCloudMiniGameAbstract;
 import com.thecraftcloud.minigame.domain.GamePlayer;
 
@@ -20,14 +21,13 @@ public class AdminService {
 
 	private TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance();
 
-	public void notifyGameStart(TheCraftCloudMiniGameAbstract miniGame) {
+	public void notifyGameStart(TheCraftCloudMiniGameAbstract miniGame, ServerInstance server) {
 		
 		GameInstance gi = miniGame.getConfigService().getGameInstance();
 		gi.setStartTime(Calendar.getInstance());
 		gi.setStatus(GameState.RUNNING);
 		delegate.updateGameInstance(gi);
 		
-		ServerInstance server = miniGame.getConfigService().getServerInstance();
 		server.setStatus(ServerStatus.INGAME);
 		delegate.updateServer(server);
 		
@@ -59,7 +59,7 @@ public class AdminService {
 		delegate.updatePlayer(mcp);
 	}
 
-	public void sendPlayersToLobby(TheCraftCloudMiniGameAbstract game) {
+	public void sendPlayersToLobby(TheCraftCloudMiniGameAbstract game ) {
 		//ESSE CODIGO ESTA HARD CODED RETORNANDO MGLOBBY
 		ServerInstance server = delegate.findLobbyAvailable();
 		
@@ -75,6 +75,7 @@ public class AdminService {
 		ServerInstance server = delegate.findLobbyAvailable();
 		BungeeUtils bu = new BungeeUtils();
 		bu.setup(game);
+		Bukkit.getConsoleSender().sendMessage(Utils.color("&6 BungeeUtils sendToServer: " + server.getName() ));
 		bu.sendToServer(gamePlayer.getPlayer(), server.getName());
 	}
 	
