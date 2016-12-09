@@ -14,5 +14,4 @@ public class GunGamePlayer extends GamePlayer {
 		this.level = level;
 	}
 	
-	
 }

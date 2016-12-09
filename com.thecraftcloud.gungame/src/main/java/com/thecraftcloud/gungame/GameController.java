@@ -33,61 +33,68 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 	private GunGamePlayerService gunGamePlayerService = new GunGamePlayerService(this);
 	private GunGameConfigService gunGameConfigService = GunGameConfigService.getInstance();
 
-    @Override
-    public void onEnable() {
+	@Override
+	public void onEnable() {
 		super.onEnable();
-		
+
 		spawnBonusItemTask = new SpawnBonusItemTask(this);
-		
-    }
+	}
 
 	@Override
 	public void startGameEngine() {
 		super.startGameEngine();
 
 		gunGamePlayerService.setupPlayersToStartGame();
-		
+
 		// Enviar jogadores para a Arena
 		gunGamePlayerService.teleportPlayersToArena();
-		
+
+		// cria lista de itens
+		this.gunGameConfigService.createItemList();
+
+		// cria lista para sortear os itens
+		this.gunGameConfigService.createPrizeList(this.getLivePlayers());
+
 		// Iniciar threads do jogo
 		BukkitScheduler scheduler = getServer().getScheduler();
 		this.spawnBonusItemThreadID = scheduler.scheduleSyncRepeatingTask(this, this.spawnBonusItemTask, 200L, 250L);
 
-		//varrer o mapa para encontrar Chests
-		List<Chest> chestList = new BlockManipulationUtil().getArenaChests(Bukkit.getWorld(this.configService.getArena().getName()), this.configService.getArena() );
-		this.gunGameConfigService .setChestList(chestList);
-		
+		// varrer o mapa para encontrar Chests
+		List<Chest> chestList = new BlockManipulationUtil().getArenaChests(
+				Bukkit.getWorld(this.configService.getArena().getName()), this.configService.getArena());
+		this.gunGameConfigService.setChestList(chestList);
 	}
-	
+
 	@Override
 	public void init() {
 		super.init();
-		
-		//Carregar configuracoes especificas do Gun Game
+
+		// Carregar configuracoes especificas do Gun Game
 		GunGameConfigService.getInstance().loadConfig();
 	}
-	
+
 	@Override
 	public boolean shouldEndGame() {
-    	//Terminar o jogo caso não tenha mais jogadores
-    	if( this.getLivePlayers().size() == 0  && this.configService.getMyCloudCraftGame().isStarted()) {
-            Bukkit.getConsoleSender().sendMessage(Utils.color("&6EndGameTask - No more players"));
-            return true;
-    	}
-    	
-    	//Terminar o jogo caso tenha alcançado o limite de tempo
-    	long currentTime = System.currentTimeMillis();
-    	long duration = ( currentTime - this.configService.getMyCloudCraftGame().getGameStartTime() ) / 1000;
-		this.gameDuration = (Integer)this.configService.getGameConfigInstance(TheCraftCloudConfig.GAME_DURATION_IN_SECONDS);
+		// Terminar o jogo caso não tenha mais jogadores
+		if (this.getLivePlayers().size() == 0 && this.configService.getMyCloudCraftGame().isStarted()) {
+			Bukkit.getConsoleSender().sendMessage(Utils.color("&6EndGameTask - No more players"));
+			return true;
+		}
 
-    	if( duration >= this.gameDuration  ) {
-            Bukkit.getConsoleSender().sendMessage(Utils.color("&6EndGameTask - TimeOver: " + duration + " > " + this.gameDuration ));
-    		return true;
-    	}
-    	return false;
+		// Terminar o jogo caso tenha alcançado o limite de tempo
+		long currentTime = System.currentTimeMillis();
+		long duration = (currentTime - this.configService.getMyCloudCraftGame().getGameStartTime()) / 1000;
+		this.gameDuration = (Integer) this.configService
+				.getGameConfigInstance(TheCraftCloudConfig.GAME_DURATION_IN_SECONDS);
+
+		if (duration >= this.gameDuration) {
+			Bukkit.getConsoleSender()
+					.sendMessage(Utils.color("&6EndGameTask - TimeOver: " + duration + " > " + this.gameDuration));
+			return true;
+		}
+		return false;
 	}
-	
+
 	/**
 	 * Quando esse método executar, o jogo terá terminado com um vencedor e/ou o
 	 * tempo terá acabado.
@@ -126,7 +133,7 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 	public GamePlayer createGamePlayer() {
 		return new GunGamePlayer();
 	}
-	
+
 	@Override
 	protected void registerListeners() {
 		super.registerListeners();
@@ -138,6 +145,5 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 	public MyCloudCraftGame createMyCloudCraftGame() {
 		return new GunGame();
 	}
-
 
 }
