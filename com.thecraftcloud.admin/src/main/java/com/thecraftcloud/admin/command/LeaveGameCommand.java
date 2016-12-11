@@ -1,4 +1,4 @@
-package com.thecraftcloud.minigame.command;
+package com.thecraftcloud.admin.command;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -6,14 +6,15 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.thecraftcloud.admin.TheCraftCloudAdmin;
+import com.thecraftcloud.admin.service.AdminService;
 import com.thecraftcloud.core.util.Utils;
-import com.thecraftcloud.minigame.TheCraftCloudMiniGameAbstract;
 
 public class LeaveGameCommand implements CommandExecutor {
 
-	private TheCraftCloudMiniGameAbstract controller;
+	private TheCraftCloudAdmin controller;
 
-    public LeaveGameCommand(TheCraftCloudMiniGameAbstract plugin) {
+    public LeaveGameCommand(TheCraftCloudAdmin plugin) {
 		super();
 		this.controller = plugin;
 	}
@@ -24,7 +25,9 @@ public class LeaveGameCommand implements CommandExecutor {
         
         Player player = (Player) commandSender;
         Bukkit.getConsoleSender().sendMessage(Utils.color("&6remove live player: " + player.getName() ));
-        controller.removeLivePlayer(player);
+        
+        AdminService aservice = new AdminService(this.controller);
+        aservice.removeLivePlayer(player);
         
         return true;
     }

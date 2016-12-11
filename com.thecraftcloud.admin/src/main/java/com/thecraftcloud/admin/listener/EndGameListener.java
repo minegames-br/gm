@@ -23,12 +23,12 @@ public class EndGameListener implements Listener {
 	@EventHandler(priority=EventPriority.HIGHEST)
     public void onEndGame(final EndGameEvent event) {
     	Bukkit.getConsoleSender().sendMessage(Utils.color("&3Game: " + event.getGame().getName() + " has ended."));
-    	final AdminService service = new AdminService();
+    	final AdminService service = new AdminService(this.plugin);
     	final ConfigService cService = ConfigService.getInstance();
     	Bukkit.getScheduler().runTaskAsynchronously(event.getGame(), new Runnable() {
     		public void run() {
     	    	service.notifyGameOver( event.getGame() );
-    	    	AdminService adminService = new AdminService();
+    	    	AdminService adminService = new AdminService(plugin);
     	    	adminService.sendPlayersToLobby( event.getGame() );
     		}
     	});

@@ -4,3 +4,4 @@ version: 1.0.0
 main: com.thecraftcloud.admin.TheCraftCloudAdmin
 depend: [TheCraftCloud-Core, TheCraftCloud-Client]
 commands:
+   sair:

@@ -22,7 +22,7 @@ public class StartGameListener implements Listener {
     @EventHandler(priority=EventPriority.HIGHEST)
     public void onStartGame(final StartGameEvent event) {
     	Bukkit.getConsoleSender().sendMessage(Utils.color("&2Game: " + event.getGame().getName() + " has started."));
-    	final AdminService service = new AdminService();
+    	final AdminService service = new AdminService(plugin);
     	final ConfigService cService = ConfigService.getInstance();
     	Bukkit.getScheduler().runTaskAsynchronously(event.getGame(), new Runnable() {
     		public void run() {
