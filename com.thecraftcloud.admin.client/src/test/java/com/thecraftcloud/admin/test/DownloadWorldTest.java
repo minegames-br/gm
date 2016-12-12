@@ -10,7 +10,7 @@ import com.thecraftcloud.core.domain.ServerInstance;
 
 public class DownloadWorldTest {
 
-	
+	/*
 	public static final String URL_SERVICES = "http://services.thecraftcloud.com:8080/gamemanager/webresources";
 	//public static final String URL_SERVICES = "http://localhost:8080/gamemanager/webresources";
 	//String restURL = "";
@@ -33,5 +33,5 @@ public class DownloadWorldTest {
 		client.execute(server, actionDTO);
 		
 	}
-
+*/
 }

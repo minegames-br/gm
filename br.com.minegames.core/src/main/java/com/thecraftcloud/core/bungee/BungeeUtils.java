@@ -9,22 +9,32 @@ import com.google.common.io.ByteStreams;
  
 public class BungeeUtils {
    
-    private static Plugin
-            plugin;
+    private Plugin plugin;
+    private static BungeeUtils me;
    
-    public static void setup(Plugin plugin) {
+    private BungeeUtils() {
+    	
+    }
+    
+    public static BungeeUtils getInstance() {
+    	if (me == null) {
+    		me = new BungeeUtils();
+    	}
+    	return me;
+    }
+    
+    public void setup(Plugin plugin) {
         Bukkit.getMessenger().registerOutgoingPluginChannel(plugin, "BungeeCord");
-        BungeeUtils.plugin = plugin;
-       
+        this.plugin = plugin;
     }
    
-    public static void sendToServer(Player player, String server) {
+    public void sendToServer(Player player, String server) {
          send(toByte("Connect", server), player);
     }
    
    
    
-    public static byte[] toByte(String...string) {
+    public byte[] toByte(String...string) {
        
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         for (String str : string)
@@ -33,9 +43,8 @@ public class BungeeUtils {
         return out.toByteArray();
     }
    
-    public static void send(byte[] data, Player player) {
+    public void send(byte[] data, Player player) {
         player.sendPluginMessage(plugin, "BungeeCord", data);
-       
     }
    
 }

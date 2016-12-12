@@ -49,6 +49,16 @@ public class MonitorAgent {
 				.build();		
 		scheduler.scheduleJob( job, t4 );
 
+		job = newJob(PrepareGamesJob.class).withIdentity("prepare-games-job", "group-30-secs").build();
+		Trigger t5 = TriggerBuilder
+				.newTrigger()
+				.withIdentity("every-10-seconds", "group3")
+				.withSchedule(
+				    SimpleScheduleBuilder.simpleSchedule()
+					.withIntervalInSeconds(10).repeatForever())
+				.build();		
+		scheduler.scheduleJob( job, t5 );
+
 		job = newJob(AdminQueueJob.class).withIdentity("admin-queue-job", "group-2-secs").build();
 		Trigger t6 = TriggerBuilder
 				.newTrigger()
@@ -59,15 +69,6 @@ public class MonitorAgent {
 				.build();		
 		scheduler.scheduleJob( job, t6 );
 
-		job = newJob(PrepareGamesJob.class).withIdentity("prepare-games-job", "group-30-secs").build();
-		Trigger t5 = TriggerBuilder
-				.newTrigger()
-				.withIdentity("every-10-seconds", "group3")
-				.withSchedule(
-				    SimpleScheduleBuilder.simpleSchedule()
-					.withIntervalInSeconds(10).repeatForever())
-				.build();		
-		scheduler.scheduleJob( job, t5 );
 	}
 	
 }

@@ -1123,6 +1123,7 @@ public class TheCraftCloudDelegate {
 
 	public Boolean markAdminRequestCompleted(AdminQueue aq) {
 		String json = JSONParser.getInstance().toJSONString(aq);
+		MGLogger.info("markAdminRequestCompleted");
 		Boolean result = post("/admin/queue/markcomplete/" + aq.getUuid().toString());
 		return result;
 	}

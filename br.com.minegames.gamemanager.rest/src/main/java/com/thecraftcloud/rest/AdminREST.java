@@ -27,7 +27,7 @@ public class AdminREST extends REST {
 	@Path("/sendtolobby/{name}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response sendPlayerToLobby(@PathParam("name") String name) {
-		
+		log("send player to lobby name: " + name ); 
 		AdminService aService = new AdminService();
 		aService.teleportPlayerToLobby(name);
 	    return Response.ok().build();
