@@ -109,6 +109,7 @@ public class GunGameConfigService {
 	
 	public void clearAllChests() {
 		for (Chest chest : getChestList()) {
+			//limpa todos os baús
 			chest.getInventory().clear();
 		}
 	}
