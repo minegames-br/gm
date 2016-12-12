@@ -14,14 +14,9 @@ import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Scoreboard;
 
-import com.thecraftcloud.core.domain.ServerInstance;
-<<<<<<< HEAD
-=======
 import com.thecraftcloud.core.multiverse.MultiVerseWrapper;
->>>>>>> branch 'master' of https://github.com/minegames-br/gm.git
 import com.thecraftcloud.core.util.LocationUtil;
 import com.thecraftcloud.core.util.Utils;
-import com.thecraftcloud.minigame.command.LeaveGameCommand;
 import com.thecraftcloud.minigame.domain.EntityPlayer;
 import com.thecraftcloud.minigame.domain.GamePlayer;
 import com.thecraftcloud.minigame.domain.MyCloudCraftGame;
@@ -80,13 +75,6 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 	public void onEnable() {
 		this.configService = ConfigService.getInstance();
 
-<<<<<<< HEAD
-		if( this.getName().equals( TheCraftCloudMiniGameAbstract.PLUGIN_NAME ) ) {
-			getCommand("sair").setExecutor(new LeaveGameCommand(this));
-		}
-		
-=======
->>>>>>> branch 'master' of https://github.com/minegames-br/gm.git
 		registerListeners();
 		
 		// inicializar em que mundo o jogador está. Só deve ter um.

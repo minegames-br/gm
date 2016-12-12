@@ -7,7 +7,6 @@ import org.bukkit.event.Listener;
 
 import com.thecraftcloud.admin.TheCraftCloudAdmin;
 import com.thecraftcloud.admin.service.AdminService;
-import com.thecraftcloud.client.TheCraftCloudDelegate;
 import com.thecraftcloud.core.util.Utils;
 import com.thecraftcloud.minigame.event.EndGameEvent;
 import com.thecraftcloud.minigame.service.ConfigService;

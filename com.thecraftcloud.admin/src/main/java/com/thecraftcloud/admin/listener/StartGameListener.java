@@ -19,12 +19,6 @@ public class StartGameListener implements Listener {
 		this.plugin = plugin;
 	}
 	
-	private TheCraftCloudAdmin plugin;
-	
-	public StartGameListener(TheCraftCloudAdmin plugin) {
-		this.plugin = plugin;
-	}
-	
     @EventHandler(priority=EventPriority.HIGHEST)
     public void onStartGame(final StartGameEvent event) {
     	Bukkit.getConsoleSender().sendMessage(Utils.color("&2Game: " + event.getGame().getName() + " has started."));

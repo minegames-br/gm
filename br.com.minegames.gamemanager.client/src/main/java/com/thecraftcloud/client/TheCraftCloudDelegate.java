@@ -19,6 +19,8 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thecraftcloud.client.exception.InvalidRegistrationException;
+import com.thecraftcloud.core.admin.domain.ActionDTO;
+import com.thecraftcloud.core.domain.AdminQueue;
 import com.thecraftcloud.core.domain.Area3D;
 import com.thecraftcloud.core.domain.Arena;
 import com.thecraftcloud.core.domain.Game;
@@ -1080,52 +1082,50 @@ public class TheCraftCloudDelegate {
         
         return myObjects;
 	}
+
+	public Boolean sendPlayerToLobby(String name) {
+
+		Boolean result = post("/admin/sendtolobby/" + name);
+		MGLogger.info("send to lobby: " + result);
+		return result;
+	}
+
+	public List<AdminQueue> findAdminQueueRequestsOpened() {
+		String url = this.gameManagerUrl + "/admin/queue/open/list";
+		ClientRequest client = new ClientRequest(url);
+		System.out.println( url );
+		ClientResponse response = null;
+		try {
+			response = client.get(String.class);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        ObjectMapper mapper = new ObjectMapper();
+        String json = (String)response.getEntity(String.class);
+        List<AdminQueue> myObjects = null;
+		try {
+			myObjects = mapper.readValue(json, mapper.getTypeFactory().constructCollectionType(List.class, AdminQueue.class));
+		} catch (JsonParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+        
+        return myObjects;
+	}
+
+	public Boolean markAdminRequestCompleted(AdminQueue aq) {
+		String json = JSONParser.getInstance().toJSONString(aq);
+		Boolean result = post("/admin/queue/markcomplete/" + aq.getUuid().toString());
+		return result;
+	}
 	
 }
 
-/*	public static void main(String args[]) {
-GameManagerClientPlugin.setMinegamesGameManagerUrl("http://localhost:8080/gamemanager/webresources");
-GameManagerDelegate delegate = GameManagerDelegate.getInstance("http://localhost:8080/gamemanager/webresources");
-
-Arena arena = new Arena();
-arena.setArena_uuid(UUID.fromString("fad5f5fc-e770-4049-bfa2-3ef9616a8ecf"));
-arena.setDescription("arena1");
-arena.setDescription("the last archer arena pokemon go");
-
-File file = new File("d:/minecraft/worlds/schematics/s2.schematic");
-Schematic schematic = new Schematic();
-schematic.setName("arena1-schematic");
-schematic.setDescription("the last archer arena pokemon go");
-
-System.out.println("create schematic");
-schematic = delegate.createSchematic(schematic);
-
-System.out.println("upload schematic");
-delegate.uploadSchematic(schematic, file);
-
-Game game = delegate.findGame("46bea463-7bb9-46ed-8eae-ec004ce84833");
-
-GameArenaConfig config = new GameArenaConfig();
-config.setArena(arena);
-config.setGame(game);
-
-delegate.createGameArenaConfig(config);
-
-arena.setSchematic(schematic);
-System.out.println("create arena");
-delegate.createArena(arena);
-
-List<Arena> arenas = delegate.findArenas("");
-for(Arena a: arenas) {
-	System.out.println(a.getName());
-}
-
-Game game = delegate.findGame("46bea463-7bb9-46ed-8eae-ec004ce84833");
-System.out.println(game.getName());
-
-List<Game> games = delegate.findGames();
-for(Game g: games) {
-	System.out.println(g.getName() + ":" + g.getGame_uuid().toString());
-}
-}
-*/

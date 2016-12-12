@@ -25,11 +25,9 @@ public class PlayerLeftGameListener implements Listener {
     	Bukkit.getScheduler().runTaskAsynchronously(event.getGame(), new Runnable() {
     		public void run() {
     	    	service.notifyPlayerLeft( event.getGamePlayer(), event.getGame() );
-<<<<<<< HEAD
-    	    	AdminService adminService = new AdminService();
-=======
+
     	    	AdminService adminService = new AdminService(plugin);
->>>>>>> branch 'master' of https://github.com/minegames-br/gm.git
+
     			Bukkit.getConsoleSender().sendMessage(Utils.color("&6 adminService.sendPlayerToLobby" ));
     	    	adminService.sendPlayerToLobby( event.getGame(), event.getGamePlayer() );
     		}

@@ -3,6 +3,7 @@ package com.thecraftcloud.service;
 import java.util.Collection;
 import java.util.UUID;
 
+import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 import org.jboss.logging.Logger;
@@ -12,6 +13,14 @@ import com.thecraftcloud.core.domain.ServerStatus;
 import com.thecraftcloud.dao.ServerDAO;
 
 public class ServerService extends Service {
+	
+	public ServerService() {
+		super();
+	}
+	
+	public ServerService(EntityManager em) {
+		super(em);
+	}
 	
 	public UUID create(ServerInstance server) {
 		startTransaction();

@@ -15,7 +15,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.thecraftcloud.admin.command.LeaveGameCommand;
 import com.thecraftcloud.admin.listener.EndGameListener;
 import com.thecraftcloud.admin.listener.PlayerJoinGameListener;
+import com.thecraftcloud.admin.listener.PlayerJoinListener;
 import com.thecraftcloud.admin.listener.PlayerLeftGameListener;
+import com.thecraftcloud.admin.listener.PlayerQuitListener;
 import com.thecraftcloud.admin.listener.StartGameListener;
 import com.thecraftcloud.admin.service.ServerService;
 import com.thecraftcloud.admin.socket.server.SocketServer;
@@ -91,13 +93,10 @@ public class TheCraftCloudAdmin extends JavaPlugin {
 		
 		Bukkit.getPluginManager().registerEvents(new StartGameListener(this), this);
 		Bukkit.getPluginManager().registerEvents(new EndGameListener(this), this);
-<<<<<<< HEAD
-		Bukkit.getPluginManager().registerEvents(new PlayerJoinGameListener(), this);
-		Bukkit.getPluginManager().registerEvents(new PlayerLeftGameListener(), this);
-=======
+
 		Bukkit.getPluginManager().registerEvents(new PlayerJoinGameListener(this), this);
 		Bukkit.getPluginManager().registerEvents(new PlayerLeftGameListener(this), this);
->>>>>>> branch 'master' of https://github.com/minegames-br/gm.git
+
 		Bukkit.getPluginManager().registerEvents(new PlayerJoinListener(this), this);
 		Bukkit.getPluginManager().registerEvents(new PlayerQuitListener(this), this);
 		
@@ -181,8 +180,7 @@ public class TheCraftCloudAdmin extends JavaPlugin {
 		return this.serverName;
 	}
 	
-<<<<<<< HEAD
-=======
+
 	public TheCraftCloudDelegate getDelegate() {
 		return delegate;
 	}
@@ -227,7 +225,7 @@ public class TheCraftCloudAdmin extends JavaPlugin {
 		this.serverInstance = serverInstance;
 	}
 
->>>>>>> branch 'master' of https://github.com/minegames-br/gm.git
+
 	public static TheCraftCloudAdmin getBukkitPlugin() {
 		return (TheCraftCloudAdmin)Bukkit.getPluginManager().getPlugin( TheCraftCloudAdmin.PLUGIN_NAME );
 	}
