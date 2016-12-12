@@ -51,7 +51,7 @@ public class SpawnBonusItemTask implements Runnable {
 		Integer randomItemNumber = new Random().nextInt(prizeList);
 		Integer value = configService.getPrizeList().get(randomItemNumber);
 		if (value == 0) {
-			return;
+			inventory.addItem(new ItemStack(Material.BREAD));
 		}
 		// sortear qual item colocar no baú
 		giveRandomItem();
