@@ -3,6 +3,7 @@ package com.thecraftcloud.admin.service;
 import java.util.Calendar;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 import com.thecraftcloud.admin.TheCraftCloudAdmin;
 import com.thecraftcloud.client.TheCraftCloudDelegate;
@@ -16,10 +17,16 @@ import com.thecraftcloud.core.domain.ServerStatus;
 import com.thecraftcloud.core.util.Utils;
 import com.thecraftcloud.minigame.TheCraftCloudMiniGameAbstract;
 import com.thecraftcloud.minigame.domain.GamePlayer;
+import com.thecraftcloud.minigame.service.ConfigService;
 
 public class AdminService {
 
 	private TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance();
+	private TheCraftCloudAdmin admin = null;
+	
+	public AdminService( TheCraftCloudAdmin plugin ) {
+		this.admin = plugin;
+	}
 
 	public void notifyGameStart(TheCraftCloudMiniGameAbstract miniGame, ServerInstance server) {
 		
@@ -30,6 +37,8 @@ public class AdminService {
 		
 		server.setStatus(ServerStatus.INGAME);
 		delegate.updateServer(server);
+		
+		this.admin.setMiniGame(miniGame);
 		
 	}
 	
@@ -77,6 +86,12 @@ public class AdminService {
 		bu.setup(game);
 		Bukkit.getConsoleSender().sendMessage(Utils.color("&6 BungeeUtils sendToServer: " + server.getName() ));
 		bu.sendToServer(gamePlayer.getPlayer(), server.getName());
+	}
+
+	public void removeLivePlayer(Player player) {
+		
+		this.admin.getMiniGame().removeLivePlayer(player);
+		
 	}
 	
 

@@ -12,11 +12,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.thecraftcloud.admin.command.LeaveGameCommand;
 import com.thecraftcloud.admin.listener.EndGameListener;
 import com.thecraftcloud.admin.listener.PlayerJoinGameListener;
-import com.thecraftcloud.admin.listener.PlayerJoinListener;
 import com.thecraftcloud.admin.listener.PlayerLeftGameListener;
-import com.thecraftcloud.admin.listener.PlayerQuitListener;
 import com.thecraftcloud.admin.listener.StartGameListener;
 import com.thecraftcloud.admin.service.ServerService;
 import com.thecraftcloud.admin.socket.server.SocketServer;
@@ -24,7 +23,8 @@ import com.thecraftcloud.client.TheCraftCloudDelegate;
 import com.thecraftcloud.core.domain.ServerInstance;
 import com.thecraftcloud.core.domain.ServerStatus;
 import com.thecraftcloud.core.util.Utils;
-import com.thecraftcloud.minigame.service.ConfigService;
+import com.thecraftcloud.minigame.TheCraftCloudMiniGameAbstract;
+
 
 public class TheCraftCloudAdmin extends JavaPlugin {
 
@@ -39,6 +39,8 @@ public class TheCraftCloudAdmin extends JavaPlugin {
 	private HashMap<String, String> actions = new HashMap<String, String>();
 	private SocketServer socketServer;
 	private ServerInstance serverInstance;
+	
+	private TheCraftCloudMiniGameAbstract miniGame;
 
 	@Override
 	public void onEnable() {
@@ -46,6 +48,9 @@ public class TheCraftCloudAdmin extends JavaPlugin {
 		this.socketServerPort = this.getConfig().getInt(TheCraftCloudAdmin.SOCKET_SERVER_PORT);
 		this.serverName = this.getConfig().getString(TheCraftCloudAdmin.SERVER_NAME);
 		
+		Bukkit.getConsoleSender().sendMessage(Utils.color("&8registrar comando sair"));
+		getCommand("sair").setExecutor(new LeaveGameCommand(this));
+
 		Bukkit.getConsoleSender().sendMessage(Utils.color("&6serverName: " + this.serverName));
 		
 		if(this.serverName == null) {
@@ -86,8 +91,13 @@ public class TheCraftCloudAdmin extends JavaPlugin {
 		
 		Bukkit.getPluginManager().registerEvents(new StartGameListener(this), this);
 		Bukkit.getPluginManager().registerEvents(new EndGameListener(this), this);
+<<<<<<< HEAD
 		Bukkit.getPluginManager().registerEvents(new PlayerJoinGameListener(), this);
 		Bukkit.getPluginManager().registerEvents(new PlayerLeftGameListener(), this);
+=======
+		Bukkit.getPluginManager().registerEvents(new PlayerJoinGameListener(this), this);
+		Bukkit.getPluginManager().registerEvents(new PlayerLeftGameListener(this), this);
+>>>>>>> branch 'master' of https://github.com/minegames-br/gm.git
 		Bukkit.getPluginManager().registerEvents(new PlayerJoinListener(this), this);
 		Bukkit.getPluginManager().registerEvents(new PlayerQuitListener(this), this);
 		
@@ -171,6 +181,53 @@ public class TheCraftCloudAdmin extends JavaPlugin {
 		return this.serverName;
 	}
 	
+<<<<<<< HEAD
+=======
+	public TheCraftCloudDelegate getDelegate() {
+		return delegate;
+	}
+
+	public void setDelegate(TheCraftCloudDelegate delegate) {
+		this.delegate = delegate;
+	}
+
+	public Integer getSocketServerPort() {
+		return socketServerPort;
+	}
+
+	public void setSocketServerPort(Integer socketServerPort) {
+		this.socketServerPort = socketServerPort;
+	}
+
+	public SocketServer getSocketServer() {
+		return socketServer;
+	}
+
+	public void setSocketServer(SocketServer socketServer) {
+		this.socketServer = socketServer;
+	}
+
+	public TheCraftCloudMiniGameAbstract getMiniGame() {
+		return miniGame;
+	}
+
+	public void setMiniGame(TheCraftCloudMiniGameAbstract miniGame) {
+		this.miniGame = miniGame;
+	}
+
+	public void setServerName(String serverName) {
+		this.serverName = serverName;
+	}
+
+	public void setActions(HashMap<String, String> actions) {
+		this.actions = actions;
+	}
+
+	public void setServerInstance(ServerInstance serverInstance) {
+		this.serverInstance = serverInstance;
+	}
+
+>>>>>>> branch 'master' of https://github.com/minegames-br/gm.git
 	public static TheCraftCloudAdmin getBukkitPlugin() {
 		return (TheCraftCloudAdmin)Bukkit.getPluginManager().getPlugin( TheCraftCloudAdmin.PLUGIN_NAME );
 	}

@@ -4,3 +4,4 @@ author: gyuriX
 main: com.thecraftcloud.gungame.GameController
 depend: [TheCraftCloud-MiniGame,TheCraftCloud-Core]
 commands:
+    sair:
