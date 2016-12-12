@@ -18,6 +18,8 @@ public class ActionDTO extends TransferObject {
 	public static final String DEPLOY_GAME = "deploy-game";
 	public static final String DEPLOY_ARENA = "deploy-arena";
 	public static final String JOIN_GAME = "join-game";
+	public static final String SEND_PLAYER_TO_LOBBY = "send-player-to-lobby";
+	public static final String TELEPORT_PLAYER = "teleport-player";
 	
 	private String name;
 	private MineCraftPlayer player;

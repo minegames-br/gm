@@ -49,6 +49,16 @@ public class MonitorAgent {
 				.build();		
 		scheduler.scheduleJob( job, t4 );
 
+		job = newJob(AdminQueueJob.class).withIdentity("admin-queue-job", "group-2-secs").build();
+		Trigger t6 = TriggerBuilder
+				.newTrigger()
+				.withIdentity("every-2-seconds", "group8")
+				.withSchedule(
+				    SimpleScheduleBuilder.simpleSchedule()
+					.withIntervalInSeconds(2).repeatForever())
+				.build();		
+		scheduler.scheduleJob( job, t6 );
+
 		job = newJob(PrepareGamesJob.class).withIdentity("prepare-games-job", "group-30-secs").build();
 		Trigger t5 = TriggerBuilder
 				.newTrigger()
