@@ -8,6 +8,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Chest;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
@@ -104,6 +105,12 @@ public class GunGameConfigService {
 			getPrizeList().add(i, 1);
 		}
 		return getPrizeList();
+	}
+	
+	public void clearAllChests() {
+		for (Chest chest : getChestList()) {
+			chest.getInventory().clear();
+		}
 	}
 
 	public void setChestList(List<Chest> chestList) {

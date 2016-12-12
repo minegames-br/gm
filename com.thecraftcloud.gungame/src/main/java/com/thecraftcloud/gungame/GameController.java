@@ -116,6 +116,8 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 			player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
 			player.sendMessage("Você fez " + gp.getPoint() + " pontos.");
 		}
+		
+		this.gunGameConfigService.clearAllChests();
 
 	}
 

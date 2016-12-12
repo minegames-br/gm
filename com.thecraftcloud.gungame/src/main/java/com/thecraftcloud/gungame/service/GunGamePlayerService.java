@@ -7,6 +7,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -70,6 +71,7 @@ public class GunGamePlayerService extends PlayerService {
 		ItemStack itemStack = MaterialUtil.getInstance().toItemStack(gci.getItem());
 		playerUtil.setItemInPlayer(shooter, itemStack);
 		shooter.sendMessage(ChatColor.GOLD  + "Você subiu para o Nível " + ggPlayer.getLevel());
+		shooter.playSound(shooter.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
 	}
 
 	public void removeBonus(Player dead) {
@@ -128,7 +130,13 @@ public class GunGamePlayerService extends PlayerService {
 		Item item = gci.getItem();
 		ItemStack itemStack = MaterialUtil.getInstance().toItemStack(item);
 		playerUtil.setItemInPlayer(player, itemStack);
+		playMusic(player);
 	}
+	
+	public void playMusic(Player player) {
+		player.playSound(player.getLocation(), Sound.MUSIC_END, 10, 1);
+	}
+		
 
 	public void spawnDeadPlayer(Player player) {
 		CopyOnWriteArraySet<GameArenaConfig> gacList = ConfigService.getInstance().getSpawnPoints();
