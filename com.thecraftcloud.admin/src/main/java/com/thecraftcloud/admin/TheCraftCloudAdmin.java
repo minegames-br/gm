@@ -27,6 +27,7 @@ import com.thecraftcloud.core.domain.ServerStatus;
 import com.thecraftcloud.core.util.Utils;
 import com.thecraftcloud.minigame.TheCraftCloudMiniGameAbstract;
 
+
 public class TheCraftCloudAdmin extends JavaPlugin {
 
 	private static final String SOCKET_SERVER_PORT = "thecraftcloud.admin.port";
@@ -92,8 +93,10 @@ public class TheCraftCloudAdmin extends JavaPlugin {
 		
 		Bukkit.getPluginManager().registerEvents(new StartGameListener(this), this);
 		Bukkit.getPluginManager().registerEvents(new EndGameListener(this), this);
+
 		Bukkit.getPluginManager().registerEvents(new PlayerJoinGameListener(this), this);
 		Bukkit.getPluginManager().registerEvents(new PlayerLeftGameListener(this), this);
+
 		Bukkit.getPluginManager().registerEvents(new PlayerJoinListener(this), this);
 		Bukkit.getPluginManager().registerEvents(new PlayerQuitListener(this), this);
 		
@@ -177,6 +180,7 @@ public class TheCraftCloudAdmin extends JavaPlugin {
 		return this.serverName;
 	}
 	
+
 	public TheCraftCloudDelegate getDelegate() {
 		return delegate;
 	}
@@ -220,6 +224,7 @@ public class TheCraftCloudAdmin extends JavaPlugin {
 	public void setServerInstance(ServerInstance serverInstance) {
 		this.serverInstance = serverInstance;
 	}
+
 
 	public static TheCraftCloudAdmin getBukkitPlugin() {
 		return (TheCraftCloudAdmin)Bukkit.getPluginManager().getPlugin( TheCraftCloudAdmin.PLUGIN_NAME );

@@ -14,11 +14,9 @@ import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Scoreboard;
 
-import com.thecraftcloud.core.domain.ServerInstance;
 import com.thecraftcloud.core.multiverse.MultiVerseWrapper;
 import com.thecraftcloud.core.util.LocationUtil;
 import com.thecraftcloud.core.util.Utils;
-import com.thecraftcloud.minigame.command.LeaveGameCommand;
 import com.thecraftcloud.minigame.domain.EntityPlayer;
 import com.thecraftcloud.minigame.domain.GamePlayer;
 import com.thecraftcloud.minigame.domain.MyCloudCraftGame;
