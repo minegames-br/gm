@@ -21,7 +21,7 @@ public class SendPlayerToServerAction extends Action {
 		}
 		
 		TheCraftCloudAdmin plugin = (TheCraftCloudAdmin)Bukkit.getPluginManager().getPlugin( "TheCraftCloud-Admin" );
-		BungeeUtils bungeeUtils = new BungeeUtils();
+		BungeeUtils bungeeUtils = BungeeUtils.getInstance();
 		bungeeUtils.setup(plugin);
 		Player player = Bukkit.getPlayer( dto.getPlayer().getName() );
 

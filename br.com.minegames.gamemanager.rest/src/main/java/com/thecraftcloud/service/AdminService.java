@@ -36,12 +36,13 @@ public class AdminService extends Service {
 		action.setPlayer(mcp);
 		
 		ServerService sService = new ServerService(this.em);
-		ServerInstance lobbyServer = sService.findByHostname("mglobby");
+		ServerInstance lobbyServer = sService.findByName("mglobby");
+		log("server: " + lobbyServer );
+		action.setServer(lobbyServer);
 
 		//The action will be sent to the DB so that TCC Manager can process it
 		String json = JSONParser.getInstance().toJSONString(action);
 		aq.setAction(json);
-		action.setServer(lobbyServer);
 		aq.setRequestTime(Calendar.getInstance());
 		aq.setStatus(RequestStatus.OPEN);
 		
@@ -65,7 +66,8 @@ public class AdminService extends Service {
 
 	public void markRequestComplete(String uuid) {
 		startTransaction();
-		AdminQueue qa = (AdminQueue)this.findByUUID(AdminQueue.class, UUID.fromString(uuid) );
+		AdminService aService = new AdminService(this.em);
+		AdminQueue qa = (AdminQueue)aService.findByUUID(AdminQueue.class, UUID.fromString(uuid) );
 		qa.setResponseTime(Calendar.getInstance());
 		qa.setStatus(RequestStatus.CLOSED);
 		this.em.merge(qa);

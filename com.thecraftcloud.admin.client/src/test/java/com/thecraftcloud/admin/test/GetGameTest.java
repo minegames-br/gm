@@ -8,7 +8,7 @@ import com.thecraftcloud.core.admin.domain.ResponseDTO;
 import com.thecraftcloud.core.domain.ServerInstance;
 
 public class GetGameTest {
-
+/*
 	@Test
 	public void test() {
 		ActionDTO dto = new ActionDTO();
@@ -25,5 +25,5 @@ public class GetGameTest {
 			e.printStackTrace();
 		}
 	}
-
+*/
 }

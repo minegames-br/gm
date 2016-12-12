@@ -22,7 +22,7 @@ public class AdminQueue extends TransferObject implements Comparable {
 	@Column(columnDefinition = "BINARY(16)")
 	private UUID uuid;	
 	
-	@Column( length = 255 )
+	@Column( length = 1000 )
 	private String action;
 	
 	private String response;
