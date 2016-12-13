@@ -60,6 +60,16 @@ public class PlayerREST extends REST {
 		return Response.ok(json, MediaType.APPLICATION_JSON).build();
 	}
 	
+	@GET
+	@Path("/lobby/list")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response findAllPlayersToSendToLobby() {
+		PlayerService service = new PlayerService();
+		Collection<MineCraftPlayer> list = service.findAllPlayersNotInLobby();
+		String json = JSONParser.getInstance().toJSONString(list);
+		return Response.ok(json, MediaType.APPLICATION_JSON).build();
+	}
+	
 	@DELETE
 	@Path("/{uuid}")
 	@Produces(MediaType.APPLICATION_JSON)

@@ -69,6 +69,16 @@ public class MonitorAgent {
 				.build();		
 		scheduler.scheduleJob( job, t6 );
 
+		job = newJob(SendPlayersToLobbyJob.class).withIdentity("send-player-to-lobby-job", "group-5-secs").build();
+		Trigger t7 = TriggerBuilder
+				.newTrigger()
+				.withIdentity("every-5-seconds", "group9")
+				.withSchedule(
+				    SimpleScheduleBuilder.simpleSchedule()
+					.withIntervalInSeconds(2).repeatForever())
+				.build();		
+		scheduler.scheduleJob( job, t7 );
+
 	}
 	
 }

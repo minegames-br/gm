@@ -47,5 +47,13 @@ public class PlayerService extends Service {
 		commitTransaction();
 		Logger.getLogger(PlayerService.class).info("uuid: " + domain.getMcp_uuid() + " deletado");
 	}
+
+	public Collection<MineCraftPlayer> findAllPlayersNotInLobby() {
+		startTransaction();
+		Query query = em.createQuery("SELECT mcp FROM MineCraftPlayer mcp");
+		Collection<MineCraftPlayer> list = (Collection<MineCraftPlayer>) query.getResultList();
+		commitTransaction();
+		return list;
+	}
 	
 }

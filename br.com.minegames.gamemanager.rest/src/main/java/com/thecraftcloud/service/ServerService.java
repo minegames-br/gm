@@ -10,6 +10,7 @@ import org.jboss.logging.Logger;
 
 import com.thecraftcloud.core.domain.ServerInstance;
 import com.thecraftcloud.core.domain.ServerStatus;
+import com.thecraftcloud.core.domain.ServerType;
 import com.thecraftcloud.dao.ServerDAO;
 
 public class ServerService extends Service {
@@ -90,6 +91,16 @@ public class ServerService extends Service {
 		}
 		commitTransaction();
 		return server;
+	}
+
+	public Collection<ServerInstance> findAllOnlineByType(ServerType serverType) {
+		startTransaction();
+		Query query = em.createQuery("SELECT si FROM ServerInstance si where status = :_status and type = :_type");
+		query.setParameter("_status", ServerStatus.ONLINE);
+		query.setParameter("_type", serverType);
+		Collection<ServerInstance> list = (Collection<ServerInstance>) query.getResultList();
+		commitTransaction();
+		return list;
 	}
 	
 }

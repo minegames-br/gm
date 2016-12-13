@@ -15,6 +15,7 @@ import com.thecraftcloud.core.admin.domain.ResponseType;
 import com.thecraftcloud.core.domain.Game;
 import com.thecraftcloud.core.domain.GameInstance;
 import com.thecraftcloud.core.domain.ServerInstance;
+import com.thecraftcloud.core.domain.ServerStatus;
 import com.thecraftcloud.core.json.JSONParser;
 
 public class UpdateGameInstanceJob implements Job {
@@ -70,13 +71,12 @@ public class UpdateGameInstanceJob implements Job {
 						//System.out.println("MINECRAFT \n" + responseDTO.getMessage());
 					}
 				} else {
-					//System.out.println("THECRAFTCLOUD \ngame " + gi.getGame().getName() ); 
-					//System.out.println(" arena " + gi.getArena().getName() + 
-					//		" start " +  (gi.getStartTime() != null?sdf.format(gi.getStartTime().getTime() ):"") + 
-					//		" end " + (gi.getEndTime() != null?sdf.format(gi.getEndTime().getTime() ):"") +
-					//		" state " + gi.getStatus() ); 
-
-					//System.out.println("MINECRAFT \n" + responseDTO.getMessage());
+					String s = ( (char)27 + "[34m" + responseDTO.getType() + " " + responseDTO.getMessage() + " " + responseDTO.getResult()  + (char)27 + "[0m"); 
+					System.out.println( s );		
+					if(responseDTO.getCode().equals("ADM-999-010")) {
+						server.setStatus(ServerStatus.ONLINE);
+						delegate.updateServer(server);
+					}
 				}
 			}catch(Exception e) {
 				e.printStackTrace();
@@ -86,10 +86,18 @@ public class UpdateGameInstanceJob implements Job {
 	}
 	
 	private void updateGameInstance(GameInstance _gi) {
+		String s = ( (char)27 + "[38m" + _gi.getStatus() + " " + _gi.getServer() + " " + _gi.getStartTime() + " " + _gi.getEndTime()  + (char)27 + "[0m"); 
+		System.out.println( s );		
 		delegate.updateGameInstance(_gi);
 	}
 
 	private void cancelGameInstance(GameInstance gi) {
+		String s = ( (char)27 + "[40m" + gi.getStatus() + " " + gi.getServer() + " " + gi.getStartTime() + " " + gi.getEndTime()  + (char)27 + "[0m"); 
+		System.out.println( s );		
+
+		ServerInstance server = gi.getServer();
+		server.setStatus(ServerStatus.ONLINE);
+		delegate.updateServer(server);
 		delegate.cancelGameInstance(gi);
 	}
 

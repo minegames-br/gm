@@ -834,6 +834,27 @@ public class TheCraftCloudDelegate {
 		return gi;
 	}
 
+	public List<ServerInstance> findAllGameServerInstanceOnline() {
+        System.out.println("findAllGameServerInstanceOnline");
+        String json = get("/server/game/list/online");
+        System.out.println("findAllServerInstanceOnline response: " + json);
+        ObjectMapper mapper = new ObjectMapper();
+        List<ServerInstance> myObjects = null;
+		try {
+			myObjects = mapper.readValue(json, mapper.getTypeFactory().constructCollectionType(List.class, ServerInstance.class));
+		} catch (JsonParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return myObjects;
+	}
+
 	public List<ServerInstance> findAllServerInstanceOnline() {
         System.out.println("findAllServerInstanceOnline");
         String json = get("/server/list/online");
@@ -1126,6 +1147,37 @@ public class TheCraftCloudDelegate {
 		MGLogger.info("markAdminRequestCompleted");
 		Boolean result = post("/admin/queue/markcomplete/" + aq.getUuid().toString());
 		return result;
+	}
+
+	public List<MineCraftPlayer> findPlayersNotInLobby() {
+		String url = this.gameManagerUrl + "/player/notinlobby/list";
+		ClientRequest client = new ClientRequest(url);
+		System.out.println( url );
+		ClientResponse response = null;
+		try {
+			response = client.get(String.class);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        ObjectMapper mapper = new ObjectMapper();
+        String json = (String)response.getEntity(String.class);
+        List<MineCraftPlayer> myObjects = null;
+		try {
+			myObjects = mapper.readValue(json, mapper.getTypeFactory().constructCollectionType(List.class, MineCraftPlayer.class));
+		} catch (JsonParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+        
+        return myObjects;
 	}
 	
 }
