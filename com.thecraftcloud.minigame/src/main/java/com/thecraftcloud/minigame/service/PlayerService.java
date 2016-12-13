@@ -1,9 +1,9 @@
 package com.thecraftcloud.minigame.service;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.concurrent.CopyOnWriteArraySet;
-
-import javax.swing.colorchooser.ColorSelectionModel;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 
 import com.thecraftcloud.core.logging.MGLogger;
@@ -83,8 +84,10 @@ public class PlayerService extends TheCraftCloudService {
 		regainAttributesToPlayer(player);
 
 		Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
-		Objective objective = scoreboard.registerNewObjective(Utils.color("&6Placar"), "placar");
-		objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+		Objective objective1 = scoreboard.registerNewObjective(Utils.color("&6Placar"), "placar");
+		objective1.setDisplaySlot(DisplaySlot.SIDEBAR);
+		// Objective objective =
+		// scoreboard.registerNewObjective(Utils.color(msg), arg1)
 		// scoreboard.getObjective(DisplaySlot.SIDEBAR).getScore("time").setScore(
 		// configService.getConfig().getGameDurationInSeconds() );
 		player.setScoreboard(scoreboard);
@@ -96,6 +99,13 @@ public class PlayerService extends TheCraftCloudService {
 			Scoreboard scoreboard = player.getScoreboard();
 			if (scoreboard == null || scoreboard.getObjective(DisplaySlot.SIDEBAR) == null)
 				continue;
+
+			Objective objective1 = scoreboard.getObjective(DisplaySlot.SIDEBAR);
+			objective1.unregister();
+
+			objective1 = scoreboard.registerNewObjective(Utils.color("&6Placar"), "placar");
+			objective1.setDisplaySlot(DisplaySlot.SIDEBAR);
+
 			for (GamePlayer gp1 : this.miniGame.getLivePlayers()) {
 				String name = gp1.getPlayer().getName();
 				if (scoreboard.getObjective(DisplaySlot.SIDEBAR).getScore(name) == null)
@@ -104,6 +114,17 @@ public class PlayerService extends TheCraftCloudService {
 				// scoreboard.getObjective(DisplaySlot.SIDEBAR).getScore("time").setScore(
 				// this.miniGame.getGameDuration() );
 			}
+
+			Bukkit.getConsoleSender().sendMessage(Utils.color("&6 CONFIG SERVICE " + configService));
+			Bukkit.getConsoleSender().sendMessage(Utils.color("&6 GET CONFIG " + configService.getConfig()));
+			Bukkit.getConsoleSender().sendMessage(
+					Utils.color("&6 GAME DURATION IN SECONDS " + configService.getConfig().getGameDurationInSeconds()));
+			Bukkit.getConsoleSender()
+					.sendMessage(Utils.color("&6 GET GAME DURATION " + this.miniGame.getGameDuration()));
+			Integer time = (configService.getGameDurationInSeconds() - this.miniGame.getGameDuration());
+
+			Score p4 = objective1.getScore("Tempo: " + time);
+			p4.setScore(0);
 		}
 	}
 
