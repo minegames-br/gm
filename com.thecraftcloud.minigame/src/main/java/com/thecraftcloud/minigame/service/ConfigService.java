@@ -160,6 +160,11 @@ public class ConfigService {
 	public void setStartCountDown() {
 		this.config.setStartCountDown( (Integer)this.getGameConfigInstance(TheCraftCloudConfig.START_COUNTDOWN) );
 	}
+	
+	public Integer getGameDurationInSeconds() {
+		Integer gameDuration = (Integer)this.getGameConfigInstance(TheCraftCloudConfig.GAME_DURATION_IN_SECONDS);
+		return gameDuration;
+	}
 
 
 	public Local getLobby() {

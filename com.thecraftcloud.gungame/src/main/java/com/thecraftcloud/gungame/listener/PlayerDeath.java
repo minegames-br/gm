@@ -15,38 +15,38 @@ import com.thecraftcloud.minigame.service.EntityService;
 
 public class PlayerDeath implements Listener {
 
-    private GameController controller;
+	private GameController controller;
 	private GunGamePlayerService playerService;
 	private EntityService entityService;
 
-    public PlayerDeath(GameController controller) {
-        this.controller = controller;
-        this.playerService = new GunGamePlayerService(controller);
-        this.entityService = new EntityService(controller);
-    }
+	public PlayerDeath(GameController controller) {
+		this.controller = controller;
+		this.playerService = new GunGamePlayerService(controller);
+		this.entityService = new EntityService(controller);
+	}
 
-    @EventHandler(priority=EventPriority.HIGHEST)
-    public void onDeath(EntityDeathEvent event) {
-    	
-        event.getDrops().clear();
-        event.setDroppedExp(0);
-        
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onDeath(EntityDeathEvent event) {
+
+		event.getDrops().clear();
+		event.setDroppedExp(0);
+
 		if (event instanceof PlayerDeathEvent) {
-			PlayerDeathEvent playerDeathEvent = (PlayerDeathEvent)event;
-			Player dead = (Player)playerDeathEvent.getEntity();
+			PlayerDeathEvent playerDeathEvent = (PlayerDeathEvent) event;
+			Player dead = (Player) playerDeathEvent.getEntity();
 			this.playerService.killPlayer(dead);
 			dead.setHealth(20);
 			playerService.spawnDeadPlayer(dead);
 		} else {
 			Entity entity = event.getEntity();
-			if(entity instanceof Entity) {
-				Entity z = (Entity)entity;
-				if(((LivingEntity) z).getKiller() == null) {
+			if (entity instanceof Entity) {
+				Entity z = (Entity) entity;
+				if (((LivingEntity) z).getKiller() == null) {
 				} else {
 				}
 				this.entityService.killEntity(z);
 			}
 		}
-    }
+	}
 
 }

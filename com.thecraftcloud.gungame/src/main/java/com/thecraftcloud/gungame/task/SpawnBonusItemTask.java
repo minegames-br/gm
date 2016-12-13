@@ -36,13 +36,11 @@ public class SpawnBonusItemTask implements Runnable {
 
 		MyCloudCraftGame game = this.controller.getConfigService().getMyCloudCraftGame();
 
-		// descobrir se é para dar o bonus ou não
-		getPrizeNumber();
-
 		// pegar baú aleatório da arena
 		getRandomChest();
 
-	
+		// descobrir se é para dar o bonus ou não
+		getPrizeNumber();
 
 	}
 
@@ -51,7 +49,9 @@ public class SpawnBonusItemTask implements Runnable {
 		Integer randomItemNumber = new Random().nextInt(prizeList);
 		Integer value = configService.getPrizeList().get(randomItemNumber);
 		if (value == 0) {
-			return;
+			inventory.addItem(new ItemStack(Material.BREAD));
+			Bukkit.getConsoleSender().sendMessage(Utils.color("&4Spawning bread on: " + chest.getBlock().getX()
+					+ " " + chest.getBlock().getY() + " " + chest.getBlock().getZ()));
 		}
 		// sortear qual item colocar no baú
 		giveRandomItem();

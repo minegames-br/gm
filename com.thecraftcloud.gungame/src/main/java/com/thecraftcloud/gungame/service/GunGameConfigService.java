@@ -8,6 +8,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Chest;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
@@ -32,9 +33,7 @@ public class GunGameConfigService {
 	private ConfigService configService;
 	// private TheCraftCloudDelegate delegate;
 	private static GunGameConfigService me;
-	private int MaxOfPlayers = 20; // futuramente, fazer puxar da tabela do
-	// mysql
-
+	
 	public static GunGameConfigService getInstance() {
 		if (me == null) {
 			me = new GunGameConfigService();
@@ -96,16 +95,23 @@ public class GunGameConfigService {
 
 	public ArrayList<Integer> createPrizeList(CopyOnWriteArraySet<GamePlayer> numberOfPlayers) {
 		setPrizeList(new ArrayList<Integer>());
-		for (int i = 0; i < MaxOfPlayers; i++) {
+		for (int i = 0; i < configService.getMaxPlayers(); i++) {
 			getPrizeList().add(0);
 		}
 
 		for (GamePlayer gp : numberOfPlayers) {
-			int i = new Random().nextInt(20);
+			int i = new Random().nextInt(configService.getMaxPlayers());
 			getPrizeList().remove(i);
 			getPrizeList().add(i, 1);
 		}
 		return getPrizeList();
+	}
+	
+	public void clearAllChests() {
+		for (Chest chest : getChestList()) {
+			//limpa todos os baús
+			chest.getInventory().clear();
+		}
 	}
 
 	public void setChestList(List<Chest> chestList) {
