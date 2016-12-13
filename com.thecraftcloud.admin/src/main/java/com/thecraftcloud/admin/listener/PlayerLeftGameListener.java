@@ -29,7 +29,7 @@ public class PlayerLeftGameListener implements Listener {
     	    	AdminService adminService = new AdminService(plugin);
 
     			Bukkit.getConsoleSender().sendMessage(Utils.color("&6 adminService.sendPlayerToLobby" ));
-    	    	adminService.sendPlayerToLobby( event.getGame(), event.getGamePlayer() );
+    	    	//adminService.sendPlayerToLobby( event.getGame(), event.getGamePlayer() );
     		}
     	});
     }

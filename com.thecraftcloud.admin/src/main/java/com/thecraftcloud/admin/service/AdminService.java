@@ -82,7 +82,7 @@ public class AdminService {
 		}
 		*/
 		for( GamePlayer gp: game.getLivePlayers() ) {
-			sendPlayerToLobby(game, gp);
+			//sendPlayerToLobby(game, gp);
 		}
 		
 	}
@@ -96,7 +96,7 @@ public class AdminService {
 		bu.sendToServer(gamePlayer.getPlayer(), server.getName());
 		*/
 		
-		delegate.sendPlayerToLobby( gamePlayer.getPlayer().getName() );
+		//delegate.sendPlayerToLobby( gamePlayer.getPlayer().getName() );
 	}
 
 	public void removeLivePlayer(Player player) {

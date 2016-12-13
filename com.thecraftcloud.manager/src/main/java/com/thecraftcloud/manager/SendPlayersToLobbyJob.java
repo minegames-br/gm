@@ -27,14 +27,14 @@ public class SendPlayersToLobbyJob implements Job {
 	
 	
 	public void execute(JobExecutionContext context) throws JobExecutionException {
-		logger.info((char)27 + "[32m" + "Running SendPlayersToLobbyJob Job."+ "[0m");
+		logger.info((char)27 + "[45m" + "Running SendPlayersToLobbyJob Job." + (char)27  + "[0m");
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		List<MineCraftPlayer> list = delegate.findPlayersNotInLobby();
-		logger.info((char)27 + "[32m" + "size: " + list.size() + (char)27 + "[0m");
+		logger.info((char)27 + "[45m" + "size: " + list.size() + (char)27 + "[0m");
 		ServerInstance lobbyServer = delegate.findLobbyAvailable();
 		
 		for(MineCraftPlayer player: list) {
-			logger.info((char)27 + "[32m" + player.getName() + " " + player.getServer().getName() + player.getServer().getStatus() + " " + player.getStatus() + (char)27 + "[0m");
+			logger.info((char)27 + "[45m" + player.getName() + " " + player.getServer().getName() + player.getServer().getStatus() + " " + player.getStatus() + (char)27 + "[0m");
 
 			ActionDTO action = new ActionDTO();
 			action.setName(ActionDTO.TELEPORT_PLAYER);
@@ -48,12 +48,18 @@ public class SendPlayersToLobbyJob implements Job {
 				player.setStatus(PlayerStatus.OFFLINE);
 				delegate.updatePlayer(player);
 			} else {
-				player.setStatus(PlayerStatus.ONLINE);
-				player.setServer(lobbyServer);
-				delegate.updatePlayer(player);
+				//player.setStatus(PlayerStatus.ONLINE);
+				//player.setServer(lobbyServer);
+				//delegate.updatePlayer(player);
+			}
+			try {
+				Thread.sleep(300);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
-		logger.info((char)27 + "[32m" + "Completing SendPlayersToLobbyJob Job." + (char)27 + "[0m");
+		logger.info((char)27 + "[45m" + "Completing SendPlayersToLobbyJob Job." + (char)27 + "[0m");
 	}
 
 }

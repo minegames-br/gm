@@ -88,7 +88,7 @@ public class MineCraftPlayerService extends Service {
 	public Collection<MineCraftPlayer> findAllPlayersNotInLobby() {
 		startTransaction();
 		Query query = em.createQuery("SELECT p FROM MineCraftPlayer p where p.server.type != :_serverType and p.status = :_status");
-		query.setParameter("_status", PlayerStatus.LOBBY);
+		query.setParameter("_status", PlayerStatus.ONLINE);
 		query.setParameter("_serverType", ServerType.LOBBY);
 		Collection<MineCraftPlayer> list = (Collection<MineCraftPlayer>) query.getResultList();
 		commitTransaction();

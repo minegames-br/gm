@@ -25,7 +25,7 @@ public class MonitorAgent {
 				.withIdentity("every-5-seconds", "group1")
 				.withSchedule(
 				    SimpleScheduleBuilder.simpleSchedule()
-					.withIntervalInSeconds(5).repeatForever())
+					.withIntervalInSeconds(30).repeatForever())
 				.build();		
 		scheduler.scheduleJob( job, t2 );
 
@@ -35,7 +35,7 @@ public class MonitorAgent {
 				.withIdentity("every-10-seconds", "group2")
 				.withSchedule(
 				    SimpleScheduleBuilder.simpleSchedule()
-					.withIntervalInSeconds(10).repeatForever())
+					.withIntervalInSeconds(30).repeatForever())
 				.build();		
 		scheduler.scheduleJob( job, t3 );
 
@@ -45,7 +45,7 @@ public class MonitorAgent {
 				.withIdentity("every-5-seconds", "group3")
 				.withSchedule(
 				    SimpleScheduleBuilder.simpleSchedule()
-					.withIntervalInSeconds(5).repeatForever())
+					.withIntervalInSeconds(1).repeatForever())
 				.build();		
 		scheduler.scheduleJob( job, t4 );
 
@@ -55,7 +55,7 @@ public class MonitorAgent {
 				.withIdentity("every-10-seconds", "group3")
 				.withSchedule(
 				    SimpleScheduleBuilder.simpleSchedule()
-					.withIntervalInSeconds(10).repeatForever())
+					.withIntervalInSeconds(30).repeatForever())
 				.build();		
 		scheduler.scheduleJob( job, t5 );
 
@@ -65,7 +65,7 @@ public class MonitorAgent {
 				.withIdentity("every-2-seconds", "group8")
 				.withSchedule(
 				    SimpleScheduleBuilder.simpleSchedule()
-					.withIntervalInSeconds(2).repeatForever())
+					.withIntervalInSeconds(30).repeatForever())
 				.build();		
 		scheduler.scheduleJob( job, t6 );
 
@@ -75,7 +75,7 @@ public class MonitorAgent {
 				.withIdentity("every-5-seconds", "group9")
 				.withSchedule(
 				    SimpleScheduleBuilder.simpleSchedule()
-					.withIntervalInSeconds(2).repeatForever())
+					.withIntervalInSeconds(5).repeatForever())
 				.build();		
 		scheduler.scheduleJob( job, t7 );
 
