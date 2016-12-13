@@ -10,6 +10,9 @@ import org.jboss.logging.Logger;
 
 import com.thecraftcloud.core.domain.Game;
 import com.thecraftcloud.core.domain.MineCraftPlayer;
+import com.thecraftcloud.core.domain.PlayerStatus;
+import com.thecraftcloud.core.domain.ServerStatus;
+import com.thecraftcloud.core.domain.ServerType;
 import com.thecraftcloud.dao.MineCraftPlayerDAO;
 
 public class MineCraftPlayerService extends Service {
@@ -80,6 +83,16 @@ public class MineCraftPlayerService extends Service {
 		}
 		commitTransaction();
 		return MineCraftPlayer;
+	}
+
+	public Collection<MineCraftPlayer> findAllPlayersNotInLobby() {
+		startTransaction();
+		Query query = em.createQuery("SELECT p FROM MineCraftPlayer p where p.server.type != :_serverType and p.status = :_status");
+		query.setParameter("_status", PlayerStatus.LOBBY);
+		query.setParameter("_serverType", ServerType.LOBBY);
+		Collection<MineCraftPlayer> list = (Collection<MineCraftPlayer>) query.getResultList();
+		commitTransaction();
+		return list;
 	}
 	
 }

@@ -39,8 +39,9 @@ public class PingServerJob implements Job {
 		
 			try{
 				AdminClient client = AdminClient.getInstance();
-				ResponseDTO responseDTO = client.execute(server, dto); 
-				System.out.println( server.getName() + " - " + responseDTO.getMessage() + " " + responseDTO.getResult() );
+				ResponseDTO responseDTO = client.execute(server, dto);
+				String s = ( (char)27 + "[33m" + server.getName() + " - " + responseDTO.getMessage() + " " + responseDTO.getResult()  + (char)27 + "[0m"); 
+				System.out.println( s );		
 			}catch(Exception e) {
 				
 				server.setStatus(ServerStatus.OFFLINE);

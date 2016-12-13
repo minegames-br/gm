@@ -10,6 +10,7 @@ import javax.persistence.Query;
 import com.thecraftcloud.core.admin.domain.ActionDTO;
 import com.thecraftcloud.core.domain.AdminQueue;
 import com.thecraftcloud.core.domain.MineCraftPlayer;
+import com.thecraftcloud.core.domain.PlayerStatus;
 import com.thecraftcloud.core.domain.RequestStatus;
 import com.thecraftcloud.core.domain.ServerInstance;
 import com.thecraftcloud.core.json.JSONParser;
@@ -28,6 +29,9 @@ public class AdminService extends Service {
 		startTransaction();
 		MineCraftPlayerService pService = new MineCraftPlayerService(this.em);
 		MineCraftPlayer mcp = pService.findByName(name);
+		
+		mcp.setStatus(PlayerStatus.LOBBY);
+		this.em.merge(mcp);
 		
 		AdminQueue aq = new AdminQueue();
 		

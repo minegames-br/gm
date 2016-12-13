@@ -16,6 +16,7 @@ import com.thecraftcloud.core.admin.domain.ResponseDTO;
 import com.thecraftcloud.core.domain.AdminQueue;
 import com.thecraftcloud.core.domain.MineCraftPlayer;
 import com.thecraftcloud.core.domain.RequestStatus;
+import com.thecraftcloud.core.domain.ServerInstance;
 import com.thecraftcloud.core.json.JSONParser;
 
 public class AdminQueueJob implements Job {
@@ -44,7 +45,8 @@ public class AdminQueueJob implements Job {
 			MineCraftPlayer mcp = delegate.findPlayerByName(action.getPlayer().getName());
 			
 			for(int i = 0; i< 10; i++) {
-				ResponseDTO rdto = client.execute(mcp.getServer(), action);
+				ServerInstance server = delegate.findServerByName("mgbungee");
+				ResponseDTO rdto = client.execute(server, action);
 				if(rdto.getResult()) {
 					String s = ( (char)27 + "[32m" + "player: " + mcp.getName() + " enviado para o server na tentativa: " + i  + (char)27 + "[0m"); 
 					System.out.println(s + rdto.getMessage() + " \n " + rdto.getJson() );

@@ -9,6 +9,7 @@ import com.thecraftcloud.core.util.Utils;
 import com.thecraftcloud.lobby.listener.InteractNpcListener;
 import com.thecraftcloud.lobby.listener.InteractSignListener;
 import com.thecraftcloud.lobby.listener.PlayerFlightEventListener;
+import com.thecraftcloud.lobby.listener.PlayerJoinListener;
 import com.thecraftcloud.lobby.listener.ServerListener;
 
 public class TheCraftCloudLobbyPlugin extends JavaPlugin {
@@ -28,6 +29,7 @@ public class TheCraftCloudLobbyPlugin extends JavaPlugin {
 		pm.registerEvents(new InteractNpcListener(this), this);
 		pm.registerEvents(new PlayerFlightEventListener(this), this );
 		pm.registerEvents(new ServerListener(this), this );
+		pm.registerEvents(new PlayerJoinListener(this), this );
 	}
 	
 	

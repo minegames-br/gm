@@ -15,6 +15,7 @@ import javax.ws.rs.core.Response;
 import com.thecraftcloud.core.domain.Item;
 import com.thecraftcloud.core.domain.Local;
 import com.thecraftcloud.core.domain.ServerInstance;
+import com.thecraftcloud.core.domain.ServerType;
 import com.thecraftcloud.core.json.JSONParser;
 import com.thecraftcloud.service.ItemService;
 import com.thecraftcloud.service.LocalService;
@@ -93,6 +94,16 @@ public class ServerREST extends REST {
 	public Response findAllServerOnline() {
 		ServerService service = new ServerService();
 		Collection<ServerInstance> list = service.findAllOnline();
+		String json = JSONParser.getInstance().toJSONString(list);
+		return Response.ok(json, MediaType.APPLICATION_JSON).build();
+	}
+	
+	@GET
+	@Path("/game/list/online")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response findAllGameServerOnline() {
+		ServerService service = new ServerService();
+		Collection<ServerInstance> list = service.findAllOnlineByType(ServerType.GAME);
 		String json = JSONParser.getInstance().toJSONString(list);
 		return Response.ok(json, MediaType.APPLICATION_JSON).build();
 	}

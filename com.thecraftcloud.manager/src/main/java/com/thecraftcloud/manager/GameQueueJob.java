@@ -60,8 +60,16 @@ public class GameQueueJob implements Job {
 				continue;
 			}
 			
+			if(gq.getPlayer() == null) {
+				cancelGameSubscription(gq);
+				continue;
+			}
+			
 			try {
 				//descobrir em qual servidor o jogador está para mandá-lo para o jogo
+				String s = ( (char)27 + "[36m" + "gq " + gq + " player: " + gq.getPlayer()  + (char)27 + "[0m"); 
+				System.out.println(s);
+				
 				MineCraftPlayer mcp = delegate.findPlayerByName(gq.getPlayer().getName());
 				ServerInstance server = mcp.getServer();
 				if(server == null) {
@@ -93,7 +101,7 @@ public class GameQueueJob implements Job {
 				rdto = client.teleportPlayer(server, gq.getPlayer(), gameServer);
 				boolean success = false;
 				if(rdto.getResult() ) {
-					String s = ( (char)27 + "[32m" + "teleport player worked. executing joinGame..."  + (char)27 + "[0m"); 
+					s = ( (char)27 + "[32m" + "teleport player worked. executing joinGame..."  + (char)27 + "[0m"); 
 					System.out.println(s);
 					//Fazer o player entrar no jogo (addPlayer - livePlayers)
 					for(int i = 0; i < 3; i++ ) {
@@ -116,7 +124,7 @@ public class GameQueueJob implements Job {
 					System.out.println(s);
 
 				} else {
-					String s = ( (char)27 + "[36m" + "teleport player failed. " + rdto.getMessage()  + (char)27 + "[0m"); 
+					s = ( (char)27 + "[36m" + "teleport player failed. " + rdto.getMessage()  + (char)27 + "[0m"); 
 					System.out.println(s);
 					throw new Exception(rdto.getCode() + " " + rdto.getMessage() );
 				}
@@ -139,8 +147,8 @@ public class GameQueueJob implements Job {
 	}
 
 	private ServerInstance findFirstServerAvailable() {
-		List<ServerInstance> servers = delegate.findAllServerInstanceOnline();
-		if(servers != null) {
+		List<ServerInstance> servers = delegate.findAllGameServerInstanceOnline();
+		if(servers != null && servers.size() > 0) {
 			return servers.get(0);
 		}
 		return null;
