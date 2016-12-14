@@ -118,7 +118,7 @@ public class PlayerService extends TheCraftCloudService {
 			Bukkit.getConsoleSender().sendMessage(Utils.color("&6 CONFIG SERVICE " + configService));
 			Bukkit.getConsoleSender().sendMessage(Utils.color("&6 GET CONFIG " + configService.getConfig()));
 			Bukkit.getConsoleSender().sendMessage(
-					Utils.color("&6 GAME DURATION IN SECONDS " + configService.getConfig().getGameDurationInSeconds()));
+					Utils.color("&6 GAME DURATION IN SECONDS " + this.miniGame.getGameDuration() ));
 			Bukkit.getConsoleSender()
 					.sendMessage(Utils.color("&6 GET GAME DURATION " + this.miniGame.getGameDuration()));
 			Integer time = (configService.getGameDurationInSeconds() - this.miniGame.getGameDuration());

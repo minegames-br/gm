@@ -104,21 +104,7 @@ public class GameQueueJob implements Job {
 					s = ( (char)27 + "[32m" + "teleport player worked. executing joinGame..."  + (char)27 + "[0m"); 
 					System.out.println(s);
 					//Fazer o player entrar no jogo (addPlayer - livePlayers)
-					for(int i = 0; i < 3; i++ ) {
-						rdto = client.joinGame( gameServer, gq.getPlayer(), gq.getGame() );
-						if( rdto.getResult() ) {
-							success = true;
-							break;
-						} else {
-							Thread.sleep(2000);
-						}
-					}
-					
-					if(!success) {
-						s = ( (char)27 + "[36m" + "join game failed. " + rdto.getMessage()  + (char)27 + "[0m"); 
-						System.out.println(s);
-						throw new Exception(rdto.getCode() + " " + rdto.getMessage() );
-					}
+					rdto = client.joinGame( gameServer, gq.getPlayer(), gq.getGame() );
 					
 					s = ( (char)27 + "[32m" + "joinGame..." + rdto.getResult() + " " + rdto.getMessage()  + (char)27 + "[0m"); 
 					System.out.println(s);
@@ -170,14 +156,26 @@ public class GameQueueJob implements Job {
 			System.out.println("Game: " + game.getName() + " arenas: " + arenas.size() );
 		}
 		
+		String s = ""; 
 		int index = arenas.size();
 		if( arenas.size() == 1) {
 			index = 0;
 		} else {
-			index = new Random().nextInt(index);
+			Random rand = new Random();
+			int max = arenas.size();
+			int min = 0;
+		    index = rand.nextInt((max - min) + 1) + min;
+		    if(index >= arenas.size()) index = arenas.size()-1;
+		}
+		
+		for(Arena arena: arenas) {
+			s = ( (char)27 + "[36m" + "Arena: " + arena.getName()  + (char)27 + "[0m"); 
+			System.out.println(s);
 		}
 		
 		Arena arena = arenas.get(index);
+		s = ( (char)27 + "[36m" + "Arena: " + arena.getName()  + (char)27 + "[0m"); 
+		System.out.println(s);
 		
 		dto.setGame(game);
 		dto.setArena(arena);
@@ -185,25 +183,6 @@ public class GameQueueJob implements Job {
 		try{
 			AdminClient client = AdminClient.getInstance();
 			
-			ResponseDTO responseDTO = client.execute(server, dto); 
-			System.out.println( server.getName() + " - " + responseDTO.getMessage() + " " + responseDTO.getResult() );
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	private void prepareGunGame(ServerInstance server) {
-		ActionDTO dto = new ActionDTO();
-		dto.setName(ActionDTO.PREPARE_GAME);
-		
-		Game game = delegate.findGame("d10e8c62-6124-4952-a054-c7c668e7944f");
-		Arena arena = delegate.findArena("30d00221-b371-4828-a0e6-5d75de7bfaec");
-		
-		dto.setGame(game);
-		dto.setArena(arena);
-		
-		try{
-			AdminClient client = AdminClient.getInstance();
 			ResponseDTO responseDTO = client.execute(server, dto); 
 			System.out.println( server.getName() + " - " + responseDTO.getMessage() + " " + responseDTO.getResult() );
 		}catch(Exception e) {

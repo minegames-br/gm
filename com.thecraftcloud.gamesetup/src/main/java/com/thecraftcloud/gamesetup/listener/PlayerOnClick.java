@@ -37,6 +37,11 @@ public class PlayerOnClick implements Listener {
     	
     	this.controller.setPlayer(event.getPlayer());
     	
+		if(event.getPlayer().getInventory().getItemInMainHand().getType() == Material.WOOD_AXE) {
+			selectArea(event);
+			return;
+		}
+    	
     	if(controller.getSetupArena()) {
         	Bukkit.getConsoleSender().sendMessage("&6onClick - getSetupArena()");
     		controller.onPlayerClickSetupArena(event);
@@ -71,7 +76,21 @@ public class PlayerOnClick implements Listener {
     	
     }
     
-    private void updateHologram(Block block, Lever lever, Player player) {
+    private void selectArea(PlayerInteractEvent event) {
+    	if(event.getAction() == Action.LEFT_CLICK_BLOCK ) {
+    		Block block = event.getClickedBlock();
+    		//blockDetails(block, event.getPlayer());
+    		controller.setSelectionPointA(event.getClickedBlock().getLocation());
+    	}
+        
+    	if(event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+    		Block block = event.getClickedBlock();
+    		controller.setSelectionPointB(event.getClickedBlock().getLocation());
+    	}
+	}
+
+
+	private void updateHologram(Block block, Lever lever, Player player) {
     	
     	Bukkit.getConsoleSender().sendMessage("&6updateHologram");
     	

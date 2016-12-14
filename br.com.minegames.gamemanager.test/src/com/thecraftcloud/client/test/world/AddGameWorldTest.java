@@ -23,10 +23,16 @@ public class AddGameWorldTest {
 		delegate.addGameWorld( gw );
 */
 		
+		/*
 		GameWorld gw = new GameWorld();
 		gw.setName("arqueiro-pokemon-go");
 		gw.setDescription("arena estilo pokemon-go para o TheLastArcher");
-		
+		*/
+
+		GameWorld gw = new GameWorld();
+		gw.setName("thearcher.stadium");
+		gw.setDescription("Arena Stadium para o jogo TheLastArcher");
+		gw.setPath("/opt/mg/worlds/thearcher-stadium.zip");
 		delegate.addGameWorld( gw );
 
 	}

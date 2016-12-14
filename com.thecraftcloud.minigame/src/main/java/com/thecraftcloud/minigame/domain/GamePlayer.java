@@ -7,6 +7,7 @@ import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 
 import com.thecraftcloud.core.domain.Area3D;
+import com.thecraftcloud.core.domain.Local;
 import com.thecraftcloud.core.domain.TransferObject;
 
 public class GamePlayer extends TransferObject {
@@ -17,7 +18,7 @@ public class GamePlayer extends TransferObject {
 	protected String email;
 	protected String name;
 	protected String nickName;
-	protected Area3D spawnPoint;
+	protected Local spawnPoint;
 	protected Player player;
 	protected BossBar baseBar;
 	protected Integer point = 0;
@@ -60,11 +61,11 @@ public class GamePlayer extends TransferObject {
 	}
 	
 	
-	public void setSpawnPoint(Area3D l) {
+	public void setSpawnPoint(Local l) {
 		this.spawnPoint = l;
 	}
 	
-	public Area3D getSpawnPoint() {
+	public Local getSpawnPoint() {
 		return this.spawnPoint;
 	}
 	
@@ -96,9 +97,9 @@ public class GamePlayer extends TransferObject {
 	
 	public boolean isNear(Location l) {
 		int x = l.getBlockX();
-		int minX = spawnPoint.getPointA().getX();
-		int maxX = spawnPoint.getPointA().getX();
-		int maxZ = spawnPoint.getPointB().getZ();
+		int minX = spawnPoint.getX();
+		int maxX = spawnPoint.getX();
+		int maxZ = spawnPoint.getZ();
 		if( x >= minX || x <= maxX) {
 			if(l.getBlockZ() == maxZ+1) {
 				return true;

@@ -6,6 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.thecraftcloud.core.domain.Area3D;
 import com.thecraftcloud.core.domain.GameConfigType;
 import com.thecraftcloud.core.domain.Local;
 import com.thecraftcloud.gamesetup.TheCraftCloudGameSetupPlugin;
@@ -28,14 +29,14 @@ public class SelectPointBAction extends TheCraftCloudCommandAction {
 		}
 
 		TheCraftCloudGameSetupPlugin p = (TheCraftCloudGameSetupPlugin)plugin;
-		if(p.isServerRegistered()) {
-			if(player != null) {
-				player.sendMessage("Please, register server first. /mg register <name>");
-				return;
-			}
-		}
 		
+		if(p.getSelection() == null) p.setSelection(new Area3D());
 		p.getSelection().setPointB( new Local(player.getLocation().getBlockX(), player.getLocation().getBlockY(), player.getLocation().getBlockZ()) );
+		
+		if(!p.getSetupArena()) {
+			player.sendMessage("Point B has been set: " + p.getSelection().getPointB().getX() + "," + p.getSelection().getPointB().getY() + "," + p.getSelection().getPointB().getZ() );
+			return;
+		}
 		
 		player.sendMessage("Point B has been set: " + p.getSelection().getPointB().getX() + "," + p.getSelection().getPointB().getY() + "," + p.getSelection().getPointB().getZ() );
 		if(p.getGameConfig().getConfigType() == GameConfigType.AREA3D) {

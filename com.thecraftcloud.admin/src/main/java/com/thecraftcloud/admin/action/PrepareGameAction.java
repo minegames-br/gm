@@ -56,7 +56,7 @@ public class PrepareGameAction extends Action {
 			//return ResponseDTO.incompleteRequest("Arena: " + dto.getArena().getName() + " is not available on this server.");
 		} else {
 			MultiVerseWrapper mvw = new MultiVerseWrapper();
-			mvw.unloadWorld(world);
+			//mvw.unloadWorld(world);
 		}
 		
 		//recuperar o plugin do jogo associado
@@ -103,16 +103,19 @@ public class PrepareGameAction extends Action {
 		//habilitar o plugin do jogo a ser preparado
 		Bukkit.getPluginManager().enablePlugin(plugin);
 		
-		String s = ( (char)27 + "[32m" + "[PrepareGameAction]"  + (char)27 + "[0m") + " - plugin.init()"; 
+		String s = ( (char)27 + "[32m" + "[PrepareGameAction] GAME: " + dto.getGame().getName() + " ARENA: " + dto.getArena().getName()  + (char)27 + "[0m") + " - plugin.init()"; 
+		Bukkit.getConsoleSender().sendMessage(s);
 		System.out.println(s);
 		
 		//inicializar plugin para receber jogadores
 		plugin.init();
 		
 		s = ( (char)27 + "[32m" + "[PrepareGameAction]"  + (char)27 + "[0m") + " - responseDTO"; 
+		Bukkit.getConsoleSender().sendMessage(s);
 		System.out.println(s);
 		
 		s = ( (char)27 + "[32m" + "[PrepareGameAction]"  + (char)27 + "[0m") + " - responseDTO - " + "Game: " + dto.getGame().getName() + " has been prepared to run on Arena: " + dto.getArena().getName() ; 
+		Bukkit.getConsoleSender().sendMessage(s);
 		System.out.println(s);
 		
 		ResponseDTO responseDTO = new ResponseDTO();

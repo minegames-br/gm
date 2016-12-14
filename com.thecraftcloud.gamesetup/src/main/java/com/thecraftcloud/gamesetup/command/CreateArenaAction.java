@@ -39,18 +39,6 @@ public class CreateArenaAction extends TheCraftCloudCommandAction {
 		}
 		
 		TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance();
-		String server_uuid = p.getConfig().getString("thecraftcloud.server.uuid");
-		if(server_uuid == null || server_uuid.equals("")) {
-			if(player != null) {
-				player.sendMessage("Please, register server first. /mg register <name>");
-				return;
-			}
-		}
-
-		if(p.getGame() == null) {
-			player.sendMessage("Please, select the Game first. /mg listgames then /mg setgame <#>");
-			return;
-		}
 		
 		if(arguments.length != 2) {
 			player.sendMessage("Please, choose a name. /mg createarena <name>");

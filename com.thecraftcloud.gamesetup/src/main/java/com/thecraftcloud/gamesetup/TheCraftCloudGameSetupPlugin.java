@@ -312,6 +312,8 @@ public class TheCraftCloudGameSetupPlugin extends JavaPlugin {
 			if(this.gac == null) {
 				this.gac = new GameArenaConfig();
 				this.gac.setGameConfig(this.gameConfig);
+				this.gac.setGame(this.getGame());
+				this.gac.setArena(this.arena);
 				this.gameConfigArenaMap.put(this.gameConfig.getName(), this.gac);
 				if(this.gameConfig.getConfigType() == GameConfigType.INT) {
 					this.configValue= new Integer(0);
@@ -330,6 +332,8 @@ public class TheCraftCloudGameSetupPlugin extends JavaPlugin {
 			if(this.gci == null) {
 				this.gci = new GameConfigInstance();
 				this.setGameConfig(this.gameConfig);
+				this.gci.setGameConfig(this.gameConfig);
+				this.gci.setGame(this.getGame());
 				this.gameGameConfigMap.put(this.gameConfig.getName(), this.gci);
 				if(this.gameConfig.getConfigType() == GameConfigType.INT) {
 					this.configValue= new Integer(0);
@@ -445,6 +449,7 @@ public class TheCraftCloudGameSetupPlugin extends JavaPlugin {
 			if(this.gac == null) {
 				this.gac = new GameArenaConfig();
 				this.gac.setGameConfig(this.gameConfig);
+				this.gac.setGame(this.game);
 				this.gac.setArena(this.getArena() );
 				this.gameConfigArenaMap.put(this.gameConfig.getName(), this.gac);
 				this.configArenaValue = null;

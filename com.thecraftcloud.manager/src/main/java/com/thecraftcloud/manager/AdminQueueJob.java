@@ -44,25 +44,8 @@ public class AdminQueueJob implements Job {
 			
 			MineCraftPlayer mcp = delegate.findPlayerByName(action.getPlayer().getName());
 			
-			for(int i = 0; i< 10; i++) {
-				ServerInstance server = delegate.findServerByName("mgbungee");
-				ResponseDTO rdto = client.execute(server, action);
-				if(rdto.getResult()) {
-					String s = ( (char)27 + "[32m" + "player: " + mcp.getName() + " enviado para o server na tentativa: " + i  + (char)27 + "[0m"); 
-					System.out.println(s + rdto.getMessage() + " \n " + rdto.getJson() );
-					break;
-				} else {
-					String s = ( (char)27 + "[32m" + "nao conseguiu enviar o player: " + mcp.getName() + " ... tentando novamente... " + i  + (char)27 + "[0m"); 
-					System.out.println(s + rdto.getMessage() + " \n " + rdto.getJson() );
-				}
-				try {
-					Thread.sleep(250);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			
+			ServerInstance server = delegate.findServerByName("mgbungee");
+			ResponseDTO rdto = client.execute(server, action);
 			delegate.markAdminRequestCompleted(aq);
 		}
 		logger.info((char)27 + "[32m" + "Completing AdminQueueJob Job." + (char)27 + "[0m");
