@@ -8,13 +8,14 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+
+import com.avaje.ebean.validation.NotNull;
 
 @Entity
 public class GameConfigInstance extends TransferObject {
@@ -25,10 +26,12 @@ public class GameConfigInstance extends TransferObject {
 	@Column(columnDefinition = "BINARY(16)")
 	private UUID gci_uuid;
 	
-	@OneToOne(fetch = FetchType.EAGER)
+	@OneToOne(optional = false,fetch = FetchType.EAGER)
+	@NotNull
 	private GameConfig gameConfig;
 
-	@OneToOne(fetch = FetchType.EAGER)
+	@OneToOne(optional = false,fetch = FetchType.EAGER)
+	@NotNull
 	private Game game;
 	
 	@OneToOne(fetch = FetchType.EAGER)

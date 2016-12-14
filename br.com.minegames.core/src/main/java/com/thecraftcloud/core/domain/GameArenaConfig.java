@@ -7,11 +7,14 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.GenericGenerator;
+
+import com.avaje.ebean.validation.NotNull;
 
 @Entity
 @Table(uniqueConstraints=@UniqueConstraint(columnNames = {"gameconfig_game_config_uuid", "arena_arena_uuid"}))
@@ -23,10 +26,14 @@ public class GameArenaConfig extends TransferObject {
 	@Column(columnDefinition = "BINARY(16)")
 	private UUID gac_uuid;
 	
-	@OneToOne(fetch = FetchType.EAGER)
+	@OneToOne(optional = false,fetch = FetchType.EAGER)
+	@JoinColumn(nullable=false)
+	@NotNull
 	private GameConfig gameConfig;
 	
-	@OneToOne(fetch = FetchType.EAGER)
+	@OneToOne(optional = false, fetch = FetchType.EAGER)
+	@JoinColumn(nullable=false)
+	@NotNull
 	private Game game;
 	
 	@OneToOne(fetch = FetchType.EAGER)
