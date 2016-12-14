@@ -3,6 +3,7 @@ package com.thecraftcloud.admin.service;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import com.thecraftcloud.admin.TheCraftCloudAdmin;
@@ -30,9 +31,11 @@ public class PlayerService {
 		ServerService sService = new ServerService();
 		ServerInstance server = sService.getServerInstance(plugin.getServerName());
 		mcp.setServer(server);
-		mcp.setStatus(PlayerStatus.ONLINE);
 		delegate.updatePlayer(mcp);
-		
+		if(mcp.getStatus().equals(PlayerStatus.INGAME)) {
+			Bukkit.getConsoleSender().sendMessage(Utils.color("&player: " + player.getName() + " teleporting to waiting lobby"));
+			player.teleport(new Location( Bukkit.getWorld("world"), -56, 5, -25 ));
+		}
 	}
 
 	public void quitServer(Player player) {

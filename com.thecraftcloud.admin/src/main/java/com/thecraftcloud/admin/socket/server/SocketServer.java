@@ -40,14 +40,14 @@ public class SocketServer {
         server = new ServerSocket(port);
         //keep listens indefinitely until receives 'exit' call or program terminates
         while(true){
-            System.out.println("Waiting for client request");
+           // System.out.println("Waiting for client request");
             //creating socket and waiting for client connection
             Socket socket = server.accept();
             //read from socket to ObjectInputStream object
             ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
             //convert ObjectInputStream object to String
             String json = (String) ois.readObject();
-            System.out.println("Message Received: " + json);
+            //System.out.println("Message Received: " + json);
             //create ObjectOutputStream object
             ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
             //write object to Socket

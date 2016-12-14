@@ -44,7 +44,7 @@ public class TheCraftCloudConfig {
 	
 	//TESTE
 	protected TheCraftCloudConfig() {
-		Bukkit.getConsoleSender().sendMessage("Criou TheCraftCloudConfig");
+		//Bukkit.getConsoleSender().sendMessage("Criou TheCraftCloudConfig");
 	}
 	
 	public static TheCraftCloudConfig getInstance() {

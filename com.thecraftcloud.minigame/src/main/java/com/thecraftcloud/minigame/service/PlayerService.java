@@ -43,7 +43,7 @@ public class PlayerService extends TheCraftCloudService {
 		dead.getInventory().clear();
 
 		if (this.configService.getMyCloudCraftGame().isStarted()) {
-			Bukkit.getConsoleSender().sendMessage(Utils.color("&6vai removeLivePlayer"));
+			//Bukkit.getConsoleSender().sendMessage(Utils.color("&6vai removeLivePlayer"));
 			this.miniGame.removeLivePlayer(dead);
 			dead.teleport(locationUtil.toLocation(this.configService.getWorld(), this.configService.getLobby())); // TELEPORT
 																													// DEAD
@@ -115,12 +115,12 @@ public class PlayerService extends TheCraftCloudService {
 				// this.miniGame.getGameDuration() );
 			}
 
-			Bukkit.getConsoleSender().sendMessage(Utils.color("&6 CONFIG SERVICE " + configService));
-			Bukkit.getConsoleSender().sendMessage(Utils.color("&6 GET CONFIG " + configService.getConfig()));
-			Bukkit.getConsoleSender().sendMessage(
-					Utils.color("&6 GAME DURATION IN SECONDS " + this.miniGame.getGameDuration() ));
-			Bukkit.getConsoleSender()
-					.sendMessage(Utils.color("&6 GET GAME DURATION " + this.miniGame.getGameDuration()));
+			//Bukkit.getConsoleSender().sendMessage(Utils.color("&6 CONFIG SERVICE " + configService));
+			//Bukkit.getConsoleSender().sendMessage(Utils.color("&6 GET CONFIG " + configService.getConfig()));
+			//Bukkit.getConsoleSender().sendMessage(
+			//		Utils.color("&6 GAME DURATION IN SECONDS " + this.miniGame.getGameDuration() ));
+			//Bukkit.getConsoleSender()
+			//		.sendMessage(Utils.color("&6 GET GAME DURATION " + this.miniGame.getGameDuration()));
 			Integer time = (configService.getGameDurationInSeconds() - this.miniGame.getGameDuration());
 
 			Score p4 = objective1.getScore("Tempo: " + time);
@@ -142,12 +142,12 @@ public class PlayerService extends TheCraftCloudService {
 	}
 
 	public GamePlayer findGamePlayerByPlayer(Player player) {
-		Bukkit.getConsoleSender().sendMessage(Utils.color("&3findGamePlayerByPlayer: " + player));
+		//Bukkit.getConsoleSender().sendMessage(Utils.color("&3findGamePlayerByPlayer: " + player));
 		CopyOnWriteArraySet<GamePlayer> playerList = this.miniGame.getLivePlayers();
 		for (GamePlayer gp : playerList) {
-			Bukkit.getConsoleSender().sendMessage(Utils.color("&3findGamePlayerByPlayer: " + gp.getPlayer()));
-			Bukkit.getConsoleSender()
-					.sendMessage(Utils.color("&3findGamePlayerByPlayer gpname: " + gp.getPlayer().getName()));
+			//Bukkit.getConsoleSender().sendMessage(Utils.color("&3findGamePlayerByPlayer: " + gp.getPlayer()));
+			//Bukkit.getConsoleSender()
+			//		.sendMessage(Utils.color("&3findGamePlayerByPlayer gpname: " + gp.getPlayer().getName()));
 			if (gp.getPlayer().equals(player)) {
 				return gp;
 			}

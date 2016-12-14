@@ -102,11 +102,11 @@ public class ConfigService {
 
 	public Object getGameArenaConfig(String name) {
 		Object result = null;
-		if( isDebugging() ) Bukkit.getConsoleSender().sendMessage( Utils.color("&6 [TheCraftCloudPlugin] getGameArenaConfig: " + name) );
+		//if( isDebugging() ) Bukkit.getConsoleSender().sendMessage( Utils.color("&6 [TheCraftCloudPlugin] getGameArenaConfig: " + name) );
 
 		for(GameArenaConfig gac: this.config.getGacList()) {
 			//Bukkit.getLogger().info("getGameArenaConfig " + name + " comparing with " + gac.getGameConfig().getName());
-			if( isDebugging() ) Bukkit.getConsoleSender().sendMessage( Utils.color("&6 [TheCraftCloudPlugin] getGameArenaConfig: " + gac.getGameConfig().getName()) );
+			//if( isDebugging() ) Bukkit.getConsoleSender().sendMessage( Utils.color("&6 [TheCraftCloudPlugin] getGameArenaConfig: " + gac.getGameConfig().getName()) );
 
 			if(gac.getGameConfig().getName().equalsIgnoreCase(name)) {
 				if(gac.getGameConfig().getConfigType() == GameConfigType.INT) {
@@ -130,11 +130,11 @@ public class ConfigService {
 	}
 
 	public Object getGameConfigInstance(String name) {
-		if( isDebugging() ) Bukkit.getConsoleSender().sendMessage( Utils.color("&6 [TheCraftCloudPlugin] getGameConfigInstance: " + name) );
+		//if( isDebugging() ) Bukkit.getConsoleSender().sendMessage( Utils.color("&6 [TheCraftCloudPlugin] getGameConfigInstance: " + name) );
 		Object result = null;
 		//Bukkit.getLogger().info("getGameConfigInstance " + name );
 		for(GameConfigInstance gci: this.config.getGciList()) {
-			if( isDebugging() ) Bukkit.getConsoleSender().sendMessage( Utils.color("&6 [TheCraftCloudPlugin] getGameConfigInstance: " + gci.getGameConfig().getName()) );
+			//if( isDebugging() ) Bukkit.getConsoleSender().sendMessage( Utils.color("&6 [TheCraftCloudPlugin] getGameConfigInstance: " + gci.getGameConfig().getName()) );
 			//Bukkit.getLogger().info("getGameConfigInstance " + name + " comparing with " + gci.getGameConfig().getName());
 			if(gci.getGameConfig().getName().equalsIgnoreCase(name)) {
 				if(gci.getGameConfig().getConfigType() == GameConfigType.INT) {
@@ -192,7 +192,7 @@ public class ConfigService {
 			Object gci = this.getGameConfigInstance(name);
 			Object gca = this.getGameArenaConfig(name);
 			if(gci == null && gca == null) {
-				System.out.println("missing config: " + name);
+				//System.out.println("missing config: " + name);
 				valid = false;
 			}
 		}

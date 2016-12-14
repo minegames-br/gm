@@ -9,7 +9,6 @@ import com.thecraftcloud.admin.TheCraftCloudAdmin;
 import com.thecraftcloud.admin.service.AdminService;
 import com.thecraftcloud.core.util.Utils;
 import com.thecraftcloud.minigame.event.PlayerJoinGameEvent;
-import com.thecraftcloud.minigame.service.ConfigService;
 
 public class PlayerJoinGameListener implements Listener {
 	

@@ -46,7 +46,7 @@ public class JoinGameAction extends Action {
 		
 		//recuperar o plugin do jogo associado
 		String gamePluginName = configService.getGame().getPluginName();
-		Bukkit.getConsoleSender().sendMessage("&3Game Plugin: " + gamePluginName);
+		//Bukkit.getConsoleSender().sendMessage("&3Game Plugin: " + gamePluginName);
 		TheCraftCloudMiniGameAbstract plugin = (TheCraftCloudMiniGameAbstract)Bukkit.getPluginManager().getPlugin( gamePluginName );
 		
 		if( plugin == null ) {
@@ -58,7 +58,7 @@ public class JoinGameAction extends Action {
 
 		ServerInstance sourceServer = dto.getPlayer().getServer();
 		String destinationServerName = admin.getServerName();
-		Bukkit.getConsoleSender().sendMessage(Utils.color("&8destination server: " + destinationServerName ));
+		//Bukkit.getConsoleSender().sendMessage(Utils.color("&8destination server: " + destinationServerName ));
 		Player player = Bukkit.getPlayer( dto.getPlayer().getName() );
 		
 		/*
@@ -66,20 +66,18 @@ public class JoinGameAction extends Action {
 		bu.setup(admin);
 		bu.sendToServer(player, destinationServerName);
 		*/
-		
-		MineCraftPlayer mcp = delegate.findPlayerByName(player.getName());
-		
+		MineCraftPlayer mcp = null;
 		//give it 3 seconds before it confirms the player is teleported
 		for(int i = 0; i < 3; i++) {
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 			mcp = delegate.findPlayerByName(player.getName());
+			
 			if(mcp.getServer() != null && mcp.getServer().getName().equals(destinationServerName) ) {
 				break;
-			} else {
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
 			}
 		}
 
@@ -92,7 +90,7 @@ public class JoinGameAction extends Action {
 		Game game = dto.getGame();
 		
 		if(game == null) {
-			Bukkit.getConsoleSender().sendMessage("&6Game is null" );
+			//Bukkit.getConsoleSender().sendMessage("&6Game is null" );
 			return ResponseDTO.unableToCompleteAction("Game object is null");
 		}
 		
@@ -108,7 +106,7 @@ public class JoinGameAction extends Action {
 		responseDTO.setResult(false);
 		responseDTO.setCode(ResponseDTO.ADM_SUCCESS);
 		
-		Bukkit.getConsoleSender().sendMessage("&6player: " + player.getName() + " has joined " + dto.getGame().getName() );
+		//Bukkit.getConsoleSender().sendMessage("&6player: " + player.getName() + " has joined " + dto.getGame().getName() );
 		return responseDTO;
 	}
 

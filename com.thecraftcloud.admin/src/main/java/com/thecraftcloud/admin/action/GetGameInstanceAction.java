@@ -46,15 +46,15 @@ public class GetGameInstanceAction extends Action {
 		ResponseDTO responseDTO = new ResponseDTO();
 		if(gi != null && miniGame != null && configService.getMyCloudCraftGame() != null && configService.getMyCloudCraftGame().isWaitingPlayers() ) { 
 			String json = JSONParser.getInstance().toJSONString(gi);
-			Bukkit.getConsoleSender().sendMessage(Utils.color("&8game : " + configService.getGame().getName() + " status: " + configService.getMyCloudCraftGame().getState() ));
+			//Bukkit.getConsoleSender().sendMessage(Utils.color("&8game : " + configService.getGame().getName() + " status: " + configService.getMyCloudCraftGame().getState() ));
 			responseDTO.setMessage("Game: " + configService.getGame().getName() + " is waiting players." );
 			responseDTO.setJson( json );
 			responseDTO.setType(ResponseType.JSON);
 			responseDTO.setResult(true);
 		} else {
 			responseDTO.setMessage( "TheCraftCloudMiniGame not installed or not prepared?" );
-			Bukkit.getConsoleSender().sendMessage(Utils.color("&8" + miniGame.getName() ));
-			Bukkit.getConsoleSender().sendMessage(Utils.color("&8TheCraftCloudMiniGame not installed or not prepared?" ));
+			//Bukkit.getConsoleSender().sendMessage(Utils.color("&8" + miniGame.getName() ));
+			//Bukkit.getConsoleSender().sendMessage(Utils.color("&8TheCraftCloudMiniGame not installed or not prepared?" ));
 			responseDTO.setCode("ADM-999-010");
 			responseDTO.setType(ResponseType.TEXT);
 			responseDTO.setResult(false);

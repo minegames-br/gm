@@ -7,7 +7,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.WorldCreator;
 
 import com.thecraftcloud.admin.TheCraftCloudAdmin;
 import com.thecraftcloud.admin.service.GameInstanceService;
@@ -24,7 +24,6 @@ import com.thecraftcloud.core.domain.GameInstance;
 import com.thecraftcloud.core.domain.GameWorld;
 import com.thecraftcloud.core.domain.ServerInstance;
 import com.thecraftcloud.core.domain.ServerStatus;
-import com.thecraftcloud.core.multiverse.MultiVerseWrapper;
 import com.thecraftcloud.minigame.TheCraftCloudConfig;
 import com.thecraftcloud.minigame.TheCraftCloudMiniGameAbstract;
 import com.thecraftcloud.minigame.service.ConfigService;
@@ -55,7 +54,7 @@ public class PrepareGameAction extends Action {
 			world = this.setupGameWorld( dto.getArena() );
 			//return ResponseDTO.incompleteRequest("Arena: " + dto.getArena().getName() + " is not available on this server.");
 		} else {
-			MultiVerseWrapper mvw = new MultiVerseWrapper();
+			//MultiVerseWrapper mvw = new MultiVerseWrapper();
 			//mvw.unloadWorld(world);
 		}
 		
@@ -105,18 +104,14 @@ public class PrepareGameAction extends Action {
 		
 		String s = ( (char)27 + "[32m" + "[PrepareGameAction] GAME: " + dto.getGame().getName() + " ARENA: " + dto.getArena().getName()  + (char)27 + "[0m") + " - plugin.init()"; 
 		Bukkit.getConsoleSender().sendMessage(s);
-		System.out.println(s);
+		//System.out.println(s);
 		
 		//inicializar plugin para receber jogadores
 		plugin.init();
 		
-		s = ( (char)27 + "[32m" + "[PrepareGameAction]"  + (char)27 + "[0m") + " - responseDTO"; 
-		Bukkit.getConsoleSender().sendMessage(s);
-		System.out.println(s);
-		
 		s = ( (char)27 + "[32m" + "[PrepareGameAction]"  + (char)27 + "[0m") + " - responseDTO - " + "Game: " + dto.getGame().getName() + " has been prepared to run on Arena: " + dto.getArena().getName() ; 
 		Bukkit.getConsoleSender().sendMessage(s);
-		System.out.println(s);
+		//System.out.println(s);
 		
 		ResponseDTO responseDTO = new ResponseDTO();
 		responseDTO.setMessage( "Game: " + dto.getGame().getName() + " has been prepared to run on Arena: " + dto.getArena().getName() );
@@ -133,12 +128,13 @@ public class PrepareGameAction extends Action {
 		//recuperar o plugin TheCraftCloudAdmin
 		TheCraftCloudAdmin plugin = (TheCraftCloudAdmin)Bukkit.getPluginManager().getPlugin( TheCraftCloudAdmin.PLUGIN_NAME );
 		
+		Bukkit.getServer().unloadWorld(arena.getName(), false);
 		//Abrir uma thread para fazer download do mundo
 		GameWorld gw = delegate.findGameWorldByName(arena.getName());
 		delegate.downloadWorld( gw , worldContainerDir);
 		
-		MultiVerseWrapper wrapper = new MultiVerseWrapper();
-		return wrapper.addWorld( plugin, arena );
+		//MultiVerseWrapper wrapper = new MultiVerseWrapper();
+		return Bukkit.createWorld(new WorldCreator(arena.getName()));
 		
 	}
 
