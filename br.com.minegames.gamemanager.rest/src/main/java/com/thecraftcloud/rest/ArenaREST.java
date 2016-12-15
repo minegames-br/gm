@@ -51,6 +51,20 @@ public class ArenaREST extends REST {
 		}
 	}
 	
+	@GET
+	@Path("/search/{name}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getArenaByName(@PathParam("name") String _name) {
+		ArenaService service = new ArenaService();
+		Arena domain = service.findArenaByName(_name);
+		if( domain != null) {
+			String json = JSONParser.getInstance().toJSONString(domain);
+		    return Response.ok( json , MediaType.APPLICATION_JSON).build();
+		} else {
+			return Response.status(Response.Status.NOT_FOUND).entity("Arena não encontrado: " + _name).build();
+		}
+	}
+	
 	@POST
 	@Path("/{uuid}")
 	@Produces(MediaType.APPLICATION_JSON)

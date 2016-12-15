@@ -19,8 +19,6 @@ public class MainJoinGame {
 		
 		joinGame(gameName, playerName);
 		
-		
-		
 	}
 	
 	public static void joinGame(String gameName, String playerName) {
