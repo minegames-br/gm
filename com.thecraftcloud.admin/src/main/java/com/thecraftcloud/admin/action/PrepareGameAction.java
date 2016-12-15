@@ -69,7 +69,7 @@ public class PrepareGameAction extends Action {
 		pService.disableTheCraftCloudMiniGames();
 		
 		//recuperar as configuracoes do jogo
-		List<GameArenaConfig> gacList = delegate.findAllGameConfigArenaByGameUUID( dto.getGame().getGame_uuid().toString() );
+		List<GameArenaConfig> gacList = delegate.findAllGameConfigArenaByGameArena( dto.getGame().getGame_uuid().toString(), dto.getArena().getArena_uuid().toString() );
 		List<GameConfigInstance> gciList = delegate.findAllGameConfigInstanceByGameUUID( dto.getGame().getGame_uuid().toString() );
 
 		configService.setMyCloudCraftGame( plugin.createMyCloudCraftGame() );
