@@ -67,7 +67,6 @@ public class SamplePart {
 			
 			@Override
 			public void mouseDown(MouseEvent arg0) {
-				MessageDialog.openInformation(parent.getShell(), "Teste", "Mensagem Teste" );
 				ServerInstance server = delegate.findServerByName("localhost");
 				Game game = delegate.findGameByName("TheArcher");
 				Arena arena = delegate.findArenasByGame(game).get(1);
@@ -120,7 +119,8 @@ public class SamplePart {
 		
 		
 		txtInput = new Text(parent, SWT.BORDER);
-		txtInput.setMessage("Enter text to mark part as dirty");
+		txtInput.setMessage("Digite o nome do jogador");
+		txtInput.setText("_WolfGamer");
 		txtInput.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent e) {
