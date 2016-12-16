@@ -25,9 +25,10 @@ public class MainPrepareGame {
 	}
 	
 	public static void prepareGame(String gameName, String arenaName) {
-		ServerInstance server = delegate.findServerByName("localhost");
+		ServerInstance server = delegate.findServerByName("localhost-joao");
+		System.out.println(server.getHostname() + " " + server.getIp_address() + "  "  + server.getAdminPort());
 		Game game = delegate.findGameByName(gameName);
-		Arena arena = delegate.findArenasByGame(game).get(1);
+		Arena arena = delegate.findArenaByName(arenaName);
 		GameWorld gameWorld = delegate.findGameWorldByName( arenaName );
 		ActionDTO dto = new ActionDTO();
 		dto.setArena(arena);

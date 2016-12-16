@@ -28,7 +28,7 @@ public class MainJoinGame {
 		dto.setGame(game);
 		dto.setName(ActionDTO.JOIN_GAME);
 		dto.setPlayer(player);
-		ServerInstance server = delegate.findServerByName("localhost");
+		ServerInstance server = delegate.findServerByName("localhost-joao");
 		
 		AdminClient.getInstance().execute(server, dto);
 	}

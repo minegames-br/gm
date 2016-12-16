@@ -57,6 +57,7 @@ public class PrepareGameAction extends Action {
 		} else {
 			MultiVerseWrapper mvw = new MultiVerseWrapper();
 			mvw.unloadWorld(world);
+			world = this.setupGameWorld( dto.getArena() );
 		}
 		
 		//recuperar o plugin do jogo associado
