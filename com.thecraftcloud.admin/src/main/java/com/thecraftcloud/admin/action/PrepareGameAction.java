@@ -24,6 +24,7 @@ import com.thecraftcloud.core.domain.GameInstance;
 import com.thecraftcloud.core.domain.GameWorld;
 import com.thecraftcloud.core.domain.ServerInstance;
 import com.thecraftcloud.core.domain.ServerStatus;
+import com.thecraftcloud.core.multiverse.MultiVerseWrapper;
 import com.thecraftcloud.minigame.TheCraftCloudConfig;
 import com.thecraftcloud.minigame.TheCraftCloudMiniGameAbstract;
 import com.thecraftcloud.minigame.service.ConfigService;
@@ -54,8 +55,8 @@ public class PrepareGameAction extends Action {
 			world = this.setupGameWorld( dto.getArena() );
 			//return ResponseDTO.incompleteRequest("Arena: " + dto.getArena().getName() + " is not available on this server.");
 		} else {
-			//MultiVerseWrapper mvw = new MultiVerseWrapper();
-			//mvw.unloadWorld(world);
+			MultiVerseWrapper mvw = new MultiVerseWrapper();
+			mvw.unloadWorld(world);
 		}
 		
 		//recuperar o plugin do jogo associado

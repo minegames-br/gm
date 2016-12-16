@@ -41,8 +41,7 @@ public class ListAreasAction extends TheCraftCloudCommandAction {
 		TheCraftCloudGameSetupPlugin p = (TheCraftCloudGameSetupPlugin)plugin;
 		Arena arena = delegate.findArena(p.getArena().getArena_uuid().toString());
 		int i = 0;
-		for(Area3D area: arena.getAreas()) {
-			player.sendMessage((i++) + " - " + area.getName() + ":" + area.getType() + ":" + area.getPointA() + "/" + area.getPointB() );
-		}
+		Area3D area = arena.getArea();
+		player.sendMessage((i++) + " - " + area.getName() + ":" + area.getType() + ":" + area.getPointA() + "/" + area.getPointB() );
 	}
 }

@@ -58,11 +58,7 @@ public class DefineAreaAction extends TheCraftCloudCommandAction {
 		if(arguments.length == 3) {
 			area.setType(arguments[2]);			
 		}
-		
-		arena = delegate.addArenaArea3D(arena, area);
-		player.sendMessage("Listing Areas...");
-		for(Area3D a: arena.getAreas()) {
-			player.sendMessage(a.getName() + ":" + a.getType() );
-		}
+
+		arena = delegate.updateArena(arena);
 	}
 }
