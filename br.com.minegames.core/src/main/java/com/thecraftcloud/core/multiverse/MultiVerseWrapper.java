@@ -40,30 +40,10 @@ public class MultiVerseWrapper {
 		MultiverseCore mvplugin = (MultiverseCore)Bukkit.getPluginManager().getPlugin("Multiverse-Core");
 		String worldPath = dir.getAbsolutePath() + "/" + arena.getName();
 				
-		if(!arenaWorldFile.exists()) {
-			File zipFile = new File( dir, arena.getName() + ".zip");
-			ExtractZipContents.unzip(zipFile);
-			Bukkit.getLogger().info("world path: " + worldPath);
-			mvplugin.getCore().getMVWorldManager().addWorld(arena.getName(), Environment.NORMAL, new Integer( arena.getName().hashCode() ).toString(), WorldType.NORMAL, new Boolean(false), null, false);
-		} else {
-			//Remover o mundo do multi verse para recarregar
-			mvplugin.getMVWorldManager().unloadWorld(arena.getName());
-			
-			//Apagar o diretório
-			try {
-				FileUtils.deleteDirectory(arenaWorldFile);
-			} catch (java.io.IOException e) {
-				e.printStackTrace();
-			}
-			
-			//Descompactar arena
-			File zipFile = new File( dir, arena.getName() + ".zip");
-			ExtractZipContents.unzip(zipFile);
-			
-			//Carregar o mundo no multiverse
-			Bukkit.getLogger().info("world path: " + worldPath);
-			mvplugin.getCore().getMVWorldManager().addWorld(arena.getName(), Environment.NORMAL, new Integer( arena.getName().hashCode() ).toString(), WorldType.NORMAL, new Boolean(false), null, false);
-		}
+		File zipFile = new File( dir, arena.getName() + ".zip");
+		ExtractZipContents.unzip(zipFile);
+		Bukkit.getLogger().info("world path: " + worldPath);
+		mvplugin.getCore().getMVWorldManager().addWorld(arena.getName(), Environment.NORMAL, new Integer( arena.getName().hashCode() ).toString(), WorldType.NORMAL, new Boolean(false), null, false);
 		return Bukkit.getWorld(arena.getName());
 	}
 

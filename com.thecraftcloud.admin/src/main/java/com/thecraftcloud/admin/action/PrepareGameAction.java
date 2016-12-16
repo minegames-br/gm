@@ -52,9 +52,11 @@ public class PrepareGameAction extends Action {
 		//verificar se a arena está disponível
 		World world = Bukkit.getWorld( dto.getArena().getName() );
 		if(world == null) {
+			Bukkit.getConsoleSender().sendMessage("world == null");
 			world = this.setupGameWorld( dto.getArena() );
 			//return ResponseDTO.incompleteRequest("Arena: " + dto.getArena().getName() + " is not available on this server.");
 		} else {
+			Bukkit.getConsoleSender().sendMessage("world exists");
 			MultiVerseWrapper mvw = new MultiVerseWrapper();
 			mvw.unloadWorld(world);
 			world = this.setupGameWorld( dto.getArena() );
@@ -130,13 +132,13 @@ public class PrepareGameAction extends Action {
 		//recuperar o plugin TheCraftCloudAdmin
 		TheCraftCloudAdmin plugin = (TheCraftCloudAdmin)Bukkit.getPluginManager().getPlugin( TheCraftCloudAdmin.PLUGIN_NAME );
 		
-		Bukkit.getServer().unloadWorld(arena.getName(), false);
 		//Abrir uma thread para fazer download do mundo
 		GameWorld gw = delegate.findGameWorldByName(arena.getName());
 		delegate.downloadWorld( gw , worldContainerDir);
 		
-		//MultiVerseWrapper wrapper = new MultiVerseWrapper();
-		return Bukkit.createWorld(new WorldCreator(arena.getName()));
+		MultiVerseWrapper wrapper = new MultiVerseWrapper();
+		
+		return wrapper.addWorld(plugin, arena);
 		
 	}
 
