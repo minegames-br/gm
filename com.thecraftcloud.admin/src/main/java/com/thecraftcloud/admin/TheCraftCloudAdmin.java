@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.thecraftcloud.admin.command.LeaveGameCommand;
+import com.thecraftcloud.admin.command.PlayGameCommand;
 import com.thecraftcloud.admin.listener.EndGameListener;
 import com.thecraftcloud.admin.listener.PlayerJoinGameListener;
 import com.thecraftcloud.admin.listener.PlayerJoinListener;
@@ -52,6 +53,7 @@ public class TheCraftCloudAdmin extends JavaPlugin {
 		
 		Bukkit.getConsoleSender().sendMessage(Utils.color("&8registrar comando sair"));
 		getCommand("sair").setExecutor(new LeaveGameCommand(this));
+		getCommand("play").setExecutor(new PlayGameCommand(this));
 
 		Bukkit.getConsoleSender().sendMessage(Utils.color("&6serverName: " + this.serverName));
 		
