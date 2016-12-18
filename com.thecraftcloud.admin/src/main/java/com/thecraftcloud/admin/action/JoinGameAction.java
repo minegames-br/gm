@@ -59,47 +59,56 @@ public class JoinGameAction extends Action {
 		ServerInstance sourceServer = dto.getPlayer().getServer();
 		String destinationServerName = admin.getServerName();
 		//Bukkit.getConsoleSender().sendMessage(Utils.color("&8destination server: " + destinationServerName ));
-		Player player = Bukkit.getPlayer( dto.getPlayer().getName() );
 		
 		/*
 		BungeeUtils bu = new BungeeUtils();
 		bu.setup(admin);
 		bu.sendToServer(player, destinationServerName);
 		*/
-		MineCraftPlayer mcp = null;
+		Player player = null;
 		//give it 3 seconds before it confirms the player is teleported
-		for(int i = 0; i < 3; i++) {
+		for(int i = 0; i < 10; i++) {
 			try {
+				player = Bukkit.getPlayer( dto.getPlayer().getName() );
+				Bukkit.getConsoleSender().sendMessage("dto.player: " + dto.getPlayer().getName() + " bukkit: " + player);
+				if(player != null) {
+					break;
+				}
 				Thread.sleep(1000);
-			} catch (InterruptedException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
-			}
-			mcp = delegate.findPlayerByName(player.getName());
-			
-			if(mcp.getServer() != null && mcp.getServer().getName().equals(destinationServerName) ) {
-				break;
 			}
 		}
 
+		if(player == null) {
+			Bukkit.getConsoleSender().sendMessage("player not found in bukkit");
+			return ResponseDTO.unableToCompleteAction("Player: " + dto.getPlayer().getName() + " is not in this server.");
+		}
+		
+		Bukkit.getConsoleSender().sendMessage("addPlayer");
 		plugin.addPlayer( player );
 		
 		PlayerService playerService = new PlayerService(admin);
-		playerService.joinGame(mcp);
+		Bukkit.getConsoleSender().sendMessage("joinGame");
+		playerService.joinGame(dto.getPlayer());
 
 		//descobrir qual servidor esta esperando jogadores para o jogo em questao
 		Game game = dto.getGame();
 		
+		Bukkit.getConsoleSender().sendMessage("dto getGame: " + dto.getGame() );
 		if(game == null) {
 			//Bukkit.getConsoleSender().sendMessage("&6Game is null" );
 			return ResponseDTO.unableToCompleteAction("Game object is null");
 		}
 		
 		List<GameInstance> listGi = delegate.findGameInstanceAvailable(game);
+		Bukkit.getConsoleSender().sendMessage("list Game Instance available: " + listGi);
 		if(listGi == null) {
 			return ResponseDTO.unableToCompleteAction("No game is available at this time");
 		}
 		GameInstance gi = listGi.get(0);
 		
+		Bukkit.getConsoleSender().sendMessage("reponseDTO");
 		ResponseDTO responseDTO = new ResponseDTO();
 		responseDTO.setMessage( "Player " + dto.getPlayer().getNickName() + " has joined: " +  configService.getGame().getName() );
 		responseDTO.setType(ResponseType.TEXT);

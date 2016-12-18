@@ -23,22 +23,13 @@ public class PlayerLeftGameListener implements Listener {
 	
     @EventHandler(priority=EventPriority.HIGHEST)
     public void onPlayerJoinGame(final PlayerLeftGameEvent event) {
-    	Bukkit.getConsoleSender().sendMessage(Utils.color("&2Player: " + event.getGamePlayer().getName() + " has left " + event.getGame().getName() + "."));
+    	Bukkit.getConsoleSender().sendMessage(Utils.color("&2Player: " + event.getGamePlayer().getPlayer().getName() + " has left " + event.getGame().getName() + "."));
     	final AdminService service = new AdminService(plugin);
-    	if(plugin.isLocal()) {
+    	//if(plugin.isLocal()) {
     		World world = Bukkit.getWorld("world");
    			event.getGamePlayer().getPlayer().teleport(new Location(world, 0, 5, 0));
-    	}
-    	Bukkit.getScheduler().runTaskAsynchronously(event.getGame(), new Runnable() {
-    		public void run() {
-    	    	service.notifyPlayerLeft( event.getGamePlayer(), event.getGame() );
-
-    	    	AdminService adminService = new AdminService(plugin);
-
-    			Bukkit.getConsoleSender().sendMessage(Utils.color("&6 adminService.sendPlayerToLobby" ));
-    	    	//adminService.sendPlayerToLobby( event.getGame(), event.getGamePlayer() );
-    		}
-    	});
+    	//}
+    	service.notifyPlayerLeft( event.getGamePlayer(), event.getGame() );
     }
 
 }

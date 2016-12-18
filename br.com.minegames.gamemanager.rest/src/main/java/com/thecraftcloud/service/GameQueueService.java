@@ -110,5 +110,37 @@ public class GameQueueService extends Service {
 		commitTransaction();
 		return list;
 	}
+
+	public void bulkStatusUpdate(GameQueueStatus oldStatus, GameQueueStatus newStatus) {
+		startTransaction();
+		
+		logger.info("bulk status update on GameQueue: " + oldStatus + " to " + newStatus );
+		
+		Query q = em.createQuery("Update GameQueue gq set gq.status = :_newstatus where gq.status = :_oldstatus");
+		q.setParameter("_oldstatus", oldStatus);
+		q.setParameter("_newstatus", newStatus);
+		q.executeUpdate();
+		
+		Query query = em.createQuery("SELECT gq FROM GameQueue gq");
+		Collection<GameQueue> list = (Collection<GameQueue>) query.getResultList();
+		for(GameQueue gq: list) {
+			logger.info( "Player: " + gq.getPlayer().getName() + " Status: " + gq.getStatus().name() + " Game: " + gq.getGame().getName() );
+		}
+		
+		commitTransaction();
+	}
+
+	public GameQueue completeGameQueueRequest(String _uuid) {
+		startTransaction();
+		
+		GameQueueService gqService = new GameQueueService(this.em);
+		GameQueue gq = gqService.find(UUID.fromString(_uuid));
+		gq.setStatus(GameQueueStatus.COMPLETED);
+		
+		this.em.merge(gq);
+		
+		commitTransaction();
+		return gq;
+	}
 	
 }

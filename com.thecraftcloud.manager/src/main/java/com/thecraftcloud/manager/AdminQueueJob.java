@@ -19,12 +19,8 @@ import com.thecraftcloud.core.domain.RequestStatus;
 import com.thecraftcloud.core.domain.ServerInstance;
 import com.thecraftcloud.core.json.JSONParser;
 
-public class AdminQueueJob implements Job {
+public class AdminQueueJob extends ManagerJob {
 
-	private TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance("http://services.thecraftcloud.com:8080/gamemanager/webresources");
-	private Logger logger = Logger.getLogger("file");
-	
-	
 	public void execute(JobExecutionContext context) throws JobExecutionException {
 		logger.info((char)27 + "[32m" + "Running AdminQueueJob Job."+ "[0m");
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");

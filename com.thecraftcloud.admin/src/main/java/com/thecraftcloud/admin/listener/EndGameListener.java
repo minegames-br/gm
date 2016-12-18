@@ -28,21 +28,14 @@ public class EndGameListener implements Listener {
     	final AdminService service = new AdminService(this.plugin);
     	final ConfigService cService = ConfigService.getInstance();
 
-    	if(plugin.isLocal()) {
+    	//if(plugin.isLocal()) {
     		World world = Bukkit.getWorld("world");
     		for( Player player: Bukkit.getOnlinePlayers() ) {
     			player.teleport(new Location(world, 0, 5, 0));
     		}
-    	}
+    	//}
     	
-    	Bukkit.getScheduler().runTaskAsynchronously(event.getGame(), new Runnable() {
-    		public void run() {
-    	    	service.notifyGameOver( event.getGame() );
-    	    	AdminService adminService = new AdminService(plugin);
-    	    	adminService.sendPlayersToLobby( event.getGame() );
-    	    	
-    		}
-    	});
+    	service.notifyGameOver( event.getGame() );
     }
 
 }

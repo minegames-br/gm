@@ -28,9 +28,10 @@ public class PlayerService {
 	public void joinServer(Player player) {
 		MineCraftPlayer mcp = delegate.findPlayerByName(player.getName());
 		Bukkit.getConsoleSender().sendMessage(Utils.color("&player: " + player.getName() + " has joined"));
-		ServerService sService = new ServerService();
-		ServerInstance server = sService.getServerInstance(plugin.getServerName());
+		ServerInstance server = delegate.findServerByName( Bukkit.getServer().getMotd() );
 		mcp.setServer(server);
+		
+		Bukkit.getConsoleSender().sendMessage(Utils.color("&Update player: " + player.getName() + " " + server.getName() ));
 		delegate.updatePlayer(mcp);
 		if(mcp.getStatus().equals(PlayerStatus.INGAME)) {
 			Bukkit.getConsoleSender().sendMessage(Utils.color("&player: " + player.getName() + " teleporting to waiting lobby"));
@@ -48,6 +49,8 @@ public class PlayerService {
 
 	public void joinGame(MineCraftPlayer player) {
 		player.setStatus(PlayerStatus.INGAME);
+		ServerInstance server = delegate.findServerByName(Bukkit.getServer().getMotd());
+		player.setServer(server);
 		delegate.updatePlayer(player);
 		
 		List<GameQueue> gqList = delegate.findAllGameQueueByStatus(GameQueueStatus.WAITING);

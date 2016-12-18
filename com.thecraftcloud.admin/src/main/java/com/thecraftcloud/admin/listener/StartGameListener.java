@@ -24,11 +24,7 @@ public class StartGameListener implements Listener {
     	Bukkit.getConsoleSender().sendMessage(Utils.color("&2Game: " + event.getGame().getName() + " has started."));
     	final AdminService service = new AdminService(plugin);
     	final ConfigService cService = ConfigService.getInstance();
-    	Bukkit.getScheduler().runTaskAsynchronously(event.getGame(), new Runnable() {
-    		public void run() {
-    	    	service.notifyGameStart( event.getGame(), plugin.getServerInstance() );
-    		}
-    	});
+    	service.notifyGameStart( event.getGame(), plugin.getServerInstance() );
     }
 
 }

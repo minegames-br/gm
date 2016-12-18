@@ -20,22 +20,15 @@ import com.thecraftcloud.core.domain.RequestStatus;
 import com.thecraftcloud.core.domain.ServerInstance;
 import com.thecraftcloud.core.json.JSONParser;
 
-public class SendPlayersToLobbyJob implements Job {
+public class SendPlayersToLobbyJob extends ManagerJob {
 
-	private TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance("http://services.thecraftcloud.com:8080/gamemanager/webresources");
-	private Logger logger = Logger.getLogger("file");
-	
-	
 	public void execute(JobExecutionContext context) throws JobExecutionException {
-		logger.info((char)27 + "[45m" + "Running SendPlayersToLobbyJob Job." + (char)27  + "[0m");
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		List<MineCraftPlayer> list = delegate.findPlayersNotInLobby();
-		logger.info((char)27 + "[45m" + "size: " + list.size() + (char)27 + "[0m");
+
 		ServerInstance lobbyServer = delegate.findLobbyAvailable();
 		
 		for(MineCraftPlayer player: list) {
-			logger.info((char)27 + "[45m" + player.getName() + " " + player.getServer().getName() + player.getServer().getStatus() + " " + player.getStatus() + (char)27 + "[0m");
-
 			ActionDTO action = new ActionDTO();
 			action.setName(ActionDTO.TELEPORT_PLAYER);
 			action.setPlayer(player);
@@ -47,10 +40,6 @@ public class SendPlayersToLobbyJob implements Job {
 			if( !rdto.getResult() ) {
 				player.setStatus(PlayerStatus.OFFLINE);
 				delegate.updatePlayer(player);
-			} else {
-				//player.setStatus(PlayerStatus.ONLINE);
-				//player.setServer(lobbyServer);
-				//delegate.updatePlayer(player);
 			}
 			try {
 				Thread.sleep(300);

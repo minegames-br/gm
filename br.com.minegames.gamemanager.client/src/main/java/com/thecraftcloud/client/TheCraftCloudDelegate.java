@@ -131,6 +131,7 @@ public class TheCraftCloudDelegate {
 			e.printStackTrace();
 		}
 		String result = (String)response.getEntity(String.class);
+		System.out.println(result);
         return result;
 		
 	}
@@ -466,9 +467,9 @@ public class TheCraftCloudDelegate {
 	}
 	
 	public static void main(String args[]) throws InvalidRegistrationException {
-		TheCraftCloudClientPlugin.setMinegamesGameManagerUrl("http://localhost:8080/gamemanager/webresources");
-		TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance("http://localhost:8080/gamemanager/webresources");
-		Game game = delegate.findGame("46bea463-7bb9-46ed-8eae-ec004ce84833");
+		TheCraftCloudClientPlugin.setMinegamesGameManagerUrl( "http://services.thecraftcloud.com:8080/gamemanager/webresources" );
+		TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance("http://services.thecraftcloud.com:8080/gamemanager/webresources");
+		delegate.lockGameQueue();
 	}
 
 	public Game updateGame(Game game) {
@@ -1010,6 +1011,18 @@ public class TheCraftCloudDelegate {
 
         
         return myObjects;
+	}
+
+	public String lockGameQueue() {
+		String result = post("/gamequeue/lock", "{test:name}" );
+		return result;
+	}
+
+	public GameQueue completeGameQueueRequest(GameQueue gq) {
+		String json = JSONParser.getInstance().toJSONString(gq);
+		json = post("/gamequeue/" + gq.getGame_queue_uuid().toString() + "/complete", json);
+		gq = (GameQueue) JSONParser.getInstance().toObject(json, GameQueue.class);
+		return gq;
 	}
 	
 }
