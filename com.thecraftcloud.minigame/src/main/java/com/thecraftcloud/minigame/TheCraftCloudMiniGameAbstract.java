@@ -128,8 +128,8 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 		scheduler.cancelTask(startGameThreadID);
 
 		this.updateScoreBoardThreadID = scheduler.scheduleSyncRepeatingTask(this, this.updateScoreBoardTask, 0L, 20L);
-		this.endGameThreadID = scheduler.scheduleSyncRepeatingTask(this, this.endGameTask, 0L, 50L);
-		this.levelUpThreadID = scheduler.scheduleSyncRepeatingTask(this, this.levelUpTask, 0L, 50L);
+		this.endGameThreadID = scheduler.scheduleSyncRepeatingTask(this, this.endGameTask, 0L, 20L);
+		this.levelUpThreadID = scheduler.scheduleSyncRepeatingTask(this, this.levelUpTask, 0L, 20L);
 		this.start();
 		this.configService.getMyCloudCraftGame().start();
 

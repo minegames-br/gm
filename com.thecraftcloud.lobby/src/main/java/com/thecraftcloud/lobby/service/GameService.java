@@ -13,28 +13,37 @@ public class GameService {
 
 	private static GameService me;
 	private TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance();
-	
+
 	public static GameService getInstance() {
-		if( me == null) {
+		if (me == null) {
 			me = new GameService();
 		}
 		return me;
 	}
-	
-	public void playGame( Player player, String gameName ) {
-		//TheCraftCloudAdmin plugin = (TheCraftCloudAdmin) Bukkit.getPluginManager().getPlugin("TheCraftCloud-Admin");
-		
+
+	public void playGame(Player player, String gameName) {
+		// TheCraftCloudAdmin plugin = (TheCraftCloudAdmin)
+		// Bukkit.getPluginManager().getPlugin("TheCraftCloud-Admin");
+
 		MineCraftPlayer mcp = delegate.findPlayerByName(player.getName());
-		Bukkit.getConsoleSender().sendMessage(Utils.color("&9Player Status: " + mcp.getStatus().name() ));
-		if(!mcp.getStatus().equals(PlayerStatus.ONLINE)) {
+		Bukkit.getConsoleSender().sendMessage(Utils.color("&9Player Status: " + mcp.getStatus().name()));
+		if (!mcp.getStatus().equals(PlayerStatus.ONLINE)) {
 			return;
 		}
-		
+
 		mcp.setStatus(PlayerStatus.INGAME);
 		delegate.updatePlayer(mcp);
 		Game game = delegate.findGameByName(gameName);
 		delegate.joinGameQueue(mcp, game);
-		
+
+	}
+
+	public boolean isServer(String gameName) {
+		Game game = delegate.findGameByName(gameName);
+		if (game == null) {
+			return false;
+		}
+		return true;
 	}
 
 }

@@ -26,7 +26,6 @@ public class LevelUpTask implements Runnable {
     	}
     	
     	if(!game.isStarted()) {
-    		Bukkit.getLogger().info("LEVELUPTASK - Game not started");
     		return;
     	}
     	
