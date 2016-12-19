@@ -35,11 +35,10 @@ public class BlockManipulationUtil {
 
 	public Block createNewWool(World world, double x, double y, double z, DyeColor color) {
 
-    	Bukkit.getLogger().info("x:" + x + " y:" + y + "z: " + z);
+
     	Location targetLocation = new Location(world, x, y, z);
-    	//Bukkit.getConsoleSender().sendMessage(Utils.color("&6Creating New Block " + targetLocation + " - " + world));
+    
         Block block = world.getBlockAt(targetLocation);
-    	//Bukkit.getConsoleSender().sendMessage(Utils.color("&6world.getBlockAt" + world.getBlockAt(targetLocation)));
     	
        	block.setType(Material.WOOL);
        	if(color != null) {

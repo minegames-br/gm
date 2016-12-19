@@ -165,6 +165,12 @@ public class ConfigService {
 		Integer gameDuration = (Integer)this.getGameConfigInstance(TheCraftCloudConfig.GAME_DURATION_IN_SECONDS);
 		return gameDuration;
 	}
+	
+	public Integer getGameDurationInTicks() {
+		Integer gameDuration = (Integer)this.getGameConfigInstance(TheCraftCloudConfig.GAME_DURATION_IN_SECONDS);
+		gameDuration = gameDuration*20;
+		return gameDuration;
+	}
 
 
 	public Local getLobby() {

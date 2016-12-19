@@ -19,9 +19,6 @@ public class LocationUtil {
 		int xSize =  Math.abs(pointB.getX() - ( pointA.getX() ) );
 		int ySize =  Math.abs(pointB.getY() - ( pointA.getY() ) );
 		int zSize =  Math.abs(pointB.getZ() - ( pointA.getZ() ) );
-		Bukkit.getConsoleSender().sendMessage("xsize: " + xSize);
-		Bukkit.getConsoleSender().sendMessage("ysize:" + ySize);
-		Bukkit.getConsoleSender().sendMessage("zsize:" + zSize);
 		
 		int x = area.getPointA().getX();
 		if(xSize > 0) {
@@ -59,17 +56,19 @@ public class LocationUtil {
 			z = area.getPointB().getZ() + z;
 		}
 		
-		MGLogger.debug("getRamdomLocationXYZ - x: " + x + " - y: " + y + " z: " + z);
+		//MGLogger.debug("getRamdomLocationXYZ - x: " + x + " - y: " + y + " z: " + z);
 		
 		Location spawnLocation = new Location(_world, x, y, z);
 		return spawnLocation;
 	}
 	
 	public void main(String args[]) {
+		/*
 		System.out.println(Math.abs(3-(-3)));
 		System.out.println(Math.abs(-9-(-3)));
 		System.out.println(Math.abs(+9-(-3)));
 		System.out.println(Math.abs(+9-(3)));
+		*/
 	}
 
 	public Location getMiddle(World world, Area3D spawnPoint) {
@@ -89,12 +88,4 @@ public class LocationUtil {
 		return l;
 	}
 
-	/*
-	public Location getMiddle(World world) {
-        int middleX = (this.pointA.getX() + this.pointB.getX()) / 2;
-        int middleZ = (this.pointA.getZ() + this.pointB.getZ()) / 2;
-        Location l = new Location(world, middleX, pointA.getY(), middleZ);
-        return l;
-    }
-    */
 }

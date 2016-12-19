@@ -1,7 +1,5 @@
 package com.thecraftcloud.minigame.task;
 
-import org.bukkit.Bukkit;
-
 import com.thecraftcloud.minigame.TheCraftCloudMiniGameAbstract;
 import com.thecraftcloud.minigame.domain.GameState;
 import com.thecraftcloud.minigame.domain.MyCloudCraftGame;
@@ -29,13 +27,19 @@ public class LevelUpTask implements Runnable {
     		return;
     	}
     	
-    	//Aumentar de nível depois de 15 segundos
-    	//Caso seja o último nível, terminar o jogo
-    	
-    	Integer duration = (Integer)this.configService.getGameConfigInstance("GAME-DURATION-IN-SECONDS");
-    	//duration = duration * 60; // segundos
+    	game.setGameState(GameState.LEVELUP);
+		if(controller.isLastLevel()) {
+			controller.endGame();
+		} else {
+    		controller.levelUp();
+		}
+     	
+    	/*
+    	Integer duration = this.configService.getGameDurationInSeconds();
     	duration = duration * 1000; //milissegundos
-    	Integer levelDuration = (duration/10);
+    	int totalLevels = 10; //posteriormente puxar do banco de dados
+    	Integer levelDuration = (duration/totalLevels);
+    	
     	
     	if(game.getLevel().lifeTime() >= levelDuration) {
     		game.setGameState(GameState.LEVELUP);
@@ -44,7 +48,8 @@ public class LevelUpTask implements Runnable {
     		} else {
         		controller.levelUp();
     		}
-    	}
+    	} 
+    	*/
     	
     }
 
