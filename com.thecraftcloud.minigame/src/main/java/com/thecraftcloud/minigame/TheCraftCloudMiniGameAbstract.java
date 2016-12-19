@@ -47,6 +47,8 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 
 	protected Integer maxPlayers;
 	protected Integer minPlayers;
+	
+	protected Integer totalLevels;
 
 	private int endGameThreadID;
 	private Runnable endGameTask;
@@ -85,12 +87,13 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 				Bukkit.getScheduler().runTaskAsynchronously(this, new Runnable() {
 					public void run() {
 						MultiVerseWrapper mvw = new MultiVerseWrapper();
-						//mvw.unloadWorld(world);
+						// mvw.unloadWorld(world);
 					}
 				});
 				continue;
 			}
-
+			
+			totalLevels = 10; //posteriormente pegar do BD
 			world.setTime(1000);
 			world.setSpawnFlags(false, false);
 			world.setGameRuleValue("doMobSpawning", "false");
@@ -129,7 +132,7 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 
 		this.updateScoreBoardThreadID = scheduler.scheduleSyncRepeatingTask(this, this.updateScoreBoardTask, 0L, 20L);
 		this.endGameThreadID = scheduler.scheduleSyncRepeatingTask(this, this.endGameTask, 0L, 20L);
-		this.levelUpThreadID = scheduler.scheduleSyncRepeatingTask(this, this.levelUpTask, 0L, 20L);
+		this.levelUpThreadID = scheduler.scheduleSyncRepeatingTask(this, this.levelUpTask, 0L, this.configService.getGameDurationInTicks()/totalLevels);
 		this.start();
 		this.configService.getMyCloudCraftGame().start();
 
@@ -218,7 +221,8 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 	public void removeLivePlayer(Player player) {
 		GamePlayer gp = this.playerService.findGamePlayerByPlayer(player);
 
-		//Bukkit.getConsoleSender().sendMessage(Utils.color("&6find gameplayer by player: " + gp));
+		// Bukkit.getConsoleSender().sendMessage(Utils.color("&6find gameplayer
+		// by player: " + gp));
 
 		if (gp != null) {
 			if (player != null) {
@@ -232,10 +236,12 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 			removeBossBar(gp);
 
 			livePlayers.remove(gp);
-			//Bukkit.getConsoleSender().sendMessage(Utils.color("&6 Disparar evento PlayerLeftGameEvent"));
+			// Bukkit.getConsoleSender().sendMessage(Utils.color("&6 Disparar
+			// evento PlayerLeftGameEvent"));
 			this.getServer().getPluginManager().callEvent(new PlayerLeftGameEvent(this, gp));
 		} else {
-			//Bukkit.getConsoleSender().sendMessage(Utils.color("&6 NAO achou o GAMEPLAYER"));
+			// Bukkit.getConsoleSender().sendMessage(Utils.color("&6 NAO achou o
+			// GAMEPLAYER"));
 		}
 
 		if (livePlayers.size() == 0) {
@@ -316,5 +322,5 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 		Integer duration = new Integer(new Long((System.currentTimeMillis() - this.gameStartTime) / 1000).toString());
 		return duration;
 	}
-
+	
 }
