@@ -82,18 +82,6 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 		// não deixar fazer spawn de mobs automatico
 		// deixar o horário de dia
 		for (final World world : Bukkit.getWorlds()) {
-
-			if (!world.getName().contains("world")) {
-				Bukkit.getScheduler().runTaskAsynchronously(this, new Runnable() {
-					public void run() {
-						MultiVerseWrapper mvw = new MultiVerseWrapper();
-						// mvw.unloadWorld(world);
-					}
-				});
-				continue;
-			}
-			
-			totalLevels = 10; //posteriormente pegar do BD
 			world.setTime(1000);
 			world.setSpawnFlags(false, false);
 			world.setGameRuleValue("doMobSpawning", "false");
