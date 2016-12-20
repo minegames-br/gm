@@ -33,23 +33,6 @@ public class LevelUpTask implements Runnable {
 		} else {
     		controller.levelUp();
 		}
-     	
-    	/*
-    	Integer duration = this.configService.getGameDurationInSeconds();
-    	duration = duration * 1000; //milissegundos
-    	int totalLevels = 10; //posteriormente puxar do banco de dados
-    	Integer levelDuration = (duration/totalLevels);
-    	
-    	
-    	if(game.getLevel().lifeTime() >= levelDuration) {
-    		game.setGameState(GameState.LEVELUP);
-    		if(controller.isLastLevel()) {
-    			controller.endGame();
-    		} else {
-        		controller.levelUp();
-    		}
-    	} 
-    	*/
     	
     }
 

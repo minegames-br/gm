@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import com.thecraftcloud.core.domain.TransferObject;
 
 public class EntityPlayer extends TransferObject {
-	protected int killPoints = 50;
+	protected int killPoints = 15;
 	protected LivingEntity entity;
 	protected Player killer;
 
