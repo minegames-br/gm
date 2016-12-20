@@ -31,10 +31,30 @@ public class AddGameConfigToSpleggTest {
 		
 		Game game = delegate.findGameByName("splegg");
 		Arena arena = delegate.findArenaByName("splegg-orbit");
-		configurarSplegg(game);
-		createGameConfig(game);
+		//configurarSplegg(game);
+		//createGameConfig(game);
 		
 		 
+		GameConfig gameConfig = createConfig("splegg.player1.spawn", "Select the location 1 to spawn a player", 
+				"Location where the player will spawn", "PLAYER-SPAWN", GameConfigType.LOCAL, GameConfigScope.ARENA, game);
+		Local pointA = createLocal( 1564, 39, -1058 );
+		createGameArenaConfig( gameConfig, arena, game, pointA );
+
+		gameConfig = createConfig("splegg.player2.spawn", "Select the location 2 to spawn a player", 
+				"Location where the player will spawn", "PLAYER-SPAWN", GameConfigType.LOCAL, GameConfigScope.ARENA, game);
+		pointA = createLocal( 1588, 39, -1069 );
+		createGameArenaConfig( gameConfig, arena, game, pointA );
+
+		gameConfig = createConfig("splegg.player3.spawn", "Select the location 3 to spawn a player", 
+				"Location where the player will spawn", "PLAYER-SPAWN", GameConfigType.LOCAL, GameConfigScope.ARENA, game);
+		pointA = createLocal( 1574, 39, -1090 );
+		createGameArenaConfig( gameConfig, arena, game, pointA );
+
+		gameConfig = createConfig("splegg.player4.spawn", "Select the location 4 to spawn a player", 
+				"Location where the player will spawn", "PLAYER-SPAWN", GameConfigType.LOCAL, GameConfigScope.ARENA, game);
+		pointA = createLocal( 1567, 37, -1075 );
+		createGameArenaConfig( gameConfig, arena, game, pointA );
+
 		//GameConfig gameConfig = delegate.findGameConfigByName("splegg.waiting.lobby"); //createConfig("splegg.waiting.lobby", "Select the location to spawn players before the game", "Location where the players will spawn before the game", "", GameConfigType.LOCAL, GameConfigScope.ARENA, game);
 		//Local pointA = createLocal( 0, 6, 0 );
 		//createGameArenaConfig( gameConfig, arena, game, pointA );	

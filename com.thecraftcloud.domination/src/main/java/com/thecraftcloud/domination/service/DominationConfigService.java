@@ -33,7 +33,7 @@ public class DominationConfigService {
 	public void loadConfig() {
 		
 		//Deixa PVP ativo
-		this.configService.getArenaWorld().setPVP(false);
+		//this.configService.getArenaWorld().setPVP(false);
 		
 		// Carregar configuracoes especificas do Gun Game
 		Bukkit.getConsoleSender()
