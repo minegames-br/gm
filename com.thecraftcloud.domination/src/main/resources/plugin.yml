@@ -1,0 +1,6 @@
+name: TheCraftCloud-Domination
+version: 1.0
+author: joaoemilio
+main: com.thecraftcloud.domination.GameController
+depend: [TheCraftCloud-MiniGame,TheCraftCloud-Core,ArathiBasin]
+commands:

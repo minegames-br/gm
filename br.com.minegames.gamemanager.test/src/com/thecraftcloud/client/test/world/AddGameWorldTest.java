@@ -27,14 +27,32 @@ public class AddGameWorldTest {
 		GameWorld gw = new GameWorld();
 		gw.setName("arqueiro-pokemon-go");
 		gw.setDescription("arena estilo pokemon-go para o TheLastArcher");
-		*/
 
 		GameWorld gw = new GameWorld();
 		gw.setName("thearcher.stadium");
 		gw.setDescription("Arena Stadium para o jogo TheLastArcher");
 		gw.setPath("/opt/mg/worlds/thearcher-stadium.zip");
 		delegate.addGameWorld( gw );
+		*/
+		//createArathiWorld();
+		createSpleggOrbitWorld();
+		
+	}
+	
+	private void createArathiWorld() {
+		GameWorld gw = new GameWorld();
+		gw.setName("arathi");
+		gw.setDescription("Arena para o jogo domination (Arathi Basin)");
+		gw.setPath("/opt/mg/worlds/arathi.zip");
+		delegate.addGameWorld( gw );
+	}
 
+	private void createSpleggOrbitWorld() {
+		GameWorld gw = new GameWorld();
+		gw.setName("splegg-orbit");
+		gw.setDescription("Arena Orbit para o jogo Splegg");
+		gw.setPath("/opt/mg/worlds/splegg-orbit.zip");
+		delegate.addGameWorld( gw );
 	}
 
 
