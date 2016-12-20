@@ -120,13 +120,13 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 	
 		this.updateScoreBoardThreadID = scheduler.scheduleSyncRepeatingTask(this, this.updateScoreBoardTask, 0L, 20L);
 		this.endGameThreadID = scheduler.scheduleSyncRepeatingTask(this, this.endGameTask, 0L, 20L);
-		this.levelUpThreadID = scheduler.scheduleSyncRepeatingTask(this, this.levelUpTask, 0L, this.configService.getGameDurationInTicks()/totalLevels);
+		//this.levelUpThreadID = scheduler.scheduleSyncRepeatingTask(this, this.levelUpTask, 0L, this.configService.getGameDurationInTicks()/totalLevels);
 		this.start();
 		this.configService.getMyCloudCraftGame().start();
 
 		// mudar horário da arena
 		Integer time = this.configService.getArena().getTime();
-		if (time != null) {
+		if (time != null && this.configService.getWorld() != null) {
 			this.configService.getWorld().setTime(time);
 		}
 

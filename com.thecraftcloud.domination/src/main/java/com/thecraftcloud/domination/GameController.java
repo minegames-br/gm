@@ -31,6 +31,7 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 
 	@Override
 	public void startGameEngine() {
+		configService.getMyCloudCraftGame().setGameStartTime(System.currentTimeMillis());
 		super.startGameEngine();
 		ArathiBasin abPlugin = (ArathiBasin)Bukkit.getPluginManager().getPlugin("ArathiBasin");
 		for(GamePlayer gp: this.getLivePlayers()) {
