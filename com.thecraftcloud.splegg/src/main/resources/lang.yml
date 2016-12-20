@@ -1,0 +1,43 @@
+en:
+  gungame:
+    prefix: §8§lGun§7§lGame§c ► §e
+    noperm: §4§lACCESS DENIED
+    noconsole: §cThis command can not be used from the console.
+    nospawn: §cYou haven't entered the spawn id argument.
+    help: §7§l - - - - - §8§lGunGame§7 by§8 gyuriX§7§l - - - - - §f
+          §7/gg create <game>:§e Create a game
+          §7/gg help OR /gg:§e Show this help menu
+          §7/gg info <game>:§e Info about a game
+          §7/gg leave:§e Leave your current game
+          §7/gg list:§e List all the games
+          §7/gg remove <game>:§e Remove a game
+          §7/gg removespawn <game> [id]:§e Remove all or the given spawn point from the arena
+          §7/gg setspawn <game> <id>:§e Set the given spawn point of an arena to your current position
+    create: Created game §6§l<game>§e.
+    remove: Removed game §6§l<game>§e.
+    exists: §cGame §e§l<game>§c exists already.
+    list: Available games:§6§l <games>
+    notexist: §cGame §e§l<game>§c does not exist.
+    leave: §aLeft game §e§l<game>§a.
+      notin: §cYou are not in a game.
+    join: §aJoined to game §e§l<game>§a.
+      full: §cGame §e§l<game>§c is full.
+      ingame: §cGame §e§l<game>§c is running already, so you can not join to it.
+      already: §cYou are in a game already.
+    spawn:
+      set: Set spawn point §6§l<id>§e to §6§l<value>§e in game §6§l<game>§e.
+      wrong: §cThe spawn point id should be between §6§l1§c and §6§l<max>§c.
+      none: §cGame §e§l<game>§c does not have any spawn points setup.
+      remove: Removed spawn point §6§l<id>§e of game §6§l<game>§e.
+      removeall: Removed all spawn points of game §6§l<game>§e.
+    info: §eInfo about game §6§l<game>§e:§f
+          §6Counter:§e <count>
+          §6Ingame:§e <ingame>
+          §6State:§e <state>
+          §6Spawns:§e<spawns>
+    nogame: §cYou haven't entered the game argument
+    state:
+      Waiting: §7Waiting
+      Starting: §eStarting
+      Ingame: §cIngame
+      Finish: §aFinish

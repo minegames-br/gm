@@ -1,0 +1,132 @@
+package com.thecraftcloud.splegg;
+
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.PluginManager;
+import org.bukkit.scheduler.BukkitScheduler;
+import org.bukkit.scoreboard.DisplaySlot;
+
+import com.thecraftcloud.core.logging.MGLogger;
+import com.thecraftcloud.core.util.Utils;
+import com.thecraftcloud.minigame.TheCraftCloudConfig;
+import com.thecraftcloud.minigame.TheCraftCloudMiniGameAbstract;
+import com.thecraftcloud.minigame.domain.GamePlayer;
+import com.thecraftcloud.minigame.domain.MyCloudCraftGame;
+import com.thecraftcloud.splegg.domain.Splegg;
+import com.thecraftcloud.splegg.domain.SpleggPlayer;
+import com.thecraftcloud.splegg.listener.PlayerDeath;
+import com.thecraftcloud.splegg.service.SpleggConfigService;
+import com.thecraftcloud.splegg.service.SpleggPlayerService;
+
+/**
+ * Created by renatocsare@gmail.com on Dez 20, 2016
+ */
+public class GameController extends TheCraftCloudMiniGameAbstract {
+	private Integer gameDuration;
+	private SpleggPlayerService spleggPlayerService = new SpleggPlayerService(this);
+	private SpleggConfigService spleggConfigService = SpleggConfigService.getInstance();
+
+	@Override
+	public void onEnable() {
+		super.onEnable();
+	}
+
+	@Override
+	public void startGameEngine() {
+		super.startGameEngine();
+
+		spleggPlayerService.setupPlayersToStartGame();
+
+		// Enviar jogadores para a Arena
+		spleggPlayerService.teleportPlayersToArena();
+
+		// Iniciar threads do jogo
+		BukkitScheduler scheduler = getServer().getScheduler();
+		// this.spawnBonusItemThreadID =
+		// scheduler.scheduleSyncRepeatingTask(this, this.spawnBonusItemTask,
+		// 200L, 250L);
+	}
+
+	@Override
+	public void init() {
+		super.init();
+
+		// Carregar configuracoes especificas do Splegg
+		SpleggConfigService.getInstance().loadConfig();
+	}
+
+	@Override
+	public boolean shouldEndGame() {
+		// Terminar o jogo caso não tenha mais jogadores
+		if (this.getLivePlayers().size() == 0 && this.configService.getMyCloudCraftGame().isStarted()) {
+			Bukkit.getConsoleSender().sendMessage(Utils.color("&6EndGameTask - No more players"));
+			return true;
+		}
+
+		// Terminar o jogo caso tenha alcançado o limite de tempo
+		long currentTime = System.currentTimeMillis();
+		long duration = (currentTime - this.configService.getMyCloudCraftGame().getGameStartTime()) / 1000;
+		this.gameDuration = (Integer) this.configService
+				.getGameConfigInstance(TheCraftCloudConfig.GAME_DURATION_IN_SECONDS);
+
+		if (duration >= this.gameDuration) {
+			Bukkit.getConsoleSender()
+					.sendMessage(Utils.color("&6EndGameTask - TimeOver: " + duration + " > " + this.gameDuration));
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Quando esse método executar, o jogo terá terminado com um vencedor e/ou o
+	 * tempo terá acabado.
+	 */
+	@Override
+	public void endGame() {
+		super.endGame();
+		if (this.configService.getMyCloudCraftGame().isStarted()) {
+			this.configService.getMyCloudCraftGame().endGame();
+		}
+		MGLogger.info("Game.endGame");
+
+		// Terminar threads do jogo
+		// Bukkit.getScheduler().cancelTask(this.spawnBonusItemThreadID);
+
+		for (GamePlayer gp : livePlayers) {
+			Player player = gp.getPlayer();
+			player.getInventory().clear();
+			player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
+			player.sendMessage("Você fez " + gp.getPoint() + " pontos.");
+		}
+
+	}
+
+	@Override
+	public void levelUp() {
+		return;
+	}
+
+	@Override
+	public GamePlayer createGamePlayer() {
+		return new SpleggPlayer();
+	}
+
+	@Override
+	protected void registerListeners() {
+		super.registerListeners();
+		PluginManager pm = Bukkit.getPluginManager();
+		pm.registerEvents(new PlayerDeath(this), this);
+	}
+
+	@Override
+	public MyCloudCraftGame createMyCloudCraftGame() {
+		return new Splegg();
+	}
+
+	@Override
+	public boolean isLastLevel() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+}
