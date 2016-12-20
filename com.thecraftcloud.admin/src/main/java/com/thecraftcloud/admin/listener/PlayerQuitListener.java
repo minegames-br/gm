@@ -23,10 +23,6 @@ public class PlayerQuitListener  implements Listener {
     public void onPlayerQuit(PlayerQuitEvent event) {
     	Player player = event.getPlayer();
     	Bukkit.getConsoleSender().sendMessage(Utils.color("&3Player: " + player.getName() + " has left the server."));
-    	
-    	//Retirei pq o onJoin acontece antes no outro servidor que o onQuit no original. Isso deixava null no server do player
-    	//PlayerService playerService = new PlayerService(this.plugin);
-    	//playerService.quitServer(player);
     }
 
 

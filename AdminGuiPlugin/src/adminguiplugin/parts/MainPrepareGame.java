@@ -14,20 +14,16 @@ public class MainPrepareGame {
 	private static TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance("http://services.thecraftcloud.com:8080/gamemanager/webresources");
 
 	public static void main(String[] args) {
-		
 		String arenaName = "thearcher-stadium";
 		String gameName = "TheArcher";
-		
 		prepareGame(gameName, arenaName);
-		
-		
-		
 	}
 	
 	public static void prepareGame(String gameName, String arenaName) {
-		ServerInstance server = delegate.findServerByName("localhost");
+		ServerInstance server = delegate.findServerByName("localhost-joao");
+		System.out.println(server.getHostname() + " " + server.getIp_address() + "  "  + server.getAdminPort());
 		Game game = delegate.findGameByName(gameName);
-		Arena arena = delegate.findArenasByGame(game).get(1);
+		Arena arena = delegate.findArenaByName(arenaName);
 		GameWorld gameWorld = delegate.findGameWorldByName( arenaName );
 		ActionDTO dto = new ActionDTO();
 		dto.setArena(arena);

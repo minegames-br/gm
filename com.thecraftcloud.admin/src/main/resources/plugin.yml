@@ -5,3 +5,4 @@ main: com.thecraftcloud.admin.TheCraftCloudAdmin
 depend: [TheCraftCloud-Core, TheCraftCloud-Client]
 commands:
    sair:
+   play:

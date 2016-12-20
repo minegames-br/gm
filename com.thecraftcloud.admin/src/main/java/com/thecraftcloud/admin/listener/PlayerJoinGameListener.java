@@ -23,11 +23,7 @@ public class PlayerJoinGameListener implements Listener {
     	String name = event.getGamePlayer().getPlayer().getName();
     	Bukkit.getConsoleSender().sendMessage(Utils.color("&2Player: " + name + " has joined " + event.getGame().getName() + "."));
     	final AdminService service = new AdminService(this.plugin);
-    	Bukkit.getScheduler().runTaskAsynchronously(event.getGame(), new Runnable() {
-    		public void run() {
-    	    	service.notifyPlayerJoin( event.getGamePlayer(), event.getGame() );
-    		}
-    	});
+    	service.notifyPlayerJoin( event.getGamePlayer(), event.getGame() );
     }
 
 }

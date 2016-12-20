@@ -16,12 +16,12 @@ public class CreateServerTest {
 	public void test() {
 
 		ServerInstance server = new ServerInstance();
-		server.setDescription("Gun Game minigame");
+		server.setDescription("servidor local do pc do joao emilio");
 		server.setHostname("pc-joaoemilio");
 		server.setIp_address("localhost");
-		server.setPort(25565);
-		server.setName("gungame-local");
-		server.setAdminPort(65000);
+		server.setPort(26001);
+		server.setName("localhost-joao");
+		server.setAdminPort(55000);
 		
 		server = delegate.createServer( server );
 		System.out.println("Server: " + server.getName() + " uuid: " + server.getServer_uuid().toString() + " ip: " + server.getIp_address() + " port: " + server.getPort() + " admin port:" + server.getAdminPort() );

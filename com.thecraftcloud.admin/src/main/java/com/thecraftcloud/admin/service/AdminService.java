@@ -70,35 +70,6 @@ public class AdminService {
 		delegate.updatePlayer(mcp);
 	}
 
-	public void sendPlayersToLobby(TheCraftCloudMiniGameAbstract game ) {
-		/*
-		//ESSE CODIGO ESTA HARD CODED RETORNANDO MGLOBBY
-		ServerInstance server = delegate.findLobbyAvailable();
-		
-		BungeeUtils bu = new BungeeUtils();
-		bu.setup(game);
-		for( GamePlayer gp: game.getLivePlayers() ) {
-			bu.sendToServer(gp.getPlayer(), server.getName());
-		}
-		*/
-		for( GamePlayer gp: game.getLivePlayers() ) {
-			//sendPlayerToLobby(game, gp);
-		}
-		
-	}
-
-	public void sendPlayerToLobby(TheCraftCloudMiniGameAbstract game, GamePlayer gamePlayer) {
-		/*
-		ServerInstance server = delegate.findLobbyAvailable();
-		BungeeUtils bu = new BungeeUtils();
-		bu.setup(game);
-		Bukkit.getConsoleSender().sendMessage(Utils.color("&6 BungeeUtils sendToServer: " + server.getName() ));
-		bu.sendToServer(gamePlayer.getPlayer(), server.getName());
-		*/
-		
-		//delegate.sendPlayerToLobby( gamePlayer.getPlayer().getName() );
-	}
-
 	public void removeLivePlayer(Player player) {
 		
 		this.admin.getMiniGame().removeLivePlayer(player);

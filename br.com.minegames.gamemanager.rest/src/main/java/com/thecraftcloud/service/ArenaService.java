@@ -39,16 +39,6 @@ public class ArenaService extends Service {
 			return null;
 		}
 		
-		if(domain.getAreas() == null) {
-			log("areas list is null");
-		} else {
-			for(Area3D area: domain.getAreas()) {
-				UUID uuid = aservice.save( area );
-				area = aservice.find(uuid);
-				areas.add(area);
-			}
-		}
-		
 		SchematicService sservice = new SchematicService(this.em);
 		Schematic schematic = domain.getSchematic();
 		if(schematic.getSchematic_uuid() != null) {
@@ -64,7 +54,6 @@ public class ArenaService extends Service {
 			domain = dao.find(domain.getArena_uuid());
 		}
 		
-		domain.setAreas(areas);
 		dao.save(domain);
 		commitTransaction();
 		Logger.getLogger(ArenaService.class).info("uuid: " + domain.getArena_uuid());

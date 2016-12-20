@@ -25,8 +25,7 @@ public class Arena extends TransferObject implements Comparable {
 	private UUID arena_uuid;
 	
 	@LazyCollection(LazyCollectionOption.FALSE)
-	@OneToMany
-	private List<Area3D> areas;
+
 	@Column(unique=true)
 	private String name;
 	private String description;
@@ -63,12 +62,7 @@ public class Arena extends TransferObject implements Comparable {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public List<Area3D> getAreas() {
-		return areas;
-	}
-	public void setAreas(List<Area3D> areas) {
-		this.areas = areas;
-	}
+
 	public Schematic getSchematic() {
 		return schematic;
 	}

@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.thecraftcloud.admin.command.LeaveGameCommand;
+import com.thecraftcloud.admin.command.PlayGameCommand;
 import com.thecraftcloud.admin.listener.EndGameListener;
 import com.thecraftcloud.admin.listener.PlayerJoinGameListener;
 import com.thecraftcloud.admin.listener.PlayerJoinListener;
@@ -32,6 +33,7 @@ public class TheCraftCloudAdmin extends JavaPlugin {
 
 	private static final String SOCKET_SERVER_PORT = "thecraftcloud.admin.port";
 	private static final String SERVER_NAME = "thecraftcloud.admin.name";
+	private static final String LOCAL = "thecraftcloud.admin.local";
 	private static final String THECRAFTCLOUD_ADMIN_ACTIONS = "thecraftcloud.admin.actions";
 	public static final String PLUGIN_NAME = "TheCraftCloud-Admin";
 	private TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance();
@@ -43,15 +45,18 @@ public class TheCraftCloudAdmin extends JavaPlugin {
 	private ServerInstance serverInstance;
 	
 	private TheCraftCloudMiniGameAbstract miniGame;
+	private boolean local;
 
 	@Override
 	public void onEnable() {
 		this.loadConfiguration();
 		this.socketServerPort = this.getConfig().getInt(TheCraftCloudAdmin.SOCKET_SERVER_PORT);
 		this.serverName = this.getConfig().getString(TheCraftCloudAdmin.SERVER_NAME);
+		this.local = this.getConfig().getBoolean(TheCraftCloudAdmin.LOCAL);
 		
 		Bukkit.getConsoleSender().sendMessage(Utils.color("&8registrar comando sair"));
 		getCommand("sair").setExecutor(new LeaveGameCommand(this));
+		getCommand("play").setExecutor(new PlayGameCommand(this));
 
 		Bukkit.getConsoleSender().sendMessage(Utils.color("&6serverName: " + this.serverName));
 		
@@ -225,6 +230,14 @@ public class TheCraftCloudAdmin extends JavaPlugin {
 		this.serverInstance = serverInstance;
 	}
 
+
+	public boolean isLocal() {
+		return local;
+	}
+
+	public void setLocal(boolean local) {
+		this.local = local;
+	}
 
 	public static TheCraftCloudAdmin getBukkitPlugin() {
 		return (TheCraftCloudAdmin)Bukkit.getPluginManager().getPlugin( TheCraftCloudAdmin.PLUGIN_NAME );

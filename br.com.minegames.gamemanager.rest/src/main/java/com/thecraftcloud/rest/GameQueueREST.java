@@ -13,11 +13,25 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.thecraftcloud.core.domain.GameQueue;
+import com.thecraftcloud.core.domain.GameQueueStatus;
 import com.thecraftcloud.core.json.JSONParser;
 import com.thecraftcloud.service.GameQueueService;
 
 @Path("/gamequeue")
 public class GameQueueREST  extends REST {
+	
+	@POST
+	@Path("/lock")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response lockQueue(String json) {
+		log("lockQueue");
+		System.out.println("lockQueue");
+		GameQueueService service = new GameQueueService();
+		log("lockQueue1");
+		service.bulkStatusUpdate(GameQueueStatus.WAITING, GameQueueStatus.PROCESSING);
+		log("lockQueue2");
+	    return Response.ok("{teste:name}", MediaType.APPLICATION_JSON).build();
+	}
 	
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
@@ -55,6 +69,7 @@ public class GameQueueREST  extends REST {
 	@Path("/list")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response findAllGameQueue() {
+		log("gamequeue list");
 		GameQueueService service = new GameQueueService();
 		Collection<GameQueue> list = service.findAll();
 		String json = JSONParser.getInstance().toJSONString(list);
@@ -96,6 +111,25 @@ public class GameQueueREST  extends REST {
 			log("GameQueueREST http delete - build response error: " + e.getMessage() );
 			e.printStackTrace();
 			return Response.status(Response.Status.CONFLICT).entity("GameQueue nao pode ser apagado " + e.getMessage()).build();
+		}
+	}
+	
+	@POST
+	@Path("/{uuid}/complete")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response completeGameQueueRequest(@PathParam("uuid") String _uuid) {
+		log("GameQueueREST http post - uuid recebido: " + _uuid);
+		GameQueueService service = new GameQueueService();
+		try {
+			log("GameQueueREST http post - service.completeGameQueueRequest " + _uuid );
+			GameQueue gq = service.completeGameQueueRequest(_uuid);
+			String json = JSONParser.getInstance().toJSONString(gq);
+			log("GameQueueREST http post - build response ok" );
+			return Response.ok(json, MediaType.APPLICATION_JSON).build();
+		} catch (Exception e) {
+			log("GameQueueREST http port - build response error: " + e.getMessage() );
+			e.printStackTrace();
+			return Response.status(Response.Status.CONFLICT).entity("GameQueue nao pode ser completado " + e.getMessage()).build();
 		}
 	}
 	
