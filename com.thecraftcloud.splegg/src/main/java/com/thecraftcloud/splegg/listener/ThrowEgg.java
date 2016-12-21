@@ -27,9 +27,10 @@ public class ThrowEgg implements Listener {
 	@EventHandler
 	public void onClick(PlayerInteractEvent event) {
 
-		if (!configService.getMyCloudCraftGame().isStarted()) {
+		
+		/* if (!configService.getMyCloudCraftGame().isStarted()) {
 			return;
-		}
+		} */
 
 		Player player = event.getPlayer();
 		Action action = event.getAction();

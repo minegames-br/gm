@@ -8,6 +8,7 @@ import org.bukkit.scoreboard.DisplaySlot;
 
 import com.thecraftcloud.core.logging.MGLogger;
 import com.thecraftcloud.core.util.Utils;
+import com.thecraftcloud.core.util.title.TitleUtil;
 import com.thecraftcloud.minigame.TheCraftCloudConfig;
 import com.thecraftcloud.minigame.TheCraftCloudMiniGameAbstract;
 import com.thecraftcloud.minigame.domain.GamePlayer;
@@ -15,11 +16,14 @@ import com.thecraftcloud.minigame.domain.MyCloudCraftGame;
 import com.thecraftcloud.minigame.service.PlayerService;
 import com.thecraftcloud.splegg.domain.Splegg;
 import com.thecraftcloud.splegg.domain.SpleggPlayer;
-import com.thecraftcloud.splegg.listener.ThrowEgg;
+import com.thecraftcloud.splegg.listener.CancelEvents;
+import com.thecraftcloud.splegg.listener.GameModeChange;
 import com.thecraftcloud.splegg.listener.PlayerDeath;
 import com.thecraftcloud.splegg.listener.ProjectileHit;
+import com.thecraftcloud.splegg.listener.ThrowEgg;
 import com.thecraftcloud.splegg.service.SpleggConfigService;
 import com.thecraftcloud.splegg.service.SpleggPlayerService;
+import com.thecraftcloud.splegg.task.PlayerWinTask;
 
 /**
  * Created by renatocsare@gmail.com on Dez 20, 2016
@@ -28,6 +32,9 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 	private Integer gameDuration;
 	private SpleggPlayerService spleggPlayerService = new SpleggPlayerService(this);
 	private SpleggConfigService spleggConfigService = SpleggConfigService.getInstance();
+
+	private Runnable playerWinTask;
+	private int playerWinTaskThreadID;
 
 	@Override
 	public void onEnable() {
@@ -48,16 +55,15 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 
 		// Iniciar threads do jogo
 		BukkitScheduler scheduler = getServer().getScheduler();
-		// this.spawnBonusItemThreadID =
-		// scheduler.scheduleSyncRepeatingTask(this, this.spawnBonusItemTask,
-		// 200L, 250L);
+		this.playerWinTaskThreadID = scheduler.scheduleSyncRepeatingTask(this, this.playerWinTask, 0L, 20L);
 	}
 
 	@Override
 	public void init() {
 		super.init();
-
-		// aqui deve-se inicializar futuras TASKS
+		
+		//inicializar variaveis de instancia
+		this.playerWinTask = new PlayerWinTask(this);
 
 		// Carregar configuracoes especificas do Splegg
 		SpleggConfigService.getInstance().loadConfig();
@@ -97,8 +103,8 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 		}
 		MGLogger.info("Game.endGame");
 
-		// Terminar threads do jogo
-		// Bukkit.getScheduler().cancelTask(this.spawnBonusItemThreadID);
+		//Terminar threads do jogo
+		Bukkit.getScheduler().cancelTask(this.playerWinTaskThreadID);
 
 		for (GamePlayer gp : livePlayers) {
 			Player player = gp.getPlayer();
@@ -131,6 +137,8 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 		pm.registerEvents(new PlayerDeath(this), this);
 		pm.registerEvents(new ThrowEgg(this), this);
 		pm.registerEvents(new ProjectileHit(this), this);
+		//pm.registerEvents(new GameModeChange(this), this);
+		pm.registerEvents(new CancelEvents(this), this);
 	}
 
 	@Override

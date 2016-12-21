@@ -38,12 +38,10 @@ public class PlayerService extends TheCraftCloudService {
 		String deadname = dead.getDisplayName();
 		Bukkit.broadcastMessage(ChatColor.GOLD + " " + deadname + "" + ChatColor.GREEN + " died.");
 
-		dead.setHealth(20); // Do not show the respawn screen
+		dead.setHealth(20);
 		dead.getInventory().clear();
 
 		if (this.configService.getMyCloudCraftGame().isStarted()) {
-			// Bukkit.getConsoleSender().sendMessage(Utils.color("&6vai
-			// removeLivePlayer"));
 			this.miniGame.removeLivePlayer(dead);
 			dead.teleport(locationUtil.toLocation(this.configService.getWorld(), this.configService.getLobby())); 
 		}
@@ -143,14 +141,6 @@ public class PlayerService extends TheCraftCloudService {
 	protected PlayerService createPlayerService() {
 		// TODO Auto-generated method stub
 		return null;
-	}
-	
-	public void setGameMode(Player player, GameMode gameMode) {
-		player.setGameMode(gameMode);
-	}
-	
-	public GameMode getGameMode(Player player) {
-		return player.getGameMode();
 	}
 
 }

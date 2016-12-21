@@ -5,6 +5,8 @@ import java.util.Random;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -21,6 +23,7 @@ import org.bukkit.util.Vector;
 import com.thecraftcloud.core.domain.GameArenaConfig;
 import com.thecraftcloud.core.util.PlayerUtil;
 import com.thecraftcloud.core.util.Utils;
+import com.thecraftcloud.core.util.title.TitleUtil;
 import com.thecraftcloud.minigame.TheCraftCloudMiniGameAbstract;
 import com.thecraftcloud.minigame.domain.GamePlayer;
 import com.thecraftcloud.minigame.service.ConfigService;
@@ -29,17 +32,12 @@ import com.thecraftcloud.splegg.GameController;
 
 public class SpleggPlayerService extends PlayerService {
 
-	private SpleggConfigService spleggService = SpleggConfigService.getInstance();
-	private PlayerUtil playerUtil = PlayerUtil.getInstance();
+	protected SpleggConfigService spleggService = SpleggConfigService.getInstance();
+	protected SpleggPlayerService playerService;
 
 	public SpleggPlayerService(TheCraftCloudMiniGameAbstract controller) {
 		super(controller);
 		this.configService = ConfigService.getInstance();
-	}
-
-	@Override
-	public void killPlayer(Player dead) {
-		String deadname = dead.getDisplayName();
 	}
 
 	public void teleportPlayersToArena() {
@@ -66,15 +64,35 @@ public class SpleggPlayerService extends PlayerService {
 			this.setupPlayerToStartGame(player);
 		}
 	}
-	
+
 	@Override
 	public void setupPlayerToStartGame(Player player) {
 		super.setupPlayerToStartGame(player);
-		
+
 		PlayerInventory inventory = player.getInventory();
 		ItemStack spade = new ItemStack(Material.IRON_SPADE);
 		inventory.setItemInMainHand(spade);
-		
+		player.setGameMode(GameMode.SURVIVAL);
+	}
+
+	@Override
+	public void killPlayer(Player dead) {
+		String deadname = dead.getDisplayName();
+		Bukkit.broadcastMessage(ChatColor.GOLD + " " + deadname + "" + ChatColor.GREEN + " died.");
+
+		dead.setHealth(20);
+		dead.getInventory().clear();
+		dead.setGameMode(GameMode.SPECTATOR);
+		dead.sendMessage(ChatColor.YELLOW.ITALIC + dead.getName() + " , você agora é um espectador!");
+
+		if (this.configService.getMyCloudCraftGame().isWaitingPlayers()
+				|| !this.configService.getMyCloudCraftGame().isStarted()) {
+			this.miniGame.removeLivePlayer(dead);
+			dead.teleport(locationUtil.toLocation(this.configService.getWorld(), this.configService.getLobby()));
+		}
+
+		spawnDeadPlayer(dead);
+		this.miniGame.removeLivePlayer(dead);
 	}
 
 	@Override

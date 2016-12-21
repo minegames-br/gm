@@ -3,6 +3,7 @@ package com.thecraftcloud.minigame;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -217,12 +218,13 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 		this.configService.setStartCountDown();
 
 	}
+	
+	public void livePlayerToSpectator(Player player) {
+		GamePlayer gp = this.playerService.findGamePlayerByPlayer(player);
+	}
 
 	public void removeLivePlayer(Player player) {
 		GamePlayer gp = this.playerService.findGamePlayerByPlayer(player);
-
-		// Bukkit.getConsoleSender().sendMessage(Utils.color("&6find gameplayer
-		// by player: " + gp));
 
 		if (gp != null) {
 			if (player != null) {
@@ -236,9 +238,9 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 			removeBossBar(gp);
 
 			livePlayers.remove(gp);
-			// Bukkit.getConsoleSender().sendMessage(Utils.color("&6 Disparar
-			// evento PlayerLeftGameEvent"));
-			this.getServer().getPluginManager().callEvent(new PlayerLeftGameEvent(this, gp));
+			if (gp.getPlayer().getGameMode() != GameMode.SPECTATOR) {
+				this.getServer().getPluginManager().callEvent(new PlayerLeftGameEvent(this, gp));
+			}
 		} else {
 			// Bukkit.getConsoleSender().sendMessage(Utils.color("&6 NAO achou o
 			// GAMEPLAYER"));
