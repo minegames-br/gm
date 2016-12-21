@@ -14,7 +14,9 @@ import com.thecraftcloud.minigame.domain.GamePlayer;
 import com.thecraftcloud.minigame.domain.MyCloudCraftGame;
 import com.thecraftcloud.splegg.domain.Splegg;
 import com.thecraftcloud.splegg.domain.SpleggPlayer;
+import com.thecraftcloud.splegg.listener.ThrowEgg;
 import com.thecraftcloud.splegg.listener.PlayerDeath;
+import com.thecraftcloud.splegg.listener.ProjectileHit;
 import com.thecraftcloud.splegg.service.SpleggConfigService;
 import com.thecraftcloud.splegg.service.SpleggPlayerService;
 
@@ -30,7 +32,7 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 	public void onEnable() {
 		super.onEnable();
 	}
-
+	
 	@Override
 	public void startGameEngine() {
 		super.startGameEngine();
@@ -39,21 +41,27 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 
 		// Enviar jogadores para a Arena
 		spleggPlayerService.teleportPlayersToArena();
-
+		
+		//registar listeners especificos
+		this.registerListeners();
+		
 		// Iniciar threads do jogo
 		BukkitScheduler scheduler = getServer().getScheduler();
 		// this.spawnBonusItemThreadID =
 		// scheduler.scheduleSyncRepeatingTask(this, this.spawnBonusItemTask,
 		// 200L, 250L);
 	}
-
+	
 	@Override
 	public void init() {
 		super.init();
+		
+		//aqui deve-se inicializar futuras TASKS
 
 		// Carregar configuracoes especificas do Splegg
 		SpleggConfigService.getInstance().loadConfig();
 	}
+
 
 	@Override
 	public boolean shouldEndGame() {
@@ -116,6 +124,8 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 		super.registerListeners();
 		PluginManager pm = Bukkit.getPluginManager();
 		pm.registerEvents(new PlayerDeath(this), this);
+		pm.registerEvents(new ThrowEgg(this), this);
+		pm.registerEvents(new ProjectileHit(this), this);
 	}
 
 	@Override
@@ -127,6 +137,14 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 	public boolean isLastLevel() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	public SpleggConfigService getSpleggConfigService() {
+		return spleggConfigService;
+	}
+
+	public void setSpleggConfigService(SpleggConfigService spleggConfigService) {
+		this.spleggConfigService = spleggConfigService;
 	}
 
 }

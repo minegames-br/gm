@@ -1,7 +1,11 @@
 package com.thecraftcloud.splegg.service;
 
+import java.util.concurrent.CopyOnWriteArraySet;
+
+import com.thecraftcloud.core.domain.GameArenaConfig;
 import com.thecraftcloud.minigame.service.ConfigService;
 import com.thecraftcloud.splegg.GameController;
+import com.thecraftcloud.splegg.SpleggConfig;
 
 public class SpleggConfigService {
 	private GameController controller;
@@ -17,22 +21,18 @@ public class SpleggConfigService {
 
 	private SpleggConfigService() {
 		this.configService = ConfigService.getInstance();
-		// this.delegate = TheCraftCloudDelegate.getInstance();
 	}
 
 	public void loadConfig() {
 
-		// Deixa PVP ativo
-		this.configService.getArenaWorld().setPVP(false);
+		// Deixa PVP inativo
+		this.configService.getArenaWorld().setPVP(true);
 
-		/*
-		 * // setar spawn points CopyOnWriteArraySet<GameArenaConfig>
-		 * gacSpawnPoints = this.configService
-		 * .getGameArenaConfigByGroup(GunGameConfig.PLAYER_SPAWN);
-		 * this.configService.getConfig().setSpawnPoints(gacSpawnPoints);
-		 * 
-		 */
+		// setar spawn points
+		CopyOnWriteArraySet<GameArenaConfig> gacSpawnPoints = this.configService
+				.getGameArenaConfigByGroup(SpleggConfig.PLAYER_SPAWN);
+		this.configService.getConfig().setSpawnPoints(gacSpawnPoints);
+
 	}
-
 
 }

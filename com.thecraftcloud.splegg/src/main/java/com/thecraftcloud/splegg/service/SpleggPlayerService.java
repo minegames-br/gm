@@ -5,22 +5,22 @@ import java.util.Random;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.entity.Egg;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.util.Vector;
 
 import com.thecraftcloud.core.domain.GameArenaConfig;
-import com.thecraftcloud.core.domain.GameConfigInstance;
-import com.thecraftcloud.core.domain.Item;
-import com.thecraftcloud.core.util.MaterialUtil;
 import com.thecraftcloud.core.util.PlayerUtil;
+import com.thecraftcloud.core.util.Utils;
 import com.thecraftcloud.minigame.TheCraftCloudMiniGameAbstract;
 import com.thecraftcloud.minigame.domain.GamePlayer;
 import com.thecraftcloud.minigame.service.ConfigService;
 import com.thecraftcloud.minigame.service.PlayerService;
-import com.thecraftcloud.splegg.domain.SpleggPlayer;
 
 public class SpleggPlayerService extends PlayerService {
 
@@ -64,20 +64,28 @@ public class SpleggPlayerService extends PlayerService {
 
 	public void setupPlayerToStartGame(Player player) {
 		super.setupPlayerToStartGame(player);
-		
-		/*
-		GameConfigInstance gci = spleggConfigService.getGunGameLevel(1);
-		Item item = gci.getItem();
-		ItemStack itemStack = MaterialUtil.getInstance().toItemStack(item);
-		playerUtil.setItemInPlayer(player, itemStack);
-		playMusic(player);
-		*/
+
+		PlayerInventory inventory = player.getInventory();
+
+		ItemStack spade = new ItemStack(Material.IRON_SPADE);
+		inventory.setItemInMainHand(spade);
+		// playMusic(player);
+
 	}
-	
+
+	public void throwEggs(Player player) {
+		Bukkit.getConsoleSender().sendMessage(Utils.color("&6 E TACOU O OVO"));
+		Location player_location = player.getLocation();
+		Egg egg = player.launchProjectile(Egg.class);
+		//Vector velocity = (player.getEyeLocation().toVector().subtract(egg.getLocation().toVector()).normalize())
+				//.multiply(4);
+		//egg.setVelocity(velocity);
+
+	}
+
 	public void playMusic(Player player) {
 		player.playSound(player.getLocation(), Sound.MUSIC_END, 10, 1);
 	}
-		
 
 	public void spawnDeadPlayer(Player player) {
 		CopyOnWriteArraySet<GameArenaConfig> gacList = ConfigService.getInstance().getSpawnPoints();

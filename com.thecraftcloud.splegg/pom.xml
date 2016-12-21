@@ -2,9 +2,9 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.thecraftcloud.game</groupId>
-  <artifactId>gungame</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
-  <name>gungame</name>
+  <artifactId>com.thecraftcloud.splegg</artifactId>
+  <version>1.0.0</version>
+  <name>splegg</name>
 
     <build>
         <plugins>

@@ -1,7 +1,7 @@
-name: GunGame
+name: TheCraftCloud-Splegg
 version: 1.0
-author: gyuriX
-main: com.thecraftcloud.gungame.GameController
+author: renatocesar
+main: com.thecraftcloud.splegg.GameController
 depend: [TheCraftCloud-MiniGame,TheCraftCloud-Core]
 commands:
     sair:
