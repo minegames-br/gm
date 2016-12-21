@@ -1,8 +1,6 @@
 package com.thecraftcloud.minigame.service;
 
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.bukkit.Bukkit;
@@ -43,7 +41,8 @@ public class PlayerService extends TheCraftCloudService {
 		dead.getInventory().clear();
 
 		if (this.configService.getMyCloudCraftGame().isStarted()) {
-			//Bukkit.getConsoleSender().sendMessage(Utils.color("&6vai removeLivePlayer"));
+			// Bukkit.getConsoleSender().sendMessage(Utils.color("&6vai
+			// removeLivePlayer"));
 			this.miniGame.removeLivePlayer(dead);
 			dead.teleport(locationUtil.toLocation(this.configService.getWorld(), this.configService.getLobby())); // TELEPORT
 																													// DEAD
@@ -74,23 +73,21 @@ public class PlayerService extends TheCraftCloudService {
 	 * Nesse método poderemos decidir o que dar a cada jogador
 	 */
 	public void setupPlayerToStartGame(Player player) {
-
 		PlayerInventory inventory = player.getInventory();
-
 		inventory.clear();
 		inventory.setArmorContents(null);
-
-		// recupera vida, fome e retira efeitos de poção
+		
 		regainAttributesToPlayer(player);
+		
+		createScoreBoard(player);
+	}
 
+	public void createScoreBoard(Player player) {
 		Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
 		Objective objective1 = scoreboard.registerNewObjective(Utils.color("&6Placar"), "placar");
 		objective1.setDisplaySlot(DisplaySlot.SIDEBAR);
-		// Objective objective =
-		// scoreboard.registerNewObjective(Utils.color(msg), arg1)
-		// scoreboard.getObjective(DisplaySlot.SIDEBAR).getScore("time").setScore(
-		// configService.getConfig().getGameDurationInSeconds() );
 		player.setScoreboard(scoreboard);
+
 	}
 
 	public void updateScoreBoards() {
@@ -111,16 +108,8 @@ public class PlayerService extends TheCraftCloudService {
 				if (scoreboard.getObjective(DisplaySlot.SIDEBAR).getScore(name) == null)
 					continue;
 				scoreboard.getObjective(DisplaySlot.SIDEBAR).getScore(name).setScore(gp1.getPoint());
-				// scoreboard.getObjective(DisplaySlot.SIDEBAR).getScore("time").setScore(
-				// this.miniGame.getGameDuration() );
 			}
 
-			//Bukkit.getConsoleSender().sendMessage(Utils.color("&6 CONFIG SERVICE " + configService));
-			//Bukkit.getConsoleSender().sendMessage(Utils.color("&6 GET CONFIG " + configService.getConfig()));
-			//Bukkit.getConsoleSender().sendMessage(
-			//		Utils.color("&6 GAME DURATION IN SECONDS " + this.miniGame.getGameDuration() ));
-			//Bukkit.getConsoleSender()
-			//		.sendMessage(Utils.color("&6 GET GAME DURATION " + this.miniGame.getGameDuration()));
 			Integer time = (configService.getGameDurationInSeconds() - this.miniGame.getGameDuration());
 
 			Score p4 = objective1.getScore("Tempo: " + time);
@@ -131,7 +120,6 @@ public class PlayerService extends TheCraftCloudService {
 	public void regainAttributesToPlayer(Player player) {
 		player.setHealth(player.getMaxHealth());
 		player.setFoodLevel(20);
-		;
 		player.getActivePotionEffects().clear();
 	}
 
@@ -142,12 +130,8 @@ public class PlayerService extends TheCraftCloudService {
 	}
 
 	public GamePlayer findGamePlayerByPlayer(Player player) {
-		//Bukkit.getConsoleSender().sendMessage(Utils.color("&3findGamePlayerByPlayer: " + player));
 		CopyOnWriteArraySet<GamePlayer> playerList = this.miniGame.getLivePlayers();
 		for (GamePlayer gp : playerList) {
-			//Bukkit.getConsoleSender().sendMessage(Utils.color("&3findGamePlayerByPlayer: " + gp.getPlayer()));
-			//Bukkit.getConsoleSender()
-			//		.sendMessage(Utils.color("&3findGamePlayerByPlayer gpname: " + gp.getPlayer().getName()));
 			if (gp.getPlayer().equals(player)) {
 				return gp;
 			}
@@ -158,4 +142,5 @@ public class PlayerService extends TheCraftCloudService {
 	public CopyOnWriteArraySet<GamePlayer> getLivePlayers() {
 		return this.miniGame.getLivePlayers();
 	}
+
 }

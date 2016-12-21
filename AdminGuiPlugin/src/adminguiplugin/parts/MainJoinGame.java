@@ -12,14 +12,10 @@ public class MainJoinGame {
 	private static TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance("http://services.thecraftcloud.com:8080/gamemanager/webresources");
 
 	public static void main(String[] args) {
-		/*
+		
 		String arenaName = "thearcher-stadium";
 		String gameName = "TheArcher";
-		*/
-		
-		String arenaName = "arathi";
-		String gameName = "domination";
-		String playerName = "FoxGamer129";
+		String playerName = "_WolfGamer";
 		
 		joinGame(gameName, playerName);
 		
@@ -32,7 +28,7 @@ public class MainJoinGame {
 		dto.setGame(game);
 		dto.setName(ActionDTO.JOIN_GAME);
 		dto.setPlayer(player);
-		ServerInstance server = delegate.findServerByName("localhost");
+		ServerInstance server = delegate.findServerByName("localhost-joao");
 		
 		AdminClient.getInstance().execute(server, dto);
 	}

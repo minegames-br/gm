@@ -1,0 +1,7 @@
+name: TheCraftCloud-Splegg
+version: 1.0
+author: renatocesar
+main: com.thecraftcloud.splegg.GameController
+depend: [TheCraftCloud-MiniGame,TheCraftCloud-Core]
+commands:
+    sair:

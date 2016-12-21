@@ -62,11 +62,7 @@ public class MultiVerseWrapper {
 
 	public void deleteWorld(World world) {
 		MultiverseCore mvplugin = (MultiverseCore)Bukkit.getPluginManager().getPlugin("Multiverse-Core");
-		try{
-			mvplugin.getCore().getMVWorldManager().deleteWorld(world.getName());
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
+		mvplugin.getCore().getMVWorldManager().deleteWorld(world.getName());
 		
 		//Apagar o diretório
 		try {

@@ -11,6 +11,7 @@ import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.commons.io.FileUtils;
+import org.bukkit.Bukkit;
 import org.jboss.resteasy.client.ClientRequest;
 import org.jboss.resteasy.client.ClientResponse;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataOutput;
@@ -39,6 +40,7 @@ import com.thecraftcloud.core.domain.Schematic;
 import com.thecraftcloud.core.domain.ServerInstance;
 import com.thecraftcloud.core.dto.SearchGameWorldDTO;
 import com.thecraftcloud.core.json.JSONParser;
+import com.thecraftcloud.core.util.Utils;
 
 public class TheCraftCloudDelegate {
 
@@ -388,7 +390,7 @@ public class TheCraftCloudDelegate {
 
 	public GameConfig addGameConfig(GameConfig domain) {
 		String json = JSONParser.getInstance().toJSONString(domain);
-		json = post("/gameconfig", json);
+		json = post("/game/config/add", json);
 		domain = (GameConfig) JSONParser.getInstance().toObject(json, GameConfig.class);
 		return domain;
 	}

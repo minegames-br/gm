@@ -19,7 +19,6 @@ import com.thecraftcloud.core.domain.Game;
 import com.thecraftcloud.core.domain.GameWorld;
 import com.thecraftcloud.core.domain.MineCraftPlayer;
 import com.thecraftcloud.core.domain.ServerInstance;
-import com.thecraftcloud.minigame.TheCraftCloudMiniGameAbstract;
 
 public class PlayGameCommand implements CommandExecutor {
 
@@ -65,7 +64,6 @@ public class PlayGameCommand implements CommandExecutor {
 			action = new JoinGameAction();
 			action.execute(dto);
 		}
-		
 
 		return true;
     }

@@ -66,7 +66,7 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 	private Runnable levelUpTask;
 
 	protected LocationUtil locationUtil = new LocationUtil();
-	protected PlayerService playerService = new PlayerService(this);
+	protected PlayerService playerService = createPlayerService();
 	protected ConfigService configService;
 	private Runnable updateScoreBoardTask;
 	private int updateScoreBoardThreadID;
@@ -89,6 +89,10 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 		}
 
 		this.getServer().getPluginManager().callEvent(new TheCraftCloudMiniGameEnableEvent(this));
+	}
+
+	protected PlayerService createPlayerService() {
+		return new PlayerService(this);
 	}
 
 	public void init() {
