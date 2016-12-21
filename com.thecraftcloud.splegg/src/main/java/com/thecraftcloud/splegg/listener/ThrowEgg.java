@@ -33,6 +33,10 @@ public class ThrowEgg implements Listener {
 
 		Player player = event.getPlayer();
 		Action action = event.getAction();
+		
+		if (action.equals(Action.LEFT_CLICK_AIR) || action.equals(Action.LEFT_CLICK_BLOCK)) {
+			event.setCancelled(true);
+		}
 
 		if (action.equals(Action.RIGHT_CLICK_AIR) || action.equals(Action.RIGHT_CLICK_BLOCK)) {
 			if (player.getInventory().getItemInMainHand().getType() == Material.IRON_SPADE) {

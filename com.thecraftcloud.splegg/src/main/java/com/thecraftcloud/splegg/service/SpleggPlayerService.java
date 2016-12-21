@@ -29,7 +29,6 @@ import com.thecraftcloud.splegg.GameController;
 
 public class SpleggPlayerService extends PlayerService {
 
-	private GameController controller;
 	private SpleggConfigService spleggService = SpleggConfigService.getInstance();
 	private PlayerUtil playerUtil = PlayerUtil.getInstance();
 
@@ -76,12 +75,10 @@ public class SpleggPlayerService extends PlayerService {
 		ItemStack spade = new ItemStack(Material.IRON_SPADE);
 		inventory.setItemInMainHand(spade);
 		
-		createScoreBoard(player);
 	}
 
 	@Override
 	public void createScoreBoard(Player player) {
-		Bukkit.getConsoleSender().sendMessage(Utils.color("&6CRIANDO SCOREBOARD"));
 		Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
 		Objective objective1 = scoreboard.registerNewObjective(Utils.color("&6Splegg"), "splegg");
 		objective1.setDisplaySlot(DisplaySlot.SIDEBAR);
@@ -90,7 +87,7 @@ public class SpleggPlayerService extends PlayerService {
 
 	@Override
 	public void updateScoreBoards() {
-		for (GamePlayer gp : this.controller.getLivePlayers()) {
+		for (GamePlayer gp : this.miniGame.getLivePlayers()) {
 			Player player = gp.getPlayer();
 			Scoreboard scoreboard = player.getScoreboard();
 			if (scoreboard == null || scoreboard.getObjective(DisplaySlot.SIDEBAR) == null)
@@ -103,10 +100,10 @@ public class SpleggPlayerService extends PlayerService {
 
 			Integer time = (configService.getGameDurationInSeconds() - this.miniGame.getGameDuration());
 
-			Score p1 = objective1.getScore("&5Tempo: " + time);
+			Score p1 = objective1.getScore(Utils.color("&5Tempo: " + time));
 			p1.setScore(0);
 
-			Score p2 = objective1.getScore("&3Jogadores: " + this.controller.getLivePlayers().size());
+			Score p2 = objective1.getScore("&3Jogadores: " + this.miniGame.getLivePlayers().size());
 			p1.setScore(1);
 		}
 

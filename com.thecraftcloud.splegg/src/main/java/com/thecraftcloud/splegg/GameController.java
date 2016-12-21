@@ -12,6 +12,7 @@ import com.thecraftcloud.minigame.TheCraftCloudConfig;
 import com.thecraftcloud.minigame.TheCraftCloudMiniGameAbstract;
 import com.thecraftcloud.minigame.domain.GamePlayer;
 import com.thecraftcloud.minigame.domain.MyCloudCraftGame;
+import com.thecraftcloud.minigame.service.PlayerService;
 import com.thecraftcloud.splegg.domain.Splegg;
 import com.thecraftcloud.splegg.domain.SpleggPlayer;
 import com.thecraftcloud.splegg.listener.ThrowEgg;
@@ -32,7 +33,7 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 	public void onEnable() {
 		super.onEnable();
 	}
-	
+
 	@Override
 	public void startGameEngine() {
 		super.startGameEngine();
@@ -41,27 +42,26 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 
 		// Enviar jogadores para a Arena
 		spleggPlayerService.teleportPlayersToArena();
-		
-		//registar listeners especificos
+
+		// registar listeners especificos
 		this.registerListeners();
-		
+
 		// Iniciar threads do jogo
 		BukkitScheduler scheduler = getServer().getScheduler();
 		// this.spawnBonusItemThreadID =
 		// scheduler.scheduleSyncRepeatingTask(this, this.spawnBonusItemTask,
 		// 200L, 250L);
 	}
-	
+
 	@Override
 	public void init() {
 		super.init();
-		
-		//aqui deve-se inicializar futuras TASKS
+
+		// aqui deve-se inicializar futuras TASKS
 
 		// Carregar configuracoes especificas do Splegg
 		SpleggConfigService.getInstance().loadConfig();
 	}
-
 
 	@Override
 	public boolean shouldEndGame() {
@@ -107,6 +107,11 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 			player.sendMessage("Você fez " + gp.getPoint() + " pontos.");
 		}
 
+	}
+
+	@Override
+	public PlayerService createPlayerService() {
+		return new SpleggPlayerService(this);
 	}
 
 	@Override

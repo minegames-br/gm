@@ -249,6 +249,10 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 			this.endGame();
 		}
 	}
+	
+	public PlayerService createPlayerService() {
+        return new PlayerService(this);
+    }
 
 	protected void registerListeners() {
 		PluginManager pm = Bukkit.getPluginManager();

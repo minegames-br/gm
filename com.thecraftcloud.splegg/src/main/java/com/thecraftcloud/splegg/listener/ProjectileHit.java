@@ -25,11 +25,11 @@ public class ProjectileHit implements Listener {
 
 	@EventHandler
 	public void onProjectileHit(ProjectileHitEvent event) {
-		
+
 		if (!configService.getMyCloudCraftGame().isStarted()) {
 			return;
 		}
-		
+
 		if (event.getEntity() instanceof Egg) {
 			Egg egg = (Egg) event.getEntity();
 			Player player = (Player) egg.getShooter();
@@ -45,10 +45,9 @@ public class ProjectileHit implements Listener {
 				} else if (hit.getType().equals(Material.TNT)) {
 					egg.remove();
 					hit.setType(Material.AIR);
-					player.getWorld().createExplosion(hit.getLocation(), 2.0F);	
+					player.getWorld().createExplosion(hit.getLocation(), 2.0F);
 				}
 			}
-
 		}
 	}
 
