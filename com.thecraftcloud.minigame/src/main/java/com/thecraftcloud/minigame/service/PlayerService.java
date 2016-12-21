@@ -41,7 +41,8 @@ public class PlayerService extends TheCraftCloudService {
 		dead.getInventory().clear();
 
 		if (this.configService.getMyCloudCraftGame().isStarted()) {
-			//Bukkit.getConsoleSender().sendMessage(Utils.color("&6vai removeLivePlayer"));
+			// Bukkit.getConsoleSender().sendMessage(Utils.color("&6vai
+			// removeLivePlayer"));
 			this.miniGame.removeLivePlayer(dead);
 			dead.teleport(locationUtil.toLocation(this.configService.getWorld(), this.configService.getLobby())); // TELEPORT
 																													// DEAD
@@ -72,23 +73,21 @@ public class PlayerService extends TheCraftCloudService {
 	 * Nesse método poderemos decidir o que dar a cada jogador
 	 */
 	public void setupPlayerToStartGame(Player player) {
-
 		PlayerInventory inventory = player.getInventory();
-
 		inventory.clear();
 		inventory.setArmorContents(null);
-
-		// recupera vida, fome e retira efeitos de poção
+		
 		regainAttributesToPlayer(player);
+		
+		createScoreBoard(player);
+	}
 
+	public void createScoreBoard(Player player) {
 		Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
 		Objective objective1 = scoreboard.registerNewObjective(Utils.color("&6Placar"), "placar");
 		objective1.setDisplaySlot(DisplaySlot.SIDEBAR);
-		// Objective objective =
-		// scoreboard.registerNewObjective(Utils.color(msg), arg1)
-		// scoreboard.getObjective(DisplaySlot.SIDEBAR).getScore("time").setScore(
-		// configService.getConfig().getGameDurationInSeconds() );
 		player.setScoreboard(scoreboard);
+
 	}
 
 	public void updateScoreBoards() {

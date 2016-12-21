@@ -1,20 +1,14 @@
 package com.thecraftcloud.splegg.listener;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Egg;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerEggThrowEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
-import com.thecraftcloud.core.util.Utils;
 import com.thecraftcloud.minigame.service.ConfigService;
 import com.thecraftcloud.splegg.GameController;
 import com.thecraftcloud.splegg.service.SpleggPlayerService;
@@ -33,9 +27,9 @@ public class ThrowEgg implements Listener {
 	@EventHandler
 	public void onClick(PlayerInteractEvent event) {
 
-		/*
-		 * if(!configService.getMyCloudCraftGame().isStarted()) { return; }
-		 */
+		if (!configService.getMyCloudCraftGame().isStarted()) {
+			return;
+		}
 
 		Player player = event.getPlayer();
 		Action action = event.getAction();
@@ -46,14 +40,14 @@ public class ThrowEgg implements Listener {
 				Egg egg = player.launchProjectile(Egg.class);
 
 				double pitch = ((player.getLocation().getPitch() + 90) * Math.PI) / 180;
-				double yaw  = ((player.getLocation().getYaw() + 90)  * Math.PI) / 180;
-				
+				double yaw = ((player.getLocation().getYaw() + 90) * Math.PI) / 180;
+
 				double x = Math.sin(pitch) * Math.cos(yaw);
 				double y = Math.sin(pitch) * Math.sin(yaw);
 				double z = Math.cos(pitch);
-				
+
 				Vector velocity = new Vector(x, z, y).multiply(2);
-				
+
 				egg.setVelocity(velocity);
 
 			}

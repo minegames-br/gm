@@ -12,6 +12,10 @@ import org.bukkit.entity.Egg;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Score;
+import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.util.Vector;
 
 import com.thecraftcloud.core.domain.GameArenaConfig;
@@ -21,9 +25,11 @@ import com.thecraftcloud.minigame.TheCraftCloudMiniGameAbstract;
 import com.thecraftcloud.minigame.domain.GamePlayer;
 import com.thecraftcloud.minigame.service.ConfigService;
 import com.thecraftcloud.minigame.service.PlayerService;
+import com.thecraftcloud.splegg.GameController;
 
 public class SpleggPlayerService extends PlayerService {
 
+	private GameController controller;
 	private SpleggConfigService spleggService = SpleggConfigService.getInstance();
 	private PlayerUtil playerUtil = PlayerUtil.getInstance();
 
@@ -61,25 +67,48 @@ public class SpleggPlayerService extends PlayerService {
 			this.setupPlayerToStartGame(player);
 		}
 	}
-
+	
+	@Override
 	public void setupPlayerToStartGame(Player player) {
 		super.setupPlayerToStartGame(player);
-
+		
 		PlayerInventory inventory = player.getInventory();
-
 		ItemStack spade = new ItemStack(Material.IRON_SPADE);
 		inventory.setItemInMainHand(spade);
-		// playMusic(player);
-
+		
+		createScoreBoard(player);
 	}
 
-	public void throwEggs(Player player) {
-		Bukkit.getConsoleSender().sendMessage(Utils.color("&6 E TACOU O OVO"));
-		Location player_location = player.getLocation();
-		Egg egg = player.launchProjectile(Egg.class);
-		//Vector velocity = (player.getEyeLocation().toVector().subtract(egg.getLocation().toVector()).normalize())
-				//.multiply(4);
-		//egg.setVelocity(velocity);
+	@Override
+	public void createScoreBoard(Player player) {
+		Bukkit.getConsoleSender().sendMessage(Utils.color("&6CRIANDO SCOREBOARD"));
+		Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
+		Objective objective1 = scoreboard.registerNewObjective(Utils.color("&6Splegg"), "splegg");
+		objective1.setDisplaySlot(DisplaySlot.SIDEBAR);
+		player.setScoreboard(scoreboard);
+	}
+
+	@Override
+	public void updateScoreBoards() {
+		for (GamePlayer gp : this.controller.getLivePlayers()) {
+			Player player = gp.getPlayer();
+			Scoreboard scoreboard = player.getScoreboard();
+			if (scoreboard == null || scoreboard.getObjective(DisplaySlot.SIDEBAR) == null)
+				continue;
+
+			Objective objective1 = scoreboard.getObjective(DisplaySlot.SIDEBAR);
+			objective1.unregister();
+			objective1 = scoreboard.registerNewObjective(Utils.color("&6Splegg"), "splegg");
+			objective1.setDisplaySlot(DisplaySlot.SIDEBAR);
+
+			Integer time = (configService.getGameDurationInSeconds() - this.miniGame.getGameDuration());
+
+			Score p1 = objective1.getScore("&5Tempo: " + time);
+			p1.setScore(0);
+
+			Score p2 = objective1.getScore("&3Jogadores: " + this.controller.getLivePlayers().size());
+			p1.setScore(1);
+		}
 
 	}
 

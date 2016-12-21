@@ -11,6 +11,7 @@ import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.commons.io.FileUtils;
+import org.bukkit.Bukkit;
 import org.jboss.resteasy.client.ClientRequest;
 import org.jboss.resteasy.client.ClientResponse;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataOutput;
@@ -39,6 +40,7 @@ import com.thecraftcloud.core.domain.Schematic;
 import com.thecraftcloud.core.domain.ServerInstance;
 import com.thecraftcloud.core.dto.SearchGameWorldDTO;
 import com.thecraftcloud.core.json.JSONParser;
+import com.thecraftcloud.core.util.Utils;
 
 public class TheCraftCloudDelegate {
 
