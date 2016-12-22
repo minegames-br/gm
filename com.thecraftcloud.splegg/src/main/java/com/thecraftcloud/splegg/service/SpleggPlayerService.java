@@ -78,7 +78,7 @@ public class SpleggPlayerService extends PlayerService {
 		dead.setHealth(20);
 		dead.getInventory().clear();
 		dead.setGameMode(GameMode.SPECTATOR);
-		dead.sendMessage(ChatColor.YELLOW.ITALIC + dead.getName() + " , voc� agora � um espectador!");
+		dead.sendMessage(ChatColor.YELLOW.ITALIC + dead.getName() + " , você agora é um espectador!");
 
 		if (!this.configService.getMyCloudCraftGame().isStarted()) {
 			this.miniGame.removeLivePlayer(dead);
@@ -107,16 +107,32 @@ public class SpleggPlayerService extends PlayerService {
 
 			Objective objective1 = scoreboard.getObjective(DisplaySlot.SIDEBAR);
 			objective1.unregister();
-			objective1 = scoreboard.registerNewObjective(Utils.color("&6Splegg"), "splegg");
+			objective1 = scoreboard.registerNewObjective(ChatColor.BOLD.UNDERLINE + "❐ SPLEGG ❐", "splegg");
 			objective1.setDisplaySlot(DisplaySlot.SIDEBAR);
 
 			Integer time = (configService.getGameDurationInSeconds() - this.miniGame.getGameDuration());
 
-			Score p1 = objective1.getScore(Utils.color("&5Tempo: " + time));
-			p1.setScore(0);
+			
+			Score space0 = objective1.getScore("");
+			space0.setScore(7);
+			
+			Score p1 = objective1.getScore(ChatColor.BOLD + Utils.color("&BTempo"));
+			p1.setScore(6);
+			
+			Score p2 = objective1.getScore("" + time);
+			p2.setScore(5);
+			
+			Score space1 = objective1.getScore("");
+			space1.setScore(4);
+			
+			Score space2 = objective1.getScore("");
+			space2.setScore(3);
 
-			Score p2 = objective1.getScore("&3Jogadores: " + this.miniGame.getLivePlayers().size());
-			p1.setScore(1);
+			Score p3 = objective1.getScore(ChatColor.BOLD + Utils.color("&AJogadores"));
+			p3.setScore(2);
+			
+			Score p4 = objective1.getScore("" + this.miniGame.getLivePlayers().size());
+			p4.setScore(1);
 		}
 
 	}

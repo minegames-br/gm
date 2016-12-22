@@ -262,7 +262,9 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 		scheduler.scheduleSyncDelayedTask(this, new Runnable() {
 			@Override
 			public void run() {
-				livePlayers.removeAll(livePlayers);
+				for (GamePlayer gp : getLivePlayers()) {
+					removeLivePlayer(gp.getPlayer());
+				}
 			}
 		}, 200L);
 	}

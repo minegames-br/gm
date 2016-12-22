@@ -59,8 +59,8 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 	@Override
 	public void init() {
 		super.init();
-		
-		//inicializar variaveis de instancia
+
+		// inicializar variaveis de instancia
 		this.playerWinTask = new PlayerWinTask(this);
 
 		// Carregar configuracoes especificas do Splegg
@@ -88,7 +88,7 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Quando esse método executar, o jogo terá terminado com um vencedor e/ou o
 	 * tempo terá acabado.
@@ -100,9 +100,8 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 			this.configService.getMyCloudCraftGame().endGame();
 		}
 		MGLogger.info("Game.endGame");
-		Bukkit.getConsoleSender().sendMessage(Utils.color("&6 AQUIIIIIIIIIIIIIIIIIIIIIIIIIIII"));
 
-		//Terminar threads do jogo
+		// Terminar threads do jogo
 		Bukkit.getScheduler().cancelTask(this.playerWinTaskThreadID);
 
 		for (GamePlayer gp : livePlayers) {
