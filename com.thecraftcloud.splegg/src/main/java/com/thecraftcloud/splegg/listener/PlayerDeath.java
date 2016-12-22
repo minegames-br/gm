@@ -9,6 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
+import com.thecraftcloud.minigame.domain.MyCloudCraftGame;
 import com.thecraftcloud.minigame.service.EntityService;
 import com.thecraftcloud.splegg.GameController;
 import com.thecraftcloud.splegg.service.SpleggPlayerService;
@@ -27,6 +28,13 @@ public class PlayerDeath implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onDeath(EntityDeathEvent event) {
+		
+		MyCloudCraftGame game = this.controller.getConfigService().getMyCloudCraftGame();
+
+		if (!game.isStarted()) {
+			return;
+		}
+
 
 		event.getDrops().clear();
 		event.setDroppedExp(0);

@@ -5,10 +5,11 @@ import java.util.Random;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.entity.Egg;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -16,31 +17,22 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.util.Vector;
 
 import com.thecraftcloud.core.domain.GameArenaConfig;
-import com.thecraftcloud.core.util.PlayerUtil;
 import com.thecraftcloud.core.util.Utils;
 import com.thecraftcloud.minigame.TheCraftCloudMiniGameAbstract;
 import com.thecraftcloud.minigame.domain.GamePlayer;
 import com.thecraftcloud.minigame.service.ConfigService;
 import com.thecraftcloud.minigame.service.PlayerService;
-import com.thecraftcloud.splegg.GameController;
 
 public class SpleggPlayerService extends PlayerService {
 
-	private GameController controller;
-	private SpleggConfigService spleggService = SpleggConfigService.getInstance();
-	private PlayerUtil playerUtil = PlayerUtil.getInstance();
+	protected SpleggConfigService spleggService = SpleggConfigService.getInstance();
+	protected SpleggPlayerService playerService;
 
 	public SpleggPlayerService(TheCraftCloudMiniGameAbstract controller) {
 		super(controller);
 		this.configService = ConfigService.getInstance();
-	}
-
-	@Override
-	public void killPlayer(Player dead) {
-		String deadname = dead.getDisplayName();
 	}
 
 	public void teleportPlayersToArena() {
@@ -67,21 +59,38 @@ public class SpleggPlayerService extends PlayerService {
 			this.setupPlayerToStartGame(player);
 		}
 	}
-	
+
 	@Override
 	public void setupPlayerToStartGame(Player player) {
 		super.setupPlayerToStartGame(player);
-		
+
 		PlayerInventory inventory = player.getInventory();
 		ItemStack spade = new ItemStack(Material.IRON_SPADE);
 		inventory.setItemInMainHand(spade);
-		
-		createScoreBoard(player);
+		player.setGameMode(GameMode.SURVIVAL);
+	}
+
+	@Override
+	public void killPlayer(Player dead) {
+		String deadname = dead.getDisplayName();
+		Bukkit.broadcastMessage(ChatColor.GOLD + " " + deadname + "" + ChatColor.GREEN + " died.");
+
+		dead.setHealth(20);
+		dead.getInventory().clear();
+		dead.setGameMode(GameMode.SPECTATOR);
+		dead.sendMessage(ChatColor.YELLOW.ITALIC + dead.getName() + " , você agora é um espectador!");
+
+		if (!this.configService.getMyCloudCraftGame().isStarted()) {
+			this.miniGame.removeLivePlayer(dead);
+			dead.teleport(locationUtil.toLocation(this.configService.getWorld(), this.configService.getLobby()));
+		}
+
+		spawnDeadPlayer(dead);
+		this.miniGame.removeLivePlayer(dead);
 	}
 
 	@Override
 	public void createScoreBoard(Player player) {
-		Bukkit.getConsoleSender().sendMessage(Utils.color("&6CRIANDO SCOREBOARD"));
 		Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
 		Objective objective1 = scoreboard.registerNewObjective(Utils.color("&6Splegg"), "splegg");
 		objective1.setDisplaySlot(DisplaySlot.SIDEBAR);
@@ -90,7 +99,7 @@ public class SpleggPlayerService extends PlayerService {
 
 	@Override
 	public void updateScoreBoards() {
-		for (GamePlayer gp : this.controller.getLivePlayers()) {
+		for (GamePlayer gp : this.miniGame.getLivePlayers()) {
 			Player player = gp.getPlayer();
 			Scoreboard scoreboard = player.getScoreboard();
 			if (scoreboard == null || scoreboard.getObjective(DisplaySlot.SIDEBAR) == null)
@@ -98,16 +107,32 @@ public class SpleggPlayerService extends PlayerService {
 
 			Objective objective1 = scoreboard.getObjective(DisplaySlot.SIDEBAR);
 			objective1.unregister();
-			objective1 = scoreboard.registerNewObjective(Utils.color("&6Splegg"), "splegg");
+			objective1 = scoreboard.registerNewObjective(ChatColor.BOLD.UNDERLINE + "❐ SPLEGG ❐", "splegg");
 			objective1.setDisplaySlot(DisplaySlot.SIDEBAR);
 
 			Integer time = (configService.getGameDurationInSeconds() - this.miniGame.getGameDuration());
 
-			Score p1 = objective1.getScore("&5Tempo: " + time);
-			p1.setScore(0);
+			
+			Score space0 = objective1.getScore("");
+			space0.setScore(7);
+			
+			Score p1 = objective1.getScore(ChatColor.BOLD + Utils.color("&BTempo"));
+			p1.setScore(6);
+			
+			Score p2 = objective1.getScore("" + time);
+			p2.setScore(5);
+			
+			Score space1 = objective1.getScore("");
+			space1.setScore(4);
+			
+			Score space2 = objective1.getScore("");
+			space2.setScore(3);
 
-			Score p2 = objective1.getScore("&3Jogadores: " + this.controller.getLivePlayers().size());
-			p1.setScore(1);
+			Score p3 = objective1.getScore(ChatColor.BOLD + Utils.color("&AJogadores"));
+			p3.setScore(2);
+			
+			Score p4 = objective1.getScore("" + this.miniGame.getLivePlayers().size());
+			p4.setScore(1);
 		}
 
 	}

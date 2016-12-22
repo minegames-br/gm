@@ -3,6 +3,7 @@ package com.thecraftcloud.minigame;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -50,8 +51,8 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 	
 	protected Integer totalLevels;
 
-	private int endGameThreadID;
-	private Runnable endGameTask;
+	protected int endGameThreadID;
+	protected Runnable endGameTask;
 
 	private int startGameThreadID;
 	private StartGameTask startGameTask;
@@ -66,10 +67,10 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 	private Runnable levelUpTask;
 
 	protected LocationUtil locationUtil = new LocationUtil();
-	protected PlayerService playerService = createPlayerService();
+	protected PlayerService playerService = new PlayerService(this);
 	protected ConfigService configService;
-	private Runnable updateScoreBoardTask;
-	private int updateScoreBoardThreadID;
+	protected Runnable updateScoreBoardTask;
+	protected int updateScoreBoardThreadID;
 
 	@Override
 	public void onEnable() {
@@ -82,6 +83,18 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 		// não deixar fazer spawn de mobs automatico
 		// deixar o horário de dia
 		for (final World world : Bukkit.getWorlds()) {
+
+			if (!world.getName().contains("world")) {
+				Bukkit.getScheduler().runTaskAsynchronously(this, new Runnable() {
+					public void run() {
+						MultiVerseWrapper mvw = new MultiVerseWrapper();
+						// mvw.unloadWorld(world);
+					}
+				});
+				continue;
+			}
+			
+			totalLevels = 10; //posteriormente pegar do BD
 			world.setTime(1000);
 			world.setSpawnFlags(false, false);
 			world.setGameRuleValue("doMobSpawning", "false");
@@ -89,10 +102,6 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 		}
 
 		this.getServer().getPluginManager().callEvent(new TheCraftCloudMiniGameEnableEvent(this));
-	}
-
-	protected PlayerService createPlayerService() {
-		return new PlayerService(this);
 	}
 
 	public void init() {
@@ -122,20 +131,25 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 		scheduler.cancelTask(startCountDownThreadID);
 		scheduler.cancelTask(startGameThreadID);
 	
-		this.updateScoreBoardThreadID = scheduler.scheduleSyncRepeatingTask(this, this.updateScoreBoardTask, 0L, 20L);
-		this.endGameThreadID = scheduler.scheduleSyncRepeatingTask(this, this.endGameTask, 0L, 20L);
-		//this.levelUpThreadID = scheduler.scheduleSyncRepeatingTask(this, this.levelUpTask, 0L, this.configService.getGameDurationInTicks()/totalLevels);
+		startThreads(scheduler);
 		this.start();
 		this.configService.getMyCloudCraftGame().start();
 
 		// mudar horário da arena
 		Integer time = this.configService.getArena().getTime();
-		if (time != null && this.configService.getWorld() != null) {
+		if (time != null) {
 			this.configService.getWorld().setTime(time);
 		}
 
 		this.getServer().getPluginManager().callEvent(new StartGameEvent(this));
 		this.gameStartTime = System.currentTimeMillis();
+	}
+
+	public void startThreads(BukkitScheduler scheduler) {
+		this.updateScoreBoardThreadID = scheduler.scheduleSyncRepeatingTask(this, this.updateScoreBoardTask, 0L, 20L);
+		this.endGameThreadID = scheduler.scheduleSyncRepeatingTask(this, this.endGameTask, 0L, 20L);
+		this.levelUpThreadID = scheduler.scheduleSyncRepeatingTask(this, this.levelUpTask, 0L, this.configService.getGameDurationInTicks()/totalLevels);
+		
 	}
 
 	public void endGame() {
@@ -209,12 +223,13 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 		this.configService.setStartCountDown();
 
 	}
+	
+	public void livePlayerToSpectator(Player player) {
+		GamePlayer gp = this.playerService.findGamePlayerByPlayer(player);
+	}
 
 	public void removeLivePlayer(Player player) {
 		GamePlayer gp = this.playerService.findGamePlayerByPlayer(player);
-
-		// Bukkit.getConsoleSender().sendMessage(Utils.color("&6find gameplayer
-		// by player: " + gp));
 
 		if (gp != null) {
 			if (player != null) {
@@ -228,9 +243,9 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 			removeBossBar(gp);
 
 			livePlayers.remove(gp);
-			// Bukkit.getConsoleSender().sendMessage(Utils.color("&6 Disparar
-			// evento PlayerLeftGameEvent"));
-			this.getServer().getPluginManager().callEvent(new PlayerLeftGameEvent(this, gp));
+			if (gp.getPlayer().getGameMode() != GameMode.SPECTATOR) {
+				this.getServer().getPluginManager().callEvent(new PlayerLeftGameEvent(this, gp));
+			}
 		} else {
 			// Bukkit.getConsoleSender().sendMessage(Utils.color("&6 NAO achou o
 			// GAMEPLAYER"));
@@ -241,6 +256,22 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 			this.endGame();
 		}
 	}
+	
+	public void endGameDelay() {
+		BukkitScheduler scheduler = this.getServer().getScheduler();
+		scheduler.scheduleSyncDelayedTask(this, new Runnable() {
+			@Override
+			public void run() {
+				for (GamePlayer gp : getLivePlayers()) {
+					removeLivePlayer(gp.getPlayer());
+				}
+			}
+		}, 200L);
+	}
+	
+	public PlayerService createPlayerService() {
+        return new PlayerService(this);
+    }
 
 	protected void registerListeners() {
 		PluginManager pm = Bukkit.getPluginManager();

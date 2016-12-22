@@ -20,7 +20,6 @@
 		<class>com.thecraftcloud.core.domain.GameArenaConfig</class>
 		<class>com.thecraftcloud.core.domain.Schematic</class>
 		<class>com.thecraftcloud.core.domain.Kit</class>
-		<class>com.thecraftcloud.core.domain.KitItem</class>
 		<class>com.thecraftcloud.core.domain.Item</class>
 		<class>com.thecraftcloud.core.domain.GameQueue</class>
 		<class>com.thecraftcloud.core.domain.GameGameConfig</class>

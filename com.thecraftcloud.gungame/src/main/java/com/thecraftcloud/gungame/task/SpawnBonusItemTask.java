@@ -1,7 +1,5 @@
 package com.thecraftcloud.gungame.task;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
@@ -9,16 +7,11 @@ import org.bukkit.Material;
 import org.bukkit.block.Chest;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
 import com.thecraftcloud.core.util.Utils;
 import com.thecraftcloud.gungame.service.GunGameConfigService;
 import com.thecraftcloud.minigame.TheCraftCloudMiniGameAbstract;
-import com.thecraftcloud.minigame.domain.GamePlayer;
 import com.thecraftcloud.minigame.domain.MyCloudCraftGame;
-import com.thecraftcloud.minigame.service.ConfigService;
 
 public class SpawnBonusItemTask implements Runnable {
 

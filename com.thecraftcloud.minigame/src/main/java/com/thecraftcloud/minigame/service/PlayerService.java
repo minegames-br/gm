@@ -5,6 +5,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
@@ -37,18 +38,12 @@ public class PlayerService extends TheCraftCloudService {
 		String deadname = dead.getDisplayName();
 		Bukkit.broadcastMessage(ChatColor.GOLD + " " + deadname + "" + ChatColor.GREEN + " died.");
 
-		dead.setHealth(20); // Do not show the respawn screen
+		dead.setHealth(20);
 		dead.getInventory().clear();
 
 		if (this.configService.getMyCloudCraftGame().isStarted()) {
-			// Bukkit.getConsoleSender().sendMessage(Utils.color("&6vai
-			// removeLivePlayer"));
 			this.miniGame.removeLivePlayer(dead);
-			dead.teleport(locationUtil.toLocation(this.configService.getWorld(), this.configService.getLobby())); // TELEPORT
-																													// DEAD
-																													// PLAYER
-																													// TO
-																													// LOBBY
+			dead.teleport(locationUtil.toLocation(this.configService.getWorld(), this.configService.getLobby())); 
 		}
 	}
 
@@ -141,6 +136,11 @@ public class PlayerService extends TheCraftCloudService {
 
 	public CopyOnWriteArraySet<GamePlayer> getLivePlayers() {
 		return this.miniGame.getLivePlayers();
+	}
+
+	protected PlayerService createPlayerService() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

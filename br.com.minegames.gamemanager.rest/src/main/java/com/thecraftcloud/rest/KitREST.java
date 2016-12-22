@@ -12,8 +12,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.thecraftcloud.core.domain.Item;
 import com.thecraftcloud.core.domain.Kit;
 import com.thecraftcloud.core.json.JSONParser;
+import com.thecraftcloud.service.ItemService;
 import com.thecraftcloud.service.KitService;
 
 @Path("/kit")
@@ -72,6 +74,22 @@ public class KitREST extends REST {
 		    return Response.ok( "Kit removido com sucesso" , MediaType.APPLICATION_JSON).build();
 		} else {
 			return Response.status(Response.Status.NOT_FOUND).entity("Kit não encontrado: " + _uuid).build();
+		}
+	}
+	
+	@POST
+	@Path("/{kit_uuid}/additem/{item_uuid}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response update(@PathParam("kit_uuid") String kit_uuid, @PathParam("item_uuid") String item_uuid ) {
+		KitService service = new KitService();
+		ItemService iService = new ItemService();
+		Kit kit = service.find( UUID.fromString(kit_uuid) );
+		Item item = iService.find(UUID.fromString(item_uuid));
+		if( kit != null && item != null) {
+			kit = service.addItem(kit, item);
+		    return Response.ok( MediaType.APPLICATION_JSON).build();
+		} else {
+			return Response.status(Response.Status.NOT_FOUND).entity("Kit ou Item não encontrado").build();
 		}
 	}
 	

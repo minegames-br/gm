@@ -12,8 +12,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.thecraftcloud.core.domain.Arena;
 import com.thecraftcloud.core.domain.Item;
 import com.thecraftcloud.core.json.JSONParser;
+import com.thecraftcloud.service.ArenaService;
 import com.thecraftcloud.service.ItemService;
 
 @Path("/item")
@@ -85,6 +87,24 @@ public class ItemREST extends REST {
 		if( domain != null) {
 			service.delete(domain);
 		    return Response.ok( "Item removido com sucesso" , MediaType.APPLICATION_JSON).build();
+		} else {
+			return Response.status(Response.Status.NOT_FOUND).entity("Item não encontrado: " + _uuid).build();
+		}
+	}
+	
+	@POST
+	@Path("/{uuid}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response update(@PathParam("uuid") String _uuid, String json) {
+		ItemService service = new ItemService();
+		log("json: " + json);
+		Item domain = service.find( UUID.fromString(_uuid) );
+		if( domain != null) {
+			domain = (Item)JSONParser.getInstance().toObject(json, Item.class);
+			service.merge(domain);
+			domain = service.find( UUID.fromString(_uuid) );
+			json = JSONParser.getInstance().toJSONString(domain);
+		    return Response.ok( json , MediaType.APPLICATION_JSON).build();
 		} else {
 			return Response.status(Response.Status.NOT_FOUND).entity("Item não encontrado: " + _uuid).build();
 		}

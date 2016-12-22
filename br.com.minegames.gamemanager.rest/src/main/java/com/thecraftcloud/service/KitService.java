@@ -8,6 +8,7 @@ import javax.persistence.Query;
 
 import org.jboss.logging.Logger;
 
+import com.thecraftcloud.core.domain.Item;
 import com.thecraftcloud.core.domain.Kit;
 import com.thecraftcloud.dao.KitDAO;
 
@@ -51,6 +52,14 @@ public class KitService extends Service {
 		em.remove(domain);
 		commitTransaction();
 		Logger.getLogger(KitService.class).info("uuid: " + domain.getKit_uuid() + " deletado");
+	}
+
+	public Kit addItem(Kit kit, Item item) {
+		startTransaction();
+		kit.getItems().add(item);
+		this.em.merge(kit);
+		commitTransaction();
+		return kit;
 	}
 	
 }

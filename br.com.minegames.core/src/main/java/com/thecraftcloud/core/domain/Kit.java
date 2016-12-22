@@ -26,7 +26,7 @@ public class Kit extends TransferObject {
 
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@OneToMany
-	private List<KitItem> items;
+	private List<Item> items;
 
 	public UUID getKit_uuid() {
 		return kit_uuid;
@@ -44,11 +44,11 @@ public class Kit extends TransferObject {
 		this.name = name;
 	}
 
-	public List<KitItem> getItems() {
+	public List<Item> getItems() {
 		return items;
 	}
 
-	public void setItems(List<KitItem> items) {
+	public void setItems(List<Item> items) {
 		this.items = items;
 	}
 	

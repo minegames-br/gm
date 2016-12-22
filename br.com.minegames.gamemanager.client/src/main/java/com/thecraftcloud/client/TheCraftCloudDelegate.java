@@ -1026,6 +1026,27 @@ public class TheCraftCloudDelegate {
 		gq = (GameQueue) JSONParser.getInstance().toObject(json, GameQueue.class);
 		return gq;
 	}
+
+	public Kit findKit(String _uuid) {
+		Kit kit = null;
+		String json = get("/kit", _uuid );
+		kit = (Kit)JSONParser.getInstance().toObject(json, Kit.class);
+		
+		return kit;
+	}
+
+	public Item updateItem(Item item) {
+		String json = JSONParser.getInstance().toJSONString(item);
+		json = post("/item/" + item.getItem_uuid().toString(), json);
+		item = (Item) JSONParser.getInstance().toObject(json, Item.class);
+		return item;
+	}
+
+	public Kit addItemToKit(Kit kit, Item item) {
+		String json = JSONParser.getInstance().toJSONString(item);
+		post("/kit/" + kit.getKit_uuid().toString() + "/additem/" + item.getItem_uuid().toString() );
+		return kit;
+	}
 	
 }
 
