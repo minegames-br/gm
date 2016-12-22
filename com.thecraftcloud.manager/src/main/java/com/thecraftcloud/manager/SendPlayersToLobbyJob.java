@@ -1,24 +1,17 @@
 package com.thecraftcloud.manager;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.List;
-import java.util.logging.Logger;
 
-import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 import com.thecraftcloud.admin.socket.client.AdminClient;
-import com.thecraftcloud.client.TheCraftCloudDelegate;
 import com.thecraftcloud.core.admin.domain.ActionDTO;
 import com.thecraftcloud.core.admin.domain.ResponseDTO;
-import com.thecraftcloud.core.domain.AdminQueue;
 import com.thecraftcloud.core.domain.MineCraftPlayer;
 import com.thecraftcloud.core.domain.PlayerStatus;
-import com.thecraftcloud.core.domain.RequestStatus;
 import com.thecraftcloud.core.domain.ServerInstance;
-import com.thecraftcloud.core.json.JSONParser;
 
 public class SendPlayersToLobbyJob extends ManagerJob {
 

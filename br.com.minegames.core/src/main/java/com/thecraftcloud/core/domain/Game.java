@@ -1,13 +1,17 @@
 package com.thecraftcloud.core.domain;
 
+import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 @Entity
 public class Game extends TransferObject implements Comparable {
@@ -23,6 +27,10 @@ public class Game extends TransferObject implements Comparable {
 	private String description;
 	
 	private String pluginName;
+	
+	@LazyCollection(LazyCollectionOption.FALSE)
+	@OneToMany
+	private List<Kit> kit;
 	
 	public UUID getGame_uuid() {
 		return game_uuid;
@@ -53,6 +61,12 @@ public class Game extends TransferObject implements Comparable {
 	public int compareTo(Object o) {
 		Game game = (Game)o;
 		return game.getGame_uuid().compareTo(this.getGame_uuid());
+	}
+	public List<Kit> getKit() {
+		return kit;
+	}
+	public void setKit(List<Kit> kit) {
+		this.kit = kit;
 	}
 	
 }

@@ -4,6 +4,7 @@ import org.bukkit.Material;
 import org.junit.Test;
 
 import com.thecraftcloud.client.TheCraftCloudDelegate;
+import com.thecraftcloud.core.domain.Game;
 import com.thecraftcloud.core.domain.Item;
 import com.thecraftcloud.core.domain.Kit;
 
@@ -13,11 +14,24 @@ public class CreateKitTest {
 
 	@Test
 	public void test() {
-		
 		Kit kit = null;
 		Item item = null;
-		//{"kit_uuid":"6e1c9419-233d-4100-af03-ffa46cf46915","name":"Guerreiro","items":null}
 		kit = delegate.findKit("6e1c9419-233d-4100-af03-ffa46cf46915");
+		Game game = delegate.findGameByName("domination");
+		addKitToGame( kit, game );
+	}
+	
+	private void addKitToGame( Kit kit, Game game ) {
+		game.getKit().add(kit);
+		delegate.updateGame(game);
+	}
+	
+	private Kit createKitWarrior() {
+		//{"kit_uuid":"6e1c9419-233d-4100-af03-ffa46cf46915","name":"Guerreiro","items":null}
+		Kit kit = null;
+		Item item = null;
+		kit = delegate.findKit("6e1c9419-233d-4100-af03-ffa46cf46915");
+		
 		item = delegate.findItemByName(Material.DIAMOND_LEGGINGS.name());
 		addItemToKit(kit, item);
 		item = delegate.findItemByName(Material.DIAMOND_HELMET.name());
@@ -26,9 +40,6 @@ public class CreateKitTest {
 		addItemToKit(kit, item);
 		item = delegate.findItemByName(Material.DIAMOND_CHESTPLATE.name());
 		addItemToKit(kit, item);
-	}
-	
-	private Kit createKit(Kit kit) {
 		return delegate.addKit(kit);
 	}
 	

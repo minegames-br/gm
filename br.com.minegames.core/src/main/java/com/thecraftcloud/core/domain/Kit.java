@@ -23,6 +23,8 @@ public class Kit extends TransferObject {
 	
 	@Column(unique=true)
 	private String name;
+	
+	private String displayName;
 
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@OneToMany
@@ -50,6 +52,14 @@ public class Kit extends TransferObject {
 
 	public void setItems(List<Item> items) {
 		this.items = items;
+	}
+
+	public String getDisplayName() {
+		return displayName;
+	}
+
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
 	}
 	
 	
