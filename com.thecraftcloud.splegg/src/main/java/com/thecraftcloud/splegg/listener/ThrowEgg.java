@@ -19,6 +19,9 @@ public class ThrowEgg implements Listener {
 	private GameController controller;
 	private ConfigService configService = ConfigService.getInstance();
 	private SpleggPlayerService spleggPlayerService;
+	private com.thecraftcloud.splegg.domain.Egg eggProjectile;
+	
+	//public ArrayList<Projectile> eggs = new ArrayList<Projectile>();
 
 	public ThrowEgg(GameController controller) {
 		super();
@@ -45,6 +48,7 @@ public class ThrowEgg implements Listener {
 			if (player.getInventory().getItemInMainHand().getType() == Material.IRON_SPADE) {
 
 				Egg egg = player.launchProjectile(Egg.class);
+				eggProjectile.getEggs().add(egg);
 
 				double pitch = ((player.getLocation().getPitch() + 90) * Math.PI) / 180;
 				double yaw = ((player.getLocation().getYaw() + 90) * Math.PI) / 180;
@@ -60,5 +64,6 @@ public class ThrowEgg implements Listener {
 			}
 		}
 	}
-
+	
+	
 }

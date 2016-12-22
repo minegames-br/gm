@@ -6,7 +6,6 @@ import org.bukkit.entity.Egg;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.util.BlockIterator;
 
@@ -18,6 +17,7 @@ public class ProjectileHit implements Listener {
 
 	private GameController controller;
 	private ConfigService configService = ConfigService.getInstance();
+	private com.thecraftcloud.splegg.domain.Egg eggProjectile;
 
 	public ProjectileHit(GameController controller) {
 		super();
@@ -43,21 +43,14 @@ public class ProjectileHit implements Listener {
 			while (bi.hasNext()) {
 				hit = bi.next();
 				if (!hit.getType().equals(Material.AIR) && !hit.getType().equals(Material.TNT)) {
-					egg.remove();
+					eggProjectile.getEggs().remove(egg);
 					hit.setType(Material.AIR);
 				} else if (hit.getType().equals(Material.TNT)) {
-					egg.remove();
+					eggProjectile.getEggs().remove(egg);
 					hit.setType(Material.AIR);
 					player.getWorld().createExplosion(hit.getLocation(), 2.0F);
 				}
 			}
 		}
 	}
-
-	@EventHandler
-	public void onDamage(EntityDamageByEntityEvent event) {
-		event.setDamage(0.0);
-		event.setCancelled(true);
-	}
-
 }

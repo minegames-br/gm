@@ -134,7 +134,7 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 		PluginManager pm = Bukkit.getPluginManager();
 		pm.registerEvents(new PlayerDeath(this), this);
 		pm.registerEvents(new ThrowEgg(this), this);
-		pm.registerEvents(new ProjectileHit(this), this);
+		//pm.registerEvents(new ProjectileHit(this), this);
 		pm.registerEvents(new CancelEvents(this), this);
 	}
 
