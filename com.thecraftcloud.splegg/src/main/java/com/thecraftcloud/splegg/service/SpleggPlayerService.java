@@ -10,7 +10,6 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.entity.Egg;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -18,17 +17,13 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.util.Vector;
 
 import com.thecraftcloud.core.domain.GameArenaConfig;
-import com.thecraftcloud.core.util.PlayerUtil;
 import com.thecraftcloud.core.util.Utils;
-import com.thecraftcloud.core.util.title.TitleUtil;
 import com.thecraftcloud.minigame.TheCraftCloudMiniGameAbstract;
 import com.thecraftcloud.minigame.domain.GamePlayer;
 import com.thecraftcloud.minigame.service.ConfigService;
 import com.thecraftcloud.minigame.service.PlayerService;
-import com.thecraftcloud.splegg.GameController;
 
 public class SpleggPlayerService extends PlayerService {
 
@@ -85,8 +80,7 @@ public class SpleggPlayerService extends PlayerService {
 		dead.setGameMode(GameMode.SPECTATOR);
 		dead.sendMessage(ChatColor.YELLOW.ITALIC + dead.getName() + " , você agora é um espectador!");
 
-		if (this.configService.getMyCloudCraftGame().isWaitingPlayers()
-				|| !this.configService.getMyCloudCraftGame().isStarted()) {
+		if (!this.configService.getMyCloudCraftGame().isStarted()) {
 			this.miniGame.removeLivePlayer(dead);
 			dead.teleport(locationUtil.toLocation(this.configService.getWorld(), this.configService.getLobby()));
 		}

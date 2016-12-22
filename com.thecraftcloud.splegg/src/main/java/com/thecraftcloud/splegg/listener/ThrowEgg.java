@@ -9,6 +9,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.util.Vector;
 
+import com.thecraftcloud.minigame.domain.MyCloudCraftGame;
 import com.thecraftcloud.minigame.service.ConfigService;
 import com.thecraftcloud.splegg.GameController;
 import com.thecraftcloud.splegg.service.SpleggPlayerService;
@@ -27,10 +28,11 @@ public class ThrowEgg implements Listener {
 	@EventHandler
 	public void onClick(PlayerInteractEvent event) {
 
-		
-		/* if (!configService.getMyCloudCraftGame().isStarted()) {
+		MyCloudCraftGame game = configService.getMyCloudCraftGame();
+
+		if (!game.isStarted()) {
 			return;
-		} */
+		}
 
 		Player player = event.getPlayer();
 		Action action = event.getAction();

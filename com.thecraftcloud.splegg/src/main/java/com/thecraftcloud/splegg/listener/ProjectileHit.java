@@ -10,6 +10,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.util.BlockIterator;
 
+import com.thecraftcloud.minigame.domain.MyCloudCraftGame;
 import com.thecraftcloud.minigame.service.ConfigService;
 import com.thecraftcloud.splegg.GameController;
 
@@ -26,10 +27,12 @@ public class ProjectileHit implements Listener {
 	@EventHandler
 	public void onProjectileHit(ProjectileHitEvent event) {
 
-		if (!configService.getMyCloudCraftGame().isStarted()) {
+		MyCloudCraftGame game = configService.getMyCloudCraftGame();
+
+		if (!game.isStarted()) {
 			return;
 		}
-
+		
 		if (event.getEntity() instanceof Egg) {
 			Egg egg = (Egg) event.getEntity();
 			Player player = (Player) egg.getShooter();

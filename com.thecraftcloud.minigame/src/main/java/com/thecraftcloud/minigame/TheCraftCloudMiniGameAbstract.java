@@ -51,8 +51,8 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 	
 	protected Integer totalLevels;
 
-	private int endGameThreadID;
-	private Runnable endGameTask;
+	protected int endGameThreadID;
+	protected Runnable endGameTask;
 
 	private int startGameThreadID;
 	private StartGameTask startGameTask;
@@ -69,8 +69,8 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 	protected LocationUtil locationUtil = new LocationUtil();
 	protected PlayerService playerService = new PlayerService(this);
 	protected ConfigService configService;
-	private Runnable updateScoreBoardTask;
-	private int updateScoreBoardThreadID;
+	protected Runnable updateScoreBoardTask;
+	protected int updateScoreBoardThreadID;
 
 	@Override
 	public void onEnable() {
@@ -131,9 +131,7 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 		scheduler.cancelTask(startCountDownThreadID);
 		scheduler.cancelTask(startGameThreadID);
 	
-		this.updateScoreBoardThreadID = scheduler.scheduleSyncRepeatingTask(this, this.updateScoreBoardTask, 0L, 20L);
-		this.endGameThreadID = scheduler.scheduleSyncRepeatingTask(this, this.endGameTask, 0L, 20L);
-		this.levelUpThreadID = scheduler.scheduleSyncRepeatingTask(this, this.levelUpTask, 0L, this.configService.getGameDurationInTicks()/totalLevels);
+		startThreads(scheduler);
 		this.start();
 		this.configService.getMyCloudCraftGame().start();
 
@@ -145,6 +143,13 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 
 		this.getServer().getPluginManager().callEvent(new StartGameEvent(this));
 		this.gameStartTime = System.currentTimeMillis();
+	}
+
+	public void startThreads(BukkitScheduler scheduler) {
+		this.updateScoreBoardThreadID = scheduler.scheduleSyncRepeatingTask(this, this.updateScoreBoardTask, 0L, 20L);
+		this.endGameThreadID = scheduler.scheduleSyncRepeatingTask(this, this.endGameTask, 0L, 20L);
+		this.levelUpThreadID = scheduler.scheduleSyncRepeatingTask(this, this.levelUpTask, 0L, this.configService.getGameDurationInTicks()/totalLevels);
+		
 	}
 
 	public void endGame() {
@@ -250,6 +255,16 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 			this.configService.getMyCloudCraftGame().endGame();
 			this.endGame();
 		}
+	}
+	
+	public void endGameDelay() {
+		BukkitScheduler scheduler = this.getServer().getScheduler();
+		scheduler.scheduleSyncDelayedTask(this, new Runnable() {
+			@Override
+			public void run() {
+				livePlayers.removeAll(livePlayers);
+			}
+		}, 200L);
 	}
 	
 	public PlayerService createPlayerService() {

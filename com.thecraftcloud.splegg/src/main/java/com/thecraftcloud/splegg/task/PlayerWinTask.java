@@ -2,7 +2,10 @@ package com.thecraftcloud.splegg.task;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitScheduler;
+import org.bukkit.scheduler.BukkitTask;
 
+import com.thecraftcloud.core.util.Utils;
 import com.thecraftcloud.core.util.title.TitleUtil;
 import com.thecraftcloud.minigame.TheCraftCloudMiniGameAbstract;
 import com.thecraftcloud.minigame.domain.GamePlayer;
@@ -23,6 +26,7 @@ public class PlayerWinTask implements Runnable {
 
 	@Override
 	public void run() {
+
 		MyCloudCraftGame game = configService.getMyCloudCraftGame();
 
 		if (!game.isStarted()) {
@@ -30,24 +34,23 @@ public class PlayerWinTask implements Runnable {
 		}
 
 		if (this.controller.getLivePlayers().size() == 1) {
-			String winner = null;
+			Player winner = null;
 			for (GamePlayer gp : this.controller.getLivePlayers()) {
-				Player player = gp.getPlayer();
-				winner = player.getName();
+				winner = gp.getPlayer();
 			}
-			playerWin(winner);
+			showPlayerWinner(winner);
 		}
 
 	}
 
-	public void playerWin(String winner) {
+	public void showPlayerWinner(Player winner) {
+
 		for (Player player : Bukkit.getOnlinePlayers()) {
 			if (player.getWorld().equals(configService.getArenaWorld())) {
-				TitleUtil.sendTitle(player.getPlayer(), 1, 70, 10, " " + winner,
-						" venceu o jogo!");
+				TitleUtil.sendTitle(player.getPlayer(), 1, 70, 10, " " + winner.getName(), " venceu o jogo!");
 			}
-
 		}
+		this.controller.endGameDelay();
 	}
 
 }

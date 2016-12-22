@@ -7,6 +7,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 
+import com.thecraftcloud.minigame.domain.MyCloudCraftGame;
 import com.thecraftcloud.minigame.service.ConfigService;
 import com.thecraftcloud.splegg.GameController;
 
@@ -14,6 +15,7 @@ public class CancelEvents implements Listener {
 
 	private GameController controller;
 	private ConfigService configService = ConfigService.getInstance();
+	MyCloudCraftGame game = configService.getMyCloudCraftGame();
 
 	public CancelEvents(GameController controller) {
 		super();
@@ -22,7 +24,8 @@ public class CancelEvents implements Listener {
 
 	@EventHandler
 	public void onHungry(FoodLevelChangeEvent event) {
-		if (!configService.getMyCloudCraftGame().isStarted()) {
+
+		if (!game.isStarted()) {
 			return;
 		}
 		event.setCancelled(true);
@@ -30,10 +33,11 @@ public class CancelEvents implements Listener {
 
 	@EventHandler
 	public void onFallDamage(EntityDamageEvent event) {
-		if (!configService.getMyCloudCraftGame().isStarted()) {
+
+		if (!game.isStarted()) {
 			return;
 		}
-		
+
 		if (!(event.getEntity() instanceof Player)) {
 			return;
 		}
