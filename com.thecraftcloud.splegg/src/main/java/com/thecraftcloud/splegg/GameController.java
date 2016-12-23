@@ -1,12 +1,15 @@
 package com.thecraftcloud.splegg;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scoreboard.DisplaySlot;
 
+import com.thecraftcloud.core.domain.Area3D;
 import com.thecraftcloud.core.logging.MGLogger;
+import com.thecraftcloud.core.util.BlockManipulationUtil;
 import com.thecraftcloud.core.util.Utils;
 import com.thecraftcloud.minigame.TheCraftCloudConfig;
 import com.thecraftcloud.minigame.TheCraftCloudMiniGameAbstract;
@@ -17,7 +20,6 @@ import com.thecraftcloud.splegg.domain.Splegg;
 import com.thecraftcloud.splegg.domain.SpleggPlayer;
 import com.thecraftcloud.splegg.listener.CancelEvents;
 import com.thecraftcloud.splegg.listener.PlayerDeath;
-import com.thecraftcloud.splegg.listener.ProjectileHit;
 import com.thecraftcloud.splegg.listener.ThrowEgg;
 import com.thecraftcloud.splegg.service.SpleggConfigService;
 import com.thecraftcloud.splegg.service.SpleggPlayerService;
@@ -33,6 +35,9 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 
 	private Runnable playerWinTask;
 	private int playerWinTaskThreadID;
+
+	private BlockManipulationUtil BlockUtil;
+	private Area3D area;
 
 	@Override
 	public void onEnable() {
@@ -65,6 +70,13 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 
 		// Carregar configuracoes especificas do Splegg
 		SpleggConfigService.getInstance().loadConfig();
+
+		setArea(configService.getArena().getArea());
+		new BlockManipulationUtil().blocksFromTwoPoints(this.configService.getArenaWorld(), getArea().getPointA(),
+				getArea().getPointB());
+
+		Bukkit.getConsoleSender().sendMessage(Utils.color("&6 PONTO A " + getArea().getPointA() + "&6 PONTO B "
+				+ getArea().getPointB() + "  " + this.configService.getArenaWorld()));
 	}
 
 	@Override
@@ -81,10 +93,21 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 		this.gameDuration = (Integer) this.configService
 				.getGameConfigInstance(TheCraftCloudConfig.GAME_DURATION_IN_SECONDS);
 
-		if (duration >= this.gameDuration) {
-			Bukkit.getConsoleSender()
-					.sendMessage(Utils.color("&6EndGameTask - TimeOver: " + duration + " > " + this.gameDuration));
-			return true;
+		/*
+		 * if (duration >= this.gameDuration) { Bukkit.getConsoleSender()
+		 * .sendMessage(Utils.color("&6EndGameTask - TimeOver: " + duration +
+		 * " > " + this.gameDuration)); return true; }
+		 */if (duration >= this.gameDuration && this.getLivePlayers().size() > 1) {
+			// chama uma task para derrubar toda a arena
+			// BukkitScheduler scheduler = getServer().getScheduler();
+			// this.destroyArenaTaskThreadID =
+			// scheduler.scheduleSyncDelayedTask(this, this.destroyArenaTask);
+			Location loc1 = new Location(this.configService.getArenaWorld(), this.getArea().getPointA().getX(),
+					this.getArea().getPointA().getY(), this.getArea().getPointA().getZ());
+			Location loc2 = new Location(this.configService.getArenaWorld(), this.getArea().getPointB().getX(),
+					this.getArea().getPointB().getY(), this.getArea().getPointB().getZ());
+			BlockUtil.clearBlocks(loc1, loc2);
+			Bukkit.getConsoleSender().sendMessage(Utils.color("&6 DERRUBAR ARENA"));
 		}
 		return false;
 	}
@@ -134,7 +157,6 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 		PluginManager pm = Bukkit.getPluginManager();
 		pm.registerEvents(new PlayerDeath(this), this);
 		pm.registerEvents(new ThrowEgg(this), this);
-		//pm.registerEvents(new ProjectileHit(this), this);
 		pm.registerEvents(new CancelEvents(this), this);
 	}
 
@@ -155,6 +177,14 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 
 	public void setSpleggConfigService(SpleggConfigService spleggConfigService) {
 		this.spleggConfigService = spleggConfigService;
+	}
+
+	public Area3D getArea() {
+		return area;
+	}
+
+	public void setArea(Area3D area) {
+		this.area = area;
 	}
 
 }

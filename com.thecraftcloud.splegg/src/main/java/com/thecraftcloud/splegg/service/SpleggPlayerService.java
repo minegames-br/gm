@@ -79,7 +79,6 @@ public class SpleggPlayerService extends PlayerService {
 		dead.setHealth(20);
 		dead.getInventory().clear();
 		dead.setGameMode(GameMode.SPECTATOR);
-		dead.sendMessage(ChatColor.YELLOW.ITALIC + dead.getName() + " , você agora é um espectador!");
 
 		if (!this.configService.getMyCloudCraftGame().isStarted()) {
 			this.miniGame.removeLivePlayer(dead);
