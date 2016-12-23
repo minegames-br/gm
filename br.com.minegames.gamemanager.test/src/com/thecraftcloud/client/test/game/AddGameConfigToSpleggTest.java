@@ -36,22 +36,22 @@ public class AddGameConfigToSpleggTest {
 		
 		 
 		GameConfig gameConfig = createConfig("splegg.player1.spawn", "Select the location 1 to spawn a player", 
-				"Location where the player will spawn", "PLAYER-SPAWN", GameConfigType.LOCAL, GameConfigScope.ARENA, game);
+				"Location where the player will spawn", "PLAYER-SPAWN", GameConfigType.LOCAL, GameConfigScope.ARENA);
 		Local pointA = createLocal( 1564, 39, -1058 );
 		createGameArenaConfig( gameConfig, arena, game, pointA );
 
 		gameConfig = createConfig("splegg.player2.spawn", "Select the location 2 to spawn a player", 
-				"Location where the player will spawn", "PLAYER-SPAWN", GameConfigType.LOCAL, GameConfigScope.ARENA, game);
+				"Location where the player will spawn", "PLAYER-SPAWN", GameConfigType.LOCAL, GameConfigScope.ARENA);
 		pointA = createLocal( 1588, 39, -1069 );
 		createGameArenaConfig( gameConfig, arena, game, pointA );
 
 		gameConfig = createConfig("splegg.player3.spawn", "Select the location 3 to spawn a player", 
-				"Location where the player will spawn", "PLAYER-SPAWN", GameConfigType.LOCAL, GameConfigScope.ARENA, game);
+				"Location where the player will spawn", "PLAYER-SPAWN", GameConfigType.LOCAL, GameConfigScope.ARENA);
 		pointA = createLocal( 1574, 39, -1090 );
 		createGameArenaConfig( gameConfig, arena, game, pointA );
 
 		gameConfig = createConfig("splegg.player4.spawn", "Select the location 4 to spawn a player", 
-				"Location where the player will spawn", "PLAYER-SPAWN", GameConfigType.LOCAL, GameConfigScope.ARENA, game);
+				"Location where the player will spawn", "PLAYER-SPAWN", GameConfigType.LOCAL, GameConfigScope.ARENA);
 		pointA = createLocal( 1567, 37, -1075 );
 		createGameArenaConfig( gameConfig, arena, game, pointA );
 
@@ -124,7 +124,7 @@ public class AddGameConfigToSpleggTest {
 		delegate.createGameArenaConfig(gac);
 	}
 
-	public static GameConfig createConfig(String name, String displayName, String description, String group, GameConfigType type, GameConfigScope scope, Game game ) {
+	public static GameConfig createConfig(String name, String displayName, String description, String group, GameConfigType type, GameConfigScope scope) {
 		String restURL = URL_SERVICES;
 		TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance(restURL);
 

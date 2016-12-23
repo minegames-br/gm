@@ -390,7 +390,7 @@ public class TheCraftCloudDelegate {
 
 	public GameConfig addGameConfig(GameConfig domain) {
 		String json = JSONParser.getInstance().toJSONString(domain);
-		json = post("/game/config/add", json);
+		json = post("/gameconfig/", json);
 		domain = (GameConfig) JSONParser.getInstance().toObject(json, GameConfig.class);
 		return domain;
 	}

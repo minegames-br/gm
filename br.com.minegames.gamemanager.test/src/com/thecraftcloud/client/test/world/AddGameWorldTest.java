@@ -35,7 +35,8 @@ public class AddGameWorldTest {
 		delegate.addGameWorld( gw );
 		*/
 		//createArathiWorld();
-		createSpleggOrbitWorld();
+		//createSpleggOrbitWorld();
+		createSpleggTaurusWorld();
 		
 	}
 	
@@ -52,6 +53,14 @@ public class AddGameWorldTest {
 		gw.setName("splegg-orbit");
 		gw.setDescription("Arena Orbit para o jogo Splegg");
 		gw.setPath("/opt/mg/worlds/splegg-orbit.zip");
+		delegate.addGameWorld( gw );
+	}
+
+	private void createSpleggTaurusWorld() {
+		GameWorld gw = new GameWorld();
+		gw.setName("splegg-taurus");
+		gw.setDescription("Arena Taurus para o jogo Splegg");
+		gw.setPath("/opt/mg/worlds/splegg-taurus.zip");
 		delegate.addGameWorld( gw );
 	}
 

@@ -3,7 +3,7 @@ package com.thecraftcloud.gamesetup.command;
 import java.io.File;
 
 import org.bukkit.Bukkit;
-import org.bukkit.WorldCreator;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -11,6 +11,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.thecraftcloud.client.TheCraftCloudDelegate;
 import com.thecraftcloud.core.domain.Arena;
+import com.thecraftcloud.core.domain.GameWorld;
 import com.thecraftcloud.core.multiverse.MultiVerseWrapper;
 import com.thecraftcloud.core.util.zip.ExtractZipContents;
 import com.thecraftcloud.gamesetup.TheCraftCloudGameSetupPlugin;
@@ -59,16 +60,16 @@ public class DefineArenaAction extends TheCraftCloudCommandAction {
 			Arena arena = p.getArenas().get(indexArena);
 			p.setArena(arena);
 			player.sendMessage("Downloading arena: " + arena.getName() );
-			
-			File dir = Bukkit.getWorldContainer();
-			
-			File zipFile = delegate.downloadArenaWorld(arena, dir );
-			player.sendMessage("Preparing arena..." );
-			ExtractZipContents.unzip(zipFile);
-			//WorldCreator wc = new WorldCreator( dir.getAbsolutePath() + "/" + arena.getName() );
-			//wc.createWorld();
+			World world = Bukkit.getWorld(arena.getName());
 			MultiVerseWrapper mvw = new MultiVerseWrapper();
-			mvw.addWorld(p, arena);
+			if(world != null) {
+				mvw.deleteWorld(world);
+			}
+			
+			File worldContainerDir = Bukkit.getWorldContainer();
+			GameWorld gw = delegate.findGameWorldByName(arena.getName());			
+			delegate.downloadWorld(gw, worldContainerDir);
+			mvw.addWorld(this.plugin, arena);
 			player.sendMessage("Arena: " + arena.getName() + " is ready.");
 		}catch(Exception e) {
 			e.printStackTrace();
