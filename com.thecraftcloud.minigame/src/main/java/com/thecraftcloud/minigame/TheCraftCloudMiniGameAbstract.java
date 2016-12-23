@@ -224,10 +224,6 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 
 	}
 	
-	public void livePlayerToSpectator(Player player) {
-		GamePlayer gp = this.playerService.findGamePlayerByPlayer(player);
-	}
-
 	public void removeLivePlayer(Player player) {
 		GamePlayer gp = this.playerService.findGamePlayerByPlayer(player);
 

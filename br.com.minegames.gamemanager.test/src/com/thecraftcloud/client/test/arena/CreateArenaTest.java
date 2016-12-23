@@ -17,20 +17,21 @@ public class CreateArenaTest {
 	public void test() {
 		
 		Schematic schematic = new Schematic();
-		schematic.setDescription("schematic para arena splegg taurus");
-		schematic.setName("splegg-taurus");
-		schematic.setPath("/opt/mg/worlds/splegg-taurus.schematic");
+		schematic.setDescription("schematic para arena thearcher original");
+		schematic.setName("thearcher-original");
+		schematic.setPath("/opt/mg/worlds/thearcher-original.schematic");
 		
 		delegate.createSchematic(schematic);
 		
 		Arena arena = new Arena();
-		arena.setName("splegg-taurus");
-		arena.setDescription("arena Taurus para o jogo splegg");
+		arena.setName("thearcher-original");
+		arena.setDescription("arena Original para o jogo TheArcher");
 		arena.setFacing(FacingDirection.NORTH);
 		arena.setSchematic(schematic);
 		arena.setTime(1000);
 
 		delegate.createArena(arena);
+				
 	}
 
 //	{"schematic_uuid":"8152d874-0fb0-4ffb-ab0d-df62291cc9e3","name":"splegg-taurus","path":"/opt/mg/schematics/","description":"schematic para arena splegg taurus"}

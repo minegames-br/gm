@@ -73,4 +73,11 @@ public class MultiVerseWrapper {
 		
 	}
 
+	public void unloadWorld(String name) {
+
+		MultiverseCore mvplugin = (MultiverseCore)Bukkit.getPluginManager().getPlugin("Multiverse-Core");
+		mvplugin.getCore().getMVWorldManager().unloadWorld(name);
+		
+	}
+
 }

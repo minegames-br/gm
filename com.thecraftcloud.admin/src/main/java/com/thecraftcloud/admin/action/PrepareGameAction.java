@@ -60,7 +60,12 @@ public class PrepareGameAction extends Action {
 		} else {
 			Bukkit.getConsoleSender().sendMessage("world exists");
 			MultiVerseWrapper mvw = new MultiVerseWrapper();
-			mvw.deleteWorld(world);
+			try{
+				mvw.deleteWorld(world);
+			}catch(Exception e) {
+				e.printStackTrace();
+				mvw.unloadWorld( dto.getArena().getName() );
+			}
 			world = this.setupGameWorld(dto.getArena());
 		}
 
