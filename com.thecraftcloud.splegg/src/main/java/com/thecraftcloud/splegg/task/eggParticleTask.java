@@ -1,12 +1,10 @@
 package com.thecraftcloud.splegg.task;
 
 import com.thecraftcloud.splegg.GameController;
-import com.thecraftcloud.splegg.domain.Egg;
 
 public class eggParticleTask implements Runnable {
 
 	private GameController controller;
-	private Egg eggShoot;
 
 	public eggParticleTask(GameController game) {
 		this.controller = game;

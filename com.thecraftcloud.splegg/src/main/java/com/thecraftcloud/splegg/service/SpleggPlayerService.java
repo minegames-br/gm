@@ -10,6 +10,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -107,7 +108,7 @@ public class SpleggPlayerService extends PlayerService {
 
 			Objective objective1 = scoreboard.getObjective(DisplaySlot.SIDEBAR);
 			objective1.unregister();
-			objective1 = scoreboard.registerNewObjective(ChatColor.BOLD.UNDERLINE + "❐ SPLEGG ❐", "splegg");
+			objective1 = scoreboard.registerNewObjective(ChatColor.BOLD.UNDERLINE + "SPLEGG", "splegg");
 			objective1.setDisplaySlot(DisplaySlot.SIDEBAR);
 
 			Integer time = (configService.getGameDurationInSeconds() - this.miniGame.getGameDuration());
