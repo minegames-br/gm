@@ -468,12 +468,6 @@ public class TheCraftCloudDelegate {
 		return domain;
 	}
 	
-	public static void main(String args[]) throws InvalidRegistrationException {
-		TheCraftCloudClientPlugin.setMinegamesGameManagerUrl( "http://services.thecraftcloud.com:8080/gamemanager/webresources" );
-		TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance("http://services.thecraftcloud.com:8080/gamemanager/webresources");
-		delegate.lockGameQueue();
-	}
-
 	public Game updateGame(Game game) {
 		String json = JSONParser.getInstance().toJSONString(game);
 		json = post("/game/" + game.getGame_uuid(), json);

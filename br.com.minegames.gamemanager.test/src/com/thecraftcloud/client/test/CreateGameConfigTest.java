@@ -13,12 +13,8 @@ import com.thecraftcloud.core.domain.GameConfigScope;
 import com.thecraftcloud.core.domain.GameConfigType;
 import com.thecraftcloud.core.domain.Item;
 
-public class CreateGameConfigTest {
+public class CreateGameConfigTest  extends TheCraftCloudJUnitTest {
 	
-	public static final String URL_SERVICES = "http://services.thecraftcloud.com:8080/gamemanager/webresources";
-	//public static final String URL_SERVICES = "http://localhost:8080/gamemanager/webresources";
-	//String restURL = "";
-    private static TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance(URL_SERVICES);
 	
 	@Test
 	public void test() {
@@ -30,10 +26,7 @@ public class CreateGameConfigTest {
 		
 	}
 
-	public static GameConfig createConfig(String name, String displayName, String description, String group, GameConfigType type, GameConfigScope scope) {
-		String restURL = URL_SERVICES;
-		TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance(restURL);
-
+	public GameConfig createConfig(String name, String displayName, String description, String group, GameConfigType type, GameConfigScope scope) {
 		System.out.println("creating config " + name);
 
         GameConfig domain = new GameConfig();

@@ -5,14 +5,12 @@ import java.util.Calendar;
 import org.junit.Test;
 
 import com.thecraftcloud.client.TheCraftCloudDelegate;
+import com.thecraftcloud.client.test.TheCraftCloudJUnitTest;
 import com.thecraftcloud.core.domain.MineCraftPlayer;
 import com.thecraftcloud.core.domain.PlayerStatus;
 
-public class CreatePlayerTest {
-	public static final String URL_SERVICES = "http://services.minegames.com.br:8080/gamemanager/webresources";
-	//public static final String URL_SERVICES = "http://localhost:8080/gamemanager/webresources";
-	//String restURL = "";
-    private static TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance(URL_SERVICES);
+public class CreatePlayerTest  extends TheCraftCloudJUnitTest {
+	
 
 	@Test
 	public void test() {

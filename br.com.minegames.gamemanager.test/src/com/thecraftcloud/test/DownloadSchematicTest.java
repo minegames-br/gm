@@ -4,20 +4,20 @@ import java.io.File;
 import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
+import org.junit.Test;
 
 import com.thecraftcloud.client.TheCraftCloudDelegate;
 import com.thecraftcloud.client.exception.InvalidRegistrationException;
+import com.thecraftcloud.client.test.TheCraftCloudJUnitTest;
 import com.thecraftcloud.core.domain.Arena;
 import com.thecraftcloud.core.domain.Game;
 
-public class DownloadSchematicTest {
-	//public static final String URL_SERVICES = "http://services.minegames.com.br:8080/gamemanager/webresources";
-	public static final String URL_SERVICES = "http://localhost:8080/gamemanager/webresources";
-	//String restURL = "";
-    private static TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance(URL_SERVICES);
+public class DownloadSchematicTest extends TheCraftCloudJUnitTest {
 	
-	public static void main(String args[]) throws IOException, InvalidRegistrationException {
-		TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance(URL_SERVICES);
+	
+	@Test
+	public void test() throws IOException, InvalidRegistrationException {
+
 		Game game = delegate.findGame("c6905743-6514-49ba-9257-420743f65b65");
 		Arena arena = delegate.findArena("c5253674-8c19-4620-b500-51645a620f64");
 

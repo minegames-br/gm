@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import com.thecraftcloud.client.TheCraftCloudDelegate;
 import com.thecraftcloud.client.exception.InvalidRegistrationException;
+import com.thecraftcloud.client.test.TheCraftCloudJUnitTest;
 import com.thecraftcloud.core.domain.Area3D;
 import com.thecraftcloud.core.domain.Arena;
 import com.thecraftcloud.core.domain.Game;
@@ -14,11 +15,7 @@ import com.thecraftcloud.core.domain.GameConfigScope;
 import com.thecraftcloud.core.domain.GameConfigType;
 import com.thecraftcloud.core.domain.Local;
 
-public class AddGameConfigArenaToTheArcherOriginalTest {
-
-	public static final String URL_SERVICES = "http://services.thecraftcloud.com:8080/gamemanager/webresources";
-
-    private static TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance(URL_SERVICES);
+public class AddGameConfigArenaToTheArcherOriginalTest  extends TheCraftCloudJUnitTest {
 	
     
     /**
@@ -73,7 +70,7 @@ public class AddGameConfigArenaToTheArcherOriginalTest {
 
 	}
 	
-	private static void createGameArenaConfig(GameConfig gameConfig, Arena arena, Game game, Object object) {
+	private  void createGameArenaConfig(GameConfig gameConfig, Arena arena, Game game, Object object) {
 		GameArenaConfig gac = new GameArenaConfig();
 		gac.setArena(arena);
 		gac.setGameConfig(gameConfig);
@@ -92,9 +89,7 @@ public class AddGameConfigArenaToTheArcherOriginalTest {
 		delegate.createGameArenaConfig(gac);
 	}
 
-	public static GameConfig createConfig(String name, String displayName, String description, String group, GameConfigType type, GameConfigScope scope, Game game ) {
-		String restURL = URL_SERVICES;
-		TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance(restURL);
+	public GameConfig createConfig(String name, String displayName, String description, String group, GameConfigType type, GameConfigScope scope, Game game ) {
 
 		System.out.println("creating config " + name);
 
@@ -110,7 +105,7 @@ public class AddGameConfigArenaToTheArcherOriginalTest {
         return gameConfig;
 	}
 	
-	public static Local createLocal( int x, int y, int z) {
+	public Local createLocal( int x, int y, int z) {
 		Local l = new Local();
 		l.setX(x);
 		l.setY(y);

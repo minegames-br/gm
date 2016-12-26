@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import com.thecraftcloud.client.TheCraftCloudDelegate;
 import com.thecraftcloud.client.exception.InvalidRegistrationException;
+import com.thecraftcloud.client.test.TheCraftCloudJUnitTest;
 import com.thecraftcloud.core.domain.Area3D;
 import com.thecraftcloud.core.domain.Arena;
 import com.thecraftcloud.core.domain.Game;
@@ -14,18 +15,14 @@ import com.thecraftcloud.core.domain.GameConfigScope;
 import com.thecraftcloud.core.domain.GameConfigType;
 import com.thecraftcloud.core.domain.Local;
 
-public class AddGameConfigToSpleggTest {
+public class AddGameConfigToSpleggTest  extends TheCraftCloudJUnitTest {
+	
 
 	public static final String MIN_PLAYERS = "MIN-PLAYERS";
 	public static final String MAX_PLAYERS = "MAX-PLAYERS";
 	public static final String START_COUNTDOWN = "START-COUNTDOWN";
 	public static final String GAME_DURATION = "GAME-DURATION-IN-SECONDS";
 
-	public static final String URL_SERVICES = "http://services.thecraftcloud.com:8080/gamemanager/webresources";
-	//public static final String URL_SERVICES = "http://localhost:8080/gamemanager/webresources";
-	//String restURL = "";
-    private static TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance(URL_SERVICES);
-	
 	@Test
 	public void test() {
 		
@@ -73,7 +70,7 @@ public class AddGameConfigToSpleggTest {
 		delegate.addGameConfigToGame( game, gc);
 	}
 
-	public static void createGameConfig(Game game) {
+	public void createGameConfig(Game game) {
 		GameConfig gameConfig = null;
 		
 		System.out.println("creating configs");
@@ -90,8 +87,7 @@ public class AddGameConfigToSpleggTest {
 		createGameConfigInstance( game, gameConfig, 120 );
 	}
 
-	public static void createGameConfigInstance(Game game, GameConfig gameConfig, Object object ) {
-		String restURL = URL_SERVICES;
+	public void createGameConfigInstance(Game game, GameConfig gameConfig, Object object ) {
         GameConfigInstance domain = new GameConfigInstance();
         System.out.println("game_config_uuid: " + gameConfig.getGame_config_uuid());
         domain.setGameConfig(gameConfig);
@@ -105,7 +101,7 @@ public class AddGameConfigToSpleggTest {
         
 	}	
 	
-	private static void createGameArenaConfig(GameConfig gameConfig, Arena arena, Game game, Object object) {
+	private void createGameArenaConfig(GameConfig gameConfig, Arena arena, Game game, Object object) {
 		GameArenaConfig gac = new GameArenaConfig();
 		gac.setArena(arena);
 		gac.setGameConfig(gameConfig);
@@ -124,10 +120,7 @@ public class AddGameConfigToSpleggTest {
 		delegate.createGameArenaConfig(gac);
 	}
 
-	public static GameConfig createConfig(String name, String displayName, String description, String group, GameConfigType type, GameConfigScope scope) {
-		String restURL = URL_SERVICES;
-		TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance(restURL);
-
+	public GameConfig createConfig(String name, String displayName, String description, String group, GameConfigType type, GameConfigScope scope) {
 		System.out.println("creating config " + name);
 
         GameConfig domain = new GameConfig();
@@ -141,7 +134,7 @@ public class AddGameConfigToSpleggTest {
         GameConfig gameConfig = delegate.addGameConfig(domain);
         return gameConfig;
 	}
-	public static Local createLocal( int x, int y, int z) {
+	public Local createLocal( int x, int y, int z) {
 		Local l = new Local();
 		l.setX(x);
 		l.setY(y);

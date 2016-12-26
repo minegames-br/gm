@@ -11,17 +11,12 @@ import com.thecraftcloud.client.TheCraftCloudDelegate;
 import com.thecraftcloud.core.domain.Item;
 import com.thecraftcloud.core.domain.Kit;
 
-public class AddKitTest {
+public class AddKitTest  extends TheCraftCloudJUnitTest {
 	
-	public static final String URL_SERVICES = "http://services.thecraftcloud.com:8080/gamemanager/webresources";
-	//public static final String URL_SERVICES = "http://localhost:8080/gamemanager/webresources";
-	//String restURL = "";
-    private static TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance(URL_SERVICES);
 	
 	@Test
 	public void test() {
 
-		TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance(URL_SERVICES);
 		Kit kit = new Kit();
 		for(int i = 2; i < 50; )
 		kit.setName("GUNGAME.NIVEL2");

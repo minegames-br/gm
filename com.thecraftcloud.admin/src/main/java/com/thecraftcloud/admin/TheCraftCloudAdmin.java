@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Properties;
 
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -25,6 +26,7 @@ import com.thecraftcloud.admin.socket.server.SocketServer;
 import com.thecraftcloud.client.TheCraftCloudDelegate;
 import com.thecraftcloud.core.domain.ServerInstance;
 import com.thecraftcloud.core.domain.ServerStatus;
+import com.thecraftcloud.core.multiverse.MultiVerseWrapper;
 import com.thecraftcloud.core.util.Utils;
 import com.thecraftcloud.minigame.TheCraftCloudMiniGameAbstract;
 
@@ -63,6 +65,15 @@ public class TheCraftCloudAdmin extends JavaPlugin {
 		if(this.serverName == null) {
 			Bukkit.getConsoleSender().sendMessage(Utils.color("&CServer Name on config.yml is null"));
 			throw new NullPointerException("server name is null");
+		}
+		
+		for(World world: Bukkit.getWorlds()) {
+			if(world.getName().contains("world")) {
+				continue;
+			}
+			
+			MultiVerseWrapper mvw = new MultiVerseWrapper();
+			mvw.deleteWorld(world);
 		}
 		
 		//verificar se o servidor esta cadastrado. Se nao, cadastrar.

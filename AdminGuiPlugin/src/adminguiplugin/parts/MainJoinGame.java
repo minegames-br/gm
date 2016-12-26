@@ -9,7 +9,7 @@ import com.thecraftcloud.core.domain.ServerInstance;
 
 public class MainJoinGame {
 
-	private static TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance("http://services.thecraftcloud.com:8080/gamemanager/webresources");
+	private static TheCraftCloudDelegate delegate;
 
 	public static void main(String[] args) {
 		

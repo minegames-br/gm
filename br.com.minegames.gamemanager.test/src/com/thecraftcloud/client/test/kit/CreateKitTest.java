@@ -4,13 +4,13 @@ import org.bukkit.Material;
 import org.junit.Test;
 
 import com.thecraftcloud.client.TheCraftCloudDelegate;
+import com.thecraftcloud.client.test.TheCraftCloudJUnitTest;
 import com.thecraftcloud.core.domain.Game;
 import com.thecraftcloud.core.domain.Item;
 import com.thecraftcloud.core.domain.Kit;
 
-public class CreateKitTest {
-	public static final String URL_SERVICES = "http://services.thecraftcloud.com:8080/gamemanager/webresources";
-    private static TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance(URL_SERVICES);
+public class CreateKitTest  extends TheCraftCloudJUnitTest {
+	
 
 	@Test
 	public void test() {

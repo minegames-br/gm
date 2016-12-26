@@ -12,10 +12,7 @@ import com.thecraftcloud.core.domain.ServerInstance;
 
 public class PrepareGameTest {
 /*
-	public static final String URL_SERVICES = "http://services.thecraftcloud.com:8080/gamemanager/webresources";
-	//public static final String URL_SERVICES = "http://localhost:8080/gamemanager/webresources";
-	//String restURL = "";
-    private static TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance(URL_SERVICES);
+    private static TheCraftCloudDelegate delegate;
     
 	@Test
 	public void test() {
