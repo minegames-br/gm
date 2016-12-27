@@ -44,7 +44,8 @@ public class AdminClient {
 		    ObjectOutputStream oos = null;
 		    ObjectInputStream ois = null;
 		
-		    //establish socket connection to server
+		    System.out.println("establish socket connection to server: " + server.getIp_address() + " " + server.getAdminPort() );
+		    
 		    socket = new Socket( server.getIp_address(), server.getAdminPort() );
 		    
 		    String json = JSONParser.getInstance().toJSONString(actionDTO);
@@ -138,6 +139,10 @@ public class AdminClient {
 	}
 
 	public ResponseDTO teleportPlayer(ServerInstance server, MineCraftPlayer player, ServerInstance gameServer) throws Exception {
+	    System.out.println("server: " + server.getName() );
+	    System.out.println("player: " + player.getName() );
+	    System.out.println("game Server: " + gameServer.getName() );
+		
 		ActionDTO dto = new ActionDTO();
 		dto.setName(SendPlayerToServerAction.ACTION_NAME);
 		dto.setPlayer(player);

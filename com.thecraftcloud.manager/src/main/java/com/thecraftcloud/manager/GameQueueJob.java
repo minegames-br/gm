@@ -41,7 +41,7 @@ public class GameQueueJob extends ManagerJob {
 			games.add(gq.getGame());
 		}
 
-		//preparar os servidores para os jogos
+		logger.info("preparar os servidores para os jogos");
 		for(Game game: games) {
 			ServerInstance server = findFirstServerAvailable();
 			if(server == null) {
@@ -57,19 +57,21 @@ public class GameQueueJob extends ManagerJob {
 		
 		for(GameQueue gq: list) {
 			
+			logger.info("verificar se o jogo pode ser preparado");
 			if(invalidGames.contains(gq.getGame())) {
 				notifyPlayer(gq.getPlayer());
 				cancelGameSubscription(gq);
 				continue;
 			}
 			
+			logger.info("verificar se o player esta online");
 			if(gq.getPlayer() == null) {
 				cancelGameSubscription(gq);
 				continue;
 			}
 			
 			try {
-				//descobrir em qual servidor o jogador está para mandá-lo para o jogo
+				logger.info("descobrir em qual servidor o jogador está para mandá-lo para o jogo");
 				MineCraftPlayer mcp = delegate.findPlayerByName(gq.getPlayer().getName());
 				ServerInstance server = mcp.getServer();
 				if(server == null) {
@@ -77,7 +79,7 @@ public class GameQueueJob extends ManagerJob {
 					continue;
 				}
 				
-				//descobrir para qual servidor o jogador vai ser teletransportado para jogar
+				logger.info("descobrir para qual servidor o jogador vai ser teletransportado para jogar");
 				List<GameInstance> listGi = delegate.findGameInstanceAvailable(gq.getGame());
 				ServerInstance gameServer = null;
 				if(listGi != null && listGi.size() > 0) {
@@ -89,12 +91,14 @@ public class GameQueueJob extends ManagerJob {
 				AdminClient client = AdminClient.getInstance();
 				ResponseDTO rdto = null;
 			
+				logger.info("recuperar informacoes do player");
 				rdto = client.getPlayerInfo( server, gq.getPlayer() );
 				if(!rdto.getResult()) {
 					this.cancelGameSubscription(gq);
 					continue;
 				}
 				
+				logger.info("teletransportar player");
 				rdto = client.teleportPlayer(server, gq.getPlayer(), gameServer);
 				boolean success = false;
 				if(rdto.getResult() ) {
@@ -104,6 +108,7 @@ public class GameQueueJob extends ManagerJob {
 					throw new Exception(rdto.getCode() + " " + rdto.getMessage() );
 				}
 				
+				logger.info("completar gamequeue request");
 				completeGameQueueRequest(gq);
 				
 			} catch (Exception e) {

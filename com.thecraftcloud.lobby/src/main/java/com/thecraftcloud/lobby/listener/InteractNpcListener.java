@@ -32,8 +32,8 @@ public class InteractNpcListener implements Listener, PluginMessageListener {
 			event.setCancelled(true);
 			return;
 		}
-			player.sendMessage(ChatColor.GOLD + "Você será direcionado para o jogo " + gameName);
-			gameService.playGame(player, gameName);
+		player.sendMessage(ChatColor.GOLD + "Você será direcionado para o jogo " + gameName);
+		gameService.playGame(player, gameName);
 	}
 
 	@Override
