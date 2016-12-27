@@ -15,7 +15,9 @@ import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Scoreboard;
 
+import com.thecraftcloud.core.domain.Area3D;
 import com.thecraftcloud.core.multiverse.MultiVerseWrapper;
+import com.thecraftcloud.core.util.BlockManipulationUtil;
 import com.thecraftcloud.core.util.LocationUtil;
 import com.thecraftcloud.core.util.Utils;
 import com.thecraftcloud.minigame.domain.EntityPlayer;
@@ -45,6 +47,8 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 	protected CopyOnWriteArraySet<EntityPlayer> livingEntities = new CopyOnWriteArraySet<EntityPlayer>();
 
 	private Scoreboard scoreboard;
+	
+	private Area3D area;
 
 	protected Integer maxPlayers;
 	protected Integer minPlayers;
@@ -106,7 +110,7 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 
 	public void init() {
 		BukkitScheduler scheduler = getServer().getScheduler();
-
+		
 		this.endGameTask = new EndGameTask(this);
 		this.levelUpTask = new LevelUpTask(this);
 		this.updateScoreBoardTask = new UpdateScoreBoardTask(this);
@@ -119,6 +123,11 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 		this.startCountDownThreadID = scheduler.scheduleSyncRepeatingTask(this, this.startCountDownTask, 0L, 25L);
 
 		this.configService.setStartCountDown();
+		
+		//Setar Area3D da arena
+		setArea(configService.getArena().getArea());		
+		new BlockManipulationUtil().blocksFromTwoPoints(this.configService.getArenaWorld(), getArea().getPointA(),
+				getArea().getPointB());
 
 		this.getServer().getPluginManager().callEvent(new InitiateGameEvent(this));
 	}
@@ -149,7 +158,6 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 		this.updateScoreBoardThreadID = scheduler.scheduleSyncRepeatingTask(this, this.updateScoreBoardTask, 0L, 20L);
 		this.endGameThreadID = scheduler.scheduleSyncRepeatingTask(this, this.endGameTask, 0L, 20L);
 		this.levelUpThreadID = scheduler.scheduleSyncRepeatingTask(this, this.levelUpTask, 0L, this.configService.getGameDurationInTicks()/totalLevels);
-		
 	}
 
 	public void endGame() {
@@ -262,7 +270,7 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 					removeLivePlayer(gp.getPlayer());
 				}
 			}
-		}, 200L);
+		}, 120L);
 	}
 	
 	public PlayerService createPlayerService() {
@@ -340,6 +348,14 @@ public abstract class TheCraftCloudMiniGameAbstract extends JavaPlugin {
 	public Integer getGameDuration() {
 		Integer duration = new Integer(new Long((System.currentTimeMillis() - this.gameStartTime) / 1000).toString());
 		return duration;
+	}
+	
+	public Area3D getArea() {
+		return area;
+	}
+
+	public void setArea(Area3D area) {
+		this.area = area;
 	}
 	
 }

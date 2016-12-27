@@ -107,30 +107,23 @@ public class SpleggPlayerService extends PlayerService {
 
 			Objective objective1 = scoreboard.getObjective(DisplaySlot.SIDEBAR);
 			objective1.unregister();
-			objective1 = scoreboard.registerNewObjective(ChatColor.BOLD.UNDERLINE + "SPLEGG", "splegg");
+			objective1 = scoreboard.registerNewObjective(ChatColor.BOLD.UNDERLINE + "[ Splegg ]", "splegg");
 			objective1.setDisplaySlot(DisplaySlot.SIDEBAR);
 
 			Integer time = (configService.getGameDurationInSeconds() - this.miniGame.getGameDuration());
 
-			
-			Score space0 = objective1.getScore("");
-			space0.setScore(7);
-			
 			Score p1 = objective1.getScore(ChatColor.BOLD + Utils.color("&BTempo"));
-			p1.setScore(6);
-			
+			p1.setScore(5);
+
 			Score p2 = objective1.getScore("" + time);
-			p2.setScore(5);
-			
+			p2.setScore(4);
+
 			Score space1 = objective1.getScore("");
-			space1.setScore(4);
-			
-			Score space2 = objective1.getScore("");
-			space2.setScore(3);
+			space1.setScore(3);
 
 			Score p3 = objective1.getScore(ChatColor.BOLD + Utils.color("&AJogadores"));
 			p3.setScore(2);
-			
+
 			Score p4 = objective1.getScore("" + this.miniGame.getLivePlayers().size());
 			p4.setScore(1);
 		}

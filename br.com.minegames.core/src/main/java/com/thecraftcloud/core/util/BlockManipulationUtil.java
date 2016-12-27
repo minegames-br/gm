@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
@@ -101,6 +102,34 @@ public class BlockManipulationUtil {
     	List<Block> blocks = blocksFromTwoPoints(l1, l2);
     	for(Block block: blocks) {
     		block.setType(Material.AIR);
+    	}
+	}
+	
+	public void clearRandomBlocks(World world, Area3D selection) {
+		
+		Location pointA = locationUtil .toLocation(world, selection.getPointA());
+		Location pointB = locationUtil.toLocation(world, selection.getPointB());
+		
+		Random rB = new Random();
+		
+		int randomLoc1X = rB.nextInt(pointA.getBlockX());
+		int randomLoc1Y = rB.nextInt(pointA.getBlockY());
+		int randomLoc1Z = rB.nextInt(pointA.getBlockZ());
+		
+		int randomLoc2X = rB.nextInt(pointB.getBlockX());
+		int randomLoc2Y = rB.nextInt(pointB.getBlockY());
+		int randomLoc2Z = rB.nextInt(pointB.getBlockZ());
+		
+		Location randomLoc1 = new Location(world, randomLoc1X, randomLoc1Y, randomLoc1Z);
+		Location randomLoc2 = new Location(world, randomLoc2X, randomLoc2Y, randomLoc2Z);
+		
+		List<Block> list = blocksFromTwoPoints(randomLoc1, randomLoc2);
+		Bukkit.getConsoleSender().sendMessage(Utils.color("&6 LOCATIONS TO DESTROY: " + randomLoc1 + "  " + randomLoc2));
+    	
+    	for(Block block : list) {
+    		Bukkit.getConsoleSender().sendMessage(Utils.color("&6 DESTROY BLOCK: " + block.getLocation()));
+    		block.setType(Material.AIR);
+    		block.getState().update();
     	}
 	}
 

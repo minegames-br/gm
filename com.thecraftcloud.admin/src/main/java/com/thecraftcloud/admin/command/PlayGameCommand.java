@@ -36,7 +36,7 @@ public class PlayGameCommand implements CommandExecutor {
     	String gameName = args[0];
     	String arenaName = args[1];
     	
-		ServerInstance server = delegate.findServerByName("localhost-joao");
+		ServerInstance server = delegate.findServerByName("localhost");
 		System.out.println(server.getHostname() + " " + server.getIp_address() + "  "  + server.getAdminPort());
 		Game game = delegate.findGameByName(gameName);
 		Arena arena = delegate.findArenaByName(arenaName);

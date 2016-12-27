@@ -1,5 +1,7 @@
 package com.thecraftcloud.splegg.listener;
 
+import java.util.HashMap;
+
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Egg;
@@ -23,6 +25,7 @@ public class ThrowEgg implements Listener {
 	private GameController controller;
 	private ConfigService configService = ConfigService.getInstance();
 	private SpleggPlayerService spleggPlayerService;
+	private HashMap<String, Long> cooldowns = new HashMap<String, Long>();
 
 	public ThrowEgg(GameController controller) {
 		super();
@@ -42,12 +45,22 @@ public class ThrowEgg implements Listener {
 
 		if (!(event.getPlayer().getInventory().getItemInMainHand().getType() == Material.IRON_SPADE))
 			return;
-
+		
+		double cooldownTime = 0.5;
+		
+		if(cooldowns.containsKey(event.getPlayer().getName())) {
+			double secondsLeft = ((cooldowns.get(event.getPlayer().getName())/1000)+cooldownTime) - (System.currentTimeMillis()/1000);
+			if(secondsLeft > 0) {
+				  event.setCancelled(true);
+			        return;
+			}
+		}
+		
+		cooldowns.put(event.getPlayer().getName(), System.currentTimeMillis());
+			  
 		Player player = event.getPlayer();
-		Action action = event.getAction();
 
 		throwEgg(player);
-
 	}
 
 	@EventHandler
@@ -64,7 +77,6 @@ public class ThrowEgg implements Listener {
 			Player player = (Player) egg.getShooter();
 			BlockIterator bi = new BlockIterator(player.getWorld(), egg.getLocation().toVector(),
 					egg.getVelocity().normalize(), 0, 2);
-			// Block hit = null;
 
 			while (bi.hasNext()) {
 				final Block hit = bi.next();
@@ -93,11 +105,11 @@ public class ThrowEgg implements Listener {
 				double y = Math.sin(pitch) * Math.sin(yaw);
 				double z = Math.cos(pitch);
 
-				Vector velocity = new Vector(x, z, y).multiply(1);
+				Vector velocity = new Vector(x, z, y).multiply(2);
 				egg.setVelocity(velocity);
-				egg.setGravity(false);
+
 			}
-		}, 5L);
+		}, 3L);
 		
 	}
 
@@ -109,6 +121,6 @@ public class ThrowEgg implements Listener {
 			public void run() {
 				block.setType(Material.AIR);
 			}
-		}, 1L);
+		}, 5L);
 	}
 }
