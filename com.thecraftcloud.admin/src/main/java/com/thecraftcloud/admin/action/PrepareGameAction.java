@@ -39,23 +39,24 @@ public class PrepareGameAction extends Action {
 	@Override
 	public ResponseDTO execute(ActionDTO dto) {
 
+		System.out.println("prepare 1");
 		PluginService pService = new PluginService();
 
-		// Testar se o game veio preenchido
+		System.out.println("Testar se o game veio preenchido");
 		if (dto.getGame() == null) {
 			return ResponseDTO.incompleteRequest("Missing Game object.");
 		}
 
-		// Testar se a arena veio preenchida
+		System.out.println("Testar se a arena veio preenchida");
 		if (dto.getArena() == null) {
 			return ResponseDTO.incompleteRequest("Missing Arena object.");
 		}
 
-		// verificar se a arena está disponível
+		System.out.println("verificar se a arena está disponível");
 		World world = Bukkit.getWorld(dto.getArena().getName());
 		if (world == null) {
 			Bukkit.getConsoleSender().sendMessage("world == null");
-			//Apagar o diretório
+			System.out.println("Apagar o diretório");
 			try {
 				File worldDir = new File( Bukkit.getWorldContainer(), dto.getArena().getName() );
 				if(worldDir.exists()) {
@@ -64,9 +65,8 @@ public class PrepareGameAction extends Action {
 			} catch (java.io.IOException e) {
 				e.printStackTrace();
 			}
+			Bukkit.getConsoleSender().sendMessage("setupGameWorld - " + dto.getArena().getName() );
 			world = this.setupGameWorld(dto.getArena());
-			// return ResponseDTO.incompleteRequest("Arena: " +
-			// dto.getArena().getName() + " is not available on this server.");
 		} else {
 			Bukkit.getConsoleSender().sendMessage("world exists");
 			MultiVerseWrapper mvw = new MultiVerseWrapper();
@@ -79,7 +79,7 @@ public class PrepareGameAction extends Action {
 			world = this.setupGameWorld(dto.getArena());
 		}
 
-		// recuperar o plugin do jogo associado
+		System.out.println("recuperar o plugin do jogo associado");
 		TheCraftCloudMiniGameAbstract plugin = (TheCraftCloudMiniGameAbstract) Bukkit.getPluginManager()
 				.getPlugin(dto.getGame().getPluginName());
 
@@ -88,10 +88,10 @@ public class PrepareGameAction extends Action {
 					.unableToCompleteAction("Plugin: " + dto.getGame().getPluginName() + " is not installed.");
 		}
 
-		// desabilitar outros plugins TheCraftCloudMiniGameAbstract
+		System.out.println("desabilitar outros plugins TheCraftCloudMiniGameAbstract");
 		pService.disableTheCraftCloudMiniGames();
 
-		// recuperar as configuracoes do jogo
+		System.out.println("recuperar as configuracoes do jogo");
 		List<GameArenaConfig> gacList = delegate.findAllGameConfigArenaByGameArena(
 				dto.getGame().getGame_uuid().toString(), dto.getArena().getArena_uuid().toString());
 		List<GameConfigInstance> gciList = delegate
@@ -119,16 +119,16 @@ public class PrepareGameAction extends Action {
 		gi.setServer(server);
 		gi = giService.createGameInstance(gi);
 
-		// atualizar o server para ele estar no modo esperando pelo jogo
+		System.out.println("atualizar o server para ele estar no modo esperando pelo jogo");
 		server.setStatus(ServerStatus.INGAME);
 		delegate.updateServer(server);
 
 		configService.setGameInstance(gi);
 
-		// habilitar o plugin do jogo a ser preparado
+		System.out.println("habilitar o plugin do jogo a ser preparado");
 		Bukkit.getPluginManager().enablePlugin(plugin);
 
-		// inicializar plugin para receber jogadores
+		System.out.println("inicializar plugin para receber jogadores");
 		plugin.init();
 
 		ResponseDTO responseDTO = new ResponseDTO();
@@ -142,18 +142,20 @@ public class PrepareGameAction extends Action {
 	}
 
 	private World setupGameWorld(Arena arena) {
+		System.out.println("setupGW 1");
 		File worldContainerDir = Bukkit.getWorldContainer();
 
-		// recuperar o plugin TheCraftCloudAdmin
+		System.out.println("recuperar o plugin TheCraftCloudAdmin");
 		TheCraftCloudAdmin plugin = (TheCraftCloudAdmin) Bukkit.getPluginManager()
 				.getPlugin(TheCraftCloudAdmin.PLUGIN_NAME);
 
-		// Abrir uma thread para fazer download do mundo
+		System.out.println("Abrir uma thread para fazer download do mundo");
 		GameWorld gw = delegate.findGameWorldByName(arena.getName());
+		System.out.println("downloadWorld");
 		delegate.downloadWorld(gw, worldContainerDir);
 
 		MultiVerseWrapper wrapper = new MultiVerseWrapper();
-
+		System.out.println("addWorld");
 		return wrapper.addWorld(plugin, arena);
 
 	}

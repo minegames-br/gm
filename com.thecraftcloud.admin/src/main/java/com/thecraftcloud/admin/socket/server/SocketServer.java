@@ -53,8 +53,11 @@ public class SocketServer {
             //write object to Socket
             
             try{
+            	System.out.println("request recebido: " + json);
             	json = reply(json);
+            	System.out.println("response a ser enviado: " + json);
             }catch(Exception e) {
+            	System.out.println("exception processando request: " + e.getMessage() );
             	e.printStackTrace();
             	json = createExceptionResponse(e);
             }
@@ -76,24 +79,32 @@ public class SocketServer {
 
 	public String reply( String json ) {
     	String response;
+    	System.out.println("reply");
     	
     	ActionDTO actionDTO = (ActionDTO)JSONParser.getInstance().toObject(json, ActionDTO.class);
+    	System.out.println("reply 2");
     	
     	if(actionDTO == null) {
     		response = JSONParser.getInstance().toJSONString( ResponseDTO.invalidAction() );
     		return response;
     	}
+    	System.out.println("reply 3");
     	
     	Action action = ActionFactory.getInstance().createAction(actionDTO.getName());
+    	System.out.println("reply 4");
 
     	ResponseDTO responseDTO;
     	if( action != null) {
+        	System.out.println("reply 4.1: " + actionDTO.getName() + " " +action.getClass().getName() );
     		responseDTO = action.execute(actionDTO);
+        	System.out.println("reply 4.2");
     	} else { 
 			responseDTO = ResponseDTO.actionNotAllowed();
     	}
+    	System.out.println("reply 5");
     	
     	response = JSONParser.getInstance().toJSONString(responseDTO);
+    	System.out.println("reply 6");
     	
     	return response;
     }
