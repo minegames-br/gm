@@ -3,14 +3,11 @@ package com.thecraftcloud.client.test.world;
 import org.junit.Test;
 
 import com.thecraftcloud.client.TheCraftCloudDelegate;
+import com.thecraftcloud.client.test.TheCraftCloudJUnitTest;
 import com.thecraftcloud.core.domain.GameWorld;
 
-public class AddGameWorldTest {
+public class AddGameWorldTest  extends TheCraftCloudJUnitTest {
 	
-	public static final String URL_SERVICES = "http://services.thecraftcloud.com:8080/gamemanager/webresources";
-	//public static final String URL_SERVICES = "http://localhost:8080/gamemanager/webresources";
-	//String restURL = "";
-    private static TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance(URL_SERVICES);
 	
 	@Test
 	public void test() {
@@ -35,7 +32,9 @@ public class AddGameWorldTest {
 		delegate.addGameWorld( gw );
 		*/
 		//createArathiWorld();
-		createSpleggOrbitWorld();
+		//createSpleggOrbitWorld();
+		//createSpleggTaurusWorld();
+		createTheArcherOriginalWorld();
 		
 	}
 	
@@ -52,6 +51,22 @@ public class AddGameWorldTest {
 		gw.setName("splegg-orbit");
 		gw.setDescription("Arena Orbit para o jogo Splegg");
 		gw.setPath("/opt/mg/worlds/splegg-orbit.zip");
+		delegate.addGameWorld( gw );
+	}
+
+	private void createSpleggTaurusWorld() {
+		GameWorld gw = new GameWorld();
+		gw.setName("splegg-taurus");
+		gw.setDescription("Arena Taurus para o jogo Splegg");
+		gw.setPath("/opt/mg/worlds/splegg-taurus.zip");
+		delegate.addGameWorld( gw );
+	}
+
+	private void createTheArcherOriginalWorld() {
+		GameWorld gw = new GameWorld();
+		gw.setName("thearcher-original");
+		gw.setDescription("Arena Original para o jogo TheArcher");
+		gw.setPath("/opt/mg/worlds/thearcher-original.zip");
 		delegate.addGameWorld( gw );
 	}
 

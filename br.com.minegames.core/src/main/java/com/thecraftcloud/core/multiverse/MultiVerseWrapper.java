@@ -51,13 +51,6 @@ public class MultiVerseWrapper {
 		MultiverseCore mvplugin = (MultiverseCore)Bukkit.getPluginManager().getPlugin("Multiverse-Core");
 		mvplugin.getCore().getMVWorldManager().unloadWorld(world.getName());
 		
-		//Apagar o diretório
-		try {
-			FileUtils.deleteDirectory(world.getWorldFolder());
-		} catch (java.io.IOException e) {
-			e.printStackTrace();
-		}
-		
 	}
 
 	public void deleteWorld(World world) {
@@ -70,6 +63,13 @@ public class MultiVerseWrapper {
 		} catch (java.io.IOException e) {
 			e.printStackTrace();
 		}
+		
+	}
+
+	public void unloadWorld(String name) {
+
+		MultiverseCore mvplugin = (MultiverseCore)Bukkit.getPluginManager().getPlugin("Multiverse-Core");
+		mvplugin.getCore().getMVWorldManager().unloadWorld(name);
 		
 	}
 

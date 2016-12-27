@@ -1,5 +1,6 @@
 package com.thecraftcloud.gamesetup;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +30,7 @@ import com.thecraftcloud.core.domain.GameConfig;
 import com.thecraftcloud.core.domain.GameConfigInstance;
 import com.thecraftcloud.core.domain.GameConfigScope;
 import com.thecraftcloud.core.domain.GameConfigType;
+import com.thecraftcloud.core.domain.GameWorld;
 import com.thecraftcloud.core.domain.Local;
 import com.thecraftcloud.core.domain.ServerInstance;
 import com.thecraftcloud.core.export.ExportBlock;
@@ -39,6 +41,7 @@ import com.thecraftcloud.core.util.Utils;
 import com.thecraftcloud.core.util.title.TitleUtil;
 import com.thecraftcloud.gamesetup.command.TheCraftCloudCommand;
 import com.thecraftcloud.gamesetup.listener.BlockBreakListener;
+import com.thecraftcloud.gamesetup.listener.PlayerChangeWorldListener;
 import com.thecraftcloud.gamesetup.listener.PlayerJoin;
 import com.thecraftcloud.gamesetup.listener.PlayerOnClick;
 import com.thecraftcloud.gamesetup.task.ArenaSetupTask;
@@ -55,8 +58,7 @@ public class TheCraftCloudGameSetupPlugin extends JavaPlugin {
 	public static Integer TIME_SET_SUNSET = 11615;
 	public static Integer TIME_SET_SUNSET2 = 12500;
 	public static Integer TIME_SET_NIGHT = 13000;
-	public static Integer TIME_SET_NIGHT2 = 14000;
-	
+	public static Integer TIME_SET_NIGHT2 = 14000;	
 	
 	private Area3D selection;
 	
@@ -146,6 +148,7 @@ public class TheCraftCloudGameSetupPlugin extends JavaPlugin {
 		pm.registerEvents(new PlayerOnClick(this), this);
 		pm.registerEvents(new BlockBreakListener(this), this);
 		pm.registerEvents(new PlayerJoin(this), this);
+		pm.registerEvents(new PlayerChangeWorldListener(this), this);
 	}
 	
 	private void init() {
@@ -595,10 +598,11 @@ public class TheCraftCloudGameSetupPlugin extends JavaPlugin {
 		if(arena.getSpawn() != null) {
 			Local l = arena.getSpawn();
 			loc = new Location( Bukkit.getWorld(this.arena.getName()), l.getX(), l.getY(), l.getZ() );
+			player.teleport(loc);
 		} else {
-			loc = locationUtil .getMiddle( Bukkit.getWorld(this.arena.getName()) , this.getArena().getArea());
+			this.world = Bukkit.getWorld(this.arena.getName());
+			player.teleport(this.world.getSpawnLocation());
 		}
-		player.teleport(loc);
 		player.setGameMode(GameMode.CREATIVE);
 		this.setupArena = true;
 		this.selection = new Area3D();
@@ -769,10 +773,15 @@ public class TheCraftCloudGameSetupPlugin extends JavaPlugin {
 	public void startArenaBuild(String arenaName, List<ExportBlock> arenaBlocks) {
 		this.world = Bukkit.getWorld(arenaName);
 		if(this.world == null) {
-	        //criar mundo void para tentar ver se a recriacao da arena fica pronta mais rapidamente
-			String worldName = "" + System.currentTimeMillis();
-			Bukkit.getLogger().info("cloneWorld void para " + worldName);
-			this.world = new MultiVerseWrapper().createWorldVoid( worldName );
+			this.world = new MultiVerseWrapper().addWorld(this, this.arena );
+		} else {
+			MultiVerseWrapper wrapper = new MultiVerseWrapper();
+			wrapper.deleteWorld(world);
+			File worldContainerDir = Bukkit.getWorldContainer();
+			// Abrir uma thread para fazer download do mundo
+			GameWorld gw = delegate.findGameWorldByName(arena.getName());			
+			delegate.downloadWorld(gw, worldContainerDir);
+			wrapper.addWorld(this, arena);
 		}
 		this.setArenaBlocks(arenaBlocks);
 

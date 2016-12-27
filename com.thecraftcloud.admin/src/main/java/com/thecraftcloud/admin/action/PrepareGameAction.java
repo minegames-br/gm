@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
@@ -54,13 +55,27 @@ public class PrepareGameAction extends Action {
 		World world = Bukkit.getWorld(dto.getArena().getName());
 		if (world == null) {
 			Bukkit.getConsoleSender().sendMessage("world == null");
+			//Apagar o diretório
+			try {
+				File worldDir = new File( Bukkit.getWorldContainer(), dto.getArena().getName() );
+				if(worldDir.exists()) {
+					FileUtils.deleteDirectory( worldDir );
+				}
+			} catch (java.io.IOException e) {
+				e.printStackTrace();
+			}
 			world = this.setupGameWorld(dto.getArena());
 			// return ResponseDTO.incompleteRequest("Arena: " +
 			// dto.getArena().getName() + " is not available on this server.");
 		} else {
 			Bukkit.getConsoleSender().sendMessage("world exists");
 			MultiVerseWrapper mvw = new MultiVerseWrapper();
-			mvw.deleteWorld(world);
+			try{
+				mvw.deleteWorld(world);
+			}catch(Exception e) {
+				e.printStackTrace();
+				mvw.unloadWorld( dto.getArena().getName() );
+			}
 			world = this.setupGameWorld(dto.getArena());
 		}
 

@@ -3,13 +3,11 @@ package com.thecraftcloud.client.test.player;
 import org.junit.Test;
 
 import com.thecraftcloud.client.TheCraftCloudDelegate;
+import com.thecraftcloud.client.test.TheCraftCloudJUnitTest;
 import com.thecraftcloud.core.domain.MineCraftPlayer;
 
-public class FindPlayerByNameTest {
-	public static final String URL_SERVICES = "http://services.minegames.com.br:8080/gamemanager/webresources";
-	//public static final String URL_SERVICES = "http://localhost:8080/gamemanager/webresources";
-	//String restURL = "";
-    private static TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance(URL_SERVICES);
+public class FindPlayerByNameTest  extends TheCraftCloudJUnitTest {
+	
 
 	@Test
 	public void test() {

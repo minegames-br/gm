@@ -10,17 +10,11 @@ import com.thecraftcloud.core.domain.Arena;
 import com.thecraftcloud.core.domain.GameArenaConfig;
 import com.thecraftcloud.core.domain.Local;
 
-public class SetupArenaAreaTest {
-
+public class SetupArenaAreaTest  extends TheCraftCloudJUnitTest {
 	
-	public static final String URL_SERVICES = "http://services.thecraftcloud.com:8080/gamemanager/webresources";
-	//public static final String URL_SERVICES = "http://localhost:8080/gamemanager/webresources";
-	//String restURL = "";
-    private static TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance(URL_SERVICES);
 	
 	@Test
 	public void test() {
-		TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance(URL_SERVICES);
 		
 		Arena arena = delegate.findArena("04cdb0ab-bbc2-41b9-8ccb-5cd555838f68");
 		

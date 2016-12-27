@@ -1,7 +1,10 @@
 package com.thecraftcloud.test;
 
+import org.junit.Test;
+
 import com.thecraftcloud.client.TheCraftCloudDelegate;
 import com.thecraftcloud.client.exception.InvalidRegistrationException;
+import com.thecraftcloud.client.test.TheCraftCloudJUnitTest;
 import com.thecraftcloud.core.domain.Area3D;
 import com.thecraftcloud.core.domain.Arena;
 import com.thecraftcloud.core.domain.Game;
@@ -13,13 +16,8 @@ import com.thecraftcloud.core.domain.GameConfigType;
 import com.thecraftcloud.core.domain.Item;
 import com.thecraftcloud.core.domain.Local;
 
-public class AddGunGameGameConfig {
+public class AddGunGameGameConfig  extends TheCraftCloudJUnitTest {
 
-	public static final String URL_SERVICES = "http://services.minegames.com.br:8080/gamemanager/webresources";
-	//public static final String URL_SERVICES = "http://localhost:8080/gamemanager/webresources";
-	//String restURL = "";
-    private static TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance(URL_SERVICES);
-	
 	public static final String LOBBY_LOCATION = "LOBBY-LOCATION";
 	public static final String MIN_PLAYERS = "MIN-PLAYERS";
 	public static final String MAX_PLAYERS = "MAX-PLAYERS";
@@ -27,15 +25,14 @@ public class AddGunGameGameConfig {
 	public static final String GAME_DURATION = "GAME-DURATION-IN-SECONDS";
 	public static final String KILL_POINTS = "KILL-POINTS";
 
-	public static void main(String args[]) throws InvalidRegistrationException {
+	@Test
+	public void test() throws InvalidRegistrationException {
 		
-		TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance(URL_SERVICES);
-
 		createGameConfig();
         
 	}
 	
-	public static void createGameConfig() throws InvalidRegistrationException {
+	public void createGameConfig() throws InvalidRegistrationException {
 		GameConfig gameConfig = null;
 		Local pointA = null;
 		Local pointB = null;
@@ -154,7 +151,7 @@ public class AddGunGameGameConfig {
 	}
 	
 	
-	private static void createGameArenaConfig(GameConfig gameConfig, Game game, Arena arena, Object object) {
+	private void createGameArenaConfig(GameConfig gameConfig, Game game, Arena arena, Object object) {
 		GameArenaConfig gac = new GameArenaConfig();
 		gac.setArena(arena);
 		gac.setGameConfig(gameConfig);
@@ -173,7 +170,7 @@ public class AddGunGameGameConfig {
 		delegate.createGameArenaConfig(gac);
 	}
 
-	private static Area3D createArea3D(String name, Local pointA, Local pointB) {
+	private Area3D createArea3D(String name, Local pointA, Local pointB) {
 		Area3D area = new Area3D(pointA, pointB);
 		area.setName(name);
 		area = delegate.addArea3D(area);
@@ -181,10 +178,7 @@ public class AddGunGameGameConfig {
 		return area;
 	}
 
-	public static GameConfig createConfig(String name, String displayName, String description, String group, GameConfigType type, GameConfigScope scope, Game game ) {
-		String restURL = URL_SERVICES;
-		TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance(restURL);
-
+	public GameConfig createConfig(String name, String displayName, String description, String group, GameConfigType type, GameConfigScope scope, Game game ) {
 		System.out.println("creating config " + name);
 
         //Game game = delegate.findGame("57b7b3df-9d18-4966-898f-f4ad8ee28a92");
@@ -200,8 +194,7 @@ public class AddGunGameGameConfig {
         return gameConfig;
 	}
 	
-	public static void createGameConfigInstance(GameConfig gameConfig, Game game, Object object ) {
-		String restURL = URL_SERVICES;
+	public void createGameConfigInstance(GameConfig gameConfig, Game game, Object object ) {
         GameConfigInstance domain = new GameConfigInstance();
         System.out.println("game_config_uuid: " + gameConfig.getGame_config_uuid());
         domain.setGameConfig(gameConfig);
@@ -221,7 +214,7 @@ public class AddGunGameGameConfig {
         
 	}	
 	
-	public static Local createLocal( int x, int y, int z) {
+	public Local createLocal( int x, int y, int z) {
 		Local l = new Local();
 		l.setX(x);
 		l.setY(y);

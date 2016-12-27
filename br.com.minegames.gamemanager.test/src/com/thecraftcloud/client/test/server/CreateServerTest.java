@@ -3,14 +3,11 @@ package com.thecraftcloud.client.test.server;
 import org.junit.Test;
 
 import com.thecraftcloud.client.TheCraftCloudDelegate;
+import com.thecraftcloud.client.test.TheCraftCloudJUnitTest;
 import com.thecraftcloud.core.domain.ServerInstance;
 
-public class CreateServerTest {
+public class CreateServerTest  extends TheCraftCloudJUnitTest {
 	
-	public static final String URL_SERVICES = "http://services.thecraftcloud.com:8080/gamemanager/webresources";
-	//public static final String URL_SERVICES = "http://localhost:8080/gamemanager/webresources";
-	//String restURL = "";
-    private static TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance(URL_SERVICES);
 	
 	@Test
 	public void test() {

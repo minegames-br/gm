@@ -6,18 +6,15 @@ import org.junit.Test;
 
 import com.thecraftcloud.client.TheCraftCloudDelegate;
 import com.thecraftcloud.client.exception.InvalidRegistrationException;
+import com.thecraftcloud.client.test.TheCraftCloudJUnitTest;
 import com.thecraftcloud.core.domain.Arena;
 import com.thecraftcloud.core.domain.Game;
 import com.thecraftcloud.core.domain.GameInstance;
 import com.thecraftcloud.core.domain.GameState;
 import com.thecraftcloud.core.domain.ServerInstance;
 
-public class CreateGameInstanceTest {
+public class CreateGameInstanceTest  extends TheCraftCloudJUnitTest {
 	
-	public static final String URL_SERVICES = "http://services.thecraftcloud.com:8080/gamemanager/webresources";
-	//public static final String URL_SERVICES = "http://localhost:8080/gamemanager/webresources";
-	//String restURL = "";
-    private static TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance(URL_SERVICES);
 	
 	@Test
 	public void test() throws InvalidRegistrationException {

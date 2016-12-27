@@ -1,7 +1,10 @@
 package com.thecraftcloud.test;
 
+import org.junit.Test;
+
 import com.thecraftcloud.client.TheCraftCloudDelegate;
 import com.thecraftcloud.client.exception.InvalidRegistrationException;
+import com.thecraftcloud.client.test.TheCraftCloudJUnitTest;
 import com.thecraftcloud.core.domain.Area3D;
 import com.thecraftcloud.core.domain.Arena;
 import com.thecraftcloud.core.domain.Game;
@@ -13,12 +16,8 @@ import com.thecraftcloud.core.domain.GameConfigType;
 import com.thecraftcloud.core.domain.Local;
 import com.thecraftcloud.core.domain.Schematic;
 
-public class AddGameConfigRESTPostTest {
-
-	public static final String URL_SERVICES = "http://services.thecraftcloud.com:8080/gamemanager/webresources";
-	//public static final String URL_SERVICES = "http://localhost:8080/gamemanager/webresources";
-	//String restURL = "";
-    private static TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance(URL_SERVICES);
+public class AddGameConfigRESTPostTest  extends TheCraftCloudJUnitTest {
+	
 	
 	public static final String FLOATING_AREA = "ARQUEIRO-FLOATING-AREA";
 	public static final String MONSTERS_SPAWN_AREA = "ARQUEIRO-MONSTERS-SPAWN-AREA";
@@ -33,23 +32,16 @@ public class AddGameConfigRESTPostTest {
 	public static final String GAME_DURATION = "GAME-DURATION-IN-SECONDS";
 	public static final String GAME_LEVELS = "ARQUEIRO-GAME-NUMBER-OF-LEVELS";
 
-	public static void main2(String args[]) throws InvalidRegistrationException {
-		TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance(URL_SERVICES);
+	@Test
+	public void test() throws InvalidRegistrationException {
+
 		Game game = delegate.findGame("c6905743-6514-49ba-9257-420743f65b65");
 		Arena arena = delegate.findArena("c5253674-8c19-4620-b500-51645a620f64");
 		
 		delegate.updateGame(game);
 	}
 	
-	public static void main(String args[]) throws InvalidRegistrationException {
-		
-		TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance(URL_SERVICES);
-
-		createGameConfig();
-        
-	}
-	
-	public static void createGameConfig() throws InvalidRegistrationException {
+	public void createGameConfig() throws InvalidRegistrationException {
 		GameConfig gameConfig = null;
 		Local pointA = null;
 		Local pointB = null;
@@ -85,7 +77,7 @@ public class AddGameConfigRESTPostTest {
 	//	gameConfig = createConfig("arqueiro.player4.area", "Select the area for player 4", "3D (flat) area that the player will have to protect", "PLAYER-AREA", GameConfigType.AREA3D, GameConfigScope.ARENA, game);
 	}
 	
-	public static void createArenaconfig() throws InvalidRegistrationException {
+	public void createArenaconfig() throws InvalidRegistrationException {
         
 		System.err.println("creating schematic");
         Schematic schematic = new Schematic();
@@ -184,7 +176,7 @@ public class AddGameConfigRESTPostTest {
 		
 	}
 	
-	private static void createGameArenaConfig(GameConfig gameConfig, Arena arena, Object object) {
+	private void createGameArenaConfig(GameConfig gameConfig, Arena arena, Object object) {
 		GameArenaConfig gac = new GameArenaConfig();
 		gac.setArena(arena);
 		gac.setGameConfig(gameConfig);
@@ -202,7 +194,7 @@ public class AddGameConfigRESTPostTest {
 		delegate.createGameArenaConfig(gac);
 	}
 
-	private static Area3D createArea3D(String name, Local pointA, Local pointB) {
+	private Area3D createArea3D(String name, Local pointA, Local pointB) {
 		Area3D area = new Area3D(pointA, pointB);
 		area.setName(name);
 		area = delegate.addArea3D(area);
@@ -210,11 +202,7 @@ public class AddGameConfigRESTPostTest {
 		return area;
 	}
 
-	public static GameConfig createConfig(String name, String displayName, String description, String group, GameConfigType type, GameConfigScope scope, Game game ) {
-		String restURL = URL_SERVICES;
-		TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance(restURL);
-
-		System.out.println("creating config " + name);
+	public GameConfig createConfig(String name, String displayName, String description, String group, GameConfigType type, GameConfigScope scope, Game game ) {
 
         //Game game = delegate.findGame("57b7b3df-9d18-4966-898f-f4ad8ee28a92");
         GameConfig domain = new GameConfig();
@@ -229,8 +217,7 @@ public class AddGameConfigRESTPostTest {
         return gameConfig;
 	}
 	
-	public static void createGameConfigInstance(Game game, GameConfig gameConfig, Object object ) {
-		String restURL = URL_SERVICES;
+	public void createGameConfigInstance(Game game, GameConfig gameConfig, Object object ) {
         GameConfigInstance domain = new GameConfigInstance();
         System.out.println("game_config_uuid: " + gameConfig.getGame_config_uuid());
         domain.setGameConfig(gameConfig);
@@ -244,7 +231,7 @@ public class AddGameConfigRESTPostTest {
         
 	}	
 	
-	public static Local createLocal( int x, int y, int z) {
+	public Local createLocal( int x, int y, int z) {
 		Local l = new Local();
 		l.setX(x);
 		l.setY(y);

@@ -29,6 +29,7 @@ public class SendPlayersToLobbyJob extends ManagerJob {
 			action.setServer(lobbyServer);
 			AdminClient client = AdminClient.getInstance();
 			ServerInstance server = delegate.findServerByName("mgbungee");
+			logger.fine("server mgbungee: " + server.getIp_address() + " " + server.getHostname() + " " + server.getAdminPort() );
 			ResponseDTO rdto = client.execute(server, action);
 			if( !rdto.getResult() ) {
 				player.setStatus(PlayerStatus.OFFLINE);

@@ -3,19 +3,17 @@ package com.thecraftcloud.client.test.game;
 import org.junit.Test;
 
 import com.thecraftcloud.client.TheCraftCloudDelegate;
+import com.thecraftcloud.client.test.TheCraftCloudJUnitTest;
 import com.thecraftcloud.core.domain.Game;
 import com.thecraftcloud.core.domain.GameConfig;
 
-public class AddGameConfigToGameTest {
-	public static final String URL_SERVICES = "http://services.thecraftcloud.com:8080/gamemanager/webresources";
-	//public static final String URL_SERVICES = "http://localhost:8080/gamemanager/webresources";
-	//String restURL = "";
-    private static TheCraftCloudDelegate delegate = TheCraftCloudDelegate.getInstance(URL_SERVICES);
+public class AddGameConfigToGameTest  extends TheCraftCloudJUnitTest {
+	
 	
 	@Test
 	public void test() {
 		
-		configurarArqueiro();
+		configurarSplegg();
 		
 	}
 	
@@ -25,6 +23,31 @@ public class AddGameConfigToGameTest {
 			GameConfig gc = delegate.findGameConfigByName("GUNGAME." + i);
 			delegate.addGameConfigToGame( game, gc);
 		}
+	}
+
+	private void configurarSplegg() {
+		Game game = delegate.findGameByName("splegg");
+		
+		addGameConfigToGame("player1.spawn", game);
+		addGameConfigToGame("player2.spawn", game);
+		addGameConfigToGame("player3.spawn", game);
+		addGameConfigToGame("player4.spawn", game);
+		addGameConfigToGame("player5.spawn", game);
+		addGameConfigToGame("player6.spawn", game);
+		addGameConfigToGame("player7.spawn", game);
+		addGameConfigToGame("player8.spawn", game);
+		addGameConfigToGame("player9.spawn", game);
+		addGameConfigToGame("player10.spawn", game);
+		addGameConfigToGame("player11.spawn", game);
+		addGameConfigToGame("player12.spawn", game);
+		addGameConfigToGame("player13.spawn", game);
+		addGameConfigToGame("player14.spawn", game);
+		addGameConfigToGame("player15.spawn", game);
+		addGameConfigToGame("player16.spawn", game);
+		addGameConfigToGame("player17.spawn", game);
+		addGameConfigToGame("player18.spawn", game);
+		addGameConfigToGame("player19.spawn", game);
+		addGameConfigToGame("player20.spawn", game);
 	}
 	
 	private void configurarArqueiro() {
