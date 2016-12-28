@@ -6,9 +6,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
-import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.weather.ThunderChangeEvent;
+import org.bukkit.event.weather.WeatherChangeEvent;
 
 import com.thecraftcloud.minigame.domain.MyCloudCraftGame;
 import com.thecraftcloud.minigame.service.ConfigService;
@@ -34,6 +36,14 @@ public class CancelEvents implements Listener {
 		event.setCancelled(true);
 	}
 	
+	@EventHandler
+	public void onThunderChange (ThunderChangeEvent event) {
+		if (!game.isStarted()) {
+			return;
+		}
+		event.setCancelled(true);
+	}
+
 	@EventHandler
 	public void onDropItem(PlayerDropItemEvent event) {
 		if (!game.isStarted()) {

@@ -14,6 +14,7 @@ import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
@@ -72,7 +73,7 @@ public class SpleggPlayerService extends PlayerService {
 	}
 
 	@Override
-	public void killPlayer(Player dead) {
+	public void killPlayer(Player dead) {	
 		String deadname = dead.getDisplayName();
 		Bukkit.broadcastMessage(ChatColor.GOLD + " " + deadname + "" + ChatColor.GREEN + " died.");
 

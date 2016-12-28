@@ -13,6 +13,7 @@ import org.bukkit.block.Block;
 import com.thecraftcloud.core.domain.Area3D;
 import com.thecraftcloud.core.util.Utils;
 import com.thecraftcloud.minigame.TheCraftCloudMiniGameAbstract;
+import com.thecraftcloud.minigame.domain.MyCloudCraftGame;
 import com.thecraftcloud.minigame.service.ConfigService;
 
 public class DestroyArenaBlocksTask implements Runnable {
@@ -26,7 +27,10 @@ public class DestroyArenaBlocksTask implements Runnable {
 
 	@Override
 	public void run() {
-		
+
+		MyCloudCraftGame game = configService.getMyCloudCraftGame();
+		if (!game.isStarted()) return;
+
 		World world = this.configService.getArenaWorld();
 		Area3D area3D = this.controller.getArea();
 
@@ -35,9 +39,28 @@ public class DestroyArenaBlocksTask implements Runnable {
 		Location loc2 = new Location(world, area3D.getPointB().getX(), area3D.getPointB().getY(),
 				area3D.getPointB().getZ());
 
-		// Método extraido da classe BlockManipulationUtil
 		List<Block> blocks = new ArrayList<Block>();
 
+		// Método extraido da classe BlockManipulationUtil
+		blocksFromToPoints(blocks, loc1, loc2);
+
+		Block[] array = new Block[blocks.size()];
+		for (int i = 0; i < blocks.size(); i++)
+			array[i] = blocks.get(i);
+
+		Random r = new Random();
+
+		for (int i = 0; i <= 40; i++) {
+			int randomBlock = r.nextInt(blocks.size());
+			if (!(array[randomBlock].getType() == Material.AIR)) {
+				world.createExplosion(array[randomBlock].getLocation(), 2.0F);
+				array[randomBlock].setType(Material.AIR);
+				array[randomBlock].getState().update();
+			}
+		}
+	}
+
+	private void blocksFromToPoints(List blocks, Location loc1, Location loc2) {
 		int topBlockX = (loc1.getBlockX() < loc2.getBlockX() ? loc2.getBlockX() : loc1.getBlockX());
 		int bottomBlockX = (loc1.getBlockX() > loc2.getBlockX() ? loc2.getBlockX() : loc1.getBlockX());
 
@@ -54,21 +77,6 @@ public class DestroyArenaBlocksTask implements Runnable {
 
 					blocks.add(block);
 				}
-			}
-		}
-
-		Block[] array = new Block[blocks.size()];
-		for (int i = 0; i < blocks.size(); i++)
-			array[i] = blocks.get(i);
-
-		Random r = new Random();
-
-		for (int i = 0; i <= 40; i++) {
-			int randomBlock = r.nextInt(blocks.size());
-			if (!(array[randomBlock].getType() == Material.AIR)) {
-				world.createExplosion(array[randomBlock].getLocation(), 1.0F);
-				array[randomBlock].setType(Material.AIR);
-				array[randomBlock].getState().update();
 			}
 		}
 	}

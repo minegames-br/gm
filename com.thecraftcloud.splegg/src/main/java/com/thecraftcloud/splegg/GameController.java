@@ -18,7 +18,7 @@ import com.thecraftcloud.minigame.service.PlayerService;
 import com.thecraftcloud.splegg.domain.Splegg;
 import com.thecraftcloud.splegg.domain.SpleggPlayer;
 import com.thecraftcloud.splegg.listener.CancelEvents;
-import com.thecraftcloud.splegg.listener.PlayerDeath;
+import com.thecraftcloud.splegg.listener.PlayerDrop;
 import com.thecraftcloud.splegg.listener.ThrowEgg;
 import com.thecraftcloud.splegg.service.SpleggConfigService;
 import com.thecraftcloud.splegg.service.SpleggPlayerService;
@@ -35,9 +35,11 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 
 	private Runnable playerWinTask;
 	private int playerWinTaskThreadID;
-	protected Runnable DestroyArenaBlocksTask;
-	protected int DestroyArenaBlocksTaskThreadID;
+	protected Runnable destroyArenaBlocksTask;
+	protected int destroyArenaBlocksTaskThreadID;
 
+	
+	
 	@Override
 	public void onEnable() {
 		super.onEnable();
@@ -66,7 +68,7 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 
 		// inicializar variaveis de instancia
 		this.playerWinTask = new PlayerWinTask(this);
-		this.DestroyArenaBlocksTask = new DestroyArenaBlocksTask(this);
+		this.destroyArenaBlocksTask = new DestroyArenaBlocksTask(this);
 
 		// Carregar configuracoes especificas do Splegg
 		SpleggConfigService.getInstance().loadConfig();
@@ -96,7 +98,7 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 
 			// chama uma task para derrubar toda a arena
 			BukkitScheduler scheduler = getServer().getScheduler();
-			this.DestroyArenaBlocksTaskThreadID = scheduler.scheduleSyncRepeatingTask(this, this.DestroyArenaBlocksTask,
+			this.destroyArenaBlocksTaskThreadID = scheduler.scheduleSyncRepeatingTask(this, this.destroyArenaBlocksTask,
 					0L, 10L);
 		}
 		return false;
@@ -116,7 +118,8 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 
 		// Terminar threads do jogo
 		Bukkit.getScheduler().cancelTask(this.playerWinTaskThreadID);
-		Bukkit.getScheduler().cancelTask(this.DestroyArenaBlocksTaskThreadID);
+		Bukkit.getScheduler().cancelTask(this.destroyArenaBlocksTaskThreadID);
+
 
 		for (GamePlayer gp : livePlayers) {
 			Player player = gp.getPlayer();
@@ -146,7 +149,7 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 	protected void registerListeners() {
 		super.registerListeners();
 		PluginManager pm = Bukkit.getPluginManager();
-		pm.registerEvents(new PlayerDeath(this), this);
+		pm.registerEvents(new PlayerDrop(this), this);
 		pm.registerEvents(new ThrowEgg(this), this);
 		pm.registerEvents(new CancelEvents(this), this);
 	}
