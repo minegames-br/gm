@@ -37,15 +37,15 @@ public class PlayerDrop implements Listener {
 
 		final Player player = event.getPlayer();
 
-		if (event.getTo().getBlock().isLiquid()) {
-			
+		if (event.getTo().getBlock().isLiquid()
+				|| player.getLocation().getY() < this.controller.getArea().getPointB().getY()) {
 
 			BukkitScheduler scheduler = this.controller.getServer().getScheduler();
 			scheduler.scheduleSyncDelayedTask(this.controller, new Runnable() {
 
 				@Override
 				public void run() {
-					
+
 					int cooldownTime = 3;
 
 					if (cooldowns.containsKey(player.getName())) {
@@ -56,7 +56,7 @@ public class PlayerDrop implements Listener {
 							return;
 						}
 					}
-					
+
 					cooldowns.put(player.getName(), System.currentTimeMillis());
 
 					playerService.killPlayer(player);

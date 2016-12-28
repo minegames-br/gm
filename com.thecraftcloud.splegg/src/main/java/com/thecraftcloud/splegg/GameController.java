@@ -37,6 +37,7 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 	private int playerWinTaskThreadID;
 	protected Runnable destroyArenaBlocksTask;
 	protected int destroyArenaBlocksTaskThreadID;
+	private boolean autoDestruction;
 
 	
 	
@@ -48,7 +49,7 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 	@Override
 	public void startGameEngine() {
 		super.startGameEngine();
-
+	
 		spleggPlayerService.setupPlayersToStartGame();
 
 		// Enviar jogadores para a Arena
@@ -60,6 +61,8 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 		// Iniciar threads do jogo
 		BukkitScheduler scheduler = getServer().getScheduler();
 		this.playerWinTaskThreadID = scheduler.scheduleSyncRepeatingTask(this, this.playerWinTask, 0L, 20L);
+		
+		autoDestruction = false;
 	}
 
 	@Override
@@ -88,12 +91,9 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 				.getGameConfigInstance(TheCraftCloudConfig.GAME_DURATION_IN_SECONDS);
 
 		if (duration >= this.gameDuration && this.getLivePlayers().size() > 1) {
-
-			for (Player player : Bukkit.getOnlinePlayers()) {
-				if (player.getWorld().equals(configService.getArenaWorld())) {
-					TitleUtil.sendTitle(player.getPlayer(), 1, 70, 10, ChatColor.RED + "Autodestruição!",
-							ChatColor.RED + "salve-se quem puder...");
-				}
+			
+			if(!autoDestruction) {
+				autoDestructionAlert();
 			}
 
 			// chama uma task para derrubar toda a arena
@@ -102,6 +102,16 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 					0L, 10L);
 		}
 		return false;
+	}
+
+	private void autoDestructionAlert() {
+		for (Player player : Bukkit.getOnlinePlayers()) {
+			if (player.getWorld().equals(configService.getArenaWorld())) {
+				TitleUtil.sendTitle(player.getPlayer(), 1, 70, 10, ChatColor.RED + "Autodestruição!",
+						ChatColor.RED + "salve-se quem puder...");
+				autoDestruction = true;
+			}
+		}
 	}
 
 	/**

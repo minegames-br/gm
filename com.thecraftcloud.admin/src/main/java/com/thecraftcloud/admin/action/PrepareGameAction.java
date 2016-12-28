@@ -105,6 +105,8 @@ public class PrepareGameAction extends Action {
 		configService.setGciList(new CopyOnWriteArraySet<>(gciList));
 		configService.setWorld(world);
 
+		
+
 		TheCraftCloudAdmin pluginAdmin = (TheCraftCloudAdmin) Bukkit.getPluginManager()
 				.getPlugin(TheCraftCloudAdmin.PLUGIN_NAME);
 
@@ -141,10 +143,10 @@ public class PrepareGameAction extends Action {
 		return responseDTO;
 	}
 
-	private World setupGameWorld(Arena arena) {
+	private World setupGameWorld(Arena arena) {	
 		System.out.println("setupGW 1");
 		File worldContainerDir = Bukkit.getWorldContainer();
-
+		
 		System.out.println("recuperar o plugin TheCraftCloudAdmin");
 		TheCraftCloudAdmin plugin = (TheCraftCloudAdmin) Bukkit.getPluginManager()
 				.getPlugin(TheCraftCloudAdmin.PLUGIN_NAME);
@@ -156,7 +158,11 @@ public class PrepareGameAction extends Action {
 
 		MultiVerseWrapper wrapper = new MultiVerseWrapper();
 		System.out.println("addWorld");
-		return wrapper.addWorld(plugin, arena);
+		World world = wrapper.addWorld(plugin, arena);
+		world.setStorm(false);
+		world.setThundering(false);
+		world.setWeatherDuration(0);
+		return world;
 
 	}
 

@@ -31,33 +31,30 @@ public class ThrowEgg implements Listener {
 		super();
 		this.controller = controller;
 	}
-	
+
 	@EventHandler
 	public void onClick(PlayerInteractEvent event) {
-
-		MyCloudCraftGame game = configService.getMyCloudCraftGame();
-
-		if (!game.isStarted())
-			return;
 
 		if (!event.getAction().equals(Action.RIGHT_CLICK_AIR) && !event.getAction().equals(Action.RIGHT_CLICK_BLOCK))
 			return;
 
 		if (!(event.getPlayer().getInventory().getItemInMainHand().getType() == Material.IRON_SPADE))
 			return;
-		
-		double cooldownTime = 0.5;
-		
-		if(cooldowns.containsKey(event.getPlayer().getName())) {
-			double secondsLeft = ((cooldowns.get(event.getPlayer().getName())/1000)+cooldownTime) - (System.currentTimeMillis()/1000);
-			if(secondsLeft > 0) {
-				  event.setCancelled(true);
-			        return;
-			}
-		}
-		
-		cooldowns.put(event.getPlayer().getName(), System.currentTimeMillis());
-			  
+
+		/*
+		 * 
+		 * double cooldownTime = 0.5;
+		 * 
+		 * if(cooldowns.containsKey(event.getPlayer().getName())) { double
+		 * secondsLeft =
+		 * ((cooldowns.get(event.getPlayer().getName())/1000)+cooldownTime) -
+		 * (System.currentTimeMillis()/1000); if(secondsLeft > 0) {
+		 * event.setCancelled(true); return; } }
+		 * 
+		 * cooldowns.put(event.getPlayer().getName(),
+		 * System.currentTimeMillis());
+		 */
+
 		Player player = event.getPlayer();
 
 		throwEgg(player);
@@ -90,7 +87,7 @@ public class ThrowEgg implements Listener {
 			}
 		}
 	}
-	
+
 	private void throwEgg(final Player player) {
 		BukkitScheduler scheduler = this.controller.getServer().getScheduler();
 		scheduler.scheduleSyncDelayedTask(this.controller, new Runnable() {
@@ -109,18 +106,12 @@ public class ThrowEgg implements Listener {
 				egg.setVelocity(velocity);
 
 			}
-		}, 3L);
-		
+		}, 2L);
+
 	}
 
 	private void breakBlock(Egg egg, final Block block) {
 		egg.remove();
-		BukkitScheduler scheduler = this.controller.getServer().getScheduler();
-		scheduler.scheduleSyncDelayedTask(this.controller, new Runnable() {
-			@Override
-			public void run() {
-				block.setType(Material.AIR);
-			}
-		}, 5L);
+		block.setType(Material.AIR);
 	}
 }
