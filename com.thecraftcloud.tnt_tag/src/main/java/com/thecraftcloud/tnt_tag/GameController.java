@@ -1,4 +1,4 @@
-package com.thecraftcloud.splegg;
+package com.thecraftcloud.tnt_tag;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -15,23 +15,21 @@ import com.thecraftcloud.minigame.TheCraftCloudMiniGameAbstract;
 import com.thecraftcloud.minigame.domain.GamePlayer;
 import com.thecraftcloud.minigame.domain.MyCloudCraftGame;
 import com.thecraftcloud.minigame.service.PlayerService;
-import com.thecraftcloud.splegg.domain.Splegg;
-import com.thecraftcloud.splegg.domain.SpleggPlayer;
-import com.thecraftcloud.splegg.listener.CancelEvents;
-import com.thecraftcloud.splegg.listener.PlayerDrop;
-import com.thecraftcloud.splegg.listener.ThrowEgg;
-import com.thecraftcloud.splegg.service.SpleggConfigService;
-import com.thecraftcloud.splegg.service.SpleggPlayerService;
-import com.thecraftcloud.splegg.task.DestroyArenaBlocksTask;
-import com.thecraftcloud.splegg.task.PlayerWinTask;
+import com.thecraftcloud.tnt_tag.domain.TntTag;
+import com.thecraftcloud.tnt_tag.domain.TntTagPlayer;
+import com.thecraftcloud.tnt_tag.listener.CancelEvents;
+import com.thecraftcloud.tnt_tag.listener.PlayerDrop;
+import com.thecraftcloud.tnt_tag.service.TntTagConfigService;
+import com.thecraftcloud.tnt_tag.service.TntTagPlayerService;
+import com.thecraftcloud.tnt_tag.task.PlayerWinTask;
 
 /**
- * Created by renatocsare@gmail.com on Dez 20, 2016
+ * Created by renatocsare@gmail.com on Dez 28, 2016
  */
 public class GameController extends TheCraftCloudMiniGameAbstract {
 	private Integer gameDuration;
-	private SpleggPlayerService spleggPlayerService = new SpleggPlayerService(this);
-	private SpleggConfigService spleggConfigService = SpleggConfigService.getInstance();
+	private TntTagPlayerService spleggPlayerService = new TntTagPlayerService(this);
+	private TntTagConfigService spleggConfigService = TntTagConfigService.getInstance();
 
 	private Runnable playerWinTask;
 	private int playerWinTaskThreadID;
@@ -71,10 +69,9 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 
 		// inicializar variaveis de instancia
 		this.playerWinTask = new PlayerWinTask(this);
-		this.destroyArenaBlocksTask = new DestroyArenaBlocksTask(this);
 
 		// Carregar configuracoes especificas do Splegg
-		SpleggConfigService.getInstance().loadConfig();
+		TntTagConfigService.getInstance().loadConfig();
 	}
 
 	@Override
@@ -142,7 +139,7 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 
 	@Override
 	public PlayerService createPlayerService() {
-		return new SpleggPlayerService(this);
+		return new TntTagPlayerService(this);
 	}
 
 	@Override
@@ -152,7 +149,7 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 
 	@Override
 	public GamePlayer createGamePlayer() {
-		return new SpleggPlayer();
+		return new TntTagPlayer();
 	}
 
 	@Override
@@ -160,13 +157,12 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 		super.registerListeners();
 		PluginManager pm = Bukkit.getPluginManager();
 		pm.registerEvents(new PlayerDrop(this), this);
-		pm.registerEvents(new ThrowEgg(this), this);
 		pm.registerEvents(new CancelEvents(this), this);
 	}
 
 	@Override
 	public MyCloudCraftGame createMyCloudCraftGame() {
-		return new Splegg();
+		return new TntTag();
 	}
 
 	@Override
@@ -175,11 +171,11 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 		return false;
 	}
 
-	public SpleggConfigService getSpleggConfigService() {
+	public TntTagConfigService getSpleggConfigService() {
 		return spleggConfigService;
 	}
 
-	public void setSpleggConfigService(SpleggConfigService spleggConfigService) {
+	public void setSpleggConfigService(TntTagConfigService spleggConfigService) {
 		this.spleggConfigService = spleggConfigService;
 	}
 }

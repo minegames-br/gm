@@ -1,0 +1,7 @@
+name: TheCraftCloud-TntTag
+version: 1.0
+author: renatocesar
+main: com.thecraftcloud.tnt_tag.GameController
+depend: [TheCraftCloud-MiniGame,TheCraftCloud-Core]
+commands:
+    sair:
