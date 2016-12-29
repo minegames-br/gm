@@ -8,13 +8,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
@@ -26,15 +22,22 @@ import com.thecraftcloud.minigame.TheCraftCloudMiniGameAbstract;
 import com.thecraftcloud.minigame.domain.GamePlayer;
 import com.thecraftcloud.minigame.service.ConfigService;
 import com.thecraftcloud.minigame.service.PlayerService;
+import com.thecraftcloud.tnt_tag.GameController;
+import com.thecraftcloud.tnt_tag.TntTagConfig;
 
 public class TntTagPlayerService extends PlayerService {
 
-	protected TntTagConfigService spleggService = TntTagConfigService.getInstance();
-	protected TntTagPlayerService playerService;
+	private GameController controller;
+	private TntTagConfigService tntTagConfigService = TntTagConfigService.getInstance();
+	private TntTagConfig tntTagConfig = TntTagConfig.getInstance();
+	private TNTService tntService;
+	
 
 	public TntTagPlayerService(TheCraftCloudMiniGameAbstract controller) {
 		super(controller);
 		this.configService = ConfigService.getInstance();
+		this.tntTagConfigService = TntTagConfigService.getInstance();
+		this.tntService = new TNTService(this.controller);
 	}
 
 	public void teleportPlayersToArena() {
@@ -67,16 +70,14 @@ public class TntTagPlayerService extends PlayerService {
 		super.setupPlayerToStartGame(player);
 
 		PlayerInventory inventory = player.getInventory();
-		ItemStack spade = new ItemStack(Material.IRON_SPADE);
-		inventory.setItemInMainHand(spade);
-		player.setGameMode(GameMode.SURVIVAL);
 	}
 
 	@Override
 	public void killPlayer(Player dead) {	
 		String deadname = dead.getDisplayName();
 		Bukkit.broadcastMessage(ChatColor.GOLD + " " + deadname + "" + ChatColor.GREEN + " died.");
-
+		
+		dead.getWorld().createExplosion(dead.getLocation(), 2.0F);
 		dead.setHealth(20);
 		dead.getInventory().clear();
 		dead.setGameMode(GameMode.SPECTATOR);
@@ -93,7 +94,7 @@ public class TntTagPlayerService extends PlayerService {
 	@Override
 	public void createScoreBoard(Player player) {
 		Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
-		Objective objective1 = scoreboard.registerNewObjective(Utils.color("&6Splegg"), "splegg");
+		Objective objective1 = scoreboard.registerNewObjective(ChatColor.BOLD + Utils.color("&CTNT TAG"), "tnt_tag");
 		objective1.setDisplaySlot(DisplaySlot.SIDEBAR);
 		player.setScoreboard(scoreboard);
 	}
@@ -108,27 +109,21 @@ public class TntTagPlayerService extends PlayerService {
 
 			Objective objective1 = scoreboard.getObjective(DisplaySlot.SIDEBAR);
 			objective1.unregister();
-			objective1 = scoreboard.registerNewObjective(ChatColor.BOLD.UNDERLINE + "[ Splegg ]", "splegg");
+			objective1 = scoreboard.registerNewObjective(ChatColor.BOLD + Utils.color( "&CTNT TAG"), "tnt_tag");
 			objective1.setDisplaySlot(DisplaySlot.SIDEBAR);
 
-			Integer time = (configService.getGameDurationInSeconds() - this.miniGame.getGameDuration());
+			//Integer time = (configService.getGameDurationInSeconds() - this.miniGame.getGameDuration());
+			Integer time = (tntTagConfigService.getTntTimerInSeconds() - tntService.getTntDuration());
 
-			Score p1 = objective1.getScore(ChatColor.BOLD + Utils.color("&BTempo"));
-			p1.setScore(5);
-
-			Score p2 = objective1.getScore("" + time);
-			p2.setScore(4);
+			Score p1 = objective1.getScore(ChatColor.BOLD + Utils.color("&FTempo:" + "   " + time));
+			p1.setScore(3);
 
 			Score space1 = objective1.getScore("");
-			space1.setScore(3);
+			space1.setScore(2);
 
-			Score p3 = objective1.getScore(ChatColor.BOLD + Utils.color("&AJogadores"));
-			p3.setScore(2);
-
-			Score p4 = objective1.getScore("" + this.miniGame.getLivePlayers().size());
-			p4.setScore(1);
+			Score p3 = objective1.getScore(ChatColor.BOLD + Utils.color("&FJogadores:" + "   " + this.miniGame.getLivePlayers().size()));
+			p3.setScore(1);
 		}
-
 	}
 
 	public void playMusic(Player player) {
@@ -144,5 +139,4 @@ public class TntTagPlayerService extends PlayerService {
 		Location spawn = locationUtil.toLocation(this.configService.getWorld(), gac.getLocalValue());
 		player.teleport(spawn);
 	}
-
 }

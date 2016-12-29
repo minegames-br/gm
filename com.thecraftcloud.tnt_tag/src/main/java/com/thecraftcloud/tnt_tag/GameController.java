@@ -1,7 +1,6 @@
 package com.thecraftcloud.tnt_tag;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.scheduler.BukkitScheduler;
@@ -9,35 +8,51 @@ import org.bukkit.scoreboard.DisplaySlot;
 
 import com.thecraftcloud.core.logging.MGLogger;
 import com.thecraftcloud.core.util.Utils;
-import com.thecraftcloud.core.util.title.TitleUtil;
 import com.thecraftcloud.minigame.TheCraftCloudConfig;
 import com.thecraftcloud.minigame.TheCraftCloudMiniGameAbstract;
 import com.thecraftcloud.minigame.domain.GamePlayer;
 import com.thecraftcloud.minigame.domain.MyCloudCraftGame;
+import com.thecraftcloud.minigame.service.ConfigService;
 import com.thecraftcloud.minigame.service.PlayerService;
+import com.thecraftcloud.tnt_tag.domain.TNT;
 import com.thecraftcloud.tnt_tag.domain.TntTag;
 import com.thecraftcloud.tnt_tag.domain.TntTagPlayer;
 import com.thecraftcloud.tnt_tag.listener.CancelEvents;
-import com.thecraftcloud.tnt_tag.listener.PlayerDrop;
+import com.thecraftcloud.tnt_tag.listener.TntExplosionListener;
+import com.thecraftcloud.tnt_tag.service.TNTService;
 import com.thecraftcloud.tnt_tag.service.TntTagConfigService;
 import com.thecraftcloud.tnt_tag.service.TntTagPlayerService;
 import com.thecraftcloud.tnt_tag.task.PlayerWinTask;
+import com.thecraftcloud.tnt_tag.task.TntExplodeTask;
+import com.thecraftcloud.tnt_tag.task.TntHolderTask;
 
 /**
  * Created by renatocsare@gmail.com on Dez 28, 2016
  */
 public class GameController extends TheCraftCloudMiniGameAbstract {
+
 	private Integer gameDuration;
-	private TntTagPlayerService spleggPlayerService = new TntTagPlayerService(this);
-	private TntTagConfigService spleggConfigService = TntTagConfigService.getInstance();
+	private Integer tntTimer;
+
+	private TntTagPlayerService tntTagPlayerService = new TntTagPlayerService(this);
+	private TntTagConfigService tntTagConfigService = TntTagConfigService.getInstance();
+	private TNTService tntService;
+
+	private TntTagConfig tntTagConfig = TntTagConfig.getInstance();
+
+	//private TNT tnt;
+
+	private Runnable tntExplodeTask;
+	private int tntExplodeTaskThreadID;
+	private Runnable tntHolderTask;
+	private int tntHolderTaskThreadID;
 
 	private Runnable playerWinTask;
 	private int playerWinTaskThreadID;
-	protected Runnable destroyArenaBlocksTask;
-	protected int destroyArenaBlocksTaskThreadID;
-	private boolean autoDestruction;
 
-	
+	public GameController() {
+		this.tntService = new TNTService(this);
+	}
 	
 	@Override
 	public void onEnable() {
@@ -47,11 +62,11 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 	@Override
 	public void startGameEngine() {
 		super.startGameEngine();
-	
-		spleggPlayerService.setupPlayersToStartGame();
+
+		tntTagPlayerService.setupPlayersToStartGame();
 
 		// Enviar jogadores para a Arena
-		spleggPlayerService.teleportPlayersToArena();
+		tntTagPlayerService.teleportPlayersToArena();
 
 		// registar listeners especificos
 		this.registerListeners();
@@ -59,8 +74,12 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 		// Iniciar threads do jogo
 		BukkitScheduler scheduler = getServer().getScheduler();
 		this.playerWinTaskThreadID = scheduler.scheduleSyncRepeatingTask(this, this.playerWinTask, 0L, 20L);
-		
-		autoDestruction = false;
+		this.tntExplodeTaskThreadID = scheduler.scheduleSyncRepeatingTask(this, this.tntExplodeTask, 20L, 20L);
+		this.tntHolderTaskThreadID = scheduler.scheduleSyncRepeatingTask(this, this.tntHolderTask, 0L, 20L);
+
+		// Bukkit.getConsoleSender().sendMessage(Utils.color("&6 GET TNT
+		// DURATION" + tntService.getTntDuration()));
+
 	}
 
 	@Override
@@ -69,9 +88,31 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 
 		// inicializar variaveis de instancia
 		this.playerWinTask = new PlayerWinTask(this);
+		this.tntExplodeTask = new TntExplodeTask(this);
+		this.tntHolderTask = new TntHolderTask(this);
 
-		// Carregar configuracoes especificas do Splegg
+		// Carregar configuracoes especificas do TNT Tag
 		TntTagConfigService.getInstance().loadConfig();
+	}
+
+	@Override
+	public void startThreads(BukkitScheduler scheduler) {
+		this.updateScoreBoardThreadID = scheduler.scheduleSyncRepeatingTask(this, this.updateScoreBoardTask, 20L, 20L);
+	}
+
+	public boolean shouldExplodeTnt() {
+		Bukkit.getConsoleSender().sendMessage(Utils.color("&6 SHOULD EXPLODE TNT"));
+		Bukkit.getConsoleSender()
+				.sendMessage(Utils.color("&6 SHOULD EXPLODE TNT - GET TNT DURATION: " + tntService.getTntDuration()));
+		Bukkit.getConsoleSender().sendMessage(Utils.color(
+				"&6 SHOULD EXPLODE TNT - GET TNT TIMER IN SECONDS: " + tntTagConfigService.getTntTimerInSeconds()));
+		// se a duração da bomba for maior que o tempo limite
+		if (tntService.getTntDuration() > tntTagConfigService.getTntTimerInSeconds()) {
+			Bukkit.getConsoleSender().sendMessage(Utils.color("&6 TEMPO ESGOTADOOOOO"));
+			return true;
+		}
+
+		return false;
 	}
 
 	@Override
@@ -88,27 +129,9 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 				.getGameConfigInstance(TheCraftCloudConfig.GAME_DURATION_IN_SECONDS);
 
 		if (duration >= this.gameDuration && this.getLivePlayers().size() > 1) {
-			
-			if(!autoDestruction) {
-				autoDestructionAlert();
-			}
-
-			// chama uma task para derrubar toda a arena
-			BukkitScheduler scheduler = getServer().getScheduler();
-			this.destroyArenaBlocksTaskThreadID = scheduler.scheduleSyncRepeatingTask(this, this.destroyArenaBlocksTask,
-					0L, 10L);
+			//
 		}
 		return false;
-	}
-
-	private void autoDestructionAlert() {
-		for (Player player : Bukkit.getOnlinePlayers()) {
-			if (player.getWorld().equals(configService.getArenaWorld())) {
-				TitleUtil.sendTitle(player.getPlayer(), 1, 90, 10, ChatColor.RED + "Autodestruição!",
-						ChatColor.RED + "salve-se quem puder...");
-				autoDestruction = true;
-			}
-		}
 	}
 
 	/**
@@ -125,8 +148,8 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 
 		// Terminar threads do jogo
 		Bukkit.getScheduler().cancelTask(this.playerWinTaskThreadID);
-		Bukkit.getScheduler().cancelTask(this.destroyArenaBlocksTaskThreadID);
-
+		Bukkit.getScheduler().cancelTask(this.tntExplodeTaskThreadID);
+		Bukkit.getScheduler().cancelTask(this.tntHolderTaskThreadID);
 
 		for (GamePlayer gp : livePlayers) {
 			Player player = gp.getPlayer();
@@ -156,7 +179,7 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 	protected void registerListeners() {
 		super.registerListeners();
 		PluginManager pm = Bukkit.getPluginManager();
-		pm.registerEvents(new PlayerDrop(this), this);
+		pm.registerEvents(new TntExplosionListener(this), this);
 		pm.registerEvents(new CancelEvents(this), this);
 	}
 
@@ -171,11 +194,4 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 		return false;
 	}
 
-	public TntTagConfigService getSpleggConfigService() {
-		return spleggConfigService;
-	}
-
-	public void setSpleggConfigService(TntTagConfigService spleggConfigService) {
-		this.spleggConfigService = spleggConfigService;
-	}
 }

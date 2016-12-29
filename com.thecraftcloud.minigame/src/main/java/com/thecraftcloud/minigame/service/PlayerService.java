@@ -73,7 +73,7 @@ public class PlayerService extends TheCraftCloudService {
 		inventory.setArmorContents(null);
 		
 		regainAttributesToPlayer(player);
-		
+	
 		createScoreBoard(player);
 	}
 

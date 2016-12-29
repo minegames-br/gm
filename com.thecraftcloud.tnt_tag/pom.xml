@@ -4,7 +4,7 @@
   <groupId>com.thecraftcloud.game</groupId>
   <artifactId>com.thecraftcloud.tnt_tag</artifactId>
   <version>1.0.0</version>
-  <name>splegg</name>
+  <name>tnt_tag</name>
 
     <build>
         <plugins>

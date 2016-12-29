@@ -27,7 +27,7 @@ public class PlayerDrop implements Listener {
 		this.playerService = new SpleggPlayerService(controller);
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler
 	public void onDeath(final PlayerMoveEvent event) {
 
 		MyCloudCraftGame game = this.controller.getConfigService().getMyCloudCraftGame();

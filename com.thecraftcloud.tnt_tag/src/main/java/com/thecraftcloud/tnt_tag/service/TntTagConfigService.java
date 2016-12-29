@@ -6,11 +6,20 @@ import com.thecraftcloud.core.domain.GameArenaConfig;
 import com.thecraftcloud.minigame.service.ConfigService;
 import com.thecraftcloud.tnt_tag.GameController;
 import com.thecraftcloud.tnt_tag.TntTagConfig;
+import com.thecraftcloud.tnt_tag.domain.TNT;
 
 public class TntTagConfigService {
+
 	private GameController controller;
-	private ConfigService configService;
+	private TNTService tntService;
+	private TNT tnt;
+	
+	private TntTagConfig tntTagConfig = TntTagConfig.getInstance();
+	private ConfigService configService = ConfigService.getInstance();
+	
 	private static TntTagConfigService me;
+	
+	private static Integer tntTimerInSeconds;
 
 	public static TntTagConfigService getInstance() {
 		if (me == null) {
@@ -21,18 +30,36 @@ public class TntTagConfigService {
 
 	private TntTagConfigService() {
 		this.configService = ConfigService.getInstance();
+		this.tntTagConfig = new TntTagConfig();
+		this.tntService = new TNTService(this.controller);
+		this.tnt = new TNT();
 	}
 
 	public void loadConfig() {
 
-		// Deixa PVP inativo
-		this.configService.getArenaWorld().setPVP(true);
+		// Deixa PVP ativo (false)
+		this.configService.getArenaWorld().setPVP(false);
+
+		Integer tntTimerInSeconds = (Integer) this.configService.getGameConfigInstance(TntTagConfig.TNT_EXPLODE_TIMER);
+
+		this.setTntTimerInSeconds(tntTimerInSeconds);
+
+		tnt.setHasTntInGame(false);
 
 		// setar spawn points
 		CopyOnWriteArraySet<GameArenaConfig> gacSpawnPoints = this.configService
 				.getGameArenaConfigByGroup(TntTagConfig.PLAYER_SPAWN);
-		this.configService.getConfig().setSpawnPoints(gacSpawnPoints);
 
+	}
+	
+	public Integer getTntTimerInSeconds() {
+		Integer time = (Integer) this.configService.getGameConfigInstance(TntTagConfig.TNT_EXPLODE_TIMER);
+		this.tntTimerInSeconds = time;
+		return tntTimerInSeconds;
+	}
+
+	public void setTntTimerInSeconds(Integer tntTimerInSeconds) {
+		this.tntTimerInSeconds = tntTimerInSeconds;
 	}
 
 }

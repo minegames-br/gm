@@ -37,12 +37,6 @@
         </dependency>
         -->
 
-  			<dependency>
-  				<groupId>com.thecraftcloud.core</groupId>
-  				<artifactId>com.thecraftcloud.core</artifactId>
-  				<version>1.0.0</version>
-  			</dependency>
-
 			<dependency>
   				<groupId>com.thecraftcloud.minigame</groupId>
 				<artifactId>com.thecraftcloud.minigame</artifactId>

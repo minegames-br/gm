@@ -2,15 +2,15 @@ package com.thecraftcloud.minigame.domain;
 
 public class MyCloudCraftGame {
 	protected GameState state;
-    protected long gameStartTime;
-    protected Level level;
+	protected long gameStartTime;
+	protected Level level;
 
 	public MyCloudCraftGame() {
 
-		//mudar o state do jogo para esperar jogadores entrarem
+		// mudar o state do jogo para esperar jogadores entrarem
 		this.state = GameState.WAITING;
 		this.level = new Level();
-		
+
 	}
 
 	public void shutDown() {
@@ -37,13 +37,13 @@ public class MyCloudCraftGame {
 	public boolean isStarted() {
 		return this.state.equals(GameState.RUNNING);
 	}
-	
+
 	public GameState getState() {
 		return this.state;
 	}
 
 	public boolean isWaitingPlayers() {
-		return this.state.equals(GameState.WAITING) || this.state.equals(GameState.STARTING);	
+		return this.state.equals(GameState.WAITING) || this.state.equals(GameState.STARTING);
 	}
 
 	public void endGame() {
@@ -66,7 +66,7 @@ public class MyCloudCraftGame {
 		this.level = new Level(this.level);
 		this.state = GameState.RUNNING;
 	}
-	
+
 	public void setGameState(GameState state) {
 		this.state = state;
 	}
@@ -86,6 +86,5 @@ public class MyCloudCraftGame {
 	public void setState(GameState state) {
 		this.state = state;
 	}
-
 
 }

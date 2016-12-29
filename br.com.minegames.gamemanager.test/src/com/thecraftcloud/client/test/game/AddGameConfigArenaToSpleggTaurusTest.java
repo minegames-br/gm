@@ -31,10 +31,19 @@ public class AddGameConfigArenaToSpleggTaurusTest  extends TheCraftCloudJUnitTes
 	@Test
 	public void test() {
 		Game game = delegate.findGameByName("splegg");
-		Arena arena = delegate.findArenaByName("splegg-taurus");
-		Local pointA = createLocal( -711, 58, -678 );
-		Local pointB = createLocal( -831, 37, -591 );
+		Arena arena = delegate.findArenaByName("splegg-orbit");
+		/*
+		 * 
+renatocesar [5:10 PM]  
+orbit pointA : 1521 | 65 | -1121
+
+[5:11]  
+orbit pointB : 1625 | 15 | -1026
+		 */
+		Local pointA = createLocal( 1521, 65, -1121 );
+		Local pointB = createLocal( 1625, 15, -1026 );
 		Area3D area = createArea(pointA, pointB);
+		area.setName("splegg-orbit");
 		arena.setArea(area);
 		delegate.updateArena(arena);
 	}
@@ -43,33 +52,11 @@ public class AddGameConfigArenaToSpleggTaurusTest  extends TheCraftCloudJUnitTes
 		Area3D area = new Area3D();
 		area.setPointA(pointA);
 		area.setPointB(pointB);
-		area.setName("area splegg-taurus");
+		area.setName("splegg-orbit");
 		area = delegate.addArea3D(area);
 		return area;
 	}
 
-	private void createSpleggTaurusSpawn() {
-		Game game = delegate.findGameByName("splegg");
-		Arena arena = delegate.findArenaByName("splegg-taurus");
-
-		GameConfig gameConfig = delegate.findGameConfigByName("splegg.player1.spawn");
-		Local pointA = createLocal(-766, 44, -620 );
-		createGameArenaConfig( gameConfig, arena, game, pointA );
-
-		gameConfig = delegate.findGameConfigByName("splegg.player2.spawn");
-		pointA = createLocal( -766, 44, -640 );
-		createGameArenaConfig( gameConfig, arena, game, pointA );
-
-		gameConfig = delegate.findGameConfigByName("splegg.player3.spawn");
-		pointA = createLocal( -790, 45, -597 );
-		createGameArenaConfig( gameConfig, arena, game, pointA );
-
-		gameConfig = delegate.findGameConfigByName("splegg.player4.spawn");
-		pointA = createLocal( -800, 47, -620 );
-		createGameArenaConfig( gameConfig, arena, game, pointA );
-
-	}
-	
 	private void createGameArenaConfig(GameConfig gameConfig, Arena arena, Game game, Object object) {
 		GameArenaConfig gac = new GameArenaConfig();
 		gac.setArena(arena);
