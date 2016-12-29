@@ -3,6 +3,7 @@ package com.thecraftcloud.tnt_tag.listener;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
@@ -29,15 +30,14 @@ public class CancelEvents implements Listener {
 
 	@EventHandler
 	public void onHungry(FoodLevelChangeEvent event) {
-
 		if (!game.isStarted()) {
 			return;
 		}
 		event.setCancelled(true);
 	}
-	
+
 	@EventHandler
-	public void onThunderChange (ThunderChangeEvent event) {
+	public void onBlockPlace(BlockPlaceEvent event) {
 		if (!game.isStarted()) {
 			return;
 		}
@@ -49,19 +49,19 @@ public class CancelEvents implements Listener {
 		if (!game.isStarted()) {
 			return;
 		}
-		
+
 		event.setCancelled(true);
 	}
-	
+
 	@EventHandler
 	public void onPickUpItem(PlayerPickupItemEvent event) {
 		if (!game.isStarted()) {
 			return;
 		}
-		
+
 		event.setCancelled(true);
 	}
-	
+
 	@EventHandler
 	public void onDamage(EntityDamageByEntityEvent event) {
 		event.setDamage(0.0);
