@@ -3,6 +3,8 @@ package com.thecraftcloud.tnt_tag.listener;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -43,6 +45,24 @@ public class CancelEvents implements Listener {
 		}
 		event.setCancelled(true);
 	}
+	
+
+	@EventHandler
+	public void onBreak(BlockBreakEvent event) {
+		if (!game.isStarted()) {
+			return;
+		}
+		event.setCancelled(true);
+	}
+	
+	@EventHandler
+	public void onExplosion(BlockExplodeEvent event) {
+		if (!game.isStarted()) {
+			return;
+		}
+		event.setCancelled(true);
+	}
+
 
 	@EventHandler
 	public void onDropItem(PlayerDropItemEvent event) {

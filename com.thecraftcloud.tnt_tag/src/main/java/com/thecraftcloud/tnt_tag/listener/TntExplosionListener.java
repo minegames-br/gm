@@ -25,11 +25,12 @@ public class TntExplosionListener implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onExplosion(BlockExplodeEvent event) {
+		
+		Bukkit.getConsoleSender().sendMessage(Utils.color("&3 BOMBA EXPLODIU!"));
 
 		if (!event.getBlock().getType().equals(Material.TNT))
 			return;
 
-		Bukkit.getConsoleSender().sendMessage(Utils.color("&6 BOMBA EXPLODIU!"));
 		tnt.setHasTntInGame(false);
 	}
 }

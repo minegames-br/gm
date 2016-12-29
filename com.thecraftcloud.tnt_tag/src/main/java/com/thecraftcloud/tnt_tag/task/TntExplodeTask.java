@@ -51,6 +51,7 @@ public class TntExplodeTask implements Runnable {
 				Player player = gp.getPlayer();
 				if (player.getName().equals(playerName)) {
 					tntTagPlayerService.killPlayer(player);
+					tnt.setHasTntInGame(false);
 				}
 			}
 

@@ -179,7 +179,7 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 	protected void registerListeners() {
 		super.registerListeners();
 		PluginManager pm = Bukkit.getPluginManager();
-		pm.registerEvents(new TntExplosionListener(this), this);
+		//pm.registerEvents(new TntExplosionListener(this), this);
 		pm.registerEvents(new CancelEvents(this), this);
 	}
 
