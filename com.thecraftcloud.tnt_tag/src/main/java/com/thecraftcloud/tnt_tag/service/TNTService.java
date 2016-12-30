@@ -27,7 +27,7 @@ public class TNTService {
 	}
 	
 	public Integer getTntStartTimeInSeconds() {
-		return tntStartTimeInSeconds;
+		return TNTService.tntStartTimeInSeconds;
 	}
 	
 	

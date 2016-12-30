@@ -45,7 +45,6 @@ public class CancelEvents implements Listener {
 		}
 		event.setCancelled(true);
 	}
-	
 
 	@EventHandler
 	public void onBreak(BlockBreakEvent event) {

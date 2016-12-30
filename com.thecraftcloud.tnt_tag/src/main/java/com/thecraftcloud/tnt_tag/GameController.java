@@ -18,13 +18,13 @@ import com.thecraftcloud.tnt_tag.domain.TNT;
 import com.thecraftcloud.tnt_tag.domain.TntTag;
 import com.thecraftcloud.tnt_tag.domain.TntTagPlayer;
 import com.thecraftcloud.tnt_tag.listener.CancelEvents;
-import com.thecraftcloud.tnt_tag.listener.TntExplosionListener;
+import com.thecraftcloud.tnt_tag.listener.TNTExplosionListener;
 import com.thecraftcloud.tnt_tag.service.TNTService;
-import com.thecraftcloud.tnt_tag.service.TntTagConfigService;
-import com.thecraftcloud.tnt_tag.service.TntTagPlayerService;
+import com.thecraftcloud.tnt_tag.service.TNTTagConfigService;
+import com.thecraftcloud.tnt_tag.service.TNTTagPlayerService;
 import com.thecraftcloud.tnt_tag.task.PlayerWinTask;
-import com.thecraftcloud.tnt_tag.task.TntExplodeTask;
-import com.thecraftcloud.tnt_tag.task.TntHolderTask;
+import com.thecraftcloud.tnt_tag.task.TNTExplodeTask;
+import com.thecraftcloud.tnt_tag.task.TNTHolderTask;
 
 /**
  * Created by renatocsare@gmail.com on Dez 28, 2016
@@ -34,11 +34,11 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 	private Integer gameDuration;
 	private Integer tntTimer;
 
-	private TntTagPlayerService tntTagPlayerService = new TntTagPlayerService(this);
-	private TntTagConfigService tntTagConfigService = TntTagConfigService.getInstance();
+	private TNTTagPlayerService tntTagPlayerService = new TNTTagPlayerService(this);
+	private TNTTagConfigService tntTagConfigService = TNTTagConfigService.getInstance();
 	private TNTService tntService;
 
-	private TntTagConfig tntTagConfig = TntTagConfig.getInstance();
+	private TNTTagConfig tntTagConfig = TNTTagConfig.getInstance();
 
 	//private TNT tnt;
 
@@ -88,11 +88,11 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 
 		// inicializar variaveis de instancia
 		this.playerWinTask = new PlayerWinTask(this);
-		this.tntExplodeTask = new TntExplodeTask(this);
-		this.tntHolderTask = new TntHolderTask(this);
+		this.tntExplodeTask = new TNTExplodeTask(this);
+		this.tntHolderTask = new TNTHolderTask(this);
 
 		// Carregar configuracoes especificas do TNT Tag
-		TntTagConfigService.getInstance().loadConfig();
+		TNTTagConfigService.getInstance().loadConfig();
 	}
 
 	@Override
@@ -162,7 +162,7 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 
 	@Override
 	public PlayerService createPlayerService() {
-		return new TntTagPlayerService(this);
+		return new TNTTagPlayerService(this);
 	}
 
 	@Override

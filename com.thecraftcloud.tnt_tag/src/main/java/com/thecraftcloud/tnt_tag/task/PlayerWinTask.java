@@ -12,12 +12,12 @@ import com.thecraftcloud.minigame.domain.GamePlayer;
 import com.thecraftcloud.minigame.domain.MyCloudCraftGame;
 import com.thecraftcloud.minigame.service.ConfigService;
 import com.thecraftcloud.tnt_tag.GameController;
-import com.thecraftcloud.tnt_tag.service.TntTagPlayerService;
+import com.thecraftcloud.tnt_tag.service.TNTTagPlayerService;
 
 public class PlayerWinTask implements Runnable {
 
 	private TheCraftCloudMiniGameAbstract controller;
-	private TntTagPlayerService spleggPlayerService;
+	private TNTTagPlayerService spleggPlayerService;
 	private ConfigService configService = ConfigService.getInstance();
 
 	public PlayerWinTask(GameController game) {
