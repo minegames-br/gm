@@ -42,7 +42,7 @@ public class TNTTagConfigService {
 
 		Integer tntTimerInSeconds = (Integer) this.configService.getGameConfigInstance(TNTTagConfig.TNT_EXPLODE_TIMER);
 
-		this.setTntTimerInSeconds(tntTimerInSeconds);
+		setTntTimerInSeconds(tntTimerInSeconds);
 
 		tnt.setHasTntInGame(false);
 
@@ -60,6 +60,11 @@ public class TNTTagConfigService {
 
 	public void setTntTimerInSeconds(Integer tntTimerInSeconds) {
 		this.tntTimerInSeconds = tntTimerInSeconds;
+	}
+	
+	public void resetTime() {
+		Integer tntTimerInSeconds = (Integer) this.configService.getGameConfigInstance(TNTTagConfig.TNT_EXPLODE_TIMER);
+		setTntTimerInSeconds(tntTimerInSeconds);
 	}
 
 }

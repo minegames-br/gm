@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import com.thecraftcloud.tnt_tag.GameController;
+import com.thecraftcloud.tnt_tag.service.TNTTagPlayerService;
 
 public class TNT {
 	
@@ -25,7 +26,7 @@ public class TNT {
 	}
 	
 
-	public boolean getHasTntInGame() {
+	public boolean hasTntInGame() {
 		return hasTntInGame;
 	}
 
@@ -39,6 +40,11 @@ public class TNT {
 
 	public void setPlayerWithTnt(Player playerWithTnt) {
 		TNT.playerWithTnt = playerWithTnt;
+	}
+	
+	public void changePlayerWithTnt(Player tagger, Player nextTagger) {
+		tagger.getInventory().clear();
+		setTntHolder(nextTagger);
 	}
 	
 	

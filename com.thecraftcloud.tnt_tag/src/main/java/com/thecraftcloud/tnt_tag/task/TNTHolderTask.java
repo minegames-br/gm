@@ -19,16 +19,14 @@ import com.thecraftcloud.tnt_tag.service.TNTService;
 import com.thecraftcloud.tnt_tag.service.TNTTagPlayerService;
 
 public class TNTHolderTask implements Runnable {
-	
+
 	private ConfigService configService = ConfigService.getInstance();
-	private TNTTagConfig tntTagConfig = TNTTagConfig.getInstance();
 	private TNTService tntService;
 	private GameController controller;
 	private TNT tnt;
-	private TNTTagPlayerService tntTagPlayerService;
 
 	private List<Player> players;
-	
+
 	public TNTHolderTask(GameController controller) {
 		this.controller = controller;
 		this.tntService = new TNTService(controller);
@@ -37,25 +35,28 @@ public class TNTHolderTask implements Runnable {
 
 	@Override
 	public void run() {
-		
+
 		MyCloudCraftGame game = configService.getMyCloudCraftGame();
-		if (!game.isStarted()) return;
-		
-		if (tnt.getHasTntInGame()) return;
-		
+		if (!game.isStarted())
+			return;
+
+		if (tnt.hasTntInGame() || this.controller.getLivePlayers().size() == 1)
+			return;
+
+		if (controller.isGameInBreak())
+			return;
+
 		players = new ArrayList<Player>();
-		
-		for(GamePlayer gp : controller.getLivePlayers()) {
+
+		for (GamePlayer gp : controller.getLivePlayers()) {
 			players.add(gp.getPlayer());
 		}
-		
+
 		Random r = new Random();
 		int randomPlayer = r.nextInt(players.size());
-		
-		Bukkit.getConsoleSender().sendMessage(Utils.color("&6 PLAYER SORTEADO: " + players.get(randomPlayer).getName()));
 
 		tnt.setTntHolder(players.get(randomPlayer));
-		
+
 		Integer time = (int) (System.currentTimeMillis() / 1000);
 		tntService.setTntStartTimeInSeconds(time);
 	}

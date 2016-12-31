@@ -98,6 +98,12 @@ public class TNTTagPlayerService extends PlayerService {
 		objective1.setDisplaySlot(DisplaySlot.SIDEBAR);
 		player.setScoreboard(scoreboard);
 	}
+	
+	public void clearPlayerInventory(Player player) {
+		PlayerInventory inventory = player.getInventory();
+		inventory.clear();
+		inventory.setArmorContents(null);
+	}
 
 	@Override
 	public void updateScoreBoards() {
@@ -111,8 +117,7 @@ public class TNTTagPlayerService extends PlayerService {
 			objective1.unregister();
 			objective1 = scoreboard.registerNewObjective(ChatColor.BOLD + Utils.color( "&CTNT TAG"), "tnt_tag");
 			objective1.setDisplaySlot(DisplaySlot.SIDEBAR);
-
-			//Integer time = (configService.getGameDurationInSeconds() - this.miniGame.getGameDuration());
+			
 			Integer time = (tntTagConfigService.getTntTimerInSeconds() - tntService.getTntDuration());
 
 			Score p1 = objective1.getScore(ChatColor.BOLD + Utils.color("&FTempo:" + "   " + time));
