@@ -12,13 +12,18 @@ public class TNT {
 	private static Player playerWithTnt;
 	public static boolean hasTntInGame;
 	
+	private GameController controller;
+	private TNTTagPlayer tntPlayer;
+	
 	public TNT() {
+		this.tntPlayer = new TNTTagPlayer(controller);
 	}
 	
 	public void setTntHolder(Player player) {
 		player.getInventory().setItemInMainHand(new ItemStack(Material.TNT));
 		setPlayerWithTnt(player);
 		setHasTntInGame(true);
+		tntPlayer.setTaggerSpeed(player);
 	}
 	
 	public Player getTntHolder() {
@@ -45,6 +50,7 @@ public class TNT {
 	public void changePlayerWithTnt(Player tagger, Player nextTagger) {
 		tagger.getInventory().clear();
 		setTntHolder(nextTagger);
+		tntPlayer.setDefaultSpeed(tagger);
 	}
 	
 	

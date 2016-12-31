@@ -43,7 +43,7 @@ public class TNTExplodeTask implements Runnable {
 
 			for (GamePlayer gp : controller.getLivePlayers()) {
 				Player player = gp.getPlayer();
-				player.sendMessage(ChatColor.RED + player.getName() + " explodiu!" );
+				player.sendMessage(ChatColor.GRAY + "[TNT_TAG] " + ChatColor.WHITE + tnt.getTntHolder().getName() + ChatColor.RED + " explodiu!" );
 				if (player.getName().equals(playerName)) {
 					tntPlayerService.killPlayer(player);
 					tnt.setHasTntInGame(false);

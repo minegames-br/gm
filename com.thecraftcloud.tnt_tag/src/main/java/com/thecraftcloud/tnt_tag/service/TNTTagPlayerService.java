@@ -24,20 +24,26 @@ import com.thecraftcloud.minigame.service.ConfigService;
 import com.thecraftcloud.minigame.service.PlayerService;
 import com.thecraftcloud.tnt_tag.GameController;
 import com.thecraftcloud.tnt_tag.TNTTagConfig;
+import com.thecraftcloud.tnt_tag.domain.TNT;
+import com.thecraftcloud.tnt_tag.domain.TNTTagPlayer;
 
 public class TNTTagPlayerService extends PlayerService {
 
 	private GameController controller;
-	private TNTTagConfigService tntTagConfigService = TNTTagConfigService.getInstance();
+	private TNTTagConfigService tntConfigService = TNTTagConfigService.getInstance();
 	private TNTTagConfig tntTagConfig = TNTTagConfig.getInstance();
+	private TNTTagPlayer tntPlayer;
 	private TNTService tntService;
+	private TNT tnt;
 	
 
 	public TNTTagPlayerService(TheCraftCloudMiniGameAbstract controller) {
 		super(controller);
 		this.configService = ConfigService.getInstance();
-		this.tntTagConfigService = TNTTagConfigService.getInstance();
+		this.tntConfigService = TNTTagConfigService.getInstance();
 		this.tntService = new TNTService(this.controller);
+		this.tntPlayer = new TNTTagPlayer(this.controller);
+		this.tnt = new TNT();
 	}
 
 	public void teleportPlayersToArena() {
@@ -68,8 +74,7 @@ public class TNTTagPlayerService extends PlayerService {
 	@Override
 	public void setupPlayerToStartGame(Player player) {
 		super.setupPlayerToStartGame(player);
-
-		PlayerInventory inventory = player.getInventory();
+		tntPlayer.setDefaultSpeed(player);
 	}
 
 	@Override
@@ -94,7 +99,7 @@ public class TNTTagPlayerService extends PlayerService {
 	@Override
 	public void createScoreBoard(Player player) {
 		Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
-		Objective objective1 = scoreboard.registerNewObjective(ChatColor.BOLD + Utils.color("&CTNT TAG"), "tnt_tag");
+		Objective objective1 = scoreboard.registerNewObjective(ChatColor.BOLD + Utils.color("&CTNT_TAG"), "tnt_tag");
 		objective1.setDisplaySlot(DisplaySlot.SIDEBAR);
 		player.setScoreboard(scoreboard);
 	}
@@ -115,19 +120,25 @@ public class TNTTagPlayerService extends PlayerService {
 
 			Objective objective1 = scoreboard.getObjective(DisplaySlot.SIDEBAR);
 			objective1.unregister();
-			objective1 = scoreboard.registerNewObjective(ChatColor.BOLD + Utils.color( "&CTNT TAG"), "tnt_tag");
+			objective1 = scoreboard.registerNewObjective(ChatColor.BOLD + "TNT TAG", "tnt_tag");
 			objective1.setDisplaySlot(DisplaySlot.SIDEBAR);
 			
-			Integer time = (tntTagConfigService.getTntTimerInSeconds() - tntService.getTntDuration());
+			Integer time = (tntConfigService.getTntTimerInSeconds() - tntService.getTntDuration());
 
 			Score p1 = objective1.getScore(ChatColor.BOLD + Utils.color("&FTempo:" + "   " + time));
-			p1.setScore(3);
+			p1.setScore(4);
 
 			Score space1 = objective1.getScore("");
-			space1.setScore(2);
+			space1.setScore(3);
 
 			Score p3 = objective1.getScore(ChatColor.BOLD + Utils.color("&FJogadores:" + "   " + this.miniGame.getLivePlayers().size()));
-			p3.setScore(1);
+			p3.setScore(2);
+			
+			Score space2 = objective1.getScore("");
+			space2.setScore(1);
+			
+			Score p4 = objective1.getScore(ChatColor.BOLD + Utils.color("&B" + "  " + tnt.getPlayerWithTnt().getName()));
+			p4.setScore(0);
 		}
 	}
 

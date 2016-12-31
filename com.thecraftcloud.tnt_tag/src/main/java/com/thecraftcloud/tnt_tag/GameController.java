@@ -105,7 +105,7 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 		
 		for (GamePlayer gp : this.getLivePlayers()) {
 			Player player = gp.getPlayer();
-			player.sendMessage(ChatColor.GOLD + player.getName() + ChatColor.WHITE + " continua no jogo!");
+			player.sendMessage(ChatColor.GRAY + "[TNT_TAG] " + ChatColor.AQUA + player.getName() + ChatColor.WHITE + " continua no jogo!");
 		}
 		BukkitScheduler scheduler = this.getServer().getScheduler();
 		scheduler.scheduleSyncDelayedTask(this, new Runnable() {
@@ -171,7 +171,7 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 
 	@Override
 	public GamePlayer createGamePlayer() {
-		return new TNTTagPlayer();
+		return new TNTTagPlayer(this);
 	}
 
 	@Override

@@ -7,11 +7,13 @@ import com.thecraftcloud.minigame.service.ConfigService;
 import com.thecraftcloud.tnt_tag.GameController;
 import com.thecraftcloud.tnt_tag.TNTTagConfig;
 import com.thecraftcloud.tnt_tag.domain.TNT;
+import com.thecraftcloud.tnt_tag.domain.TNTTagPlayer;
 
 public class TNTTagConfigService {
 
 	private GameController controller;
 	private TNTService tntService;
+	private TNTTagPlayer tntPlayer;
 	private TNT tnt;
 	
 	private TNTTagConfig tntTagConfig = TNTTagConfig.getInstance();
@@ -32,12 +34,11 @@ public class TNTTagConfigService {
 		this.configService = ConfigService.getInstance();
 		this.tntTagConfig = new TNTTagConfig();
 		this.tntService = new TNTService(this.controller);
+		this.tntPlayer = new TNTTagPlayer(this.controller);
 		this.tnt = new TNT();
 	}
 
 	public void loadConfig() {
-
-		// Deixa PVP ativo (false)
 		this.configService.getArenaWorld().setPVP(false);
 
 		Integer tntTimerInSeconds = (Integer) this.configService.getGameConfigInstance(TNTTagConfig.TNT_EXPLODE_TIMER);
@@ -45,7 +46,7 @@ public class TNTTagConfigService {
 		setTntTimerInSeconds(tntTimerInSeconds);
 
 		tnt.setHasTntInGame(false);
-
+		
 		// setar spawn points
 		CopyOnWriteArraySet<GameArenaConfig> gacSpawnPoints = this.configService
 				.getGameArenaConfigByGroup(TNTTagConfig.PLAYER_SPAWN);
