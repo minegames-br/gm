@@ -14,8 +14,8 @@ import com.thecraftcloud.minigame.TheCraftCloudMiniGameAbstract;
 import com.thecraftcloud.minigame.domain.GamePlayer;
 import com.thecraftcloud.minigame.domain.MyCloudCraftGame;
 import com.thecraftcloud.minigame.service.PlayerService;
-import com.thecraftcloud.tnt_tag.domain.TntTag;
-import com.thecraftcloud.tnt_tag.domain.TntTagPlayer;
+import com.thecraftcloud.tnt_tag.domain.TNTTag;
+import com.thecraftcloud.tnt_tag.domain.TNTTagPlayer;
 import com.thecraftcloud.tnt_tag.listener.CancelEvents;
 import com.thecraftcloud.tnt_tag.listener.EntityHitEvent;
 import com.thecraftcloud.tnt_tag.service.TNTService;
@@ -171,7 +171,7 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 
 	@Override
 	public GamePlayer createGamePlayer() {
-		return new TntTagPlayer();
+		return new TNTTagPlayer();
 	}
 
 	@Override
@@ -184,7 +184,7 @@ public class GameController extends TheCraftCloudMiniGameAbstract {
 
 	@Override
 	public MyCloudCraftGame createMyCloudCraftGame() {
-		return new TntTag();
+		return new TNTTag();
 	}
 
 	@Override

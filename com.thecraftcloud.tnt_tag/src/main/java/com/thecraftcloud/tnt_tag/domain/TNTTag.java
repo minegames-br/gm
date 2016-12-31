@@ -4,9 +4,9 @@ import com.thecraftcloud.minigame.domain.GameState;
 import com.thecraftcloud.minigame.domain.Level;
 import com.thecraftcloud.minigame.domain.MyCloudCraftGame;
 
-public class TntTag extends MyCloudCraftGame {
+public class TNTTag extends MyCloudCraftGame {
 
-	public TntTag() {
+	public TNTTag() {
 
 		//mudar o state do jogo para esperar jogadores entrarem
 		this.state = GameState.WAITING;
